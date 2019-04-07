@@ -1,5 +1,6 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.model.match;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Stack;
 
@@ -13,16 +14,20 @@ public class AutoShufflingStack<T> implements CardStack<T> {
     /** The stack of discarded cards*/
     private Stack<T> discarded;
 
-    /** The stack of cards available to be drawed */
+    /** The stack of cards available to be drawn */
     private Stack<T> available;
 
     /** Shuffles the stack of discarded cards and put them in the available stack */
     private void shuffle(){
-        if(available.size() == 0) { // Check anyway if the available stack is empty
-            available.addAll(discarded); // Move the discarded cards in the available stack
+        if(available.isEmpty()) { // Check anyway if the available stack is empty
+            available = discarded; // Swap the stacks
             Collections.shuffle(available); // Shuffle the newly available cards
-            discarded.removeAllElements(); // Empty the discarded stack
+            discarded = new Stack<>();
         }
+    }
+
+    AutoShufflingStack(Collection<T> cards){
+        this.discarded.addAll(cards);
     }
 
     /**
@@ -36,13 +41,12 @@ public class AutoShufflingStack<T> implements CardStack<T> {
 
     /**
      * Draws a card from the stack of the available cards.
-     * If, after the drawing, the stack is empty, it class the shuffle method.
+     * If the stack is empty, it class the shuffle method.
      * @return The drawn card
      */
     @Override
     public T draw() {
-        T extractedCard = available.pop();
-        if(available.size() == 0) shuffle();
-        return extractedCard;
+        if(available.isEmpty()) shuffle();
+        return available.pop();
     }
 }

@@ -6,6 +6,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.model.items.powerup.PowerUpCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.Weapon;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -89,13 +90,13 @@ public class Match {
      * Sets a player as suspended
      * @param player The username of the player
      */
-    public void suspendPlayer(String player){};
+    public void suspendPlayer(String player){}
 
     /**
      * Removes a player from the match
      * @param player The username of the player
      */
-    public void removePlayer(String player){};
+    public void removePlayer(String player){}
 
     /**
      * Retrieves the current turn
@@ -103,12 +104,12 @@ public class Match {
      */
     public PlayerTurn getCurrentTurn(){
         return null;
-    };
+    }
 
     /**
      * Ends the current turn
      */
-    public void endCurrentTurn(){};
+    public void endCurrentTurn(){}
 
 
     /**
@@ -116,7 +117,7 @@ public class Match {
      * @return The list of objects representing the players
      */
     public List<Player> getPlayers(){
-        return null;
+        return Collections.emptyList();
     }
 
     /**
@@ -130,7 +131,7 @@ public class Match {
     /**
      * Sets the match to be in frenzy mode
      */
-    public void goFrenzy(){};
+    public void goFrenzy(){}
 
     /* ===== GETTERS ===== */
 

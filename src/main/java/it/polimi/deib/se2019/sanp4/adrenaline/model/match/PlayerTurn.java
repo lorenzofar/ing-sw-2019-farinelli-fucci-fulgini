@@ -4,6 +4,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionEnum;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -43,8 +44,7 @@ public class PlayerTurn{
         turnOwner = player;
         state = PlayerTurnState.SELECTING;
         //TODO: Determine number of remaining actions
-    };
-
+    }
 
     /**
      * Retrieves the list of actions the player can perform
