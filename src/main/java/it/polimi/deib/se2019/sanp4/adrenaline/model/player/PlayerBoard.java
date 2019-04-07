@@ -48,6 +48,29 @@ public class PlayerBoard{
     }
 
     /**
+     * Returns the number of times this player died, either by killshot or overkill.
+     * @return number of deaths
+     */
+    public int getDeaths() {
+        return deaths;
+    }
+
+    /**
+     * Increment deaths by one.
+     */
+    public void addDeath() {
+        deaths += 1;
+    }
+
+    /**
+     * Returns the owner of this board.
+     * @return owner of this board
+     */
+    public Player getPlayer() {
+        return player;
+    }
+
+    /**
      * Returns a duplicate of the internal list of damages.
      * @return a list of players representing the suffered damages, in chronological order
      */
