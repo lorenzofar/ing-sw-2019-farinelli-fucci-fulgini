@@ -1,8 +1,6 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.model.match;
 
-import it.polimi.deib.se2019.sanp4.adrenaline.model.action.Action;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionEnum;
-import it.polimi.deib.se2019.sanp4.adrenaline.model.action.BasicAction;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
 
 import java.util.ArrayList;
@@ -52,7 +50,7 @@ public class PlayerTurn{
      * Retrieves the list of actions the player can perform
      * @return The list of objects representing the actions
      */
-    public List<Action> getAvailableActions(){
+    public List<ActionEnum> getAvailableActions(){
         return null;
     }
 
