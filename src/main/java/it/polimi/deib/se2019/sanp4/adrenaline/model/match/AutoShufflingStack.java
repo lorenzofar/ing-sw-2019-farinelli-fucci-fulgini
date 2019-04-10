@@ -26,7 +26,16 @@ public class AutoShufflingStack<T> implements CardStack<T> {
         }
     }
 
+    /**
+     * Creates a new auto shuffling stack with the provided cards
+     * @param cards The collection of objects representing the cards, not null
+     */
     AutoShufflingStack(Collection<T> cards){
+        if(cards == null){
+            throw new NullPointerException("Cards collection cannot be null");
+        }
+        this.available = new Stack<>();
+        this.discarded = new Stack<>();
         this.discarded.addAll(cards);
     }
 
@@ -36,6 +45,9 @@ public class AutoShufflingStack<T> implements CardStack<T> {
      */
     @Override
     public void discard(T card) {
+        if(card == null){
+            throw new NullPointerException("Card cannot be null");
+        }
         discarded.push(card);
     }
 

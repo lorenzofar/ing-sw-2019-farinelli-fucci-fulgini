@@ -8,9 +8,9 @@ public interface CardStack<T>{
 
     /**
      * Discard a card
-     * @param card The card that has to be discarded
+     * @param card The card that has to be discarded, not null
      */
-    public void discard(T card);
+    void discard(T card);
 
     /**
      * Draw a card from the stack

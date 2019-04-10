@@ -36,9 +36,12 @@ public class PlayerTurn{
 
     /**
      * Creates a new turn for the specified player.
-     * @param player The object representing the player
+     * @param player The object representing the player, not null
      */
     PlayerTurn(Player player){
+        if(player == null){
+            throw new NullPointerException("Player cannot be null");
+        }
         currentAction = null;
         hitPlayers = new ArrayList<>();
         turnOwner = player;
@@ -51,26 +54,33 @@ public class PlayerTurn{
      * @return The list of objects representing the actions
      */
     public List<ActionEnum> getAvailableActions(){
-        return null;
+        //TODO: Implement this method
+        return Collections.emptyList();
     }
 
     /**
      * Checks whether the provided action can be performed by the player
-     * @param action The action to test
-     * @return True if the action can be performed, false if not
+     * @param action The action to test, not null
+     * @return {@code true} if the action can be performed, {@code false} otherwise
      */
     public boolean canPerformAction(ActionEnum action){
-        //TODO:
+        if(action == null){
+            throw new NullPointerException("Action cannot be null");
+        }
+        //TODO: Implement this method
         return false;
     }
 
     /**
      * Checks whether the provided action is being performed by the player
-     * @param action The action to test
-     * @return True is the action is active, false if not
+     * @param action The action to test, not null
+     * @return {@code true} is the action is active, {@code false} otherwise
      */
     public boolean isActionActive(ActionEnum action){
-        //TODO:
+        if(action == null){
+            throw new NullPointerException("Action cannot be null");
+        }
+        //TODO: Implement this method
         return false;
     }
 

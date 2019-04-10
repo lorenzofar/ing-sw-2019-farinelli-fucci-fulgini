@@ -3,6 +3,7 @@ package it.polimi.deib.se2019.sanp4.adrenaline.model.match;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.Board;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.powerup.PowerUpCard;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.WeaponCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.Weapon;
 
@@ -38,7 +39,7 @@ public class Match {
     private CardStack<AmmoCard> ammoStack;
 
     /** Stack of all the weapon cards */
-    private CardStack<Weapon> weaponStack;
+    private CardStack<WeaponCard> weaponStack;
 
     /** Stack of all the powerup cards */
     private CardStack<PowerUpCard> powerupStack;
@@ -54,13 +55,19 @@ public class Match {
      * Creates a new match for the provided players.
      * It initializes the card stacks using the provided ones.
      * It also sets the number of skulls according to the corresponding parameter.
-     * @param players The players playing the match
-     * @param ammoStack The stack of ammo tiles
-     * @param weaponStack The stack of weapon cards
-     * @param powerupStack The stack of powerup cards
-     * @param skulls The number of skulls in the killshots track
+     * @param players The players playing the match, not null
+     * @param ammoStack The stack of ammo tiles, not null
+     * @param weaponStack The stack of weapon cards, not null
+     * @param powerupStack The stack of powerup cards, not null
+     * @param skulls The number of skulls in the killshots track, must be positive
      */
-    Match(List<Player> players, CardStack<AmmoCard> ammoStack, CardStack<Weapon> weaponStack, CardStack<PowerUpCard> powerupStack, int skulls){
+    Match(List<Player> players, CardStack<AmmoCard> ammoStack, CardStack<WeaponCard> weaponStack, CardStack<PowerUpCard> powerupStack, int skulls){
+        if(players == null || ammoStack == null || weaponStack == null || powerupStack == null){
+            throw new NullPointerException("Found null parameters");
+        }
+        if(skulls < 0){
+            throw new IllegalArgumentException("Skulls count cannot be negative");
+        }
         this.ammoStack = ammoStack;
         this.weaponStack = weaponStack;
         this.powerupStack = powerupStack;
@@ -70,46 +77,64 @@ public class Match {
 
     /**
      * Determines whether the current turn belongs to the provided player.
-     * @param player The username of the player
-     * @return True if the turn belongs to the player, false if not.
+     * @param player The username of the player, not null
+     * @return {@code true} if the turn belongs to the player, {@code false} otherwise
      */
     public boolean isPlayerTurn(String player){
-        return false;
+        if(player == null){
+            throw new NullPointerException("Player cannot be null");
+        }
+        return this.currentTurn.getTurnOwner().getName().equals(player);
     }
 
     /**
      * Determines whether the current turn belongs to the provided player.
-     * @param player The object representing the player
-     * @return True if the turn belongs to the player, false if not.
+     * @param player The object representing the player, not null
+     *      * @return {@code true} if the turn belongs to the player, {@code false} otherwise
      */
     public boolean isPlayerTurn(Player player){
-        return false;
+        if(player == null){
+            throw new NullPointerException("Player cannot be null");
+        }
+        return this.currentTurn.getTurnOwner().equals(player);
     }
 
     /**
      * Sets a player as suspended
-     * @param player The username of the player
+     * @param player The username of the player, not null
      */
-    public void suspendPlayer(String player){}
+    public void suspendPlayer(String player){
+        if(player == null){
+            throw new NullPointerException("Player cannot be null");
+        }
+        //TODO: Implement this method
+    }
 
     /**
      * Removes a player from the match
-     * @param player The username of the player
+     * @param player The username of the player, not null
      */
-    public void removePlayer(String player){}
+    public void removePlayer(String player){
+        if(player == null){
+            throw new NullPointerException("Player cannot be null");
+        }
+        //TODO: Implement this method
+    }
 
     /**
      * Retrieves the current turn
      * @return The object representing the current turn
      */
     public PlayerTurn getCurrentTurn(){
-        return null;
+        return currentTurn;
     }
 
     /**
      * Ends the current turn
      */
-    public void endCurrentTurn(){}
+    public void endCurrentTurn(){
+        //TODO: Implement this method
+    }
 
 
     /**
@@ -117,6 +142,7 @@ public class Match {
      * @return The list of objects representing the players
      */
     public List<Player> getPlayers(){
+        //TODO: Implement this method
         return Collections.emptyList();
     }
 
@@ -131,7 +157,9 @@ public class Match {
     /**
      * Sets the match to be in frenzy mode
      */
-    public void goFrenzy(){}
+    public void goFrenzy(){
+        //TODO: Implement this method
+    }
 
     /* ===== GETTERS ===== */
 
@@ -141,5 +169,40 @@ public class Match {
      */
     public int getSkulls() {
         return skulls;
+    }
+
+    /**
+     * Retrieves the game board
+     * @return The object representing the game board
+     */
+    public Board getBoard() {
+        return board;
+    }
+
+    /**
+     * Retrieves the stack of ammo cards
+     * @return The stack of objects representing the ammo cards
+     */
+    public CardStack<AmmoCard> getAmmoStack() {
+        //TODO: Implement this method
+        return ammoStack;
+    }
+
+    /**
+     * Retrieves the stack of weapon cards
+     * @return The stack of objects representing the weapon cards
+     */
+    public CardStack<WeaponCard> getWeaponStack() {
+        //TODO: Implement this method
+        return weaponStack;
+    }
+
+    /**
+     * Retrieves the stack of powerup cards
+     * @return The stack of objects representing the powerup cards
+     */
+    public CardStack<PowerUpCard> getPowerupStack() {
+        //TODO: Implement this method
+        return powerupStack;
     }
 }
