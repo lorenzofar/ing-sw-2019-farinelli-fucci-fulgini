@@ -26,10 +26,13 @@ public enum AmmoCubeCost{
 
     /**
      * Determines whether the provided cube can suffice as a payment method
-     * @param cube The object representing the cube
+     * @param cube The object representing the cube, not null
      * @return {@code true} if the cube is sufficient, {@code false} otherwise
      */
     public boolean canPayFor(AmmoCubeCost cube){
+        if(cube == null){
+            throw new NullPointerException("Cube cost cannot be null");
+        }
         return this == AmmoCubeCost.ANY || this == cube;
     }
 
@@ -39,6 +42,9 @@ public enum AmmoCubeCost{
      * @return {@code true} if the cube is sufficient, {@code false} otherwise
      */
     public boolean canPayFor(AmmoCube cube){
+        if(cube == null){
+            throw new NullPointerException("Cube cannot be null");
+        }
         return this == AmmoCubeCost.ANY || this.toString().equals(cube.toString());
     }
 

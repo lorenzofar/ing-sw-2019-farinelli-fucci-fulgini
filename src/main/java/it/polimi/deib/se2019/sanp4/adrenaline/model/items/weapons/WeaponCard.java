@@ -27,13 +27,23 @@ public class WeaponCard {
     /**
      * Creates a new weapon card
      * @param id The identifier of the weapon
-     * @param name The name of the weapon
-     * @param cost The list of objects representing the cost of the weapon
+     * @param name The name of the weapon, not null and not an empty string
+     * @param cost The list of objects representing the cost of the weapon, not null and not empty
      */
     WeaponCard(String id, String name, List<AmmoCubeCost> cost){
+        if(name == null || cost == null){
+            throw new NullPointerException("Found null parameters");
+        }
+        if(name.isEmpty()){
+            throw new IllegalArgumentException("Weapon name cannot be empty");
+        }
+        if(cost.isEmpty()){
+            throw new IllegalArgumentException("Cost list cannot be empty");
+        }
         this.id = id;
         this.name = name;
         this.cost = cost;
+        //TODO: Check whether the constructor should accept the list of effects
     }
 
     /**

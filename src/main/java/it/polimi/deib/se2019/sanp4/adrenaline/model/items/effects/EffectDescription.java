@@ -23,11 +23,20 @@ public class EffectDescription {
     /**
      * Creates a new object describing an effect
      * @param id The id of the effect
-     * @param name The name of the effect
-     * @param description The description of the effect
-     * @param cost The list of objects representing the cost of the effect
+     * @param name The name of the effect, not null and not an empty string
+     * @param description The description of the effect, not null and not an empty string
+     * @param cost The list of objects representing the cost of the effect, not null and not empty
      */
     public EffectDescription(String id, String name, String description, List<AmmoCubeCost> cost){
+        if(name == null || description == null || cost == null){
+            throw new NullPointerException("Found null parameters");
+        }
+        if(name.isEmpty() || description.isEmpty()){
+            throw new IllegalArgumentException("Effect descriptions cannot be empty");
+        }
+        if(cost.isEmpty()){
+            throw new IllegalArgumentException("Cost list cannot be empty");
+        }
         this.id = id;
         this.name = name;
         this.description = description;
