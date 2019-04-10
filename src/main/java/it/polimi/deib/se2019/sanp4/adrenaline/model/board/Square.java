@@ -28,6 +28,9 @@ public class Square {
      * @param location The cartesian coordinates of the location
      */
     Square(CoordPair location){
+        if(location == null){
+            throw new NullPointerException("Location cannot be null");
+        }
         this.location = location;
         this.adjacentSquares = new AdjacentMap(new HashMap<>()); //TODO: Create the map describing the connections
         this.players = new ArrayList<>(5);
@@ -36,17 +39,23 @@ public class Square {
 
     /**
      * Puts a player inside the square
-     * @param player The object representing the player
+     * @param player The object representing the player, not null
      */
     public void addPlayer(Player player){
+        if(player == null){
+            throw new NullPointerException("Player cannot be null");
+        }
         this.players.add(player);
     }
 
     /**
      * Removes a player from the square
-     * @param player The object representing the player
+     * @param player The object representing the player, not null
      */
     public void removePlayer(Player player) {
+        if(player == null){
+            throw new NullPointerException("Player cannot be null");
+        }
         this.players.remove(player);
     }
 

@@ -35,14 +35,18 @@ public class AmmoSquare extends Square {
      * @return The object representing the ammo card
      */
     public AmmoCard grabAmmo() {
+        //FIXME: Internal ammo card reference should be set to null once the ammo is grabbed
         return this.ammoCard;
     }
 
     /**
      * Puts an ammo card on the square
-     * @param ammo The object representing the ammo card
+     * @param ammo The object representing the ammo card, not null
      */
     public void insertAmmo(AmmoCard ammo){
+        if(ammo == null){
+            throw new NullPointerException("Ammo cannot be null");
+        }
         this.ammoCard = ammo;
     }
 }

@@ -43,10 +43,17 @@ public class SpawnSquare extends Square {
 
     /**
      * Takes a weapon from the square
-     * @param index The index of the weapon
+     * @param index The index of the weapon, must be positive and not outside the weapons' list capacity
      * @return The object representing the weapon
      */
     public Weapon grabWeapon(int index) {
+        if(index < 0){
+            throw new IllegalArgumentException("Index must be positive");
+        }
+        if(index >= weapons.size()){
+            throw new IndexOutOfBoundsException("Index is outside the bounds of the weapon collection");
+        }
+
         return this.weapons.get(index);
     }
 
@@ -55,6 +62,9 @@ public class SpawnSquare extends Square {
      * @param weapon The object representing the weapon
      */
     public void insertWeapon(Weapon weapon){
+        if(weapon == null){
+            throw new NullPointerException("Weapon cannot be null");
+        }
         //TODO: Implement this method
         this.weapons.add(weapon);
     }

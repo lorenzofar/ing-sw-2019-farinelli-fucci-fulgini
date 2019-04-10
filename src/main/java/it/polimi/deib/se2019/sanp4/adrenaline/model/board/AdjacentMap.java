@@ -17,18 +17,24 @@ public class AdjacentMap {
 
     /**
      * Creates a new map with the provided connections
-     * @param map The map describing the connections
+     * @param map The map describing the connections, not null
      */
     AdjacentMap(Map<CardinalDirection, SquareConnection> map){
+        if(map == null){
+            throw new NullPointerException("Connections map cannot be null");
+        }
         this.map = map;
     }
 
     /**
      * Gets the connection in the specified direction
-     * @param direction The cardinal direction
+     * @param direction The cardinal direction, not null
      * @return The object representing the connection
      */
     public SquareConnection getConnection(CardinalDirection direction){
+        if(direction == null){
+            throw new NullPointerException("Direction cannot be null");
+        }
         return this.map.get(direction);
     }
 

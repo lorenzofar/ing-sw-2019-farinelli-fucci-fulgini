@@ -22,6 +22,9 @@ public class SquareConnection {
      * @param connectionType The type of connection to the square
      */
     SquareConnection(CoordPair square, SquareConnectionType connectionType){
+        if(square == null || connectionType == null){
+            throw new NullPointerException("Found null parameters");
+        }
         this.square = square;
         this.connectionType = connectionType;
     }
