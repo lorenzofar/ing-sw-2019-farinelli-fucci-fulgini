@@ -24,12 +24,21 @@ public class ActionCard {
 
     /**
      * Construct the action card, it will be totally immutable.
-     * @param maxActions Maximum number of actions performable during a turn, also referred to as <i>multiplier</i>
-     * @param type Identifier of the type of action card
-     * @param actions Collection of "normal" actions
-     * @param finalAction Optional "final" action
+     * @param maxActions Maximum number of actions performable during a turn, also referred to as <i>multiplier</i>, must be positive
+     * @param type Identifier of the type of action card, not null
+     * @param actions Collection of "normal" actions, not null and not empty
+     * @param finalAction Optional "final" action, can be null
      */
     public ActionCard(int maxActions, ActionCardEnum type, Collection<ActionEnum> actions, ActionEnum finalAction) {
+        if(type == null || actions == null){
+            throw new NullPointerException("Found null parameters");
+        }
+        if(maxActions < 0){
+            throw new IllegalArgumentException("Maximum number of actions cannot be negative");
+        }
+        if(actions.isEmpty()){
+            throw new IllegalArgumentException("The list of actions cannot be empty");
+        }
         this.maxActions = maxActions;
         this.type = type;
         this.actions = Collections.unmodifiableCollection(actions);
@@ -62,10 +71,13 @@ public class ActionCard {
 
     /**
      * Returns wether an action is a "normal" action in this card or not.
-     * @param action the action you want to check
+     * @param action the action you want to check, not null
      * @return {@code true} if it is a "normal" action, {@code false} otherwise
      */
     public boolean hasAction(ActionEnum action) {
+        if(action == null){
+            throw new NullPointerException("Action cannot be null");
+        }
         return actions.contains(action);
     }
 

@@ -1,6 +1,7 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.model.action;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.CardNotFoundException;
+import jdk.internal.jline.internal.Nullable;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -22,12 +23,15 @@ public class StandardActionCardCreator implements ActionCardCreator {
     /**
      * Returns the action card associated to given type.
      *
-     * @param type type of the action card
+     * @param type type of the action card, not null
      * @return action card associated to type
      * @throws CardNotFoundException
      */
     @Override
     public ActionCard createActionCard(ActionCardEnum type) throws CardNotFoundException {
+        if(type == null){
+            throw new NullPointerException("Action card type cannot be null");
+        }
         ActionCard card = cards.get(type);
 
         if (card == null){
