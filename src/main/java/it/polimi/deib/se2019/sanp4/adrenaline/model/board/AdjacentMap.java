@@ -23,6 +23,9 @@ public class AdjacentMap {
         if(map == null){
             throw new NullPointerException("Connections map cannot be null");
         }
+        if(map.entrySet().stream().anyMatch(entry -> entry.getValue() == null)){
+            throw new NullPointerException("Connections map cannot contain null values");
+        }
         this.map = map;
     }
 
