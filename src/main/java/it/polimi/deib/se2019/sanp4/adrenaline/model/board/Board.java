@@ -2,10 +2,7 @@ package it.polimi.deib.se2019.sanp4.adrenaline.model.board;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /* A class representing the board game */
 public class Board {
@@ -40,73 +37,29 @@ public class Board {
     }
 
     /**
-     * Retrieves the player that are visible for the provided player
-     * @param player The object representing the player, not null
-     * @return A list of objects representing the visible players
+     * Given a starting square, this method navigates the board and returns the set of visited squares
+     * matching the specified filters
+     * @param start the square from which start, not null
+     * @param visibility determines on which condition you can move from a square to its adjacent
+     * @param direction the visit will proceed only in this direction, optional
+     * @param minDist the minimum amount of moves from the starting square
+     * @param maxDist the maximum amount of moves from the starting square
+     * @return the set of visited squares matching the specified filters
+     * @throws IllegalArgumentException if distances are negative or minDist > maxDist
+     * @throws NullPointerException if start or visibility are null
      */
-    public List<Player> getVisiblePlayers(Player player){
-        if(player == null){
-            throw new NullPointerException("Player cannot be null");
+    public Set<Square> getScopedSquares (CoordPair start, VisibilityEnum visibility, CardinalDirection direction,
+                                         Integer minDist, Integer maxDist) {
+        if (start == null || visibility == null) {
+            throw new NullPointerException("start and visibility must be not null");
         }
-        //TODO: Implement this method
-        return Collections.emptyList();
-    }
+        if ((minDist != null && minDist < 0) || (maxDist != null && maxDist < 0) ||
+                (minDist != null && maxDist != null && minDist > maxDist)) {
+            throw new IllegalArgumentException();
+        }
+        //TODO: implement this method
 
-    /**
-     * Retrieves the players that are not visible for the provided player
-     * @param player The object representing the player, not null
-     * @return A list of objects representing the non-visible players
-     */
-    public List<Player> getNotVisiblePlayers(Player player){
-        if(player == null){
-            throw new NullPointerException("Player cannot be null");
-        }
-        //TODO: Implement this method
-        return Collections.emptyList();
-    }
-
-    /**
-     * Retrieves the squares that can be reached from the provided square with a number of moves between two bounds:
-     * @param square The object representing the starting square, not null
-     * @param maxMoves The minimum allowed number of moves, must be positive
-     * @param minMoves The maximum allowed number of moves, must be positive and less or equal than maxMoves
-     * @return A list of objects representing the reachable squares
-     */
-    public List<Square> getReachableSquares(CoordPair square, int maxMoves, int minMoves){
-        if(square == null) {
-                throw new NullPointerException("Square cannot be null");
-        }
-        if(maxMoves < 0 || minMoves < 0){
-            throw new IllegalArgumentException("Player cannot move by a negative amount of squares");
-        }
-        if(minMoves > maxMoves){
-            throw new IllegalArgumentException("Minimum moves should be less than maximum ones");
-        }
-        //TODO: Implement this method
-        return Collections.emptyList();
-    }
-
-    /**
-     * Retrieves the squares that are placed in front of the provided square when facing a certain cardinal direction,
-     * whose distance is contained between two bounds
-     * @param square The object representing the square, not null
-     * @param direction The cardinal direction, not null
-     * @param minMoves The minimum allowed number of moves, must be positive
-     * @param maxMoves The maximum allowed number of moves, must be positive
-     * @return A list of objects representing the squares
-     */
-    public List<Square> getAheadSquares(CoordPair square, CardinalDirection direction, int minMoves, int maxMoves){
-        if(square == null || direction == null){
-            throw new NullPointerException("Found null parameters");
-        }
-        if(maxMoves < 0 || minMoves < 0){
-            throw new IllegalArgumentException("Player cannot move by a negative amount of squares");
-        }
-        if(minMoves > maxMoves){
-            throw new IllegalArgumentException("Minimum moves should be less than maximum ones");
-        }
-        //TODO: Implement this method
-        return Collections.emptyList();
+        return null;
     }
 
     /**
@@ -115,7 +68,7 @@ public class Board {
      * @param end The object representing the destination square
      * @return A list of objects representing the squares composing the path
      */
-    public List<Square> getPath(Square start, Square end){
+    public List<Square> getPath(CoordPair start, CoordPair end){
         if(start == null || end == null){
             throw new NullPointerException("Squares cannot be null");
         }
