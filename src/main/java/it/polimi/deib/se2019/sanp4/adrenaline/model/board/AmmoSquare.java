@@ -14,7 +14,7 @@ public class AmmoSquare extends Square {
      */
     AmmoSquare(CoordPair location){
         super(location);
-        this.ammoCard = null; //TODO: determine whether to insert the ammo card when constructing the square or in another time
+        this.ammoCard = null;
     }
 
 
