@@ -1,6 +1,7 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.model.player;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.FullCapacityException;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.NotEnoughAmmoException;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCube;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.Square;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.powerup.PowerUpCard;
@@ -201,7 +202,7 @@ public class Player{
 
     /**
      * Removes a weapon card from player's hands and resets it.
-     * @param weapon name of the weapon, not null and not an empty string
+     * @param weapon identifier of the weapon, not null and not an empty string
      * @return weapon card drawn from player
      */
     public Weapon removeWeapon(String weapon) {
@@ -210,6 +211,12 @@ public class Player{
         }
         if(weapon.isEmpty()){
             throw new IllegalArgumentException("Weapon id cannot be empty");
+        }
+        if(weapons.isEmpty()){
+            throw new IllegalStateException("User has no weapon cards");
+        }
+        if(weapons.stream().map(WeaponCard::getId).noneMatch(weaponId -> weaponId.equals(weapon))){
+            throw new IllegalStateException("The weapon does not belong to the user");
         }
         /*TODO: Implement this method */
         return null;
@@ -220,37 +227,55 @@ public class Player{
      * @param weapon weapon card to be removed
      * @return weapon card drawn from player
      */
-    public Weapon removeWeapon(Weapon weapon) {
+    public WeaponCard removeWeapon(WeaponCard weapon) {
         if(weapon == null){
             throw new NullPointerException("Weapon cannot be null");
         }
-        /*TODO: Implement this method */
-        return null;
+        if(weapons.isEmpty()){
+            throw new IllegalStateException("User has no weapon cards");
+        }
+        if(!(weapons.contains(weapon))){
+            throw new IllegalStateException("The weapon does not belong to the user");
+        }
+        weapons.remove(weapon);
+        //TODO: Reset weapon's state
+        return weapon;
     }
 
     /**
      * Adds powerup card to player's hands.
      * Also takes care of the fact that you cannot have more than more than {@link #MAX_POWERUPS} cards.
      * @param powerup powerup card to be added, not null
+     * @throws FullCapacityException if the powerups limit has been reached
      */
-    public void addPowerup(PowerUpCard powerup) {
+    public void addPowerup(PowerUpCard powerup) throws FullCapacityException{
         if(powerup == null){
             throw new NullPointerException("Powerup card cannot be null");
         }
-        /*TODO: Implement this method */
+        if(powerups.size() >= MAX_POWERUPS){
+            throw new FullCapacityException(MAX_POWERUPS);
+        }
+        powerups.add(powerup);
     }
 
     /**
      * Removes a powerup card from player's hands
      * @param powerup powerup card to be removed
      * @return removed powerup card
+     * @throws IllegalStateException if the powerup does not belong to the user
      */
     public PowerUpCard removePowerup(PowerUpCard powerup) {
         if(powerup == null){
             throw new NullPointerException("Powerup card cannot be null");
         }
-        /*TODO: Implement this method*/
-        return null;
+        if(this.powerups.isEmpty()){
+            throw new IllegalStateException("User has no powerup cards");
+        }
+        if(!(powerups.contains(powerup))){
+            throw new IllegalStateException("User does not have the powerup card");
+        }
+        powerups.remove(powerup);
+        return powerup;
     }
 
     /**
@@ -265,22 +290,37 @@ public class Player{
         if(ammo.entrySet().stream().anyMatch(entry -> entry.getValue() < 0)){
             throw new IllegalArgumentException("Cubes amounts cannot be negative");
         }
-        /*TODO: Implement this method*/
+        ammo.forEach((key, value) -> {
+            Integer playerAmmo = this.ammo.get(key);
+            playerAmmo = playerAmmo == null ? 0 : playerAmmo;
+            playerAmmo += value;
+            //TODO: Check whether the ammo exceeds capacity
+            this.ammo.put(key, playerAmmo);
+        });
     }
 
     /**
      * Removes ammo cubes from current player.
      * @param ammo a map containing the quantity of ammo cubes to remove for each color, unspecified keys
      *             are treated as zero, not null and not containing negative values
+     * @throws NotEnoughAmmoException if the player does not have enough ammo to pay the specified amount
      */
-    public void payAmmo(Map<AmmoCube, Integer> ammo) {
+    public void payAmmo(Map<AmmoCube, Integer> ammo) throws NotEnoughAmmoException {
         if(ammo == null){
             throw new NullPointerException("Cubes map cannot be null");
         }
-        if(ammo.entrySet().stream().anyMatch(entry -> entry.getValue() < 0)){
+        if(ammo.entrySet().stream().anyMatch(entry -> entry.getValue() < 0)) {
             throw new IllegalArgumentException("Cubes amounts cannot be negative");
         }
-        /*TODO: Implement this method*/
+        ammo.forEach((key, value) -> {
+            Integer playerAmmo = this.ammo.get(key);
+            playerAmmo = playerAmmo == null ? 0 : playerAmmo;
+            playerAmmo -= value;
+            if (playerAmmo < 0) {
+                //TODO: Check how to throw the exception
+            }
+            this.ammo.put(key, playerAmmo);
+        });
     }
 
     /**
