@@ -112,6 +112,9 @@ public class PlayerBoard{
      * @return number of marks, in range {@code 0..MAX_MARKS_PER_PLAYER}
      */
     public int getMarksByPlayer(Player player){
+        if(player == null){
+            throw new NullPointerException("Player cannot be null");
+        }
         Integer markCount = marks.get(player);
         return markCount == null ? 0 : markCount;
     }

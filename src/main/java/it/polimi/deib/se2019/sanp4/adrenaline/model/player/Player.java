@@ -6,6 +6,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.model.board.Square;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.powerup.PowerUpCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.Weapon;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionCard;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.WeaponCard;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -39,8 +40,7 @@ public class Player{
     private final PlayerBoard playerBoard;
 
     /** Weapon cards in player's hands */
-    /*TODO: Substitute with WeaponCard */
-    private List<Weapon> weapons;
+    private List<WeaponCard> weapons;
 
     /** Powerup cards in player's hands */
     private List<PowerUpCard> powerups;
@@ -186,7 +186,7 @@ public class Player{
      * @throws NullPointerException if weapon is null
      * @throws FullCapacityException if the weapon limit has been reached
      */
-    public void addWeapon(Weapon weapon) throws FullCapacityException {
+    public void addWeapon(WeaponCard weapon) throws FullCapacityException {
         if (weapon == null) {
             throw new NullPointerException("cannot add empty weapon to player");
         }
@@ -201,10 +201,16 @@ public class Player{
 
     /**
      * Removes a weapon card from player's hands and resets it.
-     * @param weapon name of the weapon
+     * @param weapon name of the weapon, not null and not an empty string
      * @return weapon card drawn from player
      */
     public Weapon removeWeapon(String weapon) {
+        if(weapon == null){
+            throw new NullPointerException("Weapon id cannot be null");
+        }
+        if(weapon.isEmpty()){
+            throw new IllegalArgumentException("Weapon id cannot be empty");
+        }
         /*TODO: Implement this method */
         return null;
     }
@@ -215,6 +221,9 @@ public class Player{
      * @return weapon card drawn from player
      */
     public Weapon removeWeapon(Weapon weapon) {
+        if(weapon == null){
+            throw new NullPointerException("Weapon cannot be null");
+        }
         /*TODO: Implement this method */
         return null;
     }
@@ -222,9 +231,12 @@ public class Player{
     /**
      * Adds powerup card to player's hands.
      * Also takes care of the fact that you cannot have more than more than {@link #MAX_POWERUPS} cards.
-     * @param powerup powerup card to be added
+     * @param powerup powerup card to be added, not null
      */
     public void addPowerup(PowerUpCard powerup) {
+        if(powerup == null){
+            throw new NullPointerException("Powerup card cannot be null");
+        }
         /*TODO: Implement this method */
     }
 
@@ -234,6 +246,9 @@ public class Player{
      * @return removed powerup card
      */
     public PowerUpCard removePowerup(PowerUpCard powerup) {
+        if(powerup == null){
+            throw new NullPointerException("Powerup card cannot be null");
+        }
         /*TODO: Implement this method*/
         return null;
     }
@@ -241,18 +256,30 @@ public class Player{
     /**
      * Adds ammo cubes to the current player. If given ammo exceed capacity, they are simply discarded.
      * @param ammo a map containing the quantity of ammo cubes to add for each color, unspecified keys
-     *             are treated as zero
+     *             are treated as zero, not null and not containing negative values
      */
     public void addAmmo(Map<AmmoCube, Integer> ammo){
+        if(ammo == null){
+            throw new NullPointerException("Cubes map cannot be null");
+        }
+        if(ammo.entrySet().stream().anyMatch(entry -> entry.getValue() < 0)){
+            throw new IllegalArgumentException("Cubes amounts cannot be negative");
+        }
         /*TODO: Implement this method*/
     }
 
     /**
      * Removes ammo cubes from current player.
      * @param ammo a map containing the quantity of ammo cubes to remove for each color, unspecified keys
-     *             are treated as zero
+     *             are treated as zero, not null and not containing negative values
      */
     public void payAmmo(Map<AmmoCube, Integer> ammo) {
+        if(ammo == null){
+            throw new NullPointerException("Cubes map cannot be null");
+        }
+        if(ammo.entrySet().stream().anyMatch(entry -> entry.getValue() < 0)){
+            throw new IllegalArgumentException("Cubes amounts cannot be negative");
+        }
         /*TODO: Implement this method*/
     }
 
@@ -277,6 +304,9 @@ public class Player{
      * @param currentSquare square where to set the player
      */
     public void setCurrentSquare(Square currentSquare) {
+        if(currentSquare == null){
+            throw new NullPointerException("Square cannot be null");
+        }
         this.currentSquare = currentSquare;
     }
 
@@ -293,6 +323,9 @@ public class Player{
      * @param state
      */
     public void setState(PlayerState state) {
+        if(state == null){
+            throw new NullPointerException("State cannot be null");
+        }
         this.state = state;
     }
 }
