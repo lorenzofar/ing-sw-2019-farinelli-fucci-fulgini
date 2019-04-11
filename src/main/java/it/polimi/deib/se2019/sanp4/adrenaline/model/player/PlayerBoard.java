@@ -1,9 +1,6 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.model.player;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Holds damage, marks and deaths of a centain player.
@@ -12,13 +9,13 @@ import java.util.Map;
  */
 public class PlayerBoard{
     /** Maximum marks each other player can have on this board */
-    static public final int MAX_MARKS_PER_PLAYER = 3;
+    public static final int MAX_MARKS_PER_PLAYER = 3;
     /** Number of damage tokens to perform a killshot */
-    static public final int KILLSHOT_DAMAGE = 11;
+    public static final int KILLSHOT_DAMAGE = 11;
     /** Number of damage tokens to perform an overkill */
-    static public final int OVERKILL_DAMAGE = KILLSHOT_DAMAGE + 1;
+    public static final int OVERKILL_DAMAGE = KILLSHOT_DAMAGE + 1;
     /** Number of maximum damage tokens */
-    static public final int MAX_DAMAGES = OVERKILL_DAMAGE;
+    public static final int MAX_DAMAGES = OVERKILL_DAMAGE;
 
     /** Damages received by other players */
     private List<Player> damages;
@@ -83,8 +80,7 @@ public class PlayerBoard{
      * @return number of damage tokens on this board
      */
     public int getDamageCount(){
-        /* TODO: Implement this method */
-        return 0;
+        return damages.size();
     }
 
     /**
@@ -93,7 +89,13 @@ public class PlayerBoard{
      * @param count number of damage tokens, must be positive
      */
     public void addDamage(Player shooter, int count){
-        /* TODO: Implement this method */
+        if(shooter == null){
+            throw new NullPointerException("Player cannot be null");
+        }
+        if(count < 0){
+            throw new IllegalArgumentException("Number of damage tokens cannot be negative");
+        }
+        damages.addAll(Collections.nCopies(count, shooter));
     }
 
     /**
@@ -102,7 +104,16 @@ public class PlayerBoard{
      * @param count number of marks to add, must be positive
      */
     public void addMark(Player shooter, int count){
-        /* TODO: Implement this method */
+        if(shooter == null){
+            throw new NullPointerException("Player cannot be null");
+        }
+        if(count < 0){
+            throw new IllegalArgumentException("Number of marks cannot be negative");
+        }
+        int playerMarks = getMarksByPlayer(shooter) + count;
+        // If I reached the maximum amount of marks, cap the value to it
+        playerMarks = playerMarks > MAX_MARKS_PER_PLAYER ? MAX_MARKS_PER_PLAYER : playerMarks;
+        marks.put(shooter, playerMarks);
     }
 
     /**
@@ -124,8 +135,10 @@ public class PlayerBoard{
      * @return player who performed the killshot, null otherwise
      */
     public Player getKillshot(){
-        /* TODO: Implement this method */
-        return null;
+        if(damages.size() < KILLSHOT_DAMAGE){
+            return null;
+        }
+        return damages.get(KILLSHOT_DAMAGE - 1);
     }
 
     /**
@@ -134,8 +147,10 @@ public class PlayerBoard{
      * @return player who performed the overkill, null otherwise
      */
     public Player getOverkill(){
-        /* TODO: Implement this method */
-        return null;
+        if(damages.size() < OVERKILL_DAMAGE){
+            return null;
+        }
+        return damages.get(OVERKILL_DAMAGE - 1);
     }
 
     /**
@@ -146,7 +161,13 @@ public class PlayerBoard{
      * @return {@code map<player, score>} with each player who got points
      */
     public Map<Player, Integer> getPlayerScores(){
-        /* TODO: Implement this method */
+        Map<Player, Integer> damageCounts = new HashMap<>();
+        damages.forEach(shooter -> {
+            Integer playerDamage = damageCounts.get(shooter);
+            playerDamage = playerDamage == null ? 0 : playerDamage;
+            damageCounts.put(shooter, playerDamage);
+        });
+        //TODO: Assign scores to player according to performed damages
         return null;
     }
 
@@ -156,7 +177,14 @@ public class PlayerBoard{
      * @throws PlayerException if the player is not dead
      */
     public void updateDeathsAndReset() throws PlayerException {
-        /* TODO: Implement this method */
+
+        if(damages.size() < KILLSHOT_DAMAGE){
+            throw new PlayerException("The player is not dead");
+        }
+
+        addDeath();
+        damages = new ArrayList<>();
+        marks = new HashMap<>();
     }
 
     /**
@@ -165,6 +193,9 @@ public class PlayerBoard{
      * @throws PlayerException if there are damages on the board
      */
     public void turnFrenzy() throws  PlayerException {
+        if(damages.isEmpty()) {
+            throw new PlayerException("The player is damaged");
+        }
         /* TODO: Implement this method */
     }
 
@@ -173,7 +204,6 @@ public class PlayerBoard{
      * @return {@code true} if the player is dead, {@code false} otherwise
      */
     public boolean isDead(){
-        /* TODO: Implement this method */
-        return false;
+        return damages.size() >= KILLSHOT_DAMAGE;
     }
 }
