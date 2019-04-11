@@ -1,6 +1,6 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.controller;
 
-import it.polimi.deib.se2019.sanp4.adrenaline.model.match.Match;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.Model;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
 import it.polimi.deib.se2019.sanp4.adrenaline.view.View;
 
@@ -12,9 +12,8 @@ import java.util.Map;
  * It also manages interactions with the players when they have to choose something (e.g. targets, destinations, ...).
  */
 public class Controller implements CallbackInterface{
-
-    /** The match it is controlling */
-    private Match match;
+    /** Associated model instance */
+    private Model model;
 
     /** A map of the pending request corresponding to each player */
     private Map<Player, RequestContext> pendingRequests;
@@ -27,6 +26,10 @@ public class Controller implements CallbackInterface{
 
     /** The game timer associated to the match */
     private GameTimer gameTimer;
+
+    public Controller(Model model) {
+        this.model = model;
+    }
 
     /**
      * Creates a request for the specified player and send it to him
