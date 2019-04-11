@@ -8,29 +8,16 @@ import java.util.List;
 /** A specialized class representing a square available as spawn points and that contain weapon cards*/
 public class SpawnSquare extends Square {
 
-    /** A unique identifier of the square */
-    private int id;
-
     /** The list of weapons contained in the square */
     private List<Weapon> weapons;
 
     /**
      * Creates a new spawn square at the specified location
-     * @param id The unique id of the square
      * @param location The cartesian coordinates of the location
      */
-    SpawnSquare(int id, CoordPair location){
+    SpawnSquare(CoordPair location){
         super(location);
-        this.id = id;
         this.weapons = new ArrayList<>(3);
-    }
-
-    /**
-     * Retrieves the identifier of the square
-     * @return The id of the square
-     */
-    public int getId() {
-        return id;
     }
 
     /**
