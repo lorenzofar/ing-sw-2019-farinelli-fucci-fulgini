@@ -19,11 +19,9 @@ public class AutoShufflingStack<T> implements CardStack<T> {
 
     /** Shuffles the stack of discarded cards and put them in the available stack */
     private void shuffle(){
-        if(available.isEmpty()) { // Check anyway if the available stack is empty
-            available = discarded; // Swap the stacks
-            Collections.shuffle(available); // Shuffle the newly available cards
-            discarded = new Stack<>();
-        }
+        available = discarded; // Swap the stacks
+        Collections.shuffle(available); // Shuffle the newly available cards
+        discarded = new Stack<>();
     }
 
     /**
@@ -34,6 +32,9 @@ public class AutoShufflingStack<T> implements CardStack<T> {
         if(cards == null){
             throw new NullPointerException("Cards collection cannot be null");
         }
+        if(cards.isEmpty()){
+            throw new IllegalArgumentException("Cards collection cannot be empty");
+        }
         this.available = new Stack<>();
         this.discarded = new Stack<>();
         this.discarded.addAll(cards);
@@ -41,12 +42,15 @@ public class AutoShufflingStack<T> implements CardStack<T> {
 
     /**
      * Discard a card, putting it in the discarded stack
-     * @param card The card that has to be discarded
+     * @param card The card that has to be discarded, must not be in the available stack
      */
     @Override
     public void discard(T card) {
         if(card == null){
             throw new NullPointerException("Card cannot be null");
+        }
+        if(available.contains(card)){
+            throw new IllegalArgumentException("Card to discard should not be in the available stack");
         }
         discarded.push(card);
     }
