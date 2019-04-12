@@ -1,0 +1,6 @@
+{
+  "packName" : "Standard weapons",
+  "weaponFiles" : [
+    "weapons/cyberblade.json"
+  ]
+}

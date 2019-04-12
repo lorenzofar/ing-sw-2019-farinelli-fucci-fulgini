@@ -1,0 +1,52 @@
+package it.polimi.deib.se2019.sanp4.adrenaline.utils;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.junit.Test;
+import static org.junit.Assert.*;
+
+import java.util.MissingResourceException;
+
+public class JSONUtilsTest {
+    @Test
+    public void loadJSONResource_validObject_shouldSucceed() {
+        /* Should not throw exceptions and return a non-null object */
+        JSONObject obj = JSONUtils.loadJSONResource("/schemas/weapon_pack.schema.json");
+        assertNotNull(obj);
+    }
+
+    @Test(expected = JSONException.class)
+    public void loadJSONResource_invalidObject_shouldFail() {
+        JSONObject obj = JSONUtils.loadJSONResource("/schemas/invalid_json.json");
+    }
+
+    @Test(expected = MissingResourceException.class)
+    public void loadJSONResource_inexistent_shouldFail() {
+        JSONUtils.loadJSONResource("/i/do/not/exist");
+    }
+
+    @Test
+    public void loadSchema_validSchema_shouldSucceed() {
+        /* Should throw no exception */
+        JSONUtils.loadSchema("/schemas/weapon_pack.schema.json");
+    }
+
+    @Test(expected = MissingResourceException.class)
+    public void loadSchema_inexistentSchema_shouldFail() {
+        JSONUtils.loadSchema("/i/do/not/exist");
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void validateWeapon_schemaNotLoaded_shouldThrow() {
+        JSONObject weapon = JSONUtils.loadJSONResource("/assets/weapons/validWeapon.json");
+        /* Ask the class to validate an object for a schema that had not been loaded yet */
+        JSONUtils.validateWeapon(weapon);
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void validateWeaponPack_schemaNotLoaded_shouldThrow() {
+        JSONObject weaponPack = JSONUtils.loadJSONResource("/assets/weapon_pack_valid.json");
+        /* Ask the class to validate an object for a schema that had not been loaded yet */
+        JSONUtils.validateWeapon(weaponPack);
+    }
+}

@@ -1,0 +1,22 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://fuljo.ml/adrenaline/weapons/weapon_pack.schema.json",
+  "tile": "Weapon Pack",
+  "description": "Specifies the weapons in a weapon package for Adrenaline",
+  "type" : "object",
+  "properties": {
+    "packName" : {
+      "description": "Name of this weapon package",
+      "type": "string"
+    },
+    "weaponFiles" : {
+      "description": "List of relative paths to the weapon files in this package",
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    }
+  }
+}
