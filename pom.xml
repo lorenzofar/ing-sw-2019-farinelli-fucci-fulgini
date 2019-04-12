@@ -44,7 +44,22 @@
             <artifactId>jackson-databind</artifactId>
             <version>2.9.8</version>
         </dependency>
+
+        <!-- Provides JSON schema validation -->
+        <dependency>
+            <groupId>com.github.everit-org.json-schema</groupId>
+            <artifactId>org.everit.json.schema</artifactId>
+            <version>1.11.1</version>
+        </dependency>
     </dependencies>
+
+    <repositories>
+        <!--For JSON schema validator-->
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
 
     <build>
         <plugins>
