@@ -54,6 +54,7 @@ public class GameTimer {
      */
     public void start(){
         reset();
+        timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
@@ -66,7 +67,10 @@ public class GameTimer {
      * Stops the timer
      */
     public void stop(){
-        timer.cancel();
+        try{
+            timer.cancel();
+        }
+        catch(IllegalStateException ex){}
     }
 
     /**
