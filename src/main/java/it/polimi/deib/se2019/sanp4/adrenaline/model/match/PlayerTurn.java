@@ -1,10 +1,10 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.model.match;
 
+import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionEnum;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -46,7 +46,8 @@ public class PlayerTurn{
         hitPlayers = new ArrayList<>();
         turnOwner = player;
         state = PlayerTurnState.SELECTING;
-        //TODO: Determine number of remaining actions
+        // Set the remaining actions according to the player's action card
+        remainingActions = player.getActionCard().getMaxActions();
     }
 
     /**
@@ -54,8 +55,7 @@ public class PlayerTurn{
      * @return The list of objects representing the actions
      */
     public List<ActionEnum> getAvailableActions(){
-        //TODO: Implement this method
-        return Collections.emptyList();
+        return (List<ActionEnum>) turnOwner.getActionCard().getActions();
     }
 
     /**
@@ -67,8 +67,14 @@ public class PlayerTurn{
         if(action == null){
             throw new NullPointerException("Action cannot be null");
         }
-        //TODO: Implement this method
-        return false;
+        if(remainingActions == 0){
+            // Return false if the player has no actions left
+            return false;
+        }
+        // Retrieve the action card of the player
+        ActionCard playerActionCard = turnOwner.getActionCard();
+        // Check whether the action card contains the action or if it is the final one
+        return playerActionCard.hasAction(action) || (playerActionCard.hasFinalAction() && action.toString().equals(playerActionCard.getFinalAction().toString()));
     }
 
     /**
@@ -80,8 +86,7 @@ public class PlayerTurn{
         if(action == null){
             throw new NullPointerException("Action cannot be null");
         }
-        //TODO: Implement this method
-        return false;
+        return currentAction.toString().equals(action.toString());
     }
 
     /* ===== GETTERS ===== */
