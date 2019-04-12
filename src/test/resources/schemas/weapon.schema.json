@@ -1,0 +1,404 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "weapon.schema.json",
+  "title" : "Weapon",
+  "description": "Weapon usable by a player during a Shoot action",
+  "type" : "object",
+  "oneOf": [
+    {
+      "allOf": [
+        {
+          "$ref": "#/definitions/abstractWeapon"
+        },
+        {
+          "properties": {
+            "type": { "const": "OPTIONAL_EFFECTS" },
+            "effects": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "$ref": "#/definitions/optionalEffectsWeaponSuitableEffect"
+              }
+            }
+          },
+          "required": ["effects"]
+        }
+      ]
+    },
+    {
+      "allOf": [
+        {
+          "$ref": "#/definitions/abstractWeapon"
+        },
+        {
+          "properties": {
+            "type": { "const": "ALTERNATIVE_MODES" },
+            "effects": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "$ref": "#/definitions/modeEffect"
+              }
+            }
+          },
+          "required": ["effects"]
+        }
+      ]
+    }
+  ],
+  "definitions": {
+    "ammoCost": {
+      "type": "array",
+      "items": {
+        "enum": ["RED", "YELLOW", "BLUE", "ANY"]
+      },
+      "default": []
+    },
+    "abstractWeapon": {
+      "description": "Weapon usable by a player during a Shoot action",
+      "type": "object",
+      "properties": {
+        "weaponId": {
+          "description": "Unique identifier of the weapon",
+          "type": "string",
+          "minLength": 1
+        },
+        "name": {
+          "description": "Printable name of the weapon",
+          "type": "string",
+          "minLength": 1
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "ALTERNATIVE_MODES",
+            "OPTIONAL_EFFECTS"
+          ]
+        },
+        "cost": {
+          "$ref": "#/definitions/ammoCost"
+        },
+        "direction": {
+          "type": "string",
+          "enum": [
+            "ANY",
+            "CARDINAL"
+          ],
+          "default": "ANY"
+        }
+      },
+      "required": ["weaponId", "name", "type", "cost"]
+    },
+    "abstractEffect": {
+      "title" : "Weapon effect",
+      "description": "Weapon effect",
+      "type" : "object",
+      "properties": {
+        "effectId": {
+          "description": "Unique identifier of the effect in this card",
+          "type": "string",
+          "minLength": 1
+        },
+        "name": {
+          "description": "Printable name of the effect",
+          "type": "string",
+          "minLength": 1
+        },
+        "type": {
+          "type": "string",
+          "enum": ["BASIC", "MODE", "OPTIONAL", "MOVEMENT"]
+        },
+        "cost": {
+          "$ref": "#/definitions/ammoCost"
+        },
+        "targets": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/definitions/target"
+          }
+        }
+      },
+      "required": ["effectId", "name", "type"]
+    },
+    "basicOptionalEffect": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/abstractEffect"
+        },
+        {
+          "properties": {
+            "type": {
+              "enum": ["BASIC", "OPTIONAL"]
+            },
+            "targets": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "$ref": "#/definitions/target"
+              }
+            },
+            "dependsOnEffects": {
+              "$ref": "#/definitions/stringIdArray"
+            }
+          },
+          "required": ["targets"]
+        }
+      ]
+    },
+    "modeEffect": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/abstractEffect"
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "MODE"
+            },
+            "targets": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "$ref": "#/definitions/target"
+              }
+            }
+          },
+          "required": ["targets"]
+        }
+      ]
+    },
+    "movementEffect": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/abstractEffect"
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "MOVEMENT"
+            },
+            "playerMoves": {
+              "type": "integer",
+              "minimum": 1
+            }
+          },
+          "required": ["playerMoves"]
+        }
+      ]
+    },
+    "optionalEffectsWeaponSuitableEffect": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/basicOptionalEffect"
+        },
+        {
+          "$ref": "#/definitions/movementEffect"
+        }
+      ]
+    },
+    "abstractTarget": {
+      "type" : "object",
+      "properties": {
+        "targetId" : {
+          "description": "unique identifier for this target in this weapon",
+          "type": "string",
+          "minLength": 1
+        },
+        "targetMode" : {
+          "description": "specific targeting mode",
+          "type": "string",
+          "enum": ["PLAYER", "SQUARE", "ROOM", "RADIUS", "VORTEX"]
+        },
+        "optional" : {
+          "description": "indicates that it is not mandatory to use this target",
+          "type": "boolean",
+          "default": false
+        },
+        "damage" : {
+          "description": "number of damage tokens which will be applied to all players represented by this target",
+          "type": "integer",
+          "minimum": 0,
+          "default": 0
+        },
+        "marks" : {
+          "description": "number of marks which will be applied to all players represented by this target",
+          "type": "integer",
+          "minimum": 0,
+          "default": 0
+        },
+        "visibility": {
+          "description": "sets the visibility scope of this target",
+          "type": "string",
+          "enum": ["ANY", "VISIBLE", "NOT_VISIBLE", "IGNORE_WALLS"],
+          "default": "VISIBLE"
+        }
+      },
+      "required": ["targetId", "targetMode"]
+    },
+    "playerTarget": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/abstractTarget"
+        },
+        {
+          "properties": {
+            "targetMode": { "const": "PLAYER"},
+            "chooseBetweenTargets": {
+              "$ref": "#/definitions/stringIdArray"
+            },
+            "moveTargetBefore": {
+              "$ref": "#/definitions/moveTarget"
+            },
+            "moveTargetAfter": {
+              "$ref": "#/definitions/moveTarget"
+            },
+            "minDist": {
+              "$ref": "#/definitions/distance"
+            },
+            "maxDist": {
+              "$ref": "#/definitions/distance"
+            },
+            "excludeSquares": {
+              "$ref": "#/definitions/stringIdArray"
+            },
+            "excludePlayers": {
+              "$ref": "#/definitions/stringIdArray"
+            },
+            "visibleFromPlayer": {
+              "$ref": "#/definitions/stringId"
+            },
+            "moveShooterHere": {
+              "$ref": "#/definitions/moveShooterHere"
+            },
+            "squareRef": {
+              "$ref": "#/definitions/stringId"
+            }
+          }
+        }
+      ]
+    },
+    "squareTarget": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/abstractTarget"
+        },
+        {
+          "properties": {
+            "targetMode": { "const": "SQUARE"},
+            "chooseBetweenTargets": {
+              "$ref": "#/definitions/stringIdArray"
+            },
+            "minDist": {
+              "$ref": "#/definitions/distance"
+            },
+            "maxDist": {
+              "$ref": "#/definitions/distance"
+            },
+            "excludeSquares": {
+              "$ref": "#/definitions/stringIdArray"
+            },
+            "excludePlayers": {
+              "$ref": "#/definitions/stringIdArray"
+            },
+            "visibleFromPlayer": {
+              "$ref": "#/definitions/stringId"
+            },
+            "moveShooterHere": {
+              "$ref": "#/definitions/moveShooterHere"
+            },
+            "squareRef": {
+              "$ref": "#/definitions/stringId"
+            }
+          }
+        }
+      ]
+    },
+    "roomRadiusTarget": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/abstractTarget"
+        },
+        {
+          "properties": {
+            "targetMode": { "enum": ["ROOM", "RADIUS"] },
+            "minDist": {
+              "$ref": "#/definitions/distance"
+            },
+            "maxDist": {
+              "$ref": "#/definitions/distance"
+            },
+            "excludeSquares": {
+              "$ref": "#/definitions/stringIdArray"
+            },
+            "excludePlayers": {
+              "$ref": "#/definitions/stringIdArray"
+            }
+          }
+        }
+      ]
+    },
+    "vortexTarget": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/abstractTarget"
+        },
+        {
+          "properties": {
+            "targetMode": { "const": "VORTEX" },
+            "maxDist": {
+              "$ref": "#/definitions/distance"
+            },
+            "excludeSquares": {
+              "$ref": "#/definitions/stringIdArray"
+            },
+            "excludePlayers": {
+              "$ref": "#/definitions/stringIdArray"
+            }
+          }
+        }
+      ]
+    },
+    "target": {
+      "oneOf": [
+        {
+          "$ref": "#/definitions/playerTarget"
+        },
+        {
+          "$ref": "#/definitions/squareTarget"
+        },
+        {
+          "$ref": "#/definitions/roomRadiusTarget"
+        },
+        {
+          "$ref": "#/definitions/vortexTarget"
+        }
+      ]
+    },
+    "stringId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "moveTarget": {
+      "type": "integer",
+      "minimum": 0,
+      "default": 0
+    },
+    "distance": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "stringIdArray": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/stringId"
+      },
+      "uniqueItems": true,
+      "default": []
+    },
+    "moveShooterHere": {
+      "type": "boolean",
+      "default": true
+    }
+  }
+}

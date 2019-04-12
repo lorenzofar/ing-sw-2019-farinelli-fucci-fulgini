@@ -1,0 +1,72 @@
+{
+  "weaponId" : "machine_gun",
+  "name" : "Machine Gun",
+  "type" : "OPTIONAL_EFFECTS",
+  "cost" : ["BLUE", "RED"],
+  "effects" : [
+    {
+      "effectId" : "basic",
+      "name" : "Basic effect",
+      "type" : "BASIC",
+      "cost" : [],
+      "dependsOnEffects" : [],
+      "targets" : [
+        {
+          "targetId" : "red",
+          "targetMode" : "PLAYER",
+          "visibility" : "VISIBLE",
+          "damage" : 1
+        },
+        {
+          "targetId" : "blue",
+          "targetMode" : "PLAYER",
+          "visibility" : "VISIBLE",
+          "optional" : true,
+          "excludePlayers" : ["red"],
+          "damage" : 1
+        }
+      ]
+    },
+    {
+      "effectId" : "focus_shot",
+      "name" : "Focus Shot",
+      "type" : "OPTIONAL",
+      "cost" : ["YELLOW"],
+      "dependsOnEffects" : ["base"],
+      "targets" : [
+        {
+          "targetId" : "red2",
+          "targetMode" : "PLAYER",
+          "visibility" : "VISIBLE",
+          "chooseBetweenTargets" : ["red", "blue"],
+          "damage" : 1
+        }
+      ]
+    },
+    {
+      "effectId" : "turret_tripod",
+      "name" : "Turret Tripod",
+      "type" : "OPTIONAL",
+      "cost" : ["BLUE"],
+      "dependsOnEffects" : ["base"],
+      "targets" : [
+        {
+          "targetId" : "blue2",
+          "targetMode" : "PLAYER",
+          "visibility" : "VISIBLE",
+          "chooseBetweenTargets" : ["blue"],
+          "excludePlayers" : ["red2"],
+          "damage" : 1
+        },
+        {
+          "targetId" : "green",
+          "targetMode" : "PLAYER",
+          "visibility" : "VISIBLE",
+          "optional" : true,
+          "excludePlayers" : ["red", "blue"],
+          "damage" : 1
+        }
+      ]
+    }
+  ]
+}

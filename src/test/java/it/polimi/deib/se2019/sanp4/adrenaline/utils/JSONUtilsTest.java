@@ -1,13 +1,22 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.utils;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.junit.After;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
 import java.util.MissingResourceException;
+import java.util.Set;
 
 public class JSONUtilsTest {
+    @After
+    public void tearDown() throws Exception {
+        /* Always bring it back to its original state */
+        JSONUtils.resetSchemas();
+    }
+
     @Test
     public void loadJSONResource_validObject_shouldSucceed() {
         /* Should not throw exceptions and return a non-null object */
@@ -38,7 +47,7 @@ public class JSONUtilsTest {
 
     @Test(expected = IllegalStateException.class)
     public void validateWeapon_schemaNotLoaded_shouldThrow() {
-        JSONObject weapon = JSONUtils.loadJSONResource("/assets/weapons/validWeapon.json");
+        JSONObject weapon = JSONUtils.loadJSONResource("/assets/test_weapons/validWeapon.json");
         /* Ask the class to validate an object for a schema that had not been loaded yet */
         JSONUtils.validateWeapon(weapon);
     }
@@ -47,6 +56,25 @@ public class JSONUtilsTest {
     public void validateWeaponPack_schemaNotLoaded_shouldThrow() {
         JSONObject weaponPack = JSONUtils.loadJSONResource("/assets/weapon_pack_valid.json");
         /* Ask the class to validate an object for a schema that had not been loaded yet */
-        JSONUtils.validateWeapon(weaponPack);
+        JSONUtils.validateWeaponPack(weaponPack);
+    }
+
+    @Test
+    public void arrayToStringSet_stringArray_shouldSucceed() {
+        /* Build valid string array and convert it */
+        JSONArray array = new JSONArray("[ \"string1\", \"string2\", \"string3\" ]");
+        Set<String> set = JSONUtils.arrayToStringSet(array);
+        /* Check items */
+        assertTrue(set.contains("string1"));
+        assertTrue(set.contains("string2"));
+        assertTrue(set.contains("string3"));
+        assertEquals(3, set.size());
+    }
+
+    @Test(expected = JSONException.class)
+    public void arrayToStringSet_mixedArray_shouldThrow() {
+        /* Build mixed array */
+        JSONArray array = new JSONArray("[ \"string\", false, {}, 1.0 ]");
+        JSONUtils.arrayToStringSet(array);
     }
 }

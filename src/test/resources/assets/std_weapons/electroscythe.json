@@ -1,0 +1,35 @@
+{
+  "weaponId" : "electroscythe",
+  "name" : "Electroscythe",
+  "type" : "ALTERNATIVE_MODES",
+  "cost" : ["BLUE"],
+  "effects" : [
+    {
+      "effectId" : "basic",
+      "name" : "Basic Mode",
+      "type" : "MODE",
+      "targets" : [
+        {
+          "targetId" : "sqr",
+          "targetMode" : "SQUARE",
+          "maxDist" : 0,
+          "damage" : 1
+        }
+      ]
+    },
+    {
+      "effectId" : "reaper_mode",
+      "name" : "Reaper Mode",
+      "type" : "MODE",
+      "cost" : ["BLUE", "RED"],
+      "targets" : [
+        {
+          "targetId" : "sqr",
+          "targetMode" : "SQUARE",
+          "maxDist" : 0,
+          "damage" : 2
+        }
+      ]
+    }
+  ]
+}

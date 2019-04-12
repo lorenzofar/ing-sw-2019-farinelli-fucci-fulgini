@@ -1,0 +1,38 @@
+{
+  "weaponId" : "tractor_beam",
+  "name" : "Tractor Beam",
+  "type" : "ALTERNATIVE_MODES",
+  "cost" : ["BLUE"],
+  "effects" : [
+    {
+      "effectId" : "basic",
+      "name" : "Basic Mode",
+      "type" : "MODE",
+      "targets" : [
+        {
+          "targetId" : "red",
+          "targetMode" : "PLAYER",
+          "moveTargetBefore" : 2,
+          "visibility" : "VISIBLE",
+          "damage" : 1
+        }
+      ]
+    },
+    {
+      "effectId" : "punisher_mode",
+      "name" : "Punisher Mode",
+      "type" : "MODE",
+      "cost" : ["RED", "YELLOW"],
+      "targets" : [
+        {
+          "targetId" : "red",
+          "targetMode" : "PLAYER",
+          "moveTargetBefore" : 2,
+          "visibility" : "ANY",
+          "maxDist" : 0,
+          "damage" : 3
+        }
+      ]
+    }
+  ]
+}

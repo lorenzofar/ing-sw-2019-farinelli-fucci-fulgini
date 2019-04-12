@@ -3,15 +3,19 @@ package it.polimi.deib.se2019.sanp4.adrenaline.utils;
 import org.everit.json.schema.Schema;
 import org.everit.json.schema.ValidationException;
 import org.everit.json.schema.loader.SchemaLoader;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
+import org.json.JSONException;
 
 import java.io.InputStream;
+import java.util.HashSet;
 import java.util.MissingResourceException;
+import java.util.Set;
 
 /**
  * Provides useful methods to load and validate JSON objects.
- * Please note that JSON schemas are not loaded automatically, so they should be loaded on startup
+ * Please note that JSON schemas are not loaded automatically, so they should be loaded on startup.
  */
 public class JSONUtils {
     private static Schema weaponPackSchema;
@@ -31,7 +35,7 @@ public class JSONUtils {
     public static JSONObject loadJSONResource(String path) {
         InputStream input = JSONUtils.class.getResourceAsStream(path);
         if (input == null) {
-            throw new MissingResourceException("Missing resource", JSONUtils.class.getName(), path);
+            throw new MissingResourceException(String.format("Missing resource \"%s\"", path), "JSON", path);
         }
         return new JSONObject(new JSONTokener(input));
     }
@@ -82,5 +86,27 @@ public class JSONUtils {
      */
     static Schema loadSchema(String schemaPath) {
         return SchemaLoader.load(loadJSONResource(schemaPath));
+    }
+
+    /**
+     * Converts the given array of strings to a set of strings.
+     * @param array array of strings, not null
+     * @return set of strings from array
+     * @throws JSONException if the array contains something other than strings
+     */
+    public static Set<String> arrayToStringSet(JSONArray array) {
+        Set<String> set = new HashSet<>();
+        for (int i=0; i < array.length(); i++) {
+            set.add(array.getString(i));
+        }
+        return set;
+    }
+
+    /**
+     * Deletes all the schemas loaded until now.
+     */
+    public static void resetSchemas() {
+        weaponPackSchema = null;
+        weaponSchema = null;
     }
 }

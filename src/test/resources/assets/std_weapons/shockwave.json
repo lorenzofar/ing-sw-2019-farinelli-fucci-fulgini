@@ -1,0 +1,60 @@
+{
+  "weaponId" : "shockwave",
+  "name" : "Shockwave",
+  "type" : "ALTERNATIVE_MODES",
+  "cost" : ["YELLOW"],
+  "direction" : "CARDINAL",
+  "effects" : [
+    {
+      "effectId" : "basic",
+      "name" : "Basic Mode",
+      "type" : "MODE",
+      "targets" : [
+        {
+          "targetId" : "red",
+          "targetMode" : "PLAYER",
+          "visibility" : "ANY",
+          "minDist": 1,
+          "maxDist": 1,
+          "squareRef" : "sqr_red",
+          "damage" : 1
+        },
+        {
+          "targetId" : "blue",
+          "targetMode" : "PLAYER",
+          "visibility" : "ANY",
+          "minDist": 1,
+          "maxDist": 1,
+          "squareRef" : "sqr_blue",
+          "excludeSquares" : ["sqr_red"],
+          "damage" : 1
+        },
+        {
+          "targetId" : "green",
+          "targetMode" : "PLAYER",
+          "visibility" : "ANY",
+          "minDist": 1,
+          "maxDist": 1,
+          "excludeSquares" : ["sqr_red", "sqr_blue"],
+          "damage" : 1
+        }
+      ]
+    },
+    {
+      "effectId" : "tsunami_mode",
+      "name" : "Tsunami Mode",
+      "type" : "MODE",
+      "cost" : ["YELLOW"],
+      "targets" : [
+        {
+          "targetId" : "radius",
+          "targetMode" : "RADIUS",
+          "visibility" : "ANY",
+          "minDist": 1,
+          "maxDist": 1,
+          "damage" : 1
+        }
+      ]
+    }
+  ]
+}

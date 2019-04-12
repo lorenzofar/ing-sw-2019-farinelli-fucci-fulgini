@@ -1,0 +1,39 @@
+{
+  "weaponId" : "grenade_launcher",
+  "name" : "Grenade Launcher",
+  "type" : "OPTIONAL_EFFECTS",
+  "cost" : ["RED"],
+  "effects" : [
+    {
+      "effectId" : "basic",
+      "name" : "Basic effect",
+      "type" : "BASIC",
+      "cost" : [],
+      "dependsOnEffects" : [],
+      "targets" : [
+        {
+          "targetId" : "red",
+          "targetMode" : "PLAYER",
+          "visibility" : "VISIBLE",
+          "damage" : 1,
+          "moveTargetAfter" : 1
+        }
+      ]
+    },
+    {
+      "effectId" : "extra_grenade",
+      "name" : "Extra Grenade",
+      "type" : "OPTIONAL",
+      "cost" : ["RED"],
+      "dependsOnEffects" : [],
+      "targets" : [
+        {
+          "targetId" : "sqr",
+          "targetMode" : "SQUARE",
+          "visibility" : "VISIBLE",
+          "damage" : 1
+        }
+      ]
+    }
+  ]
+}

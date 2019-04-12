@@ -1,0 +1,44 @@
+{
+  "weaponId" : "railgun",
+  "name" : "Railgun",
+  "type" : "ALTERNATIVE_MODES",
+  "cost" : ["YELLOW", "YELLOW", "BLUE"],
+  "direction" : "CARDINAL",
+  "effects" : [
+    {
+      "effectId" : "basic",
+      "name" : "Basic Mode",
+      "type" : "MODE",
+      "targets" : [
+        {
+          "targetId" : "red",
+          "targetMode" : "PLAYER",
+          "visibility" : "IGNORE_WALLS",
+          "damage" : 3
+        }
+      ]
+    },
+    {
+      "effectId" : "piercing_mode",
+      "name" : "Piercing Mode",
+      "type" : "MODE",
+      "cost" : [],
+      "targets" : [
+        {
+          "targetId" : "red",
+          "targetMode" : "PLAYER",
+          "visibility" : "IGNORE_WALLS",
+          "damage" : 2
+        },
+        {
+          "targetId" : "blue",
+          "targetMode" : "PLAYER",
+          "visibility" : "IGNORE_WALLS",
+          "optional" : true,
+          "excludePlayers" : ["red"],
+          "damage" : 2
+        }
+      ]
+    }
+  ]
+}

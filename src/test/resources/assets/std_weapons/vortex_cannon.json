@@ -1,0 +1,49 @@
+{
+  "weaponId" : "vortex_cannon",
+  "name" : "Vortex Cannon",
+  "type" : "OPTIONAL_EFFECTS",
+  "cost" : ["RED", "BLUE"],
+  "effects" : [
+    {
+      "effectId" : "basic",
+      "name" : "Basic effect",
+      "type" : "BASIC",
+      "cost" : [],
+      "dependsOnEffects" : [],
+      "targets" : [
+        {
+          "targetId" : "red",
+          "targetMode" : "VORTEX",
+          "visibility" : "VISIBLE",
+          "maxDist": 1,
+          "damage" : 2
+        }
+      ]
+    },
+    {
+      "effectId" : "black_hole",
+      "name" : "Black Hole",
+      "type" : "OPTIONAL",
+      "cost" : ["RED"],
+      "dependsOnEffects" : ["basic"],
+      "targets" : [
+        {
+          "targetId" : "blue",
+          "targetMode" : "VORTEX",
+          "visibility" : "VISIBLE",
+          "excludePlayers" : ["red"],
+          "maxDist": 1,
+          "damage" : 1
+        },
+        {
+          "targetId" : "green",
+          "targetMode" : "VORTEX",
+          "visibility" : "VISIBLE",
+          "excludePlayers" : ["red", "blue"],
+          "maxDist": 1,
+          "damage" : 1
+        }
+      ]
+    }
+  ]
+}

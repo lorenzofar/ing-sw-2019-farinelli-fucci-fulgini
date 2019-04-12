@@ -1,0 +1,23 @@
+{
+  "weaponId" : "whisper",
+  "name" : "Whisper",
+  "type" : "ALTERNATIVE_MODES",
+  "cost" : ["BLUE", "BLUE", "YELLOW"],
+  "effects" : [
+    {
+      "effectId" : "basic",
+      "name" : "Basic Mode",
+      "type" : "MODE",
+      "targets" : [
+        {
+          "targetId" : "red",
+          "targetMode" : "PLAYER",
+          "visibility" : "VISIBLE",
+          "minDist" : 2,
+          "damage" : 3,
+          "mark" : 1
+        }
+      ]
+    }
+  ]
+}

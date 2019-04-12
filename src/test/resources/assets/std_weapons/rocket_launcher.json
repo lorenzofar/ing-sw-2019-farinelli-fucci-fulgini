@@ -1,0 +1,55 @@
+{
+  "weaponId" : "rocket_launcher",
+  "name" : "Rocket Launcher",
+  "type" : "OPTIONAL_EFFECTS",
+  "cost" : ["RED", "RED"],
+  "effects" : [
+    {
+      "effectId" : "basic",
+      "name" : "Basic effect",
+      "type" : "BASIC",
+      "dependsOnEffects" : [],
+      "targets" : [
+        {
+          "targetId" : "red",
+          "targetMode" : "PLAYER",
+          "visibility" : "VISIBLE",
+          "squareRef" : "sqr",
+          "minDist" : 1,
+          "moveTargetAfter" : 1,
+          "damage" : 2
+        }
+      ]
+    },
+    {
+      "effectId" : "rocket_jump",
+      "name" : "Rocket Jump",
+      "type" : "MOVEMENT",
+      "cost" : ["BLUE"],
+      "dependsOnEffects" : [],
+      "playerMoves" : 2
+    },
+    {
+      "effectId" : "fragmenting_warhead",
+      "name" : "Charged Shot",
+      "type" : "OPTIONAL",
+      "cost" : ["YELLOW"],
+      "dependsOnEffects" : ["basic"],
+      "targets" : [
+        {
+          "targetId" : "sqr",
+          "targetMode" : "SQUARE",
+          "visibility" : "ANY",
+          "excludePlayers" : ["red"],
+          "damage" : 1
+        },
+        {
+          "targetId" : "red",
+          "targetMode" : "PLAYER",
+          "visibility" : "ANY",
+          "damage" : 1
+        }
+      ]
+    }
+  ]
+}

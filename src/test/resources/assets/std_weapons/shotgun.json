@@ -1,0 +1,39 @@
+{
+  "weaponId" : "shotgun",
+  "name" : "Shotgun",
+  "type" : "ALTERNATIVE_MODES",
+  "cost" : ["YELLOW", "YELLOW"],
+  "effects" : [
+    {
+      "effectId" : "basic",
+      "name" : "Basic Mode",
+      "type" : "MODE",
+      "targets" : [
+        {
+          "targetId" : "red",
+          "targetMode" : "PLAYER",
+          "visibility" : "ANY",
+          "maxDist" : 0,
+          "damage" : 3,
+          "moveTargetAfter" : 1
+        }
+      ]
+    },
+    {
+      "effectId" : "long_barrel_mode",
+      "name" : "Long Barrell Mode",
+      "type" : "MODE",
+      "cost" : [],
+      "targets" : [
+        {
+          "targetId" : "red",
+          "targetMode" : "PLAYER",
+          "visibility" : "VISIBLE",
+          "minDist" : 1,
+          "maxDist" : 1,
+          "damage" : 2
+        }
+      ]
+    }
+  ]
+}

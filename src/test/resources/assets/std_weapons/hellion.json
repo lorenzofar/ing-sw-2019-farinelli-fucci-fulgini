@@ -1,0 +1,50 @@
+{
+  "weaponId" : "hellion",
+  "name" : "Hellion",
+  "type" : "ALTERNATIVE_MODES",
+  "cost" : ["RED", "YELLOW"],
+  "effects" : [
+    {
+      "effectId" : "basic",
+      "name" : "Basic Mode",
+      "type" : "MODE",
+      "targets" : [
+        {
+          "targetId" : "red",
+          "targetMode" : "PLAYER",
+          "visibility" : "VISIBLE",
+          "minDist" : 1,
+          "squareRef" : "sqr",
+          "damage" : 1
+        },
+        {
+          "targetId" : "sqr",
+          "targetMode" : "SQUARE",
+          "visibility" : "VISIBLE",
+          "mark" : 1
+        }
+      ]
+    },
+    {
+      "effectId" : "nano_tracer_mode",
+      "name" : "Nano-tracer Mode",
+      "type" : "MODE",
+      "targets" : [
+        {
+          "targetId" : "red",
+          "targetMode" : "PLAYER",
+          "visibility" : "VISIBLE",
+          "minDist" : 1,
+          "squareRef" : "sqr",
+          "damage" : 1
+        },
+        {
+          "targetId" : "sqr",
+          "targetMode" : "SQUARE",
+          "visibility" : "VISIBLE",
+          "mark" : 2
+        }
+      ]
+    }
+  ]
+}

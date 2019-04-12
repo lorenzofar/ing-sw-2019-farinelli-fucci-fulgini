@@ -1,0 +1,52 @@
+{
+  "weaponId" : "power_glove",
+  "name" : "Power Glove",
+  "type" : "ALTERNATIVE_MODES",
+  "cost" : ["YELLOW", "BLUE"],
+  "direction" : "CARDINAL",
+  "effects" : [
+    {
+      "effectId" : "basic",
+      "name" : "Basic Mode",
+      "type" : "MODE",
+      "targets" : [
+        {
+          "targetId" : "red",
+          "targetMode" : "PLAYER",
+          "visibility" : "ANY",
+          "minDist": 1,
+          "maxDist": 1,
+          "moveShooterHere" : true,
+          "damage" : 1,
+          "marks" : 2
+        }
+      ]
+    },
+    {
+      "effectId" : "rocket_fist_mode",
+      "name" : "Rocket Fist Mode",
+      "type" : "MODE",
+      "cost" : ["BLUE"],
+      "targets" : [
+        {
+          "targetId" : "red",
+          "targetMode" : "PLAYER",
+          "visibility" : "ANY",
+          "minDist": 1,
+          "maxDist": 1,
+          "moveShooterHere" : true,
+          "damage" : 2
+        },
+        {
+          "targetId" : "blue",
+          "targetMode" : "PLAYER",
+          "visibility" : "ANY",
+          "minDist": 1,
+          "maxDist": 1,
+          "moveShooterHere" : true,
+          "damage" : 2
+        }
+      ]
+    }
+  ]
+}

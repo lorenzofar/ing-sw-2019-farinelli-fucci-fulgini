@@ -1,0 +1,39 @@
+{
+  "weaponId" : "furnace",
+  "name" : "Furnace",
+  "type" : "ALTERNATIVE_MODES",
+  "cost" : ["RED", "BLUE"],
+  "effects" : [
+    {
+      "effectId" : "basic",
+      "name" : "Basic Mode",
+      "type" : "MODE",
+      "targets" : [
+        {
+          "targetId" : "room",
+          "targetMode" : "ROOM",
+          "visibility" : "VISIBLE",
+          "minDist" : 1,
+          "damage" : 1
+        }
+      ]
+    },
+    {
+      "effectId" : "cozy_fire_mode",
+      "name" : "Cozy Fire Mode",
+      "type" : "MODE",
+      "cost" : [],
+      "targets" : [
+        {
+          "targetId" : "room",
+          "targetMode" : "SQUARE",
+          "visibility" : "VISIBLE",
+          "minDist" : 1,
+          "maxDist" : 1,
+          "damage" : 1,
+          "mark" : 1
+        }
+      ]
+    }
+  ]
+}

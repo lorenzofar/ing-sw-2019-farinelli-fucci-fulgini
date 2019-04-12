@@ -1,0 +1,56 @@
+{
+  "weaponId" : "flamethrower",
+  "name" : "Flamethrower",
+  "type" : "ALTERNATIVE_MODES",
+  "direction" : "CARDINAL",
+  "cost" : ["RED"],
+  "effects" : [
+    {
+      "effectId" : "basic",
+      "name" : "Basic Mode",
+      "type" : "MODE",
+      "targets" : [
+        {
+          "targetId" : "red",
+          "targetMode" : "PLAYER",
+          "visibility" : "ANY",
+          "minDist" : 1,
+          "maxDist" : 1,
+          "damage" : 1
+        },
+        {
+          "targetId" : "blue",
+          "targetMode" : "PLAYER",
+          "visibility" : "ANY",
+          "minDist" : 2,
+          "maxDist" : 2,
+          "damage" : 1
+        }
+      ]
+    },
+    {
+      "effectId" : "barbecue_mode",
+      "name" : "Barbecue Mode",
+      "type" : "MODE",
+      "cost" : ["YELLOW", "YELLOW"],
+      "targets" : [
+        {
+          "targetId" : "sqr1",
+          "targetMode" : "SQUARE",
+          "visibility" : "ANY",
+          "minDist" : 1,
+          "maxDist" : 1,
+          "damage" : 2
+        },
+        {
+          "targetId" : "blue",
+          "targetMode" : "SQUARE",
+          "visibility" : "ANY",
+          "minDist" : 2,
+          "maxDist" : 2,
+          "damage" : 1
+        }
+      ]
+    }
+  ]
+}

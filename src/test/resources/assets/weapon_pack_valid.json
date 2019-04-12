@@ -1,6 +1,6 @@
 {
-  "packName" : "Standard weapons",
-  "weaponFiles" : [
-    "weapons/cyberblade.json"
+  "packName": "Valid weapon pack",
+  "weaponFiles": [
+    "/assets/test_weapons/validweapon.json"
   ]
 }

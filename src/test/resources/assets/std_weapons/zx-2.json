@@ -1,0 +1,50 @@
+{
+  "weaponId" : "zx-2",
+  "name" : "ZX-2",
+  "type" : "ALTERNATIVE_MODES",
+  "cost" : ["YELLOW", "RED"],
+  "effects" : [
+    {
+      "effectId" : "basic",
+      "name" : "Basic Mode",
+      "type" : "MODE",
+      "targets" : [
+        {
+          "targetId" : "red",
+          "targetMode" : "PLAYER",
+          "visibility" : "VISIBLE",
+          "damage" : 1,
+          "marks" : 2
+        }
+      ]
+    },
+    {
+      "effectId" : "scanner_mode",
+      "name" : "Scanner Mode",
+      "type" : "MODE",
+      "cost" : [],
+      "targets" : [
+        {
+          "targetId" : "red",
+          "targetMode" : "PLAYER",
+          "visibility" : "VISIBLE",
+          "mark" : 1
+        },
+        {
+          "targetId" : "blue",
+          "targetMode" : "PLAYER",
+          "visibility" : "VISIBLE",
+          "excludePlayers" : ["red"],
+          "mark" : 1
+        },
+        {
+          "targetId" : "green",
+          "targetMode" : "PLAYER",
+          "visibility" : "VISIBLE",
+          "excludePlayers" : ["red", "blue"],
+          "mark" : 1
+        }
+      ]
+    }
+  ]
+}

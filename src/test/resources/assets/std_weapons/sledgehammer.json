@@ -1,0 +1,38 @@
+{
+  "weaponId" : "sledgehammer",
+  "name" : "Sledgehammer",
+  "type" : "ALTERNATIVE_MODES",
+  "cost" : ["YELLOW"],
+  "effects" : [
+    {
+      "effectId" : "basic",
+      "name" : "Basic Mode",
+      "type" : "MODE",
+      "targets" : [
+        {
+          "targetId" : "red",
+          "targetMode" : "PLAYER",
+          "visibility" : "ANY",
+          "maxDist" : 0,
+          "damage" : 2
+        }
+      ]
+    },
+    {
+      "effectId" : "pulverize_mode",
+      "name" : "Pulverize Mode",
+      "type" : "MODE",
+      "cost" : ["RED"],
+      "targets" : [
+        {
+          "targetId" : "red",
+          "targetMode" : "PLAYER",
+          "visibility" : "ANY",
+          "maxDist" : 0,
+          "damage" : 3,
+          "moveTargetAfter" : 2
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "weaponId" : "plasma_gun",
+  "name" : "Plasma Gun",
+  "type" : "OPTIONAL_EFFECTS",
+  "cost" : ["BLUE", "YELLOW"],
+  "effects" : [
+    {
+      "effectId" : "basic",
+      "name" : "Basic effect",
+      "type" : "BASIC",
+      "cost" : [],
+      "dependsOnEffects" : [],
+      "targets" : [
+        {
+          "targetId" : "red",
+          "targetMode" : "PLAYER",
+          "visibility" : "VISIBLE",
+          "damage" : 2
+        }
+      ]
+    },
+    {
+      "effectId" : "phase_glide",
+      "name" : "Phase Glide",
+      "type" : "MOVEMENT",
+      "cost" : [],
+      "dependsOnEffects" : [],
+      "playerMoves" : 2
+    },
+    {
+      "effectId" : "charged_shot",
+      "name" : "Charged Shot",
+      "type" : "OPTIONAL",
+      "cost" : ["BLUE"],
+      "dependsOnEffects" : ["basic"],
+      "targets" : [
+        {
+          "targetId" : "red",
+          "targetMode" : "PLAYER",
+          "visibility" : "ANY",
+          "damage" : 1
+        }
+      ]
+    }
+  ]
+}

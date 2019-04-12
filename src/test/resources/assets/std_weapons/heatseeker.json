@@ -1,0 +1,21 @@
+{
+  "weaponId" : "heatseeker",
+  "name" : "Heatseeker",
+  "type" : "ALTERNATIVE_MODES",
+  "cost" : ["RED", "RED", "YELLOW"],
+  "effects" : [
+    {
+      "effectId" : "basic",
+      "name" : "Basic Mode",
+      "type" : "MODE",
+      "targets" : [
+        {
+          "targetId" : "red",
+          "targetMode" : "PLAYER",
+          "visibility" : "NOT_VISIBLE",
+          "damage" : 3
+        }
+      ]
+    }
+  ]
+}

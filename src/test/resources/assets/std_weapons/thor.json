@@ -1,0 +1,57 @@
+{
+  "weaponId" : "thor",
+  "name" : "T.H.O.R.",
+  "type" : "OPTIONAL_EFFECTS",
+  "cost" : ["BLUE", "RED"],
+  "effects" : [
+    {
+      "effectId" : "basic",
+      "name" : "Basic effect",
+      "type" : "BASIC",
+      "cost" : [],
+      "dependsOnEffects" : [],
+      "targets" : [
+        {
+          "targetId" : "red",
+          "targetMode" : "PLAYER",
+          "visibility" : "VISIBLE",
+          "damage" : 2
+        }
+      ]
+    },
+    {
+      "effectId" : "chain_reaction",
+      "name" : "Chain Reaction",
+      "type" : "OPTIONAL",
+      "cost" : ["BLUE"],
+      "dependsOnEffects" : ["basic"],
+      "targets" : [
+        {
+          "targetId" : "blue",
+          "targetMode" : "PLAYER",
+          "visibility" : "ANY",
+          "excludePlayers" : ["red"],
+          "visibleFromPlayer" : "red",
+          "damage" : 1
+        }
+      ]
+    },
+    {
+      "effectId" : "high_voltage",
+      "name" : "High Voltage",
+      "type" : "OPTIONAL",
+      "cost" : ["BLUE"],
+      "dependsOnEffects" : ["basic", "chain_reaction"],
+      "targets" : [
+        {
+          "targetId" : "green",
+          "targetMode" : "PLAYER",
+          "visibility" : "ANY",
+          "excludePlayers" : ["red", "blue"],
+          "visibleFromPlayer" : "blue",
+          "damage" : 2
+        }
+      ]
+    }
+  ]
+}
