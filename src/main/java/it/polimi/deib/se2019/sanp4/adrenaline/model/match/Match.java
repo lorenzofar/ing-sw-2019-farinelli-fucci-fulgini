@@ -5,10 +5,11 @@ import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.powerup.PowerUpCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.WeaponCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
-import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.Weapon;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.player.PlayerState;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Hold the representation of the match.
@@ -29,6 +30,8 @@ import java.util.List;
  */
 public class Match {
 
+    public static final int MAX_PLAYERS = 5;
+
     /** The turn of the player which is currently playing */
     private PlayerTurn currentTurn;
 
@@ -44,6 +47,9 @@ public class Match {
     /** Stack of all the powerup cards */
     private CardStack<PowerUpCard> powerupStack;
 
+    /** List of players participating in the match */
+    private List<Player> players;
+
     /** Number of remaining skulls in the killshots track */
     private int skulls;
 
@@ -55,7 +61,7 @@ public class Match {
      * Creates a new match for the provided players.
      * It initializes the card stacks using the provided ones.
      * It also sets the number of skulls according to the corresponding parameter.
-     * @param players The players playing the match, not null
+     * @param players The players playing the match, not null and not containing null values
      * @param ammoStack The stack of ammo tiles, not null
      * @param weaponStack The stack of weapon cards, not null
      * @param powerupStack The stack of powerup cards, not null
@@ -65,14 +71,33 @@ public class Match {
         if(players == null || ammoStack == null || weaponStack == null || powerupStack == null){
             throw new NullPointerException("Found null parameters");
         }
+        if(players.contains(null)){
+            throw new NullPointerException("Players list cannot contain null values");
+        }
         if(skulls < 0){
             throw new IllegalArgumentException("Skulls count cannot be negative");
         }
+        this.players = players;
         this.ammoStack = ammoStack;
         this.weaponStack = weaponStack;
         this.powerupStack = powerupStack;
         this.skulls = skulls;
-        //TODO: Create players according to provided usernames
+    }
+
+    /**
+     * Retrieves a player by using the specified name
+     * @param playerName The name of the player, not null and not empty
+     * @return The object representing the player, null if the player does not exist
+     */
+    private Player getPlayerByName(String playerName){
+        if(playerName == null){
+            throw new NullPointerException("Player name cannot be null");
+        }
+        if(playerName.isEmpty()){
+            throw new IllegalArgumentException("Player name cannot be empty");
+        }
+        Optional<Player> player = players.stream().filter(p -> p.getName().equals(playerName)).findFirst();
+        return player.isPresent() ? player.get() : null;
     }
 
     /**
@@ -102,23 +127,34 @@ public class Match {
     /**
      * Sets a player as suspended
      * @param player The username of the player, not null
+     * @throws IllegalStateException If the player is not present
      */
     public void suspendPlayer(String player){
         if(player == null){
             throw new NullPointerException("Player cannot be null");
         }
-        //TODO: Implement this method
+        Player suspendedPlayer = getPlayerByName(player);
+        if(suspendedPlayer == null){
+            throw new IllegalStateException("Player does not exist in the match");
+        }
+        suspendedPlayer.setState(PlayerState.SUSPENDED);
     }
 
     /**
      * Removes a player from the match
      * @param player The username of the player, not null
+     * @throws IllegalStateException If the player is not present
      */
     public void removePlayer(String player){
         if(player == null){
             throw new NullPointerException("Player cannot be null");
         }
-        //TODO: Implement this method
+        Player removedPlayer = getPlayerByName(player);
+        if(removedPlayer == null){
+            throw new IllegalStateException("Player does not exist in the match");
+        }
+        removedPlayer.setState(PlayerState.LEFT);
+        players.remove(removedPlayer);
     }
 
     /**
@@ -142,8 +178,7 @@ public class Match {
      * @return The list of objects representing the players
      */
     public List<Player> getPlayers(){
-        //TODO: Implement this method
-        return Collections.emptyList();
+        return new ArrayList<>(players);
     }
 
     /**
