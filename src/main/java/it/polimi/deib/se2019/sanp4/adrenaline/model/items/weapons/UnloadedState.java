@@ -1,5 +1,7 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons;
 
+import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.CardNotFoundException;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.NotEnoughAmmoException;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
 
 public class UnloadedState implements WeaponCardState {
@@ -10,17 +12,35 @@ public class UnloadedState implements WeaponCardState {
 
     @Override
     public void reload(Player player, WeaponCard weapon) {
-        /* TODO: Implement this */
+        /*
+         In this state the weapon is completely unloaded,
+         hence all the cubes have to be paid.
+         */
+        try{
+            /*
+             Here we have to create a new payment map,
+             since the weapons can contain the ANY cube
+             */
+            // Check whether the players owns the weapon card
+            if(!player.hasWeaponCard(weapon.getId())) {
+                throw new CardNotFoundException();
+            }
+            player.payAmmo(weapon.getCost());
+            weapon.setState(new LoadedState());
+        }
+        catch(NotEnoughAmmoException | CardNotFoundException ex){
+            // Here the user does not have enough ammo to pay the reload cost
+        }
     }
 
     @Override
-    public void unload(Player shooter, WeaponCard weapon) {
-        /* TODO: Implement this */
+    public void unload(WeaponCard weapon) {
+        weapon.setState(new UnloadedState());
     }
 
     @Override
     public void reset(WeaponCard weapon) {
-        /* TODO: Implement this */
+        weapon.setState(new PickupState());
     }
 }
 

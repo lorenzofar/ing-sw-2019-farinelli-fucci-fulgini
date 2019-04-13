@@ -10,16 +10,20 @@ public class LoadedState implements WeaponCardState {
 
     @Override
     public void reload(Player player, WeaponCard weapon) {
-        /* TODO: Implement this */
+        /*
+        Since the weapon is already loaded,
+        this method has no effects on it
+        and does not charge the player with the reload cost
+         */
     }
 
     @Override
-    public void unload(Player shooter, WeaponCard weapon) {
-        /* TODO: Implement this */
+    public void unload(WeaponCard weapon) {
+        weapon.setState(new UnloadedState());
     }
 
     @Override
     public void reset(WeaponCard weapon) {
-        /* TODO: Implement this */
+        weapon.setState(new PickupState());
     }
 }

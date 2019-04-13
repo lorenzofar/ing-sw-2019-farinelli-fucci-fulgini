@@ -79,4 +79,22 @@ public class WeaponCard {
     public List<EffectDescription> getEffects(){
         return new ArrayList<>(effects);
     }
+
+    /**
+     * Retrieves the loading state of the weapon
+     * @return The object representing the state
+     */
+    public WeaponCardState getState(){
+        return state;
+    }
+
+    /**
+     * Sets the loading state of the weapon
+     * @param state The object representing the state
+     * @return The object representing the new state
+     */
+    public WeaponCardState setState(WeaponCardState state){
+        this.state = state;
+        return this.state;
+    }
  }

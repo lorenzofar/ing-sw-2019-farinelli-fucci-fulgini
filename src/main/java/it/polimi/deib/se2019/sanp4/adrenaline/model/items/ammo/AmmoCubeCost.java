@@ -48,6 +48,16 @@ public enum AmmoCubeCost{
         return this == AmmoCubeCost.ANY || this.toString().equals(cube.toString());
     }
 
-
-
+    public AmmoCube getCorrespondingCube(){
+        switch(this.toString()){
+            case "Red":
+                return AmmoCube.RED;
+            case "Blue":
+                return AmmoCube.BLUE;
+            case "Yello":
+                return AmmoCube.YELLOW;
+            default:
+                return null;
+        }
+    }
 }

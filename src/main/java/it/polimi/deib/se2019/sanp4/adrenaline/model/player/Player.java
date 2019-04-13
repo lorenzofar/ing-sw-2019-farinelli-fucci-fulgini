@@ -5,6 +5,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.FullCapacityExce
 import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.NotEnoughAmmoException;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCube;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.Square;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCubeCost;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.powerup.PowerUpCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.WeaponCard;
@@ -92,6 +93,52 @@ public class Player{
     }
 
     /**
+     * Converts a map containing generic cubes (gray) to a map containg only payable cubes
+     * It takes the first available cube from the player to suffice for the generic cost
+     * @param cubesList The list of objects representing the cubes to convert
+     * @return The map representing the converted cubes
+     * @throws NotEnoughAmmoException If player's ammo is not sufficient to cover the cost
+     */
+    private Map<AmmoCube, Integer> convertAmmoCubeCost(List<AmmoCubeCost> cubesList) throws NotEnoughAmmoException{
+        // Load count of cubes to convert
+        int genericCount = (int)cubesList.stream().filter(cube -> cube == AmmoCubeCost.ANY).count();
+        Map<AmmoCube, Integer> convertedAmmo = new EnumMap<>(AmmoCube.class);
+
+        cubesList.stream().filter(cube -> cube != AmmoCubeCost.ANY).forEach(cube -> {
+            AmmoCube convertedCube = cube.getCorrespondingCube();
+            Integer previousAmmo = convertedAmmo.get(convertedCube);
+            convertedAmmo.put(convertedCube, previousAmmo == null ? 1 : previousAmmo + 1);
+        });
+
+        // If there are no cubes to convert, do nothing
+        if(genericCount == 0){
+            return convertedAmmo;
+        }
+        // Repeat this for all the cubes that need conversion:
+        while(genericCount > 0) {
+            /* Here we search for a cube in the player wallet
+            We first filter out colors with no cubes,
+            then we retrieve a cube from the remaining ones*/
+            Optional<Map.Entry<AmmoCube, Integer>> availableAmmo = this.ammo.entrySet()
+                    .stream()
+                    .filter(entry -> {
+                        Integer userAmmo = entry.getValue();
+                        return userAmmo != null && userAmmo == 0;
+                    })
+                    .findAny();
+            // We check whether that cube is really present, if not we throw an exception
+            if(!availableAmmo.isPresent()){
+                throw new NotEnoughAmmoException();
+            }
+            // The user can pay the cost, so we increase the corresponding counter
+            convertedAmmo.put(availableAmmo.get().getKey(), availableAmmo.get().getValue() + 1);
+            genericCount--;
+        }
+        // Here we succesfully converted the cubes and the player is able to pay the cost
+        return convertedAmmo;
+    }
+
+    /**
      * Returns this player's name.
      * @return player's name
      */
@@ -175,6 +222,15 @@ public class Player{
      */
     public PlayerBoard getPlayerBoard() {
         return playerBoard;
+    }
+
+    /**
+     * Determines whether the player owns the specified weapon card
+     * @param weaponId The identifier of the weapon card
+     * @return {@code true} if the player owns the card, {@code false} otherwise
+     */
+    public boolean hasWeaponCard(String weaponId){
+        return weapons.stream().map(WeaponCard::getId).anyMatch(id -> id.equals(weaponId));
     }
 
     /**
@@ -313,6 +369,16 @@ public class Player{
             }
             this.ammo.put(key, playerAmmo);
         });
+    }
+
+    /**
+     * Removes ammo cubes from current player.
+     * @param ammo a map containing the quantity of ammo cubes to remove for each color, unspecified keys
+     *             are treated as zero, not null and not containing negative values
+     * @throws NotEnoughAmmoException if the player does not have enough ammo to pay the specified amount
+     */
+    public void payAmmo(List<AmmoCubeCost> ammo) throws NotEnoughAmmoException{
+        payAmmo(convertAmmoCubeCost(ammo));
     }
 
     /**

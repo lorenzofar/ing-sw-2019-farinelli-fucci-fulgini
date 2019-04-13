@@ -1,6 +1,11 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons;
 
+import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.CardNotFoundException;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.NotEnoughAmmoException;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCubeCost;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
+
+import java.util.List;
 
 public class PickupState implements WeaponCardState {
     @Override
@@ -10,16 +15,40 @@ public class PickupState implements WeaponCardState {
 
     @Override
     public void reload(Player player, WeaponCard weapon) {
-        /* TODO: Implement this */
+        /*
+         In this state the weapon is partially loaded,
+         hence the first element of the cost list has not to be paid.
+         We then charge the user only the remaining amount of cubes
+         (if there are no other cubes, the user pays nothing and the weapon becomes loaded)
+
+         We use try/catches to avoid setting the new state when the user cannot pay or does not own the weapon*/
+        try{
+            // Check whether the player owns the weapon
+            if(!player.hasWeaponCard(weapon.getId())){
+                throw new CardNotFoundException();
+            }
+            // Get the cost of the weapon card
+            List<AmmoCubeCost> weaponCost = weapon.getCost();
+            if(weaponCost.size() > 1){
+                // Do not consider the first cube, since it's already loaded
+                weaponCost = weaponCost.subList(1, weaponCost.size());
+                // Make the user pay the cubes
+                player.payAmmo(weaponCost);
+            }
+            weapon.setState(new LoadedState());
+        }
+        catch(NotEnoughAmmoException | CardNotFoundException ex){
+            // Here the user does not have enough ammo to pay the reload cost
+        }
     }
 
     @Override
-    public void unload(Player shooter, WeaponCard weapon) {
-        /* TODO: Implement this */
+    public void unload(WeaponCard weapon) {
+        weapon.setState(new UnloadedState());
     }
 
     @Override
     public void reset(WeaponCard weapon) {
-        /* TODO: Implement this */
+        weapon.setState(new PickupState());
     }
 }
