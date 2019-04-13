@@ -1,18 +1,15 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.model.player;
 
+import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.CardNotFoundException;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.FullCapacityException;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.NotEnoughAmmoException;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCube;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.Square;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.powerup.PowerUpCard;
-import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.Weapon;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.WeaponCard;
 
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Represents a player of the match.
@@ -202,21 +199,17 @@ public class Player{
 
     /**
      * Removes a weapon card from player's hands and resets it.
-     * @param weapon identifier of the weapon, not null and not an empty string
+     * @param weaponId identifier of the weapon, not null and not an empty string
      * @return weapon card drawn from player
+     * @throws CardNotFoundException if the requested card is not in available in this square
      */
-    public Weapon removeWeapon(String weapon) {
-        if(weapon == null){
+    public WeaponCard removeWeapon(String weaponId) throws CardNotFoundException {
+        if (weaponId == null) {
             throw new NullPointerException("Weapon id cannot be null");
         }
-        if(weapon.isEmpty()){
-            throw new IllegalArgumentException("Weapon id cannot be empty");
-        }
-        if(weapons.isEmpty()){
-            throw new IllegalStateException("User has no weapon cards");
-        }
-        if(weapons.stream().map(WeaponCard::getId).noneMatch(weaponId -> weaponId.equals(weapon))){
-            throw new IllegalStateException("The weapon does not belong to the user");
+
+        if(weapons.stream().map(WeaponCard::getId).noneMatch(id -> id.equals(weaponId))){
+            throw new CardNotFoundException(String.format("The weapon \"%s\" does not belong to the user", weaponId));
         }
         /*TODO: Implement this method */
         return null;
@@ -226,16 +219,15 @@ public class Player{
      * Removes a weapon card from player's hands and resets it.
      * @param weapon weapon card to be removed
      * @return weapon card drawn from player
+     * @throws CardNotFoundException if the requested card is not in available in this square
      */
-    public WeaponCard removeWeapon(WeaponCard weapon) {
+    public WeaponCard removeWeapon(WeaponCard weapon) throws CardNotFoundException {
         if(weapon == null){
             throw new NullPointerException("Weapon cannot be null");
         }
-        if(weapons.isEmpty()){
-            throw new IllegalStateException("User has no weapon cards");
-        }
+
         if(!(weapons.contains(weapon))){
-            throw new IllegalStateException("The weapon does not belong to the user");
+            throw new CardNotFoundException(String.format("The weapon \"%s\" does not belong to the user", weapon.getId()));
         }
         weapons.remove(weapon);
         //TODO: Reset weapon's state

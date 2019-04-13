@@ -1,7 +1,6 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCubeCost;
-import it.polimi.deib.se2019.sanp4.adrenaline.model.items.effects.EffectDescription;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +22,9 @@ public class WeaponCard {
 
     /** The list of effects provided by the weapon */
     private List<EffectDescription> effects;
+
+    /** Current state of this weapon */
+    private WeaponCardState state;
 
     /**
      * Creates a new weapon card
