@@ -45,6 +45,13 @@
             <version>2.9.8</version>
         </dependency>
 
+        <!-- Provides JSON object access -->
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20180130</version>
+        </dependency>
+
         <!-- Provides JSON schema validation -->
         <dependency>
             <groupId>com.github.everit-org.json-schema</groupId>
