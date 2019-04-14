@@ -1,8 +1,8 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.model.board;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * A class describing the connection between squares in the board.
@@ -45,8 +45,7 @@ public class AdjacentMap {
      * Retrieves all the adjacent squares
      * @return A collection of objects representing the squares
      */
-    public Collection<Square> getSquares(){
-        //TODO: Implement this method
-        return Collections.emptyList();
+    public Collection<CoordPair> getSquares(){
+        return map.values().stream().map(SquareConnection::getSquare).collect(Collectors.toList());
     }
 }

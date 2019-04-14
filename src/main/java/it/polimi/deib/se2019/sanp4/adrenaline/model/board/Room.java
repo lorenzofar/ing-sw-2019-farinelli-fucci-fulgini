@@ -2,8 +2,9 @@ package it.polimi.deib.se2019.sanp4.adrenaline.model.board;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
 
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * A class representing a room of the game board.
@@ -34,12 +35,8 @@ public class Room {
      * @return The list of objects representing the players
      */
     public List<Player> getPlayers(){
-        List<Player> players = new ArrayList<>();
-        this.squares.forEach(square ->
-            //TODO: Check list assignment
-            players.addAll(square.getPlayers())
-        );
-        return players;
+        // Remap the list of squares to the players they contain and then flatten it
+        return squares.stream().map(Square::getPlayers).flatMap(Collection::stream).collect(Collectors.toList());
     }
 
     /**

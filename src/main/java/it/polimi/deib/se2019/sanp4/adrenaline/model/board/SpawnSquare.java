@@ -1,6 +1,7 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.model.board;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.CardNotFoundException;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.FullCapacityException;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.WeaponCard;
 
 import java.util.ArrayList;
@@ -9,6 +10,9 @@ import java.util.Optional;
 
 /** A specialized class representing a square available as spawn points and that contain weapon cards*/
 public class SpawnSquare extends Square {
+
+    private static final int MAX_WEAPON_CARDS = 3;
+
 
     /** The list of weapons contained in the square */
     private List<WeaponCard> weapons;
@@ -55,12 +59,15 @@ public class SpawnSquare extends Square {
     /**
      * Puts a weapon on the square, if it is full
      * @param weapon The object representing the weapon
+     * @throws FullCapacityException If the square contains the maximum number of weapons
      */
-    public void insertWeaponCard(WeaponCard weapon){
-        if(weapon == null){
+    public void insertWeaponCard(WeaponCard weapon) throws FullCapacityException{
+        if(weapon == null) {
             throw new NullPointerException("Weapon cannot be null");
         }
-        //TODO: Implement this method
+        if(weapons.size() >= MAX_WEAPON_CARDS){
+            throw new FullCapacityException(MAX_WEAPON_CARDS);
+        }
         this.weapons.add(weapon);
     }
 }
