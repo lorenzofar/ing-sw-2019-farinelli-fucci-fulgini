@@ -17,6 +17,7 @@ import java.util.*;
  */
 public class Player{
     public static final int INITIAL_AMMO = 1;
+    public static final int MAX_AMMO_CUBES = 3;
     public static final int MAX_WEAPONS = 3;
     public static final int MAX_POWERUPS = 3;
 
@@ -248,8 +249,7 @@ public class Player{
         if (weapons.size() >= MAX_WEAPONS) {
             throw new FullCapacityException(MAX_WEAPONS);
         }
-
-        /*TODO: Reset weapon's state*/
+        weapon.getState().reset(weapon); // Resets weapon state
         weapons.add(weapon);
     }
 
@@ -257,18 +257,21 @@ public class Player{
      * Removes a weapon card from player's hands and resets it.
      * @param weaponId identifier of the weapon, not null and not an empty string
      * @return weapon card drawn from player
-     * @throws CardNotFoundException if the requested card is not in available in this square
+     * @throws CardNotFoundException if the requested card is not owned by the player
      */
     public WeaponCard removeWeapon(String weaponId) throws CardNotFoundException {
         if (weaponId == null) {
             throw new NullPointerException("Weapon id cannot be null");
         }
 
-        if(weapons.stream().map(WeaponCard::getId).noneMatch(id -> id.equals(weaponId))){
+        Optional<WeaponCard> weaponCard = weapons.stream().filter(w -> w.getId().equals(weaponId)).findFirst();
+        if(!weaponCard.isPresent()){
             throw new CardNotFoundException(String.format("The weapon \"%s\" does not belong to the user", weaponId));
         }
-        /*TODO: Implement this method */
-        return null;
+
+        weapons.remove(weaponCard.get());
+        weaponCard.get().getState().reset(weaponCard.get()); // Resets the weapon card
+        return weaponCard.get();
     }
 
     /**
@@ -285,8 +288,9 @@ public class Player{
         if(!(weapons.contains(weapon))){
             throw new CardNotFoundException(String.format("The weapon \"%s\" does not belong to the user", weapon.getId()));
         }
+
         weapons.remove(weapon);
-        //TODO: Reset weapon's state
+        weapon.getState().reset(weapon);
         return weapon;
     }
 
@@ -335,14 +339,13 @@ public class Player{
         if(ammo == null){
             throw new NullPointerException("Cubes map cannot be null");
         }
-        if(ammo.entrySet().stream().anyMatch(entry -> entry.getValue() < 0)){
+        if(ammo.entrySet().stream().filter(entry -> entry.getValue() < 0).count() > 0){
             throw new IllegalArgumentException("Cubes amounts cannot be negative");
         }
         ammo.forEach((key, value) -> {
             Integer playerAmmo = this.ammo.get(key);
             playerAmmo = playerAmmo == null ? 0 : playerAmmo;
-            playerAmmo += value;
-            //TODO: Check whether the ammo exceeds capacity
+            playerAmmo = playerAmmo + value > MAX_AMMO_CUBES ? MAX_AMMO_CUBES : playerAmmo + value; // Check whether the final amount exceeds maximum capacity
             this.ammo.put(key, playerAmmo);
         });
     }
@@ -360,15 +363,16 @@ public class Player{
         if(ammo.entrySet().stream().anyMatch(entry -> entry.getValue() < 0)) {
             throw new IllegalArgumentException("Cubes amounts cannot be negative");
         }
-        ammo.forEach((key, value) -> {
+        for (Map.Entry<AmmoCube, Integer> entry : ammo.entrySet()) {
+            AmmoCube key = entry.getKey();
+            Integer value = entry.getValue();
             Integer playerAmmo = this.ammo.get(key);
             playerAmmo = playerAmmo == null ? 0 : playerAmmo;
-            playerAmmo -= value;
-            if (playerAmmo < 0) {
-                //TODO: Check how to throw the exception
+            if (playerAmmo - value < 0) {
+                throw new NotEnoughAmmoException();
             }
-            this.ammo.put(key, playerAmmo);
-        });
+            this.ammo.put(key, playerAmmo - value);
+        }
     }
 
     /**
