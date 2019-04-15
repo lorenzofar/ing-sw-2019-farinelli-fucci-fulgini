@@ -65,6 +65,11 @@ public class SpawnSquare extends Square {
         if(weapon == null) {
             throw new NullPointerException("Weapon cannot be null");
         }
+
+        if(weapons.contains(weapon)){
+            throw new IllegalStateException("Weapon is already on the square");
+        }
+
         if(weapons.size() >= MAX_WEAPON_CARDS){
             throw new FullCapacityException(MAX_WEAPON_CARDS);
         }

@@ -246,6 +246,10 @@ public class Player{
             throw new NullPointerException("cannot add empty weapon to player");
         }
 
+        if(hasWeaponCard(weapon.getId())){
+            throw new IllegalStateException("The player already owns the card");
+        }
+
         if (weapons.size() >= MAX_WEAPONS) {
             throw new FullCapacityException(MAX_WEAPONS);
         }
@@ -304,6 +308,11 @@ public class Player{
         if(powerup == null){
             throw new NullPointerException("Powerup card cannot be null");
         }
+
+        if(powerups.contains(powerup)){
+            throw new IllegalStateException("Player already owns the powerup");
+        }
+
         if(powerups.size() >= MAX_POWERUPS){
             throw new FullCapacityException(MAX_POWERUPS);
         }

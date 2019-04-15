@@ -2,9 +2,7 @@ package it.polimi.deib.se2019.sanp4.adrenaline.model.board;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * A class representing a square of the game board
@@ -18,7 +16,7 @@ public class Square {
     private AdjacentMap adjacentSquares;
 
     /** A list of players inside the square */
-    private ArrayList<Player> players;
+    private Set<Player> players;
 
     /** The room the square is into */
     private Room room;
@@ -33,7 +31,7 @@ public class Square {
         }
         this.location = location;
         this.adjacentSquares = new AdjacentMap(new HashMap<>()); //TODO: Create the map describing the connections
-        this.players = new ArrayList<>(5);
+        this.players = new HashSet<>(5);
         //TODO: Complete the constructor
     }
 
