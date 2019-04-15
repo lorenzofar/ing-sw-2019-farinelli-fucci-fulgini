@@ -14,6 +14,12 @@ public class ScoresIterator implements Iterator<Integer> {
     private int startIndex;
 
     ScoresIterator(int[] points, int startIndex){
+        if(points.length == 0){
+            throw new IllegalArgumentException("Points array cannot be empty");
+        }
+        if(startIndex >= points.length){
+            throw new IllegalArgumentException("Start index cannot be outside points array bounds");
+        }
         this.points = points;
         this.startIndex = startIndex;
     }
@@ -25,12 +31,10 @@ public class ScoresIterator implements Iterator<Integer> {
 
     @Override
     public Integer next(){
-        if(startIndex > points.length){
+        if(!hasNext()){
             throw new NoSuchElementException();
         }
-        else{
-            startIndex++;
-        }
+        startIndex = startIndex >= points.length ? points.length : startIndex + 1;
         return points[startIndex-1];
     }
 }
