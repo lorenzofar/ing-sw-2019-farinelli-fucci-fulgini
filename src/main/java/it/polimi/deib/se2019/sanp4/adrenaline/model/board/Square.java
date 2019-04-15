@@ -1,5 +1,6 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.model.board;
 
+import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.PlayerNotFoundException;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
 
 import java.util.*;
@@ -49,10 +50,14 @@ public class Square {
     /**
      * Removes a player from the square
      * @param player The object representing the player, not null
+     * @throws PlayerNotFoundException If the player is not present in the square
      */
-    public void removePlayer(Player player) {
+    public void removePlayer(Player player) throws PlayerNotFoundException {
         if(player == null){
             throw new NullPointerException("Player cannot be null");
+        }
+        if(!players.contains(player)){
+            throw new PlayerNotFoundException("The player is not inside the square");
         }
         this.players.remove(player);
     }
