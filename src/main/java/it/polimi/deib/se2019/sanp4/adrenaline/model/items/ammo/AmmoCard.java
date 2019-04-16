@@ -1,21 +1,22 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo;
 
+import java.util.Collections;
 import java.util.Map;
 
 /**
- * A class representing an ammo card.
+ * An immutable class representing an ammo card.
  * It contains ammo cubes and an optional powerup card
  */
 public class AmmoCard {
 
     /** Unique identifier of the card */
-    private int id;
+    private final int id;
 
     /** Map describing how many cubes are available for each color */
-    private Map<AmmoCube, Integer> cubes;
+    private final Map<AmmoCube, Integer> cubes;
 
     /** Indicates whether the card holds a powerup or not */
-    private boolean powerup;
+    private final boolean powerup;
 
     /**
      * Creates a new ammo card holding the specified cubes
@@ -46,10 +47,10 @@ public class AmmoCard {
 
     /**
      * Retrieves the cubes contained in the card
-     * @return The object representing cubes with associated quantities
+     * @return An unmodifiable map containing the amount of cubes for each color
      */
     public Map<AmmoCube, Integer> getCubes() {
-        return cubes;
+        return Collections.unmodifiableMap(cubes);
     }
 
     /**
@@ -58,5 +59,22 @@ public class AmmoCard {
      */
     public boolean hasPowerup(){
         return powerup;
+    }
+
+    /**
+     * Check if this AmmoCard is equal to another Object
+     * @param obj object on which to test equality
+     * @return true if the objects are equal, false otherwise
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) return true;
+        if(!(obj instanceof AmmoCard)) return false;
+        return ((AmmoCard) obj).getId() == this.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return 17 + 31 * id;
     }
 }
