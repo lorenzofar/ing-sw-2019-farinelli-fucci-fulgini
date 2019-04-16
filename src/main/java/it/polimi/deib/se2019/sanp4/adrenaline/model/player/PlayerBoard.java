@@ -1,6 +1,7 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.model.player;
 
 import java.util.*;
+import static java.util.Map.Entry.comparingByValue;
 
 /**
  * Holds damage, marks and deaths of a centain player.
@@ -160,17 +161,26 @@ public class PlayerBoard{
      * Players who delivered no damage won't be in the map.
      * @return {@code map<player, score>} with each player who got points
      */
-    public Map<Player, Integer> getPlayerScores(){
+    public Map<Player, Integer> getPlayerScores() {
         Map<Player, Integer> damageCounts = new HashMap<>();
+        Map<Player, Integer> playerScores = new HashMap<>();
         damages.forEach(shooter -> {
             Integer playerDamage = damageCounts.get(shooter);
             playerDamage = playerDamage == null ? 0 : playerDamage;
             damageCounts.put(shooter, playerDamage);
         });
-        //TODO: Assign scores to player according to performed damages
-        return null;
-    }
 
+        // We first get the iterator to assign scores
+        Iterator<Integer> scores = state.getDamageScores(this);
+
+        // We sort damages by value in decreasing order
+        // Then for each entry we retrieve the points and put in the output map
+        damageCounts.entrySet()
+                .stream()
+                .sorted(comparingByValue())
+                .forEachOrdered(playerDamageEntry -> playerScores.put(playerDamageEntry.getKey(), scores.next()));
+        return playerScores;
+    }
     /**
      * Checks whether the player is dead or not, then increments the number of deaths accordingly and
      * resets all damage on the board.
@@ -196,7 +206,8 @@ public class PlayerBoard{
         if(damages.isEmpty()) {
             throw new PlayerException("The player is damaged");
         }
-        /* TODO: Implement this method */
+        damages.clear(); // Clear the list of damages
+        state = new FrenzyPlayerBoardState(); // Change player board
     }
 
     /**
