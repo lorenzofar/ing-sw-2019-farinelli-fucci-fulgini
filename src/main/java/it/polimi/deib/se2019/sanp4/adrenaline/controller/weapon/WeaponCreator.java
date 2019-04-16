@@ -1,6 +1,7 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.controller.weapon;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.utils.JSONUtils;
+import org.everit.json.schema.ValidationException;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -24,6 +25,7 @@ public class WeaponCreator {
      * @param filePath absolute path of the pack file
      * @throws MissingResourceException if any of the required resources is not found
      * @throws JSONException if there are errors in the JSON itself
+     * @throws ValidationException if the JSON is invalid
      */
     public static void loadWeaponPack(String filePath) {
         /* Load the file as JSON */
@@ -47,6 +49,7 @@ public class WeaponCreator {
      * @param filePath absolute path of the JSON file
      * @throws MissingResourceException if any of the required resources is not found
      * @throws JSONException if there are errors in the JSON itself
+     * @throws ValidationException if the JSON is invalid
      */
     public static void loadWeapon(String filePath) {
         /* Load file as JSON */

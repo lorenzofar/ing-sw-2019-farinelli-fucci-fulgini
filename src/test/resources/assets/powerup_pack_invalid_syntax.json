@@ -1,0 +1,26 @@
+{
+  "types": [
+    {
+      "id": "pw1",
+      "name": "Powerup 1",
+      "description": "I am a description"
+    }
+  ],
+  "deck": [
+    {
+      "type": "pw1',
+      "color": "RED",
+      "count": 1
+    },
+    {
+      "type": "pw1",
+      "color": "YELLOW",
+      "count": 2
+    },
+    {
+      "type": "pw1",
+      "color": "BLUE",
+      "count": 3
+    }
+  ]
+}
