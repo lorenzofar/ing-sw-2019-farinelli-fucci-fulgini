@@ -10,21 +10,24 @@ import java.util.Map;
 public class AmmoCard {
 
     /** Unique identifier of the card */
-    private final int id;
+    private int id;
 
     /** Map describing how many cubes are available for each color */
-    private final Map<AmmoCube, Integer> cubes;
+    private Map<AmmoCube, Integer> cubes;
 
     /** Indicates whether the card holds a powerup or not */
-    private final boolean powerup;
+    private boolean holdingPowerup;
+
+    /** Default constructor only to be used by Jackson */
+    private AmmoCard(){}
 
     /**
      * Creates a new ammo card holding the specified cubes
      * @param id The identifier of the card
      * @param cubes The cubes contained in the card, not null and must have non-negative values
-     * @param hasPowerUp {@code true} if the card holds a powerup card, {@code false} otherwise
+     * @param holdingPowerup {@code true} if the card holds a powerup card, {@code false} otherwise
      */
-    AmmoCard(int id, Map<AmmoCube, Integer> cubes, boolean hasPowerUp){
+    public AmmoCard(int id, Map<AmmoCube, Integer> cubes, boolean holdingPowerup){
         if(cubes == null){
             throw new NullPointerException("Cubes map cannot be null");
         }
@@ -34,7 +37,7 @@ public class AmmoCard {
         }
         this.id = id;
         this.cubes = cubes;
-        this.powerup = hasPowerUp;
+        this.holdingPowerup = holdingPowerup;
     }
 
     /**
@@ -57,8 +60,8 @@ public class AmmoCard {
      * Determines whether or not the card contains a powerup
      * @return {@code true} if the card holds a powerup card, {@code false} otherwise
      */
-    public boolean hasPowerup(){
-        return powerup;
+    public boolean isHoldingPowerup(){
+        return holdingPowerup;
     }
 
     /**
