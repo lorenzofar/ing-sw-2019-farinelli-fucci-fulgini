@@ -5,6 +5,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.PlayerException;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * An helper class that is responsible of managing the game flow
@@ -60,8 +61,8 @@ public class MatchController {
     public void selectNextTurn(){
         // We first retrieve the owner of the current turn
         Player currentPlayer = controller.getModel().getMatch().getCurrentTurn().getTurnOwner();
-        // Then we retrieve the list of all the players
-        List<Player> players = controller.getModel().getMatch().getPlayers();
+        // Then we retrieve the list of all the players that can actually play
+        List<Player> players = controller.getModel().getMatch().getPlayers().stream().filter(player -> player.getState().canPlay()).collect(Collectors.toList());
         // We determine the index of the current player
         int index = players.indexOf(currentPlayer);
         // Then we increase the index by 1 to rotate clockwise
@@ -69,7 +70,6 @@ public class MatchController {
         // We check whether we arrived at the end of the list
         // If yes, we start again
         if(index >= players.size()) {
-            //TODO: Determine whether we have to reset the state of players (suspended ones)
             index = 0;
             if(controller.getModel().getMatch().isFrenzy()){
                 // The match was in frenzy mode
