@@ -2,6 +2,7 @@ package it.polimi.deib.se2019.sanp4.adrenaline.controller;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.model.Model;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.player.PlayerState;
 import it.polimi.deib.se2019.sanp4.adrenaline.view.View;
 
 import java.util.HashMap;
@@ -106,8 +107,7 @@ public class Controller implements CallbackInterface{
         // Since we stop it at the end of each turn
 
         // We should first suspend the player
-        // We should stop the turn of the current player
+        matchController.suspendCurrentPlayer();
         //TODO: Implement this method
-
     }
 }

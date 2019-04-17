@@ -14,6 +14,8 @@ import java.util.stream.Collectors;
  */
 public class MatchController {
 
+    private static final int MIN_ACTIVE_PLAYERS = 3;
+
     /** The object representing the controller it acts on */
     private Controller controller;
 
@@ -51,7 +53,6 @@ public class MatchController {
     public void endCurrentTurn(){
         controller.getGameTimer().reset(); // We reset the game timer to be ready for the next turn
         controller.getModel().getMatch().endCurrentTurn();
-        selectNextTurn();
         //TODO: Implement this method
     }
 
@@ -96,5 +97,30 @@ public class MatchController {
             }catch (PlayerException ex){}
         });
         //TODO: Finish implementing this method
+    }
+
+    /**
+     * Retrievs the number of active players
+     * and determines whether the game should continue or not
+     */
+    private void checkActivePlayersCount(){
+        int activePlayers = (int)controller.getModel().getMatch().getPlayers().stream().filter(player -> player.getState().canPlay()).count();
+        if(activePlayers < MIN_ACTIVE_PLAYERS){
+            // The number of players is not sufficient for the game to continue
+            // We should hence stop the timer and end the match
+            controller.getGameTimer().stop();
+            endMatch();
+        }
+    }
+
+    /**
+     * Suspend the current player since its timer expired
+     */
+    public void suspendCurrentPlayer(){
+        Player currentPlayer = controller.getModel().getMatch().getCurrentTurn().getTurnOwner();
+        controller.getModel().getMatch().suspendPlayer(currentPlayer.getName());
+        checkActivePlayersCount();
+        endCurrentTurn();
+
     }
 }
