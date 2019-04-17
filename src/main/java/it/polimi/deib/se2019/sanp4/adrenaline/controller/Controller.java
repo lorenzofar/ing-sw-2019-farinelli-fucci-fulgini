@@ -1,8 +1,10 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.controller;
 
+import it.polimi.deib.se2019.sanp4.adrenaline.common.Observable;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.Observer;
+import it.polimi.deib.se2019.sanp4.adrenaline.controller.events.*;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.Model;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
-import it.polimi.deib.se2019.sanp4.adrenaline.model.player.PlayerState;
 import it.polimi.deib.se2019.sanp4.adrenaline.view.View;
 
 import java.util.HashMap;
@@ -13,7 +15,7 @@ import java.util.Map;
  * It is responsible of listening to events and take actions accordingly.
  * It also manages interactions with the players when they have to choose something (e.g. targets, destinations, ...).
  */
-public class Controller implements CallbackInterface{
+public class Controller implements CallbackInterface, Observer<Event> {
 
     //TODO: Implement observable
 
@@ -108,6 +110,11 @@ public class Controller implements CallbackInterface{
 
         // We should first suspend the player
         matchController.suspendCurrentPlayer();
+        //TODO: Implement this method
+    }
+
+    @Override
+    public void update(Observable<Event> observable, Event event) {
         //TODO: Implement this method
     }
 }
