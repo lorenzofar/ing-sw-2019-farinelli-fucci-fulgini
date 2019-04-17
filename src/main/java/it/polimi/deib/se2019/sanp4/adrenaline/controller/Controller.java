@@ -4,6 +4,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.model.Model;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
 import it.polimi.deib.se2019.sanp4.adrenaline.view.View;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -12,6 +13,11 @@ import java.util.Map;
  * It also manages interactions with the players when they have to choose something (e.g. targets, destinations, ...).
  */
 public class Controller implements CallbackInterface{
+
+    //TODO: Implement observable
+
+    private static final int MAX_TIMER_TICKS = 180; // 3 minutes TODO: check this attribute
+
     /** Associated model instance */
     private Model model;
 
@@ -29,6 +35,26 @@ public class Controller implements CallbackInterface{
 
     public Controller(Model model) {
         this.model = model;
+        this.gameTimer = new GameTimer(this, MAX_TIMER_TICKS);
+        this.views = new HashMap<>(); // Create a new empty map for the views
+        this.matchController = new MatchController(this);
+    }
+
+    /**
+     * Retrieves the model associated to the controller
+     * @return The object representing the model
+     */
+    public Model getModel(){
+        return model;
+    }
+
+
+    /**
+     * Retrieves the timer of the current match
+     * @return The object representing the game timer
+     */
+    public GameTimer getGameTimer(){
+        return gameTimer;
     }
 
     /**
@@ -52,8 +78,10 @@ public class Controller implements CallbackInterface{
         if(player == null){
             throw new NullPointerException("Player cannot be null");
         }
-        pendingRequests.put(player, null);
-        //TODO: Finish implementing this method
+        // Get pending request context and cancel the handler
+        pendingRequests.get(player).getHandler().cancel();
+        // Remove pending request for the player
+        pendingRequests.remove(player);
     }
 
     /**
@@ -73,6 +101,13 @@ public class Controller implements CallbackInterface{
      */
     @Override
     public void callback() {
+        // Here the time is expired.
+        // This happens only when the player has not finished its turn in time
+        // Since we stop it at the end of each turn
+
+        // We should first suspend the player
+        // We should stop the turn of the current player
         //TODO: Implement this method
+
     }
 }

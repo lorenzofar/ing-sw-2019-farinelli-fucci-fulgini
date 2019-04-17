@@ -166,6 +166,18 @@ public class Match {
     }
 
     /**
+     * Sets the current turn
+     * @param currentTurn The object representing the current turn
+     */
+    public void setCurrentTurn(PlayerTurn currentTurn){
+        if(currentTurn == null){
+            throw new NullPointerException("Current turn cannot be null");
+        }
+        this.currentTurn = currentTurn;
+    }
+
+
+    /**
      * Ends the current turn
      */
     public void endCurrentTurn(){

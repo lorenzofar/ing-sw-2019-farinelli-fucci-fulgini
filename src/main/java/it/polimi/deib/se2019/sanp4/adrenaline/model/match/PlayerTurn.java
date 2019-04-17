@@ -38,7 +38,7 @@ public class PlayerTurn{
      * Creates a new turn for the specified player.
      * @param player The object representing the player, not null
      */
-    PlayerTurn(Player player){
+    public PlayerTurn(Player player){
         if(player == null){
             throw new NullPointerException("Player cannot be null");
         }

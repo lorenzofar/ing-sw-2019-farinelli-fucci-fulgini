@@ -11,4 +11,9 @@ public interface ChoiceHandler<T> {
      * @param choice The object representing the choice, not null
      */
     void handleChoice(T choice);
+
+    /**
+     * Handles failures in retrieving the state and stops waiting for the input
+     */
+    void cancel();
 }
