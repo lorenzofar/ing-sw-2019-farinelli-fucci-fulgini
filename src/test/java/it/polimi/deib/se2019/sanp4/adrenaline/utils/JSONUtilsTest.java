@@ -66,6 +66,13 @@ public class JSONUtilsTest {
         JSONUtils.validatePowerupPack(powerupPack);
     }
 
+    @Test(expected = IllegalStateException.class)
+    public void validateAmmoCardPack_schemaNotLoaded_shouldThrow() {
+        JSONObject ammoCardPack = JSONUtils.loadJSONResource("/assets/ammo_card_pack_valid.json");
+        /* Ask the class to validate an object for a schema that had not been loaded yet */
+        JSONUtils.validateAmmoCardPack(ammoCardPack);
+    }
+
     @Test
     public void arrayToStringSet_stringArray_shouldSucceed() {
         /* Build valid string array and convert it */

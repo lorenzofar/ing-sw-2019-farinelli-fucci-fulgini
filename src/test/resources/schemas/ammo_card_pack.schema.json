@@ -1,0 +1,47 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "ammocard.schema.json",
+  "title" : "Ammo Card Pack",
+  "type" : "object",
+  "definitions": {
+    "ammoCard": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "cubes": {
+          "type": "object",
+          "properties": {
+            "RED":{
+              "type": "integer",
+              "minimum": 0
+            },
+            "YELLOW":{
+              "type": "integer",
+              "minimum": 0
+            },
+            "BLUE":{
+              "type": "integer",
+              "minimum": 0
+            }
+          },
+          "required": ["RED", "YELLOW", "BLUE"]
+        },
+        "holdingPowerup": {
+          "type": "boolean"
+        }
+      },
+      "required": ["id", "cubes", "holdingPowerup"]
+    }
+  },
+  "properties": {
+    "deck": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ammoCard"
+      }
+    }
+  }
+}

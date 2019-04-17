@@ -1,0 +1,22 @@
+{
+  "deck": [
+    {
+      "id": 0,
+      "cubes": {
+        "RED": 1,
+        "BLUE": 1,
+        "YELLOW": 1
+      },
+      "holdingPowerup": false
+    },
+    {
+      "id": 5,
+      "cubes": {
+        "RED": 3,
+        "BLUE": 0,
+        "YELLOW": 0
+      },
+      "holdingPowerup": true
+    }
+  ]
+}

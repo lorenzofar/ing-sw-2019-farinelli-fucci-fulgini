@@ -1,0 +1,12 @@
+{
+  "deck": [
+    {
+      "id": 0,
+      "cubes": {
+        "RED": 1,
+        "YELLOW": 1
+      },
+      "holdingPowerup": 5.01
+    }
+  ]
+}
