@@ -1,5 +1,6 @@
-package it.polimi.deib.se2019.sanp4.adrenaline.controller.weapon;
+package it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons;
 
+import it.polimi.deib.se2019.sanp4.adrenaline.controller.weapon.WeaponCreator;
 import it.polimi.deib.se2019.sanp4.adrenaline.utils.JSONUtils;
 import org.everit.json.schema.ValidationException;
 import org.junit.After;

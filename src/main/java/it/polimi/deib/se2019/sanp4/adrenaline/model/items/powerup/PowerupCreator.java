@@ -1,7 +1,6 @@
-package it.polimi.deib.se2019.sanp4.adrenaline.controller.powerup;
+package it.polimi.deib.se2019.sanp4.adrenaline.model.items.powerup;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCube;
-import it.polimi.deib.se2019.sanp4.adrenaline.model.items.powerup.PowerUpCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.utils.JSONUtils;
 import org.everit.json.schema.ValidationException;
 import org.json.JSONArray;
