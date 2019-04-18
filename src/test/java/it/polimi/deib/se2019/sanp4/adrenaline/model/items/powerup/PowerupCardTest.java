@@ -110,7 +110,7 @@ public class PowerupCardTest {
     }
 
     @Test
-    public void getHashCode_compareWithAnotherCard_ShouldBeSame(){
+    public void getHashCode_compareWithAnotherCard_ShouldBeDifferent(){
         PowerUpCard validPowerUpCard = new PowerUpCard(validId, validName, validDescription, validColor);
         PowerUpCard anotherCard = new PowerUpCard("anotherid", "anothername", "anotherdescription", AmmoCube.YELLOW);
         assertNotEquals(validPowerUpCard.hashCode(), anotherCard.hashCode());

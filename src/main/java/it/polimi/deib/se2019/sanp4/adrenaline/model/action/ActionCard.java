@@ -14,13 +14,16 @@ import java.util.Collections;
  */
 public class ActionCard {
 
-    private final int maxActions;
+    private int maxActions;
 
-    private final ActionCardEnum type;
+    private ActionCardEnum type;
 
-    private final Collection<ActionEnum> actions;
+    private Collection<ActionEnum> actions;
 
-    private final ActionEnum finalAction;
+    private ActionEnum finalAction;
+
+    /** Default constructor only to be used by Jackson */
+    private ActionCard(){}
 
     /**
      * Construct the action card, it will be totally immutable.
@@ -66,7 +69,7 @@ public class ActionCard {
      * @return <b>unmodifiable</b> collection of actions
       */
     public Collection<ActionEnum> getActions() {
-        return actions;
+        return Collections.unmodifiableCollection(actions);
     }
 
     /**
@@ -95,5 +98,17 @@ public class ActionCard {
      */
     public boolean hasFinalAction() {
         return finalAction != null;
+    }
+
+    @Override
+    public boolean equals(Object obj){
+        if(obj == this) return true;
+        if(!(obj instanceof ActionCard)) return false;
+        return ((ActionCard)obj).getType().toString().equals(this.type.toString());
+    }
+
+    @Override
+    public int hashCode(){
+        return 17 + 31*type.hashCode();
     }
 }
