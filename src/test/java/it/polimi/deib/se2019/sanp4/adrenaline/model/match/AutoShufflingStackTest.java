@@ -12,20 +12,20 @@ public class AutoShufflingStackTest {
     @Test(expected = NullPointerException.class)
     public void createStack_emptyCardSetProvided_ShouldThrowNullPointerException(){
         List<Object> list = null;
-        new AutoShufflingStack(list);
+        new AutoShufflingStack<>(list);
     }
 
     @Test (expected = IllegalArgumentException.class)
     public void createStack_emptyCardSetProvided_ShouldThrowIllegalArgumentException(){
         List<Object> list = Collections.emptyList();
-        new AutoShufflingStack(list);
+        new AutoShufflingStack<>(list);
     }
 
     @Test
     public void createStack_properCardSetProvided_ShouldNotThrowException(){
         List<Object> list = new ArrayList<>();
         list.add(new Object());
-        new AutoShufflingStack(list);
+        new AutoShufflingStack<>(list);
     }
 
     @Test
@@ -33,7 +33,7 @@ public class AutoShufflingStackTest {
         List<Object> list = new ArrayList<>();
         Object card = new Object();
         list.add(card);
-        AutoShufflingStack autoShufflingStack = new AutoShufflingStack(list);
+        AutoShufflingStack<Object> autoShufflingStack = new AutoShufflingStack<>(list);
         assertSame(card, autoShufflingStack.draw());
     }
 
@@ -44,7 +44,7 @@ public class AutoShufflingStackTest {
         Object card2 = new Object();
         list.add(card1);
         list.add(card2);
-        AutoShufflingStack autoShufflingStack = new AutoShufflingStack(list);
+        AutoShufflingStack<Object> autoShufflingStack = new AutoShufflingStack<>(list);
         autoShufflingStack.draw();
         autoShufflingStack.draw();
 
@@ -55,7 +55,7 @@ public class AutoShufflingStackTest {
         List<Object> list = new ArrayList<>();
         Object card = new Object();
         list.add(card);
-        AutoShufflingStack autoShufflingStack = new AutoShufflingStack(list);
+        AutoShufflingStack autoShufflingStack = new AutoShufflingStack<>(list);
         autoShufflingStack.discard(null);
     }
 
@@ -64,7 +64,7 @@ public class AutoShufflingStackTest {
         List<Object> list = new ArrayList<>();
         Object card = new Object();
         list.add(card);
-        AutoShufflingStack autoShufflingStack = new AutoShufflingStack(list);
+        AutoShufflingStack autoShufflingStack = new AutoShufflingStack<>(list);
         autoShufflingStack.discard(new Object());
     }
 
@@ -73,7 +73,7 @@ public class AutoShufflingStackTest {
         List<Object> list = new ArrayList<>();
         Object card = new Object();
         list.add(card);
-        AutoShufflingStack autoShufflingStack = new AutoShufflingStack(list);
+        AutoShufflingStack autoShufflingStack = new AutoShufflingStack<>(list);
         Object drawnCard = autoShufflingStack.draw();
         autoShufflingStack.discard(drawnCard);
         assertNotNull(autoShufflingStack.draw());
@@ -84,7 +84,7 @@ public class AutoShufflingStackTest {
         List<Object> list = new ArrayList<>();
         Object card = new Object();
         list.add(card);
-        AutoShufflingStack autoShufflingStack = new AutoShufflingStack(list);
+        AutoShufflingStack autoShufflingStack = new AutoShufflingStack<>(list);
         Object drawnCard = autoShufflingStack.draw();
         assertSame(drawnCard, card);
         autoShufflingStack.discard(drawnCard);
@@ -98,7 +98,7 @@ public class AutoShufflingStackTest {
         Object card2 = new Object();
         list.add(card1);
         list.add(card2);
-        AutoShufflingStack autoShufflingStack = new AutoShufflingStack(list);
+        AutoShufflingStack autoShufflingStack = new AutoShufflingStack<>(list);
         Object drawnCard = autoShufflingStack.draw();
         list.remove(drawnCard);
         autoShufflingStack.discard(list.get(0));

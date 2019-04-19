@@ -7,7 +7,12 @@ import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
 
 import java.util.List;
 
-public class PickupState implements WeaponCardState {
+public class PickupState extends WeaponCardState {
+
+    PickupState(){
+        super("pickup");
+    }
+
     @Override
     public boolean isUsable() {
         return false;
@@ -40,15 +45,5 @@ public class PickupState implements WeaponCardState {
         catch(NotEnoughAmmoException | CardNotFoundException ex){
             // Here the user does not have enough ammo to pay the reload cost
         }
-    }
-
-    @Override
-    public void unload(WeaponCard weapon) {
-        weapon.setState(new UnloadedState());
-    }
-
-    @Override
-    public void reset(WeaponCard weapon) {
-        weapon.setState(new PickupState());
     }
 }

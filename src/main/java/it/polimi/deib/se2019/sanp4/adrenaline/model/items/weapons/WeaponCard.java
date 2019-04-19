@@ -26,15 +26,21 @@ public class WeaponCard {
     /** Current state of this weapon */
     private WeaponCardState state;
 
+    /** Default constructor only to be used by Jackson */
+    private WeaponCard(){}
+
     /**
      * Creates a new weapon card
      * @param id The identifier of the weapon
      * @param name The name of the weapon, not null and not an empty string
      * @param cost The list of objects representing the cost of the weapon, not null and not empty
      */
-    WeaponCard(String id, String name, List<AmmoCubeCost> cost){
-        if(name == null || cost == null){
+    WeaponCard(String id, String name, List<AmmoCubeCost> cost, List<EffectDescription> effects){
+        if(id == null || name == null || cost == null){
             throw new NullPointerException("Found null parameters");
+        }
+        if(id.isEmpty()){
+            throw new IllegalArgumentException("Weapon id cannot be empty");
         }
         if(name.isEmpty()){
             throw new IllegalArgumentException("Weapon name cannot be empty");
@@ -45,7 +51,8 @@ public class WeaponCard {
         this.id = id;
         this.name = name;
         this.cost = cost;
-        //TODO: Check whether the constructor should accept the list of effects
+        this.effects = effects;
+        this.state = new PickupState();
     }
 
     /**
@@ -96,5 +103,17 @@ public class WeaponCard {
     public WeaponCardState setState(WeaponCardState state){
         this.state = state;
         return this.state;
+    }
+
+    @Override
+    public boolean equals(Object obj){
+        if(obj == this) return true;
+        if(!(obj instanceof WeaponCard)) return false;
+        return ((WeaponCard)obj).getId().equals(this.id);
+    }
+
+    @Override
+    public int hashCode(){
+        return 17 + 31*id.hashCode();
     }
  }
