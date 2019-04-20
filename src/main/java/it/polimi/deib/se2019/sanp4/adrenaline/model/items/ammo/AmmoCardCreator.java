@@ -62,7 +62,7 @@ public class AmmoCardCreator {
      * with the same id is already present.
      * @param card JSON object representing the ammo card, as extracted by the "deck" array
      */
-    public static void loadAmmoCard(JSONObject card){
+    static void loadAmmoCard(JSONObject card){
         /* Check if a card with the same id exists (avoid conflicts) */
         if (ammoCards.stream().noneMatch(c -> c.getId() == card.getInt("id"))) {
             /* Build the card */

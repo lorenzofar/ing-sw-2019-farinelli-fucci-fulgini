@@ -55,7 +55,7 @@ public class ActionCardCreator {
      * Loads an action card from given JSON object.
      * @param card JSON object representing the action card, as extracted by the "actionCards" array
      */
-    public static void loadActionCard(JSONObject card) {
+    static void loadActionCard(JSONObject card) {
         try {
             ActionCard deserialized = objectMapper.readValue(card.toString(), ActionCard.class);
             cards.put(deserialized.getType(), deserialized);

@@ -152,14 +152,6 @@ public class PowerupCreator {
     }
 
     /**
-     * Forgets all the information read untill now.
-     * The class is brought back to its original state
-     */
-    public static void reset(){
-        powerupInfoMap.clear();
-    }
-
-    /**
      * Utility function to load and build the PowerupInfo object for each type.
      * @param pwType JSON object from the "types" array
      */
@@ -192,5 +184,13 @@ public class PowerupCreator {
         /* Increment the count */
         PowerupInfo info = powerupInfoMap.get(id);
         info.addAmount(color, count);
+    }
+
+    /**
+     * Forgets all the information read untill now.
+     * The class is brought back to its original state
+     */
+    static void reset(){
+        powerupInfoMap.clear();
     }
 }
