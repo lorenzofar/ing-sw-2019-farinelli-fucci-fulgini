@@ -20,6 +20,9 @@ public class EffectDescription {
     /** The list of ammo cubes the user has to pay to use the effect */
     private List<AmmoCubeCost> cost;
 
+    /** Default constructor only to be used by Jackson */
+    private EffectDescription(){}
+
     /**
      * Creates a new object describing an effect
      * @param id The id of the effect
@@ -31,11 +34,14 @@ public class EffectDescription {
         if(name == null || description == null || cost == null){
             throw new NullPointerException("Found null parameters");
         }
-        if(name.isEmpty() || description.isEmpty()){
+        if(id.isEmpty() || name.isEmpty() || description.isEmpty()){
             throw new IllegalArgumentException("Effect descriptions cannot be empty");
         }
         if(cost.isEmpty()){
             throw new IllegalArgumentException("Cost list cannot be empty");
+        }
+        if(cost.contains(null)){
+            throw new NullPointerException("Cost list cannot contain null objects");
         }
         this.id = id;
         this.name = name;
@@ -73,5 +79,17 @@ public class EffectDescription {
      */
     public List<AmmoCubeCost> getCost(){
         return new ArrayList<>(cost);
+    }
+
+    @Override
+    public boolean equals(Object obj){
+        if(obj == this) return true;
+        if(!(obj instanceof EffectDescription)) return false;
+        return ((EffectDescription) obj).getId().equals(this.id);
+    }
+
+    @Override
+    public int hashCode(){
+        return 17 + 31*id.hashCode();
     }
 }

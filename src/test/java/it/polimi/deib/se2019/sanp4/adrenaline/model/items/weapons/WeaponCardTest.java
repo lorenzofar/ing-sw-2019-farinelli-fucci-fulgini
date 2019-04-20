@@ -6,7 +6,6 @@ import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCubeCost;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -129,17 +128,13 @@ public class WeaponCardTest {
         WeaponCard weaponCard = new WeaponCard(validId, validName, validCost, validEffects);
         try {
             final String serializedWeaponCard = mapper.writeValueAsString(weaponCard);
-            System.out.println(serializedWeaponCard);
-            System.out.printf(weaponCard.getState().toString());
             assertThat(serializedWeaponCard, containsString(String.format("\"id\":\"%s\"", validId)));
             assertThat(serializedWeaponCard, containsString(String.format("\"name\":\"%s\"", validName)));
             assertThat(serializedWeaponCard, containsString("\"cost\":"));
             weaponCard.getCost().forEach(cube -> assertThat(serializedWeaponCard, containsString(cube.name())));
             weaponCard.getEffects().forEach(effect -> assertThat(serializedWeaponCard, containsString(effect.getId())));
-            //assertThat(serializedWeaponCard, containsString(String.format("\"state\":\"%s\"", weaponCard.getState().toString())));
-            WeaponCard card = mapper.readValue(serializedWeaponCard, WeaponCard.class);
-            System.out.printf("Deserialized");
-        } catch (IOException e) {
+            assertThat(serializedWeaponCard, containsString(String.format("\"state\":{\"type\":\"%s\"}", weaponCard.getState().toString())));
+        } catch (JsonProcessingException ex) {
             fail();
         }
     }
