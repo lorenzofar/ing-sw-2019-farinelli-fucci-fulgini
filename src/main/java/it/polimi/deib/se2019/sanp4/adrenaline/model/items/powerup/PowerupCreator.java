@@ -100,12 +100,32 @@ public class PowerupCreator {
     }
 
     /**
+     * Returns a new powerup card of required type with the selected ammo cube color
+     * @param type type identifier of the powerup
+     * @param color color of the ammo cube
+     * @return powerup card
+     * @throws IllegalArgumentException if the powerup type does no exist
+     */
+    public static PowerUpCard createPowerupCard(String type, AmmoCube color) {
+        PowerupInfo info = powerupInfoMap.get(type);
+
+        if (info == null) throw new IllegalArgumentException(String.format("Powerup type \"%s\" does not exist", type));
+
+        return new PowerUpCard(
+                info.id,
+                info.name,
+                info.description,
+                color
+        );
+    }
+
+    /**
      * Returns a collection with all the powerup cards in the deck.
      * The objects in the list are all distinct and immutable, i.e. the're suitable to be inserted in
      * the powerup stack.
      * @return a collection with all the powerups in the deck
      */
-    public static Collection<PowerUpCard> getPowerupDeck() {
+    public static Collection<PowerUpCard> createPowerupDeck() {
         /* Build the empty list */
         Collection<PowerUpCard> list = new LinkedList<>();
 

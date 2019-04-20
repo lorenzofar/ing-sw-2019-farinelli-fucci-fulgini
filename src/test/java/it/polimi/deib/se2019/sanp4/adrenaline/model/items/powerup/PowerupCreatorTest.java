@@ -30,7 +30,7 @@ public class PowerupCreatorTest {
         PowerupCreator.loadPowerupPack("/assets/powerup_pack_valid.json");
 
         /* Now check that loading has been performed correctly by requesting a full deck */
-        Collection<PowerUpCard> cards = PowerupCreator.getPowerupDeck();
+        Collection<PowerUpCard> cards = PowerupCreator.createPowerupDeck();
 
         /* Red cubes */
         long count = cards.stream().filter(card -> card.getId().equals("pw1"))
@@ -60,5 +60,23 @@ public class PowerupCreatorTest {
     @Test(expected = JSONException.class)
     public void loadPowerupPack_invalidSyntax_shouldThrow() {
         PowerupCreator.loadPowerupPack("/assets/powerup_pack_invalid_syntax.json");
+    }
+
+    @Test
+    public void createPowerupCard_typeExists_shouldReturn() {
+        /* Load powerups, should throw nothing */
+        PowerupCreator.loadPowerupPack("/assets/powerup_pack_valid.json");
+
+        /* Request a card */
+        PowerUpCard card = PowerupCreator.createPowerupCard("pw1", AmmoCube.RED);
+        assertEquals("pw1", card.getId());
+        assertEquals("Powerup 1", card.getName());
+        assertEquals("I am a description", card.getDescription());
+        assertEquals(AmmoCube.RED, card.getCubeColor());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void createPowerupCard_typeNotExists_shouldThrow() {
+        PowerupCreator.createPowerupCard("pw8567", AmmoCube.RED);
     }
 }
