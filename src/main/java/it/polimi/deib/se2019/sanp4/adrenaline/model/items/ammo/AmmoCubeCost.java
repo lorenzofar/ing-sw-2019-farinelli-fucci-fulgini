@@ -49,12 +49,12 @@ public enum AmmoCubeCost{
     }
 
     public AmmoCube getCorrespondingCube(){
-        switch(this.toString()){
-            case "Red":
+        switch(this){
+            case RED:
                 return AmmoCube.RED;
-            case "Blue":
+            case BLUE:
                 return AmmoCube.BLUE;
-            case "Yello":
+            case YELLOW:
                 return AmmoCube.YELLOW;
             default:
                 return null;
