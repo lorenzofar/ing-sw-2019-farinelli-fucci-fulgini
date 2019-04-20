@@ -22,6 +22,7 @@ public class JSONUtils {
     private static Schema weaponSchema;
     private static Schema powerupPackSchema;
     private static Schema ammoCardPackSchema;
+    private static Schema actionCardPackSchema;
     /* TODO: Add more schemas */
 
     /** This class has only static methods and should not be instantiated */
@@ -119,6 +120,25 @@ public class JSONUtils {
     }
 
     /**
+     * Loads action card pack schema.
+     * @param schemaPath absolute path of the schema resource
+     */
+    public static void loadActionCardPackSchema(String schemaPath){
+        actionCardPackSchema = loadSchema(schemaPath);
+    }
+
+    /**
+     * Validates action card pack against its schema.
+     * @param pack action card pack JSON to validate
+     * @throws ValidationException if the pack is not valid
+     * @throws IllegalStateException if the validation schema had not been previously loaded
+     */
+    public static void validateActionCardPack(JSONObject pack){
+        if (actionCardPackSchema == null) throw new IllegalStateException("You must load the action card pack schema first!");
+        actionCardPackSchema.validate(pack);
+    }
+
+    /**
      * Loads and returns a schema from given path.
      * @param schemaPath absolute file path to the schema
      * @return loaded schema
@@ -150,5 +170,6 @@ public class JSONUtils {
         weaponSchema = null;
         powerupPackSchema = null;
         ammoCardPackSchema = null;
+        actionCardPackSchema = null;
     }
 }

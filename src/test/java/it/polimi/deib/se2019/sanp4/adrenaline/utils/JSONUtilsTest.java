@@ -48,29 +48,36 @@ public class JSONUtilsTest {
     @Test(expected = IllegalStateException.class)
     public void validateWeapon_schemaNotLoaded_shouldThrow() {
         JSONObject weapon = JSONUtils.loadJSONResource("/assets/test_weapons/validWeapon.json");
-        /* Ask the class to validate an object for a schema that had not been loaded yet */
+        /* Ask the class to validate an object for a schema that has not been loaded yet */
         JSONUtils.validateWeapon(weapon);
     }
 
     @Test(expected = IllegalStateException.class)
     public void validateWeaponPack_schemaNotLoaded_shouldThrow() {
         JSONObject weaponPack = JSONUtils.loadJSONResource("/assets/weapon_pack_valid.json");
-        /* Ask the class to validate an object for a schema that had not been loaded yet */
+        /* Ask the class to validate an object for a schema that has not been loaded yet */
         JSONUtils.validateWeaponPack(weaponPack);
     }
 
     @Test(expected = IllegalStateException.class)
     public void validatePowerupPack_schemaNotLoaded_shouldThrow() {
         JSONObject powerupPack = JSONUtils.loadJSONResource("/assets/powerup_pack_valid.json");
-        /* Ask the class to validate an object for a schema that had not been loaded yet */
+        /* Ask the class to validate an object for a schema that has not been loaded yet */
         JSONUtils.validatePowerupPack(powerupPack);
     }
 
     @Test(expected = IllegalStateException.class)
     public void validateAmmoCardPack_schemaNotLoaded_shouldThrow() {
         JSONObject ammoCardPack = JSONUtils.loadJSONResource("/assets/ammo_card_pack_valid.json");
-        /* Ask the class to validate an object for a schema that had not been loaded yet */
+        /* Ask the class to validate an object for a schema that has not been loaded yet */
         JSONUtils.validateAmmoCardPack(ammoCardPack);
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void validateActionCardPack_schemaNotLoaded_shouldThrow() {
+        JSONObject actionCardPack = JSONUtils.loadJSONResource("/assets/action_card_pack_valid.json");
+        /* Ask the class to validate an object for a schema that has not been loaded yet */
+        JSONUtils.validateActionCardPack(actionCardPack);
     }
 
     @Test

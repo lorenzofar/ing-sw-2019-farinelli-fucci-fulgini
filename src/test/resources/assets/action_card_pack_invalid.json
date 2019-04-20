@@ -1,0 +1,14 @@
+{
+  "actionCards": [
+    {
+      "type": "NONEXISTENT",
+      "maxActions": -5,
+      "actions": ["RUN", "GRAB", "SHOOT"],
+      "finalAction": "RELOAD"
+    },
+    {
+      "type": "FRENZY1",
+      "actions": ["RUN"]
+    }
+  ]
+}
