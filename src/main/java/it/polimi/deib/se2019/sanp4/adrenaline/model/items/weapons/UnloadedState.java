@@ -17,6 +17,9 @@ public class UnloadedState extends WeaponCardState {
 
     @Override
     public void reload(Player player, WeaponCard weapon) {
+        if(player == null || weapon == null){
+            throw new NullPointerException("Found null parameters");
+        }
         /*
          In this state the weapon is completely unloaded,
          hence all the cubes have to be paid.

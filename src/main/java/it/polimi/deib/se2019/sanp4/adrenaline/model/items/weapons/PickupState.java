@@ -20,6 +20,9 @@ public class PickupState extends WeaponCardState {
 
     @Override
     public void reload(Player player, WeaponCard weapon) {
+        if(player == null || weapon == null){
+            throw new NullPointerException("Found null parameters");
+        }
         /*
          In this state the weapon is partially loaded,
          hence the first element of the cost list has not to be paid.

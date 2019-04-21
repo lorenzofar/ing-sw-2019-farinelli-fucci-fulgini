@@ -15,6 +15,9 @@ public class LoadedState extends WeaponCardState {
 
     @Override
     public void reload(Player player, WeaponCard weapon) {
+        if(player == null || weapon == null){
+            throw new NullPointerException("Found null parameters");
+        }
         /*
         Since the weapon is already loaded,
         this method has no effects on it

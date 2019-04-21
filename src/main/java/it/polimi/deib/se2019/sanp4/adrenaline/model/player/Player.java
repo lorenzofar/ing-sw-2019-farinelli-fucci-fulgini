@@ -63,7 +63,7 @@ public class Player{
      * @param actionCard pre-built action card, may be shared with other players
      * @param character chosen game character
      */
-    Player(String name, ActionCard actionCard, PlayerCharacter character){
+    public Player(String name, ActionCard actionCard, PlayerCharacter character){
         if (actionCard == null || character == null || name == null) {
             throw new NullPointerException("Found null parameters!");
         }
@@ -348,7 +348,7 @@ public class Player{
         if(ammo == null){
             throw new NullPointerException("Cubes map cannot be null");
         }
-        if(ammo.entrySet().stream().filter(entry -> entry.getValue() < 0).count() > 0){
+        if(ammo.entrySet().stream().anyMatch(entry -> entry.getValue() < 0)){
             throw new IllegalArgumentException("Cubes amounts cannot be negative");
         }
         ammo.forEach((key, value) -> {
@@ -395,6 +395,14 @@ public class Player{
     }
 
     /**
+     * Retrieves the ammo cubes belonging to the player
+     * @return A map containing the count of each ammo cube
+     */
+    public Map<AmmoCube, Integer> getAmmo(){
+        return new EnumMap<>(ammo);
+    }
+
+    /**
      * Returns shared object representing the game character this player is associated to.
      * @return player's character
      */
@@ -431,7 +439,7 @@ public class Player{
 
     /**
      * Sets player's operational state.
-     * @param state
+     * @param state The object representing the state
      */
     public void setState(PlayerState state) {
         if(state == null){
