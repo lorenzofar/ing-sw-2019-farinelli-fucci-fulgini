@@ -3,6 +3,8 @@ package it.polimi.deib.se2019.sanp4.adrenaline.controller;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.util.ArrayList;
+
 import static org.junit.Assert.assertEquals;
 
 public class RequestContextTest {
@@ -19,7 +21,7 @@ public class RequestContextTest {
             @Override
             public void cancel() {}
         };
-        validRequest = new Request<Object>() {
+        validRequest = new Request<Object>("message", new ArrayList<>(), true) {
             @Override
             public boolean isValid(Object choice) {
                 return true;

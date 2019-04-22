@@ -19,11 +19,37 @@ public abstract class Request<T>{
     private boolean optional;
 
     /**
+     * Creates a new request
+     * @param message The message associated to the request
+     * @param choices The list of objects representing the available choices
+     * @param optional {@code true} if the request is optional, {@code false} otherwise
+     */
+    public Request(String message, List<T> choices, boolean optional){
+        if(message == null || choices == null){
+            throw new NullPointerException("Found null parameters");
+        }
+        if(message.isEmpty()){
+            throw new IllegalArgumentException("Message cannot be empty");
+        }
+        if(choices.contains((T)null)){
+            throw new NullPointerException("Choices list cannot contain null objects");
+        }
+        this.message = message;
+        this.choices = choices;
+        this.optional = optional;
+    }
+
+    /**
      * Checks whether the provided choice belong to the set of allowed choices
      * @param choice The object representing the choice, not null
      * @return {@code true} if the choice belongs, {@code false} otherwise
      */
-    public abstract boolean isValid(T choice);
+    public boolean isValid(T choice){
+        if(choice == null){
+            throw new NullPointerException("Choice cannot be null");
+        }
+        return choices.contains(choice);
+    }
 
     /**
      * Retrieves the message associated to the request
