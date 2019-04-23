@@ -184,11 +184,8 @@ public class PlayerBoard{
         Map<Player, Integer> damageCounts = new HashMap<>();
         // We create a map holding the score of each player
         Map<Player, Integer> playerScores = new HashMap<>();
-        damages.forEach(shooter -> {
-            Integer playerDamage = damageCounts.get(shooter);
-            playerDamage = playerDamage == null ? 0 : playerDamage;
-            damageCounts.put(shooter, playerDamage);
-        });
+        // For each shooter, increase its damage count by 1
+        damages.forEach(shooter -> damageCounts.merge(shooter, 1, Integer::sum));
 
         // We first get the iterator to assign scores
         Iterator<Integer> scores = state.getDamageScores(this);

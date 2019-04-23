@@ -105,11 +105,11 @@ public class Player{
         int genericCount = (int)cubesList.stream().filter(cube -> cube == AmmoCubeCost.ANY).count();
         Map<AmmoCube, Integer> convertedAmmo = new EnumMap<>(AmmoCube.class);
 
-        cubesList.stream().filter(cube -> cube != AmmoCubeCost.ANY).forEach(cube -> {
-            AmmoCube convertedCube = cube.getCorrespondingCube();
-            Integer previousAmmo = convertedAmmo.get(convertedCube);
-            convertedAmmo.put(convertedCube, previousAmmo == null ? 1 : previousAmmo + 1);
-        });
+        cubesList.stream()
+                .filter(cube -> cube != AmmoCubeCost.ANY)
+                .forEach(cube ->
+                    convertedAmmo.merge(cube.getCorrespondingCube(), 1, Integer::sum)
+                );
 
         // If there are no cubes to convert, do nothing
         if(genericCount == 0){
@@ -132,7 +132,7 @@ public class Player{
                 throw new NotEnoughAmmoException();
             }
             // The user can pay the cost, so we increase the corresponding counter
-            convertedAmmo.put(availableAmmo.get().getKey(), availableAmmo.get().getValue() + 1);
+            convertedAmmo.merge(availableAmmo.get().getKey(), 1, Integer::sum);
             genericCount--;
         }
         // Here we succesfully converted the cubes and the player is able to pay the cost
