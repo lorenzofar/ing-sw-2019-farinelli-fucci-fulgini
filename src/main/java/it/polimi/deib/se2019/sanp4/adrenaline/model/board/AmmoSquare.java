@@ -8,6 +8,9 @@ public class AmmoSquare extends Square {
     /** The ammo card contained in the square */
     private AmmoCard ammoCard;
 
+    /** Default constructor only to be used by Jackson */
+    protected AmmoSquare(){}
+
     /**
      * Creates a new ammo square at the specified location
      * @param location The cartesian coordinates of the location

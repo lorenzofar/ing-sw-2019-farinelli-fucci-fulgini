@@ -1,21 +1,50 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.model.board;
 
-import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
-
 import java.util.*;
+import java.util.stream.Collectors;
 
 /* A class representing the board game */
 public class Board {
 
-    /** A list of objects representing the squares the board is composed of */
-    private List<Square> squares;
+    /** A matrix of objects representing the squares the board is composed of. The addressing is [x][y] */
+    private Square[][] squares;
+
+    private Map<RoomColor, Room> rooms;
+
+    /** Default constructor only to be used by Jackson */
+    protected Board(){}
 
     /**
-     * Creates a new game board containing the specified squares
-     * @param squares A collection of objects representing the squares
+     * Creates an empty game board of given size.
+     * @param xSize horizontal size (number of columns)
+     * @param ySize vertical size (number of rows)
      */
-    Board(Collection<Square> squares){
-        this.squares = new ArrayList<>(squares);
+    public Board(int xSize, int ySize){
+        if (xSize <= 0 || ySize <=0) throw new IllegalArgumentException("Board size must be greater than 0");
+
+        /* Allocate the matrix */
+        squares = new Square[xSize][ySize];
+
+        /* Create the empty rooms */
+        rooms = new EnumMap<>(RoomColor.class);
+        rooms.keySet().forEach(color -> rooms.put(color, new Room(color)));
+    }
+
+    /**
+     * Adds given square to the board.
+     * @param square the square to be added, not null
+     */
+    public void addSquare(Square square){
+        if (square == null) throw new NullPointerException("Cannot add null square to the board");
+        int x = square.getLocation().getX();
+        int y = square.getLocation().getY();
+        /* Check that the square is inside the board */
+        if (x >= squares.length || y >= squares[0].length){
+            throw new IndexOutOfBoundsException(
+                    String.format("Cannot add a square at coords (%d, %d) because it's outside the board", x, y));
+        }
+        /* Add it to the board */
+        squares[x][y] = square;
     }
 
     /**
@@ -85,15 +114,23 @@ public class Board {
         if(location == null){
             throw new NullPointerException("Location cannot be null");
         }
-        //TODO: Implement this method
-        return null;
+
+        return squares[location.getX()][location.getY()];
     }
 
     /**
      * Retrieves the squares composing the board
-     * @return The list of objects representing the squares
+     * @return A collection of objects representing the squares
      */
-    public List<Square> getSquares() {
-        return new ArrayList<>(this.squares);
+    public Collection<Square> getSquares() {
+        return Arrays.stream(squares).flatMap(Arrays::stream).collect(Collectors.toList());
+    }
+
+    /**
+     * Returns the rooms composing the board
+     * @return An unmodifiable map of the rooms in this board
+     */
+    public Map<RoomColor, Room> getRooms() {
+        return Collections.unmodifiableMap(rooms);
     }
 }

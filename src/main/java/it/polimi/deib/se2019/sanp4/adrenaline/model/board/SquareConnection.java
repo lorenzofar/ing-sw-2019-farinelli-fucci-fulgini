@@ -13,8 +13,11 @@ public class SquareConnection {
     /** The coordinates of the connected square */
     private CoordPair square;
 
-    /** Thea type of connection with the square */
+    /** The- type of connection with the square */
     private SquareConnectionType connectionType;
+
+    /** Default constructor only to be used by Jackson */
+    protected SquareConnection(){}
 
     /**
      * Creates a new connection

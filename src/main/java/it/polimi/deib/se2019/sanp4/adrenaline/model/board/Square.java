@@ -8,7 +8,7 @@ import java.util.*;
 /**
  * A class representing a square of the game board
  */
-public class Square {
+public abstract class Square {
 
     /** The location of the square in cartesian coordinates */
     private CoordPair location;
@@ -22,6 +22,9 @@ public class Square {
     /** The room the square is into */
     private Room room;
 
+    /** Default constructor, only to be used by Jackson */
+    protected Square(){}
+
     /**
      * Creates a new square at the specified location with no players inside
      * @param location The cartesian coordinates of the location
@@ -31,7 +34,7 @@ public class Square {
             throw new NullPointerException("Location cannot be null");
         }
         this.location = location;
-        this.adjacentSquares = new AdjacentMap(new HashMap<>()); //TODO: Create the map describing the connections
+        this.adjacentSquares = new AdjacentMap();
         this.players = new HashSet<>(5);
         //TODO: Complete the constructor
     }
@@ -68,6 +71,14 @@ public class Square {
      */
     public List<Player> getPlayers(){
         return new ArrayList<>(this.players);
+    }
+
+    /**
+     * Sets the room for this square.
+     * @param room the room this square belongs to
+     */
+    public void setRoom(Room room) {
+        this.room = room;
     }
 
     /**

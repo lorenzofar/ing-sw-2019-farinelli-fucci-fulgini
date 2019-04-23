@@ -7,12 +7,15 @@ public class CoordPair {
     /** The Y coordinate */
     private int y;
 
+    /** Default constructor only to be used by Jackson */
+    protected CoordPair(){}
+
     /**
      * Creates a new pair of coordinates with the provided components
      * @param x The X coordinate, must be positive
      * @param y The Y coordinate, must be positive
      */
-    CoordPair(int x, int y){
+    public CoordPair(int x, int y){
         if(x < 0 || y < 0){
             throw new IllegalArgumentException("Coordinates must be positive");
         }

@@ -5,6 +5,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.FullCapacityExce
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.WeaponCard;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,8 +14,11 @@ public class SpawnSquare extends Square {
 
     private static final int MAX_WEAPON_CARDS = 3;
 
-    /** The list of weapons contained in the square */
-    private List<WeaponCard> weapons;
+    /** The list of weapon cards contained in the square */
+    private List<WeaponCard> weaponCards;
+
+    /** Default constructor only to be used by Jackson */
+    protected SpawnSquare(){}
 
     /**
      * Creates a new spawn square at the specified location
@@ -22,15 +26,15 @@ public class SpawnSquare extends Square {
      */
     SpawnSquare(CoordPair location){
         super(location);
-        this.weapons = new ArrayList<>(3);
+        this.weaponCards = new ArrayList<>(MAX_WEAPON_CARDS);
     }
 
     /**
      * Retrieves all the weapon cards contained in the square
-     * @return A list of objects representing the weapon cards
+     * @return An unmodifiable list of weapon cards
      */
     public List<WeaponCard> getWeaponCards() {
-        return new ArrayList<>(this.weapons);
+        return Collections.unmodifiableList(weaponCards);
     }
 
     /**
@@ -45,13 +49,13 @@ public class SpawnSquare extends Square {
         }
 
         /* Get the card from the collection, if it exists */
-        Optional<WeaponCard> card = weapons.stream().filter(w -> w.getId().equals(weaponId)).findFirst();
+        Optional<WeaponCard> card = weaponCards.stream().filter(w -> w.getId().equals(weaponId)).findFirst();
         /* If it does not exist, signal it */
         if (!card.isPresent()) {
             throw new CardNotFoundException("Cannot grab card " + weaponId);
         }
         /* If it exists, remove it and return it */
-        weapons.remove(card.get());
+        weaponCards.remove(card.get());
         return card.get();
     }
 
@@ -65,13 +69,13 @@ public class SpawnSquare extends Square {
             throw new NullPointerException("Weapon cannot be null");
         }
 
-        if(weapons.contains(weapon)){
+        if(weaponCards.contains(weapon)){
             throw new IllegalStateException("Weapon is already on the square");
         }
 
-        if(weapons.size() >= MAX_WEAPON_CARDS){
+        if(weaponCards.size() >= MAX_WEAPON_CARDS){
             throw new FullCapacityException(MAX_WEAPON_CARDS);
         }
-        this.weapons.add(weapon);
+        this.weaponCards.add(weapon);
     }
 }

@@ -3,7 +3,8 @@ package it.polimi.deib.se2019.sanp4.adrenaline.model.board;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
 
 import java.util.Collection;
-import java.util.List;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.stream.Collectors;
 
 /**
@@ -15,26 +16,55 @@ public class Room {
     /** The color of the room */
     private RoomColor color;
 
-    /** The list of squares belonging to the room */
-    private List<Square> squares;
+    /** A collection of distinct squares belonging to the room */
+    private Collection<Square> squares;
+
+    /** Default constructor only to be used by Jackson */
+    protected Room(){}
 
     /**
      * Creates a new room of the specified color containing the provided squares
-     * @param squares The list of objects representing the squares
+     * @param color The color of this room
      */
-    Room(List<Square> squares, RoomColor color){
-        if(color == null || squares == null){
+    Room(RoomColor color){
+        if(color == null){
             throw new NullPointerException("Found null parameters");
         }
-        this.squares = squares;
+        this.squares = new HashSet<>();
         this.color = color;
     }
 
     /**
-     * Retrieves all the players inside the room
-     * @return The list of objects representing the players
+     * Adds a square to this room. Also sets the room attribute of the square.
+     * @param square square to be added, not null
      */
-    public List<Player> getPlayers(){
+    public void addSquare(Square square){
+        if (square == null) throw new NullPointerException("Cannot add a null squuare to the room");
+        squares.add(square);
+        square.setRoom(this);
+    }
+
+    /**
+     * Removes given square from the room. If the square does not belong to the room nothing happens.
+     * @param square the square to be removed
+     */
+    public void removeSquare(Square square){
+        squares.remove(square);
+    }
+
+    /**
+     * Returns the squares in this room.
+     * @return unmodifiable collection of squares in this room
+     */
+    public Collection<Square> getSquares() {
+        return Collections.unmodifiableCollection(squares);
+    }
+
+    /**
+     * Retrieves all the players inside the room
+     * @return A collection of objects representing the players
+     */
+    public Collection<Player> getPlayers(){
         // Remap the list of squares to the players they contain and then flatten it
         return squares.stream().map(Square::getPlayers).flatMap(Collection::stream).collect(Collectors.toList());
     }
