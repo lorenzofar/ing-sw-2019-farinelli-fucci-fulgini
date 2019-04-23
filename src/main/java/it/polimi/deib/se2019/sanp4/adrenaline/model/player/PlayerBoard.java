@@ -22,6 +22,8 @@ public class PlayerBoard{
     private List<Player> damages;
     /** Number of marks received by each player */
     private Map<Player, Integer> marks;
+    /** Number of revenge marks received by other players*/
+    private Map<Player, Integer> revengeMarks;
     /** Number of times the player died, either by killshot or overkill */
     private int deaths;
     /** Owner of the player board */
@@ -40,6 +42,7 @@ public class PlayerBoard{
         }
         damages = new ArrayList<>();
         marks = new HashMap<>();
+        revengeMarks = new HashMap<>();
         deaths = 0;
         this.player = player;
         state = new RegularPlayerBoardState();
@@ -118,6 +121,21 @@ public class PlayerBoard{
     }
 
     /**
+     * Adds one revenge mark from the given player.
+     * @param shooter The player who sent the mark, not the owner of the player board, not null
+     */
+    public void addRevengeMark(Player shooter){
+        if(shooter == null){
+            throw new NullPointerException("Player cannot be null");
+        }
+        if(shooter.getPlayerBoard() == this){
+            throw new IllegalArgumentException("The player cannot add a revenge mark to himself");
+        }
+        // Increase the count by 1
+        revengeMarks.merge(player, 1, Integer::sum);
+    }
+
+    /**
      * Returns the number of marks on the board delivered by a certain player.
      * If there are no marks by that player, it will simply return 0.
      * @param player player who sent the marks, not null
@@ -162,7 +180,9 @@ public class PlayerBoard{
      * @return {@code map<player, score>} with each player who got points
      */
     public Map<Player, Integer> getPlayerScores() {
+        // We create a map holding the count of performed damages
         Map<Player, Integer> damageCounts = new HashMap<>();
+        // We create a map holding the score of each player
         Map<Player, Integer> playerScores = new HashMap<>();
         damages.forEach(shooter -> {
             Integer playerDamage = damageCounts.get(shooter);
@@ -179,6 +199,10 @@ public class PlayerBoard{
                 .stream()
                 .sorted(comparingByValue())
                 .forEachOrdered(playerDamageEntry -> playerScores.put(playerDamageEntry.getKey(), scores.next()));
+
+        // Then assign a point for first blood
+        Player firstBloodShooter = damages.get(0);
+        playerScores.put(firstBloodShooter, playerScores.get(firstBloodShooter) + 1);
         return playerScores;
     }
     /**
@@ -195,6 +219,7 @@ public class PlayerBoard{
         addDeath();
         damages = new ArrayList<>();
         marks = new HashMap<>();
+        //TODO: Check whether we have to reset also the revenge marks
     }
 
     /**
