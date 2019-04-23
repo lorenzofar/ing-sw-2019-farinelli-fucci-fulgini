@@ -13,7 +13,6 @@ public class SpawnSquare extends Square {
 
     private static final int MAX_WEAPON_CARDS = 3;
 
-
     /** The list of weapons contained in the square */
     private List<WeaponCard> weapons;
 

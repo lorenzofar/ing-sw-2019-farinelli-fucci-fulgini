@@ -23,7 +23,7 @@ public class Room {
      * @param squares The list of objects representing the squares
      */
     Room(List<Square> squares, RoomColor color){
-        if(squares == null || color == null){
+        if(color == null || squares == null){
             throw new NullPointerException("Found null parameters");
         }
         this.squares = squares;
