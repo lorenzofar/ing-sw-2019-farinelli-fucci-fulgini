@@ -33,6 +33,9 @@ public class Controller implements CallbackInterface, Observer<Event> {
     /** The helper class to manage the match */
     private MatchController matchController;
 
+    /** The helper class to compute and assign scores */
+    private ScoreManager scoreManager;
+
     /** The game timer associated to the match */
     private GameTimer gameTimer;
 
@@ -40,6 +43,7 @@ public class Controller implements CallbackInterface, Observer<Event> {
         this.model = model;
         this.gameTimer = new GameTimer(this, MAX_TIMER_TICKS);
         this.views = new HashMap<>(); // Create a new empty map for the views
+        this.scoreManager = new StandardScoreManager();
         this.matchController = new MatchController(this);
     }
 
@@ -58,6 +62,14 @@ public class Controller implements CallbackInterface, Observer<Event> {
      */
     public GameTimer getGameTimer(){
         return gameTimer;
+    }
+
+    /**
+     * Retrieves the score manager for the current match
+     * @return The object representing the score manager
+     */
+    public ScoreManager getScoreManager() {
+        return scoreManager;
     }
 
     /**
