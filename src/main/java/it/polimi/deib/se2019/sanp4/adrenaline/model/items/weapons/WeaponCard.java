@@ -35,7 +35,7 @@ public class WeaponCard {
      * @param name The name of the weapon, not null and not an empty string
      * @param cost The list of objects representing the cost of the weapon, not null and not empty
      */
-    WeaponCard(String id, String name, List<AmmoCubeCost> cost, List<EffectDescription> effects){
+    public WeaponCard(String id, String name, List<AmmoCubeCost> cost, List<EffectDescription> effects){
         if(id == null || name == null || cost == null){
             throw new NullPointerException("Found null parameters");
         }
