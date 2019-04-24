@@ -12,7 +12,7 @@ import java.util.Optional;
 /** A specialized class representing a square available as spawn points and that contain weapon cards*/
 public class SpawnSquare extends Square {
 
-    private static final int MAX_WEAPON_CARDS = 3;
+    public static final int MAX_WEAPON_CARDS = 3;
 
     /** The list of weapon cards contained in the square */
     private List<WeaponCard> weaponCards;
@@ -60,7 +60,7 @@ public class SpawnSquare extends Square {
     }
 
     /**
-     * Puts a weapon on the square, if it is full
+     * Puts a weapon on the square, if it is not full
      * @param weapon The object representing the weapon
      * @throws FullCapacityException If the square contains the maximum number of weapons
      */
