@@ -1,6 +1,8 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.model.player;
 
 import java.util.*;
+import java.util.stream.Collectors;
+
 import static java.util.Map.Entry.comparingByValue;
 
 /**
@@ -174,7 +176,7 @@ public class PlayerBoard{
 
     /**
      * Calculates and returns in a map the scores for all the players who did at least one
-     * damage to the owner of the player board.
+     * damage to the owner of the player board, automatically resolving draws.
      * Does not reset the board after calculation.
      * Players who delivered no damage won't be in the map.
      * @return {@code map<player, score>} with each player who got points
@@ -187,9 +189,30 @@ public class PlayerBoard{
         // For each shooter, increase its damage count by 1
         damages.forEach(shooter -> damageCounts.merge(shooter, 1, Integer::sum));
 
-        // We first get the iterator to assign scores
-        Iterator<Integer> scores = state.getDamageScores(this);
+        /* ===== DRAWS MANAGEMENT ===== */
+        // We have to determine whether there are draws and resolve them
+        damageCounts.values().forEach(count -> {
+            List<Player> playersWithSameDamageCount = damageCounts.entrySet()
+                    .stream()
+                    // Get all the players with the same count of damages
+                    .filter(entry -> entry.getValue().equals(count))
+                    // We keep only the player object of each entry
+                    .map(Map.Entry::getKey)
+                    .collect(Collectors.toList());
+            // Check whether there are two or more players with the same amount of damages
+            if(playersWithSameDamageCount.size() > 1){
+                // Determine which one shoot first (it always exists)
+                Player firstShooter = damages.stream().filter(playersWithSameDamageCount::contains).findFirst().get();
+                // We remove the first shooter from the list
+                playersWithSameDamageCount.remove(firstShooter);
+                // We remove players in the list from the map
+                playersWithSameDamageCount.forEach(damageCounts::remove);
+            }
+        });
 
+        /* ===== SCORES ASSIGNMENT ===== */
+        // We get the iterator to assign scores
+        Iterator<Integer> scores = state.getDamageScores(this);
         // We sort damages by value in decreasing order
         // Then for each entry we retrieve the points and put in the output map
         damageCounts.entrySet()
@@ -202,6 +225,7 @@ public class PlayerBoard{
         playerScores.put(firstBloodShooter, playerScores.get(firstBloodShooter) + 1);
         return playerScores;
     }
+
     /**
      * Checks whether the player is dead or not, then increments the number of deaths accordingly and
      * resets all damage on the board.
