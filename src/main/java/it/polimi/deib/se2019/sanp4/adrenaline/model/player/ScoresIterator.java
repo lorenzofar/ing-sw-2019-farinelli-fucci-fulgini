@@ -13,7 +13,7 @@ public class ScoresIterator implements Iterator<Integer> {
     /** Index from which the points subarray should start */
     private int startIndex;
 
-    ScoresIterator(int[] points, int startIndex){
+    public ScoresIterator(int[] points, int startIndex){
         if(points.length == 0){
             throw new IllegalArgumentException("Points array cannot be empty");
         }

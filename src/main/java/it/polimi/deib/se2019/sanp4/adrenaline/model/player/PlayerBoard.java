@@ -217,7 +217,7 @@ public class PlayerBoard{
         // Then for each entry we retrieve the points and put in the output map
         damageCounts.entrySet()
                 .stream()
-                .sorted(comparingByValue())
+                .sorted(Collections.reverseOrder(comparingByValue()))
                 .forEachOrdered(playerDamageEntry -> playerScores.put(playerDamageEntry.getKey(), scores.next()));
 
         // Then assign a point for first blood
