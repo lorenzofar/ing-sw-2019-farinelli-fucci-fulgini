@@ -1,5 +1,6 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.model.match;
 
+import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.FullCapacityException;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.Board;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.powerup.PowerUpCard;
@@ -7,9 +8,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.WeaponCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.PlayerState;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Hold the representation of the match.
@@ -31,6 +30,7 @@ import java.util.Optional;
 public class Match {
 
     public static final int MAX_PLAYERS = 5;
+    private final int SKULLS;
 
     /** The turn of the player which is currently playing */
     private PlayerTurn currentTurn;
@@ -50,12 +50,11 @@ public class Match {
     /** List of players participating in the match */
     private List<Player> players;
 
-    /** Number of remaining skulls in the killshots track */
-    private int skulls;
+    /** The killshots track */
+    private List<Player> killshotsTrack;
 
     /** A flag indicating whether the match is in frenzy mode or not */
     private boolean frenzy;
-
 
     /**
      * Creates a new match for the provided players.
@@ -81,7 +80,8 @@ public class Match {
         this.ammoStack = ammoStack;
         this.weaponStack = weaponStack;
         this.powerupStack = powerupStack;
-        this.skulls = skulls;
+        this.killshotsTrack = new ArrayList<>();
+        this.SKULLS = skulls;
     }
 
     /**
@@ -215,7 +215,30 @@ public class Match {
      * @return The count of remaining skulls
      */
     public int getSkulls() {
-        return skulls;
+        return SKULLS - killshotsTrack.size();
+    }
+
+    /**
+     * Retrieves the killshots track
+     * @return The list of players, in chronological order, that performed killshots
+     */
+    public List<Player> getKillshotsTrack(){
+        return Collections.unmodifiableList(killshotsTrack);
+    }
+
+    /**
+     * Adds a killshot to the killshots track from the provided player
+     * @param player The object representing the player, not null
+     * @throws FullCapacityException If the killshots track is full
+     */
+    public void addKillshot(Player player) throws FullCapacityException{
+        if(player == null){
+            throw new NullPointerException("The player cannot be null");
+        }
+        if(killshotsTrack.size() >= SKULLS){
+            throw new FullCapacityException(SKULLS);
+        }
+        killshotsTrack.add(player);
     }
 
     /**

@@ -1,5 +1,6 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.controller;
 
+import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.FullCapacityException;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.match.Match;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
 
@@ -38,6 +39,12 @@ public class StandardScoreManager extends ScoreManager {
             }
             // Update the count of killshots
             killshotsCount.merge(player.getPlayerBoard().getKillshot(), 1, Integer::sum);
+            // Update the killshots track
+            try {
+                match.addKillshot(player.getPlayerBoard().getKillshot());
+            } catch (FullCapacityException e) {
+                e.printStackTrace();
+            }
         });
         // We now finished to assign scores
         // No we consider the players that performed more than one killshot in the turn
