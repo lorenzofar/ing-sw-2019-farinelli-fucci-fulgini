@@ -96,7 +96,7 @@ public class StandardScoreManager extends ScoreManager {
 
         // Retrieve all the players that have damages on their boards
         List<Player> playersToConsider = match.getPlayers().stream()
-                .filter(player -> player.getPlayerBoard().getDamages().size() > 0)
+                .filter(player -> player.getPlayerBoard().getDamages().isEmpty())
                 .collect(Collectors.toList());
 
         // Assign scores according to their boards
@@ -111,7 +111,7 @@ public class StandardScoreManager extends ScoreManager {
         killshotsCount.values().forEach(count -> {
             List<Player> playersWithSameCount = killshotsCount.entrySet()
                     .stream()
-                    .filter(entry -> entry.getValue() == count)
+                    .filter(entry -> entry.getValue().equals(count))
                     .map(Map.Entry::getKey)
                     .collect(Collectors.toList());
             if(playersWithSameCount.size() > 1){
