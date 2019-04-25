@@ -4,7 +4,9 @@ import it.polimi.deib.se2019.sanp4.adrenaline.model.match.PlayerTurn;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.PlayerException;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -35,8 +37,45 @@ public class MatchController {
     public void endMatch(){
         // This happens when the last turn after frenzy mode is completed
         controller.getGameTimer().stop(); // We stop the game timer
-        //TODO: Implement this method
-        //TODO: Trigger final scoring
+        //TODO: Maybe we could notify the controller so he can tell players about game endings
+
+        // We already scored the last turn, so we just perform final scoring
+        // And we get the scores computed from the killshot track
+        Map<Player, Integer> killshotTrackScores = controller.getScoreManager().scoreFinal(controller.getModel().getMatch());
+
+        // Get all the players involved in the match
+        List<Player> players = controller.getModel().getMatch().getPlayers();
+        // Get the maximum score
+        int maxScore = Collections.max(players.stream().map(Player::getScore).collect(Collectors.toList()));
+        // Check whether there are draws, getting all the players with the highest score
+        List<Player> topPlayers = players
+                .stream()
+                .filter(player -> player.getScore() == maxScore)
+                .collect(Collectors.toList());
+        if(topPlayers.size() > 1){
+            // Here we have to break the tie by considering the scores got from the killshot track
+            // First we remove from the killshot track scores map the players not belonging to the top ones
+            killshotTrackScores.keySet()
+                    .stream()
+                    .filter(shooter -> !topPlayers.contains(shooter))
+                    .forEach(killshotTrackScores::remove);
+
+            // We check whether there are some elements left in the scores map
+            // Otherwise, the players did not perform any killshot and they remain tied
+            // Hence topPlayers list will contain the winners
+            if(killshotTrackScores.size() != 0) {
+                // Then we determine which is the highest score among top players
+                int maxKillshotScore = Collections.max(killshotTrackScores.values());
+                // Then we remove from top players those with a lesser score
+                killshotTrackScores.entrySet()
+                        .stream()
+                        .filter(entry -> entry.getValue() != maxKillshotScore)
+                        .map(Map.Entry::getKey)
+                        .forEach(topPlayers::remove);
+                // Now the topPlayers list contain the winner
+            }
+        }
+        //TODO; Tell who is the winner (by passing the list of winners)
     }
 
     /**
@@ -48,12 +87,21 @@ public class MatchController {
     }
 
     /**
-     * Ends the current turn and sets up the next one
+     * Ends the current turn
+     * Triggers scoring
+     * and sets up the next one
      */
     public void endCurrentTurn(){
         controller.getGameTimer().reset(); // We reset the game timer to be ready for the next turn
         controller.getModel().getMatch().endCurrentTurn();
-        //TODO: Implement this method
+        // We tell the score manager to perform scoring of the turn
+        controller.getScoreManager().scoreTurn(controller.getModel().getMatch());
+        // After scoring, check whether to turn frenzy
+        if(controller.getModel().getMatch().getSkulls() == 0){
+            // There is no room left on the killshots track
+            // Hence we set up frenzy mode
+            setupFrenzyMode();
+        }
     }
 
     /**
@@ -94,8 +142,11 @@ public class MatchController {
         controller.getModel().getMatch().getPlayers().forEach(player -> {
             try {
                 player.getPlayerBoard().turnFrenzy();
-            }catch (PlayerException ex){}
+            }catch (PlayerException ex){
+                // We do nothing since the player board cannot be turned to frenzy mode
+            }
         });
+        controller.getModel().getMatch().goFrenzy();
         //TODO: Finish implementing this method
     }
 
