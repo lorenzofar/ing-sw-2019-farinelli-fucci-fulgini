@@ -89,7 +89,7 @@ public class StandardScoreManager extends ScoreManager {
     }
 
     @Override
-    public void scoreFinal(Match match) {
+    public Map<Player, Integer> scoreFinal(Match match) {
         if(match == null){
             throw new NullPointerException("Match cannot be null");
         }
@@ -121,11 +121,18 @@ public class StandardScoreManager extends ScoreManager {
             }
         });
 
-        // Add extra points for performed killshots
+        Map<Player, Integer> killshotTrackScores = new HashMap<>();
+
+        // Compute extra points for performed killshots
         killshotsCount.entrySet()
                 .stream()
                 .sorted(Collections.reverseOrder(comparingByValue()))
                 .map(Map.Entry::getKey)
-                .forEachOrdered(player -> player.addScorePoints(scoresIterator.next()));
+                .forEachOrdered(player -> killshotTrackScores.put(player, scoresIterator.next()));
+
+        // Add extra points to the players
+        killshotTrackScores.forEach(Player::addScorePoints);
+
+        return killshotTrackScores;
     }
 }
