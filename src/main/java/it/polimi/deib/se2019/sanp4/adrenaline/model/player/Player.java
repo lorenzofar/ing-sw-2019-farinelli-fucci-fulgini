@@ -87,10 +87,15 @@ public class Player{
 
         /* Ammo */
         ammo = new EnumMap<>(AmmoCube.class);
-        ammo.replaceAll((color, amount) -> INITIAL_AMMO);
+        for(int i= 0; i<AmmoCube.values().length; i++){
+            ammo.put(AmmoCube.values()[i], INITIAL_AMMO);
+        }
 
         /* Set default state */
         state = PlayerState.ONLINE;
+
+        /* Initially, the player is not on any square, hence it's null */
+        currentSquare = null;
     }
 
     /**
@@ -124,7 +129,10 @@ public class Player{
                     .stream()
                     .filter(entry -> {
                         Integer userAmmo = entry.getValue();
-                        return userAmmo != null && userAmmo == 0;
+                        Integer pendingAmmo = convertedAmmo.get(entry.getKey());
+                        pendingAmmo = pendingAmmo != null ? pendingAmmo : 0;
+                        // Here we check that the player has enough ammo to pay for the pending ammo and for the generic cube
+                        return userAmmo != null && userAmmo != 0 && userAmmo - pendingAmmo > 0;
                     })
                     .findAny();
             // We check whether that cube is really present, if not we throw an exception
@@ -135,7 +143,7 @@ public class Player{
             convertedAmmo.merge(availableAmmo.get().getKey(), 1, Integer::sum);
             genericCount--;
         }
-        // Here we succesfully converted the cubes and the player is able to pay the cost
+        // Here we successfully converted the cubes and the player is able to pay the cost
         return convertedAmmo;
     }
 
@@ -226,6 +234,14 @@ public class Player{
     }
 
     /**
+     * Retrieves the weapon cards owned by the player
+     * @return The list of objects representing the weapon cards
+     */
+    public List<WeaponCard> getWeapons(){
+        return new ArrayList<>(weapons);
+    }
+
+    /**
      * Determines whether the player owns the specified weapon card
      * @param weaponId The identifier of the weapon card
      * @return {@code true} if the player owns the card, {@code false} otherwise
@@ -299,6 +315,14 @@ public class Player{
     }
 
     /**
+     * Retrieves the powerup cards owned by the player
+     * @return The list of objects representing the powerup cards
+     */
+    public List<PowerUpCard> getPowerups(){
+        return new ArrayList<>(powerups);
+    }
+
+    /**
      * Adds powerup card to player's hands.
      * Also takes care of the fact that you cannot have more than more than {@link #MAX_POWERUPS} cards.
      * @param powerup powerup card to be added, not null
@@ -328,9 +352,6 @@ public class Player{
     public PowerUpCard removePowerup(PowerUpCard powerup) {
         if(powerup == null){
             throw new NullPointerException("Powerup card cannot be null");
-        }
-        if(this.powerups.isEmpty()){
-            throw new IllegalStateException("User has no powerup cards");
         }
         if(!(powerups.contains(powerup))){
             throw new IllegalStateException("User does not have the powerup card");
@@ -391,6 +412,9 @@ public class Player{
      * @throws NotEnoughAmmoException if the player does not have enough ammo to pay the specified amount
      */
     public void payAmmo(List<AmmoCubeCost> ammo) throws NotEnoughAmmoException{
+        if(ammo == null){
+            throw new NullPointerException("Cubes list cannot be null");
+        }
         payAmmo(convertAmmoCubeCost(ammo));
     }
 
