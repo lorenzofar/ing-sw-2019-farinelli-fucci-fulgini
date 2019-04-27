@@ -2,6 +2,7 @@ package it.polimi.deib.se2019.sanp4.adrenaline.model.board;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /* A class representing the board game */
 public class Board {
@@ -61,8 +62,43 @@ public class Board {
         if(maxMoves < 0){
             throw new IllegalArgumentException("Square cannot be reached by a negative amount of moves");
         }
-        //TODO: Implement this method
-        return false;
+        if(maxMoves == 0){
+            // A 0 amount of moves we have to stay in the current square,
+            // hence the destination can be reached only if it the starting point
+            return start.equals(end);
+        }
+
+        // We initialize the list of navigable squares with those I can reach with 1 move from the start
+        Set<CoordPair> navigableSquares = new LinkedHashSet<>(start.getAdjacentSquares().getReachableSquares());
+
+        int startIndex = 0;
+
+        // We iterate over the maximum number of moves
+        // At each step we retrieve all the squares we can move into, by
+        for (int i = 1; i<maxMoves; i++){
+            // First we get all the squares we can navigate from the currently considered squares
+            // We just consider the newly added squares, by taking a subset starting at 'startIndex'
+            Stream<CoordPair> navigableSquaresToAdd = navigableSquares
+                    .stream()
+                    .skip(startIndex)
+                    .flatMap(location->
+                            getSquare(location)
+                                    .getAdjacentSquares()
+                                    .getReachableSquares()
+                                    .stream()
+                                    // Then we remove the start square from the collection
+                                    .filter(square -> square != start.getLocation()));
+            // We update the startIndex to point at the last element of the list (before insertion)
+            startIndex = navigableSquares.size();
+            // And eventually we put all the new squares inside the list
+            navigableSquaresToAdd.forEach(navigableSquares::add);
+            // We check whether we have found the destination and if yes we stop and return
+            if(navigableSquares.stream().anyMatch(coordPair -> coordPair.equals(end.getLocation()))){
+                return true;
+            }
+        }
+        // At the end we check whether we can reach the destination and we return accordingly
+        return navigableSquares.stream().anyMatch(coordPair -> coordPair.equals(end.getLocation()));
     }
 
     /**

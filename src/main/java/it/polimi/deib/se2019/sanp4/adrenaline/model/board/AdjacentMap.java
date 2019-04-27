@@ -1,7 +1,9 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.model.board;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.EnumMap;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -50,6 +52,18 @@ public class AdjacentMap extends EnumMap<CardinalDirection, SquareConnection> {
      * @return A collection of objects representing the squares
      */
     public Collection<CoordPair> getSquares(){
-        return this.values().stream().map(SquareConnection::getSquare).collect(Collectors.toList());
+        return this.values().stream().map(SquareConnection::getSquare).filter(Objects::nonNull).collect(Collectors.toList());
+    }
+
+    /**
+     * Retrieves all the adjacent squares a player can move into
+     * @return A collection of objects representing the squares
+     */
+    public Collection<CoordPair> getReachableSquares(){
+        return this.values()
+                .stream()
+                .filter(connection -> connection.getConnectionType() != SquareConnectionType.WALL)
+                .map(SquareConnection::getSquare)
+                .collect(Collectors.toList());
     }
 }
