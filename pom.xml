@@ -21,7 +21,7 @@
         <!-- Integrating Sonar with Jacoco -->
         <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
         <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
-        <sonar.jacoco.reportPaths>${project.basedir}/../target/jacoco.exec</sonar.jacoco.reportPaths>
+        <sonar.jacoco.xmlReportPaths>${project.reporting.outputDirectory}/jacoco</sonar.jacoco.xmlReportPaths>
         <sonar.language>java</sonar.language>
 
         <!-- Sonar url and credentials -->
@@ -90,7 +90,6 @@
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>0.8.3</version>
                 <configuration>
-                    <destFile>${sonar.jacoco.reportPaths}</destFile>
                     <append>true</append>
                 </configuration>
                 <executions>
@@ -98,6 +97,12 @@
                         <id>agent</id>
                         <goals>
                             <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <goals>
+                            <goal>report</goal>
                         </goals>
                     </execution>
                 </executions>
