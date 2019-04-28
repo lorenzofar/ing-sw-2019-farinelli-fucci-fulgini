@@ -24,7 +24,7 @@ public class SpawnSquare extends Square {
      * Creates a new spawn square at the specified location
      * @param location The cartesian coordinates of the location
      */
-    SpawnSquare(CoordPair location){
+    public SpawnSquare(CoordPair location){
         super(location);
         this.weaponCards = new ArrayList<>(MAX_WEAPON_CARDS);
     }

@@ -25,14 +25,21 @@ public class UnloadedStateTest {
     private static ActionCard validActionCard;
     private static String validPlayerName = "player1";
     private static PlayerCharacter validCharacter;
-    private static Map<AmmoCube, Integer> validPlayerAmmo;
+    private static Map<AmmoCube, Integer> initialPlayerAmmo;
+
+    private static List<AmmoCubeCost> validCost;
+    private static List<AmmoCubeCost> invalidCost;
 
     @BeforeClass
     public static void setup(){
-        List<AmmoCubeCost> validCost = new ArrayList<>();
-        validCost.add(AmmoCubeCost.BLUE);
-        validCost.add(AmmoCubeCost.RED);
-        validCost.add(AmmoCubeCost.YELLOW);
+        validCost = new ArrayList<>();
+        validCost.addAll(Collections.nCopies(Player.INITIAL_AMMO, AmmoCubeCost.BLUE));
+        validCost.addAll(Collections.nCopies(Player.INITIAL_AMMO, AmmoCubeCost.RED));
+        validCost.addAll(Collections.nCopies(Player.INITIAL_AMMO, AmmoCubeCost.YELLOW));
+        invalidCost = new ArrayList<>();
+        invalidCost.addAll(Collections.nCopies(Player.INITIAL_AMMO + 1, AmmoCubeCost.BLUE));
+        invalidCost.addAll(Collections.nCopies(Player.INITIAL_AMMO + 1, AmmoCubeCost.RED));
+        invalidCost.addAll(Collections.nCopies(Player.INITIAL_AMMO + 1, AmmoCubeCost.YELLOW));
         List<EffectDescription> validEffects = new ArrayList<>();
         weaponCard = new WeaponCard(validId, validName, validCost, validEffects);
 
@@ -41,10 +48,10 @@ public class UnloadedStateTest {
         validActions.add(ActionEnum.ADRENALINE_SHOOT);
         validActionCard = new ActionCard(2, ActionCardEnum.ADRENALINE1, validActions, ActionEnum.RELOAD);
 
-        validPlayerAmmo = new EnumMap<>(AmmoCube.class);
-        validPlayerAmmo.put(AmmoCube.BLUE, 1);
-        validPlayerAmmo.put(AmmoCube.RED, 1);
-        validPlayerAmmo.put(AmmoCube.YELLOW, 1);
+        initialPlayerAmmo = new EnumMap<>(AmmoCube.class);
+        for(int i = 0; i<AmmoCube.values().length; i++) {
+            initialPlayerAmmo.put(AmmoCube.values()[i], Player.INITIAL_AMMO);
+        }
         validCharacter = new PlayerCharacter("name", "description", RoomColor.BLUE);
     }
 
@@ -83,10 +90,9 @@ public class UnloadedStateTest {
     @Test
     public void reloadWeapon_playerDoesNotHaveWeapon_playerAmmoShouldNotBeDecreasedAndWeaponStateShouldBeUnloaded(){
         Player player = new Player(validPlayerName, validActionCard, validCharacter);
-        player.addAmmo(validPlayerAmmo);
         weaponCard.setState(new UnloadedState());
         weaponCard.getState().reload(player, weaponCard);
-        assertEquals(validPlayerAmmo, player.getAmmo());
+        assertEquals(initialPlayerAmmo, player.getAmmo());
         assertEquals(UnloadedState.class, weaponCard.getState().getClass());
     }
 
@@ -96,14 +102,13 @@ public class UnloadedStateTest {
         player.addAmmo(Collections.emptyMap());
         weaponCard.setState(new UnloadedState());
         weaponCard.getState().reload(player, weaponCard);
-        assertEquals(new HashMap<AmmoCube, Integer>(), player.getAmmo());
+        assertEquals(initialPlayerAmmo, player.getAmmo());
         assertEquals(UnloadedState.class, weaponCard.getState().getClass());
     }
 
     @Test
     public void reloadWeapon_playerHasWeaponAndEnoughAmmo_playerAmmoShouldBeDecreasedAndWeaponStateShouldBeLoaded(){
         Player player = new Player(validPlayerName, validActionCard, validCharacter);
-        player.addAmmo(validPlayerAmmo);
         try {
             player.addWeapon(weaponCard);
         } catch (FullCapacityException e) {
@@ -111,8 +116,10 @@ public class UnloadedStateTest {
         }
         weaponCard.setState(new UnloadedState());
         weaponCard.getState().reload(player, weaponCard);
-        Map<AmmoCube, Integer> emptyAmmo = new EnumMap<>(validPlayerAmmo);
-        emptyAmmo.replaceAll((color, count) -> 0);
+        Map<AmmoCube, Integer> emptyAmmo = new EnumMap<>(AmmoCube.class);
+        for(int i = 0; i<AmmoCube.values().length; i++) {
+            emptyAmmo.put(AmmoCube.values()[i], 0);
+        }
         assertEquals(emptyAmmo, player.getAmmo());
         assertEquals(LoadedState.class, weaponCard.getState().getClass());
     }

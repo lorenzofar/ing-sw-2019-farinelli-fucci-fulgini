@@ -23,18 +23,24 @@ public class PickupStateTest {
     private static final String validId = "weaponone";
     private static final String validName = "Weapon One";
     private static List<AmmoCubeCost> validCost;
+    private static List<AmmoCubeCost> invalidCost;
 
     private static ActionCard validActionCard;
     private static String validPlayerName = "player1";
     private static PlayerCharacter validCharacter;
-    private static Map<AmmoCube, Integer> validPlayerAmmo;
+    private static Map<AmmoCube, Integer> initialPlayerAmmo;
+
 
     @BeforeClass
     public static void setup(){
         validCost = new ArrayList<>();
-        validCost.add(AmmoCubeCost.BLUE);
-        validCost.add(AmmoCubeCost.RED);
-        validCost.add(AmmoCubeCost.YELLOW);
+        validCost.addAll(Collections.nCopies(Player.INITIAL_AMMO, AmmoCubeCost.BLUE));
+        validCost.addAll(Collections.nCopies(Player.INITIAL_AMMO, AmmoCubeCost.RED));
+        validCost.addAll(Collections.nCopies(Player.INITIAL_AMMO, AmmoCubeCost.YELLOW));
+        invalidCost = new ArrayList<>();
+        invalidCost.addAll(Collections.nCopies(Player.INITIAL_AMMO + 1, AmmoCubeCost.BLUE));
+        invalidCost.addAll(Collections.nCopies(Player.INITIAL_AMMO + 1, AmmoCubeCost.RED));
+        invalidCost.addAll(Collections.nCopies(Player.INITIAL_AMMO + 1, AmmoCubeCost.YELLOW));
         List<EffectDescription> validEffects = new ArrayList<>();
         weaponCard = new WeaponCard(validId, validName, validCost, validEffects);
 
@@ -43,10 +49,10 @@ public class PickupStateTest {
         validActions.add(ActionEnum.ADRENALINE_SHOOT);
         validActionCard = new ActionCard(2, ActionCardEnum.ADRENALINE1, validActions, ActionEnum.RELOAD);
 
-        validPlayerAmmo = new EnumMap<>(AmmoCube.class);
-        validPlayerAmmo.put(AmmoCube.BLUE, 1);
-        validPlayerAmmo.put(AmmoCube.RED, 1);
-        validPlayerAmmo.put(AmmoCube.YELLOW, 1);
+        initialPlayerAmmo = new EnumMap<>(AmmoCube.class);
+        for(int i = 0; i<AmmoCube.values().length; i++) {
+            initialPlayerAmmo.put(AmmoCube.values()[i], Player.INITIAL_AMMO);
+        }
         validCharacter = new PlayerCharacter("name", "description", RoomColor.BLUE);
     }
 
@@ -85,27 +91,25 @@ public class PickupStateTest {
     @Test
     public void reloadWeapon_playerDoesNotHaveWeapon_playerAmmoShouldNotBeDecreasedAndWeaponStateShouldBePickup(){
         Player player = new Player(validPlayerName, validActionCard, validCharacter);
-        player.addAmmo(validPlayerAmmo);
         weaponCard.setState(new PickupState());
         weaponCard.getState().reload(player, weaponCard);
-        assertEquals(validPlayerAmmo, player.getAmmo());
+        assertEquals(initialPlayerAmmo, player.getAmmo());
         assertEquals(PickupState.class, weaponCard.getState().getClass());
     }
 
     @Test
     public void reloadWeapon_playerHasWeaponButNotEnoughAmmo_playerAmmoShouldNotBeDecreasedAndWeaponStateShouldBePickup(){
         Player player = new Player(validPlayerName, validActionCard, validCharacter);
-        player.addAmmo(Collections.emptyMap());
-        weaponCard.setState(new PickupState());
-        weaponCard.getState().reload(player, weaponCard);
-        assertEquals(new HashMap<AmmoCube, Integer>(), player.getAmmo());
+        WeaponCard expensiveWeaponCard = new WeaponCard(validId, validName, invalidCost, new ArrayList<>());
+        expensiveWeaponCard.setState(new PickupState());
+        expensiveWeaponCard.getState().reload(player, expensiveWeaponCard);
+        assertEquals(initialPlayerAmmo, player.getAmmo());
         assertEquals(PickupState.class, weaponCard.getState().getClass());
     }
 
     @Test
     public void reloadWeapon_playerHasWeaponAndEnoughAmmo_playerAmmoShouldBeDecreasedAndWeaponStateShouldBeLoaded(){
         Player player = new Player(validPlayerName, validActionCard, validCharacter);
-        player.addAmmo(validPlayerAmmo);
         try {
             player.addWeapon(weaponCard);
         } catch (FullCapacityException e) {
@@ -113,8 +117,10 @@ public class PickupStateTest {
         }
         weaponCard.setState(new PickupState());
         weaponCard.getState().reload(player, weaponCard);
-        Map<AmmoCube, Integer> testAmmo = new EnumMap<>(validPlayerAmmo);
-        testAmmo.replaceAll((color, count) -> 0);
+        Map<AmmoCube, Integer> testAmmo = new EnumMap<>(AmmoCube.class);
+        for(int i= 0; i<AmmoCube.values().length; i++){
+            testAmmo.put(AmmoCube.values()[i], 0);
+        }
         // Since the first cube is already loaded, I test that it is not removed from the player
         testAmmo.put(validCost.get(0).getCorrespondingCube(), 1);
         assertEquals(testAmmo, player.getAmmo());
@@ -127,7 +133,6 @@ public class PickupStateTest {
         oneCubeCost.add(AmmoCubeCost.YELLOW);
         WeaponCard oneCubecard = new WeaponCard(validId ,validName, oneCubeCost, new ArrayList<>());
         Player player = new Player(validPlayerName, validActionCard, validCharacter);
-        player.addAmmo(validPlayerAmmo);
         try {
             player.addWeapon(oneCubecard);
         } catch (FullCapacityException e) {
@@ -135,7 +140,7 @@ public class PickupStateTest {
         }
         oneCubecard.setState(new PickupState());
         oneCubecard.getState().reload(player, oneCubecard);
-        assertEquals(validPlayerAmmo, player.getAmmo());
+        assertEquals(initialPlayerAmmo, player.getAmmo());
         assertEquals(LoadedState.class, oneCubecard.getState().getClass());
     }
 }
