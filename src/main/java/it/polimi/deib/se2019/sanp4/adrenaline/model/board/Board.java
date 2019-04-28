@@ -102,6 +102,32 @@ public class Board {
     }
 
     /**
+     * Retrieve all the squares that are visible from the provided squares, according to the game rules
+     * @param start The object representing the square
+     * @return The set of objects representing the visible squares
+     */
+    private Set<Square> getVisibleSquares(Square start){
+        // Here we have to determine which squares are visible from the provided square
+        // First we add all the squares that are in its same room
+        Set<Square> visibleSquares = new HashSet<>(start.getRoom().getSquares());
+        visibleSquares.remove(start); // We remove it from the list
+        // Then we get all the squares it is connected by a door and retrieve the visible rooms
+        start.getAdjacentSquares().values()
+                .stream()
+                // Keep only the squares connected by a door
+                .filter(squareConnection -> squareConnection.getConnectionType() == SquareConnectionType.DOOR)
+                // Get their coordinates
+                .map(SquareConnection::getSquare)
+                // Retrieve the square objects
+                .map(this::getSquare)
+                // Retrieve their rooms
+                .map(Square::getRoom)
+                // Retrieve all the squares belonging to the room and add them to the set
+                .forEach(room -> visibleSquares.addAll(room.getSquares()));
+        return visibleSquares;
+    }
+
+    /**
      * Given a starting square, this method navigates the board and returns the set of visited squares
      * matching the specified filters
      * @param start the square from which start, not null
