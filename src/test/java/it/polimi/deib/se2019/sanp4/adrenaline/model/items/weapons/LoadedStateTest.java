@@ -28,7 +28,7 @@ public class LoadedStateTest {
     private static ActionCard validActionCard;
     private static String validPlayerName = "player1";
     private static PlayerCharacter validCharacter;
-    private static Map<AmmoCube, Integer> validPlayerAmmo;
+    private static Map<AmmoCube, Integer> initialPlayerAmmo;
 
     @BeforeClass
     public static void setup(){
@@ -44,10 +44,10 @@ public class LoadedStateTest {
         validActions.add(ActionEnum.ADRENALINE_SHOOT);
         validActionCard = new ActionCard(2, ActionCardEnum.ADRENALINE1, validActions, ActionEnum.RELOAD);
 
-        validPlayerAmmo = new EnumMap<>(AmmoCube.class);
-        validPlayerAmmo.put(AmmoCube.BLUE, 1);
-        validPlayerAmmo.put(AmmoCube.RED, 1);
-        validPlayerAmmo.put(AmmoCube.YELLOW, 1);
+        initialPlayerAmmo = new EnumMap<>(AmmoCube.class);
+        for(int i = 0; i<AmmoCube.values().length; i++) {
+            initialPlayerAmmo.put(AmmoCube.values()[i], Player.INITIAL_AMMO);
+        }
         validCharacter = new PlayerCharacter("name", "description", RoomColor.BLUE);
     }
 
@@ -86,12 +86,12 @@ public class LoadedStateTest {
     @Test
     public void reloadWeapon_checkPlayerAmmo_shouldNotBeDecreasedAndWeaponStateShouldBeLoaded(){
         Player player = new Player(validPlayerName, validActionCard, validCharacter);
-        player.addAmmo(validPlayerAmmo);
+        // Here the player only has initial ammo
         try {
             player.addWeapon(weaponCard);
             weaponCard.setState(new LoadedState());
             weaponCard.getState().reload(player, weaponCard);
-            assertEquals(validPlayerAmmo, player.getAmmo());
+            assertEquals(initialPlayerAmmo, player.getAmmo());
             assertEquals(LoadedState.class, weaponCard.getState().getClass());
         } catch (FullCapacityException e) {
             fail();
