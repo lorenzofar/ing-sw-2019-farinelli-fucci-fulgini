@@ -110,7 +110,6 @@ public class Board {
         // Here we have to determine which squares are visible from the provided square
         // First we add all the squares that are in its same room
         Set<Square> visibleSquares = new HashSet<>(start.getRoom().getSquares());
-        visibleSquares.remove(start); // We remove it from the list
         // Then we get all the squares it is connected by a door and retrieve the visible rooms
         start.getAdjacentSquares().values()
                 .stream()
