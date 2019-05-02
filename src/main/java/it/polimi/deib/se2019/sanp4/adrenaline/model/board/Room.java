@@ -46,10 +46,17 @@ public class Room {
 
     /**
      * Removes given square from the room. If the square does not belong to the room nothing happens.
-     * @param square the square to be removed
+     * @param square the square to be removed, not null
      */
     public void removeSquare(Square square){
-        squares.remove(square);
+        if(square == null){
+            throw new NullPointerException("Square cannot be null");
+        }
+        if(squares.contains(square)) {
+            squares.remove(square);
+            square.setRoom(null);
+        }
+
     }
 
     /**

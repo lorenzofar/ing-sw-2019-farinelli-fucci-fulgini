@@ -36,6 +36,7 @@ public abstract class Square {
         this.location = location;
         this.adjacentSquares = new AdjacentMap();
         this.players = new HashSet<>(5);
+        this.room = null;
         //TODO: Complete the constructor
     }
 
