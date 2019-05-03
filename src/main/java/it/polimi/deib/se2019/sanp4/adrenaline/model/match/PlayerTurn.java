@@ -89,13 +89,22 @@ public class PlayerTurn{
         return currentAction.toString().equals(action.toString());
     }
 
-    /* ===== GETTERS ===== */
-
     /**
      * Retrieves the state the turn is into
      * @return The object representing the state
      */
     public PlayerTurnState getTurnState(){ return this.state; }
+
+    /**
+     * Sets the state the turn is into
+     * @param state The object representing the state, not null
+     */
+    public void setTurnState(PlayerTurnState state){
+        if(state == null){
+            throw new NullPointerException("State cannot be null");
+        }
+        this.state = state;
+    }
 
     /**
      * Retrieves the list of players that received a damage during this turn
