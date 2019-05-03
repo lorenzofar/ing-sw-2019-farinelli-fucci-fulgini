@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 import static java.util.Map.Entry.comparingByValue;
 
 /**
- * Holds damage, marks and deaths of a centain player.
+ * Holds damage, marks and deaths of a certain player.
  * It is also provides a method to calculate each player's scores when
  * the board needs to be scored (e.g. killshot), based on the state (regular or frenzy).
  */
@@ -100,6 +100,9 @@ public class PlayerBoard{
         if(shooter == null){
             throw new NullPointerException(NULL_PLAYER_ERROR);
         }
+        if(shooter.equals(player)){
+            throw new IllegalArgumentException("Shooter cannot be the board owner");
+        }
         if(count < 0){
             throw new IllegalArgumentException("Number of damage tokens cannot be negative");
         }
@@ -114,6 +117,9 @@ public class PlayerBoard{
     public void addMark(Player shooter, int count){
         if(shooter == null){
             throw new NullPointerException(NULL_PLAYER_ERROR);
+        }
+        if(shooter.equals(player)){
+            throw new IllegalArgumentException("Shooter cannot be the board owner");
         }
         if(count < 0){
             throw new IllegalArgumentException("Number of marks cannot be negative");
@@ -136,7 +142,41 @@ public class PlayerBoard{
             throw new IllegalArgumentException("The player cannot add a revenge mark to himself");
         }
         // Increase the count by 1
-        revengeMarks.merge(player, 1, Integer::sum);
+        revengeMarks.merge(shooter, 1, Integer::sum);
+    }
+
+    /**
+     * Removes a revenge mark from the provided player
+     * It automatically removev the player from the map if he does not have marks remaining
+     * @param shooter The object representing the mark shooter, not null
+     */
+    public void removeRevengeMark(Player shooter){
+        if(shooter == null){
+            throw new NullPointerException(NULL_PLAYER_ERROR);
+        }
+        Integer shooterRevengeMarks = revengeMarks.get(shooter);
+        if(shooterRevengeMarks==null) {
+            return;
+        }
+        shooterRevengeMarks--;
+        if(shooterRevengeMarks == 0){
+            revengeMarks.remove(shooter);
+        }
+        else{
+            revengeMarks.put(shooter, shooterRevengeMarks);
+        }
+    }
+
+    /**
+     * Determine whether the provided player has a pending revenge mark on the board owner
+     * @param shooter The object representing the player
+     * @return {@code true} if there is a revenge mark, {@code false} otherwise
+     */
+    public boolean hasRevengeMark(Player shooter){
+        if(shooter == null){
+            throw new NullPointerException(NULL_PLAYER_ERROR);
+        }
+        return revengeMarks.get(shooter) != null;
     }
 
     /**
@@ -188,6 +228,11 @@ public class PlayerBoard{
         Map<Player, Integer> damageCounts = new HashMap<>();
         // We create a map holding the score of each player
         Map<Player, Integer> playerScores = new HashMap<>();
+
+        if(damages.isEmpty()){
+            return playerScores;
+        }
+
         // For each shooter, increase its damage count by 1
         damages.forEach(shooter -> damageCounts.merge(shooter, 1, Integer::sum));
 
