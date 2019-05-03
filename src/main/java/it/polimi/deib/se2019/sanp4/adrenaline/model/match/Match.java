@@ -30,7 +30,7 @@ import java.util.*;
 public class Match {
 
     public static final int MAX_PLAYERS = 5;
-    private final int SKULLS;
+    private final int skulls;
 
     /** The turn of the player which is currently playing */
     private PlayerTurn currentTurn;
@@ -81,7 +81,7 @@ public class Match {
         this.weaponStack = weaponStack;
         this.powerupStack = powerupStack;
         this.killshotsTrack = new ArrayList<>();
-        this.SKULLS = skulls;
+        this.skulls = skulls;
     }
 
     /**
@@ -181,7 +181,9 @@ public class Match {
      * Ends the current turn
      */
     public void endCurrentTurn(){
-        //TODO: Implement this method
+        // Update the state of the current turn
+        currentTurn.setTurnState(PlayerTurnState.OVER);
+        //TODO: Finish implementing this method
     }
 
 
@@ -205,7 +207,11 @@ public class Match {
      * Sets the match to be in frenzy mode
      */
     public void goFrenzy(){
-        //TODO: Implement this method
+        if(frenzy){
+            throw new IllegalStateException("Match is already in frenzy mode");
+        }
+        frenzy = true;
+        //TODO: Finish implementing this method
     }
 
     /* ===== GETTERS ===== */
@@ -215,7 +221,7 @@ public class Match {
      * @return The count of remaining skulls
      */
     public int getSkulls() {
-        return SKULLS - killshotsTrack.size();
+        return skulls - killshotsTrack.size();
     }
 
     /**
@@ -235,8 +241,8 @@ public class Match {
         if(player == null){
             throw new NullPointerException("The player cannot be null");
         }
-        if(killshotsTrack.size() >= SKULLS){
-            throw new FullCapacityException(SKULLS);
+        if(killshotsTrack.size() >= skulls){
+            throw new FullCapacityException(skulls);
         }
         killshotsTrack.add(player);
     }

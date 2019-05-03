@@ -240,7 +240,6 @@ public class PlayerBoard{
         addDeath();
         damages = new ArrayList<>();
         marks = new HashMap<>();
-        //TODO: Check whether we have to reset also the revenge marks
     }
 
     /**
