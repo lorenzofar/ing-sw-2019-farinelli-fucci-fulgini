@@ -10,10 +10,10 @@ public enum ActionCardEnum {
     ADRENALINE1("Regular with adrenaline run"),
     /** Regular with second adrenaline action */
     ADRENALINE2("Regular with adrenaline run and shoot"),
-    /** Frenzy mode (x1), used by players from first onwards */
-    FRENZY1("Frenzy - before first player"),
     /** Frenzy mode (x2), used by players before first */
-    FRENZY2("Frenzy - after first player");
+    FRENZY2("Frenzy - before first player"),
+    /** Frenzy mode (x1), used by players from first onwards */
+    FRENZY1("Frenzy - after first player");
 
     private final String message;
 

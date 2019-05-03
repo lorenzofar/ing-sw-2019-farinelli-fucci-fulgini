@@ -1,0 +1,32 @@
+{
+  "actionCards": [
+    {
+      "type": "REGULAR",
+      "maxActions": 2,
+      "actions": ["RUN", "GRAB", "SHOOT"],
+      "finalAction": "RELOAD"
+    },
+    {
+      "type": "ADRENALINE1",
+      "maxActions": 2,
+      "actions": ["RUN", "ADRENALINE_GRAB", "SHOOT"],
+      "finalAction": "RELOAD"
+    },
+    {
+      "type": "ADRENALINE2",
+      "maxActions": 2,
+      "actions": ["RUN", "ADRENALINE_GRAB", "ADRENALINE_SHOOT"],
+      "finalAction": "RELOAD"
+    },
+    {
+      "type": "FRENZY2",
+      "maxActions": 2,
+      "actions": ["FRENZY2_RUN", "FRENZY2_GRAB", "FRENZY2_SHOOT"]
+    },
+    {
+      "type": "FRENZY1",
+      "maxActions": 1,
+      "actions": ["FRENZY1_GRAB", "FRENZY1_SHOOT"]
+    }
+  ]
+}
