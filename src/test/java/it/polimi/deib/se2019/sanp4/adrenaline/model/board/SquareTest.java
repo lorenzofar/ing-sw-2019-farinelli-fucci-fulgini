@@ -90,6 +90,9 @@ public class SquareTest {
     @Test
     public void setRoom_roomShouldBeChanged(){
         Square square = new AmmoSquare(validLocation);
+        Room room = new Room(RoomColor.BLUE);
+        square.setRoom(room);
+        assertEquals(room, square.getRoom());
     }
 
     @Test

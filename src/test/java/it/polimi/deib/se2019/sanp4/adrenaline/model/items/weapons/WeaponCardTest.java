@@ -66,21 +66,11 @@ public class WeaponCardTest {
 
     @Test
     public void createCard_properParametersProvided_shouldNotThrowException(){
-        new WeaponCard(validId, validName, validCost, validEffects);
-    }
-
-
-
-    @Test
-    public void getCost_shouldReturnListContainingProvidedCost(){
         WeaponCard weaponCard = new WeaponCard(validId, validName, validCost, validEffects);
+        assertEquals(validId, weaponCard.getId());
+        assertEquals(validName, weaponCard.getName());
         assertTrue(weaponCard.getCost().containsAll(validCost));
         assertTrue(validCost.containsAll(weaponCard.getCost()));
-    }
-
-    @Test
-    public void getEffects_shouldReturnListContainingProvidedEffects(){
-        WeaponCard weaponCard = new WeaponCard(validId, validName, validCost, validEffects);
         assertTrue(weaponCard.getEffects().containsAll(validEffects));
         assertTrue(validEffects.containsAll(weaponCard.getEffects()));
     }

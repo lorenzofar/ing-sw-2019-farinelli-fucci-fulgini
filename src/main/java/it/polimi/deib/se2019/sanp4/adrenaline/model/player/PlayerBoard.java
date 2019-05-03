@@ -20,6 +20,8 @@ public class PlayerBoard{
     /** Number of maximum damage tokens */
     public static final int MAX_DAMAGES = OVERKILL_DAMAGE;
 
+    private static final String NULL_PLAYER_ERROR = "Player cannot be null";
+
     /** Damages received by other players */
     private List<Player> damages;
     /** Number of marks received by each player */
@@ -40,7 +42,7 @@ public class PlayerBoard{
      */
     protected PlayerBoard(Player player){
         if (player == null) {
-            throw new IllegalArgumentException("Player cannot be null");
+            throw new IllegalArgumentException(NULL_PLAYER_ERROR);
         }
         damages = new ArrayList<>();
         marks = new HashMap<>();
@@ -96,7 +98,7 @@ public class PlayerBoard{
      */
     public void addDamage(Player shooter, int count){
         if(shooter == null){
-            throw new NullPointerException("Player cannot be null");
+            throw new NullPointerException(NULL_PLAYER_ERROR);
         }
         if(count < 0){
             throw new IllegalArgumentException("Number of damage tokens cannot be negative");
@@ -111,7 +113,7 @@ public class PlayerBoard{
      */
     public void addMark(Player shooter, int count){
         if(shooter == null){
-            throw new NullPointerException("Player cannot be null");
+            throw new NullPointerException(NULL_PLAYER_ERROR);
         }
         if(count < 0){
             throw new IllegalArgumentException("Number of marks cannot be negative");
@@ -128,7 +130,7 @@ public class PlayerBoard{
      */
     public void addRevengeMark(Player shooter){
         if(shooter == null){
-            throw new NullPointerException("Player cannot be null");
+            throw new NullPointerException(NULL_PLAYER_ERROR);
         }
         if(shooter.getPlayerBoard() == this){
             throw new IllegalArgumentException("The player cannot add a revenge mark to himself");
@@ -145,7 +147,7 @@ public class PlayerBoard{
      */
     public int getMarksByPlayer(Player player){
         if(player == null){
-            throw new NullPointerException("Player cannot be null");
+            throw new NullPointerException(NULL_PLAYER_ERROR);
         }
         Integer markCount = marks.get(player);
         return markCount == null ? 0 : markCount;

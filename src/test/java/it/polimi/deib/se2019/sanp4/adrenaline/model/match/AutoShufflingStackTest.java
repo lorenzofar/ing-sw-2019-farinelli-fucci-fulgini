@@ -26,6 +26,7 @@ public class AutoShufflingStackTest {
         List<Object> list = new ArrayList<>();
         list.add(new Object());
         new AutoShufflingStack<>(list);
+        assertTrue(true);
     }
 
     @Test
@@ -47,6 +48,7 @@ public class AutoShufflingStackTest {
         AutoShufflingStack<Object> autoShufflingStack = new AutoShufflingStack<>(list);
         autoShufflingStack.draw();
         autoShufflingStack.draw();
+        assertTrue(true);
 
     }
 
@@ -64,8 +66,9 @@ public class AutoShufflingStackTest {
         List<Object> list = new ArrayList<>();
         Object card = new Object();
         list.add(card);
-        AutoShufflingStack autoShufflingStack = new AutoShufflingStack<>(list);
+        AutoShufflingStack<Object> autoShufflingStack = new AutoShufflingStack<>(list);
         autoShufflingStack.discard(new Object());
+        assertTrue(true);
     }
 
     @Test

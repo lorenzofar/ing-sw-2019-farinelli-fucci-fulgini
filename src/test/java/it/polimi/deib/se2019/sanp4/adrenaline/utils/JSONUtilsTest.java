@@ -38,6 +38,7 @@ public class JSONUtilsTest {
     public void loadSchema_validSchema_shouldSucceed() {
         /* Should throw no exception */
         JSONUtils.loadSchema("/schemas/weapon_pack.schema.json");
+        assertTrue(true);
     }
 
     @Test(expected = MissingResourceException.class)

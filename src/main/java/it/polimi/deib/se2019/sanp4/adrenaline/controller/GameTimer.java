@@ -70,7 +70,9 @@ public class GameTimer {
         try{
             timer.cancel();
         }
-        catch(IllegalStateException ex){}
+        catch(IllegalStateException ex){
+            // The timer has already been  cancelled
+        }
     }
 
     /**

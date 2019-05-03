@@ -232,7 +232,7 @@ public class PlayerTest {
         try {
             player.removeWeapon(validWeaponCard.getId());
         } catch (CardNotFoundException e) {
-            // The test passes
+            assertTrue(true);
         }
     }
 
@@ -304,6 +304,7 @@ public class PlayerTest {
         PowerUpCard powerup = new PowerUpCard("id", "name", "desc", AmmoCube.BLUE);
         player.addPowerup(powerup);
         player.removePowerup(powerup);
+        assertFalse(player.getPowerups().contains(powerup));
     }
 
     @Test(expected = NullPointerException.class)

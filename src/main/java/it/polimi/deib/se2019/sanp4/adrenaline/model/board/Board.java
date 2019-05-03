@@ -81,13 +81,13 @@ public class Board {
             Stream<CoordPair> navigableSquaresToAdd = navigableSquares
                     .stream()
                     .skip(startIndex)
-                    .flatMap(location->
-                            getSquare(location)
-                                    .getAdjacentSquares()
-                                    .getReachableSquares()
-                                    .stream()
-                                    // Then we remove the start square from the collection
-                                    .filter(square -> square != start.getLocation()));
+                    .flatMap(location-> {
+                        Collection<CoordPair> squareNeighbours = getSquare(location)
+                                .getAdjacentSquares()
+                                .getReachableSquares();
+                        squareNeighbours.remove(start.getLocation());
+                        return squareNeighbours.stream();
+                    });
             // We update the startIndex to point at the last element of the list (before insertion)
             startIndex = navigableSquares.size();
             // And eventually we put all the new squares inside the list
@@ -147,9 +147,10 @@ public class Board {
                 (minDist != null && maxDist != null && minDist > maxDist)) {
             throw new IllegalArgumentException();
         }
+
         //TODO: implement this method
 
-        return null;
+        return Collections.emptySet();
     }
 
     /**
