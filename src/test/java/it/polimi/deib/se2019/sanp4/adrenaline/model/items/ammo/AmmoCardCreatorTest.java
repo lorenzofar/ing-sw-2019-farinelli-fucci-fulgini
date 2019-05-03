@@ -56,4 +56,9 @@ public class AmmoCardCreatorTest {
     public void loadAmmoCardPack_invalidPack_shouldThrow() {
         AmmoCardCreator.loadAmmoCardPack("/assets/ammo_card_pack_invalid_missingcolor.json");
     }
+
+    @Test
+    public void loadAmmoCardPack_StandardPack_ShouldSucceed() {
+        AmmoCardCreator.loadAmmoCardPack("/assets/standard_ammocards.json");
+    }
 }
