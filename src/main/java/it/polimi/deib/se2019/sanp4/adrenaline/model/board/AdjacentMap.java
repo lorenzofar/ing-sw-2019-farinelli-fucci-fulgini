@@ -1,7 +1,6 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.model.board;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.EnumMap;
 import java.util.Objects;
 import java.util.stream.Collectors;

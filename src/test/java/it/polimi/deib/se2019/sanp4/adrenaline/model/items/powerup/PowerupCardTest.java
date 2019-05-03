@@ -46,31 +46,11 @@ public class PowerupCardTest {
 
     @Test
     public void createPowerUpCard_validParametersProvided_shouldNotThrowException(){
-        new PowerUpCard(validId, validName, validDescription, validColor);
-    }
-
-    @Test
-    public void getId_shouldReturnProvidedId(){
-        PowerUpCard validPowerUpCard = new PowerUpCard(validId, validName, validDescription, validColor);
-        assertEquals(validPowerUpCard.getId(), validId);
-    }
-
-    @Test
-    public void getName_shouldReturnProvidedName(){
-        PowerUpCard validPowerUpCard = new PowerUpCard(validId, validName, validDescription, validColor);
-        assertEquals(validPowerUpCard.getName(), validName);
-    }
-
-    @Test
-    public void getDescription_shouldReturnProvidedDescription(){
-        PowerUpCard validPowerUpCard = new PowerUpCard(validId, validName, validDescription, validColor);
-        assertEquals(validPowerUpCard.getDescription(), validDescription);
-    }
-
-    @Test
-    public void getColor_shouldReturnProvidedColor(){
-        PowerUpCard validPowerUpCard = new PowerUpCard(validId, validName, validDescription, validColor);
-        assertEquals(validPowerUpCard.getCubeColor(), validColor);
+        PowerUpCard powerUpCard = new PowerUpCard(validId, validName, validDescription, validColor);
+        assertEquals(validId, powerUpCard.getId());
+        assertEquals(validDescription, powerUpCard.getDescription());
+        assertEquals(validName, powerUpCard.getName());
+        assertEquals(validColor, powerUpCard.getCubeColor());
     }
 
     @Test

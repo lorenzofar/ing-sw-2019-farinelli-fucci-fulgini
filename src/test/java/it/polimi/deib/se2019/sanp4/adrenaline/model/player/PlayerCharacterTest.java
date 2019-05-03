@@ -33,14 +33,9 @@ public class PlayerCharacterTest {
 
     @Test
     public void createPlayerCharacter_validParametersProvided_shouldNotThrowException(){
-        new PlayerCharacter(validName, validDescription, validColor);
-    }
-
-    @Test
-    public void createPlayerCharacter_validParametersProvidedGetAttributes_shouldReturnProvidedAttributes(){
-        PlayerCharacter pc = new PlayerCharacter(validName, validDescription, validColor);
-        assertEquals(pc.getName(), validName);
-        assertEquals(pc.getDescription(), validDescription);
-        assertEquals(pc.getColor(), validColor);
+        PlayerCharacter playerCharacter = new PlayerCharacter(validName, validDescription, validColor);
+        assertEquals(validName, playerCharacter.getName());
+        assertEquals(validDescription, playerCharacter.getDescription());
+        assertEquals(validColor, playerCharacter.getColor());
     }
 }

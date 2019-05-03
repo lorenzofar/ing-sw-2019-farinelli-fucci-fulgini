@@ -21,14 +21,13 @@ public class GameTimerTest {
     private static int properMaxTicks;
     private static GameTimer timer;
 
-    private static Object lock;
+    private static final Object lock = new Object();
     private static boolean called = false;
 
     @BeforeClass
     public static void setup(){
         callbackInterface = new TestCallback();
         properMaxTicks = 5;
-        lock = new Object();
     }
 
     @Test(expected = NullPointerException.class)
@@ -44,6 +43,7 @@ public class GameTimerTest {
     @Test
     public void createTimer_properParametersProvided_shouldNotThrowException(){
         timer = new GameTimer(callbackInterface, properMaxTicks);
+        assertTrue(true);
     }
 
     @Test
@@ -63,6 +63,7 @@ public class GameTimerTest {
     public void startTimer_properParametersProvided_shouldNotThrowException(){
         timer = new GameTimer(callbackInterface, properMaxTicks);
         timer.start();
+        assertTrue(true);
     }
 
     @Test
@@ -85,5 +86,6 @@ public class GameTimerTest {
     public void stopTimer_timerNotStarted_shouldNotThrowException(){
         timer = new GameTimer(callbackInterface, properMaxTicks);
         timer.stop();
+        assertTrue(true);
     }
 }

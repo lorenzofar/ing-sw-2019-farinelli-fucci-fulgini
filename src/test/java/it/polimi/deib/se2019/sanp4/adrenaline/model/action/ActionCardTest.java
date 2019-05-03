@@ -57,7 +57,13 @@ public class ActionCardTest {
 
     @Test
     public void createCard_properParametersProvided_shouldNotThrowException(){
-        new ActionCard(validMaxActions, validType, validActions, validFinalAction);
+        ActionCard actionCard = new ActionCard(validMaxActions, validType, validActions, validFinalAction);
+        assertEquals(validType, actionCard.getType());
+        assertTrue(validActions.containsAll(actionCard.getActions()));
+        assertTrue(actionCard.getActions().containsAll(validActions));
+        assertEquals(validFinalAction, actionCard.getFinalAction());
+        assertTrue(validActions.containsAll(actionCard.getActions()));
+        assertTrue(actionCard.getActions().containsAll(validActions));
     }
 
     @Test

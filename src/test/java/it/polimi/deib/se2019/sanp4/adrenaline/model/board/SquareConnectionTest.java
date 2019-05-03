@@ -25,7 +25,8 @@ public class SquareConnectionTest {
         CoordPair coordPair = new CoordPair(5,5);
         SquareConnectionType squareConnectionType = SquareConnectionType.DOOR;
         SquareConnection squareConnection = new SquareConnection(coordPair, squareConnectionType);
-
+        assertEquals(coordPair, squareConnection.getSquare());
+        assertEquals(squareConnectionType, squareConnection.getConnectionType());
     }
 
     @Test

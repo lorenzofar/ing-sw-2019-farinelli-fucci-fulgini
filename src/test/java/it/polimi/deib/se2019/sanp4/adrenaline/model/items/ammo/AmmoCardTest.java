@@ -46,26 +46,10 @@ public class AmmoCardTest {
 
     @Test
     public void createAmmoCard_validCubesMapProvided_shouldNotThrowException(){
-        new AmmoCard(validId, validCubes, powerup);
-    }
-
-    @Test
-    public void getId_shouldReturnProvidedId(){
-        AmmoCard validAmmoCard = new AmmoCard(validId, validCubes, powerup);
-        assertEquals(validAmmoCard.getId(), validId);
-    }
-
-    @Test
-    public void getCubes_shouldReturnMapContainingProvidedCubes(){
-        AmmoCard validAmmoCard = new AmmoCard(validId, validCubes, powerup);
-        Map<AmmoCube, Integer> retrievedCubes = validAmmoCard.getCubes();
-        retrievedCubes.forEach((key, value) -> assertEquals(value, validCubes.get(key)));
-    }
-
-    @Test
-    public void getHoldingPowerup_shouldReturnProvidedBoolean(){
-        AmmoCard validAmmoCard = new AmmoCard(validId, validCubes, powerup);
-        assertEquals(validAmmoCard.isHoldingPowerup(), powerup);
+        AmmoCard ammoCard = new AmmoCard(validId, validCubes, powerup);
+        assertEquals(validId, ammoCard.getId());
+        assertEquals(validCubes, ammoCard.getCubes());
+        assertEquals(powerup, ammoCard.isHoldingPowerup());
     }
 
     @Test
@@ -93,9 +77,10 @@ public class AmmoCardTest {
     }
 
     @Test
-    public void getHashCode_shouldReturnValidHashCode(){
+    public void getHashCode_compareWithAnotherCard_shouldBeDifferent(){
         AmmoCard validAmmoCard = new AmmoCard(validId, validCubes, powerup);
-        assertEquals(validAmmoCard.hashCode(), 17 + 31*validId);
+        AmmoCard anotherCard = new AmmoCard(5, validCubes, false);
+        assertNotEquals(anotherCard.hashCode(), validAmmoCard.hashCode());
     }
 
     @Test

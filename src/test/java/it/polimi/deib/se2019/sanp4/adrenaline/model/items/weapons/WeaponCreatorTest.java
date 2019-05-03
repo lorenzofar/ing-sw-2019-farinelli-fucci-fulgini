@@ -51,5 +51,6 @@ public class WeaponCreatorTest {
     @Test
     public void loadWeaponPack_standardPack_shouldSucceed() {
         WeaponCreator.loadWeaponPack("/assets/standard_weapons.json");
+        assertTrue(true);
     }
 }

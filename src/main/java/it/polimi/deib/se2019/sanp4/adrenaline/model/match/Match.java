@@ -29,6 +29,8 @@ import java.util.*;
  */
 public class Match {
 
+    private static final String NULL_PLAYER_ERROR = "Player cannot be null";
+
     public static final int MAX_PLAYERS = 5;
     private final int skulls;
 
@@ -107,7 +109,7 @@ public class Match {
      */
     public boolean isPlayerTurn(String player){
         if(player == null){
-            throw new NullPointerException("Player cannot be null");
+            throw new NullPointerException(NULL_PLAYER_ERROR);
         }
         return this.currentTurn.getTurnOwner().getName().equals(player);
     }
@@ -119,7 +121,7 @@ public class Match {
      */
     public boolean isPlayerTurn(Player player){
         if(player == null){
-            throw new NullPointerException("Player cannot be null");
+            throw new NullPointerException(NULL_PLAYER_ERROR);
         }
         return this.currentTurn.getTurnOwner().equals(player);
     }
@@ -131,7 +133,7 @@ public class Match {
      */
     public void suspendPlayer(String player){
         if(player == null){
-            throw new NullPointerException("Player cannot be null");
+            throw new NullPointerException(NULL_PLAYER_ERROR);
         }
         Player suspendedPlayer = getPlayerByName(player);
         if(suspendedPlayer == null){
@@ -147,7 +149,7 @@ public class Match {
      */
     public void removePlayer(String player){
         if(player == null){
-            throw new NullPointerException("Player cannot be null");
+            throw new NullPointerException(NULL_PLAYER_ERROR);
         }
         Player removedPlayer = getPlayerByName(player);
         if(removedPlayer == null){
@@ -239,7 +241,7 @@ public class Match {
      */
     public void addKillshot(Player player) throws FullCapacityException{
         if(player == null){
-            throw new NullPointerException("The player cannot be null");
+            throw new NullPointerException(NULL_PLAYER_ERROR);
         }
         if(killshotsTrack.size() >= skulls){
             throw new FullCapacityException(skulls);
