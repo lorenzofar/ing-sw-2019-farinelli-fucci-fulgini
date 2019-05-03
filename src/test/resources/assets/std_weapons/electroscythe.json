@@ -8,6 +8,7 @@
       "effectId" : "basic",
       "name" : "Basic Mode",
       "type" : "MODE",
+      "description" : "Deal 1 damage to every other player on your square.",
       "targets" : [
         {
           "targetId" : "sqr",
@@ -21,6 +22,7 @@
       "effectId" : "reaper_mode",
       "name" : "Reaper Mode",
       "type" : "MODE",
+      "description" : "Deal 2 damage to every other player on your square.",
       "cost" : ["BLUE", "RED"],
       "targets" : [
         {

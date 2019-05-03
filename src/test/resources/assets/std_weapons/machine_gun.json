@@ -8,6 +8,7 @@
       "effectId" : "basic",
       "name" : "Basic effect",
       "type" : "BASIC",
+      "description" : "Choose 1 or 2 targets you can see and deal 1 damage to each.",
       "cost" : [],
       "dependsOnEffects" : [],
       "targets" : [
@@ -31,6 +32,7 @@
       "effectId" : "focus_shot",
       "name" : "Focus Shot",
       "type" : "OPTIONAL",
+      "description" : "Deal 1 additional damage to one of those targets.",
       "cost" : ["YELLOW"],
       "dependsOnEffects" : ["base"],
       "targets" : [
@@ -47,6 +49,7 @@
       "effectId" : "turret_tripod",
       "name" : "Turret Tripod",
       "type" : "OPTIONAL",
+      "description" : "Deal 1 additional damage to the other of those targets and/or deal 1 damage to a different target you can see.",
       "cost" : ["BLUE"],
       "dependsOnEffects" : ["base"],
       "targets" : [

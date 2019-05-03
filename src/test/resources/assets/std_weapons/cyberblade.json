@@ -8,6 +8,7 @@
       "effectId" : "basic",
       "name" : "Basic Effect",
       "type" : "BASIC",
+      "description" : "Deal 2 damage to 1 target on your square.",
       "targets" : [
         {
           "targetId" : "red",
@@ -23,6 +24,7 @@
       "effectId" : "shadowstep",
       "name" : "Shadowstep",
       "type" : "MOVEMENT",
+      "description" : "Move 1 square before or after the basic effect.",
       "cost" : [],
       "dependsOnEffects" : [],
       "playerMoves" : 1
@@ -32,6 +34,7 @@
       "effectId" : "slice_and_dice",
       "name" : "Slice and dice",
       "type" : "OPTIONAL",
+      "description" : "Deal 2 damage to a different target on your square. The shadowstep may be used before or after this effect",
       "cost" : ["YELLOW"],
       "dependsOnEffects" : ["basic"],
       "targets" : [

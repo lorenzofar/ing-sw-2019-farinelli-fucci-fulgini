@@ -9,6 +9,7 @@
       "effectId" : "basic",
       "name" : "Basic Mode",
       "type" : "MODE",
+      "description" : "Choose up to 3 targets on different squares, each exactly 1 move away. Deal 1 damage to each target.",
       "targets" : [
         {
           "targetId" : "red",
@@ -44,6 +45,7 @@
       "effectId" : "tsunami_mode",
       "name" : "Tsunami Mode",
       "type" : "MODE",
+      "description" : "Deal 1 damage to all targets that are exactly 1 move away.",
       "cost" : ["YELLOW"],
       "targets" : [
         {

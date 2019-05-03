@@ -8,6 +8,7 @@
       "effectId" : "basic",
       "name" : "Basic Mode",
       "type" : "MODE",
+      "description" : "Deal 3 damage to 1 target on your square. If you want, you may then move the target 1 square.",
       "targets" : [
         {
           "targetId" : "red",
@@ -23,6 +24,7 @@
       "effectId" : "long_barrel_mode",
       "name" : "Long Barrell Mode",
       "type" : "MODE",
+      "description" : "Deal 2 damage to 1 target on any square exactly one move away.",
       "cost" : [],
       "targets" : [
         {

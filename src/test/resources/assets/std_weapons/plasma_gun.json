@@ -8,6 +8,7 @@
       "effectId" : "basic",
       "name" : "Basic effect",
       "type" : "BASIC",
+      "description" : "Deal 2 damage to 1 target you can see.",
       "cost" : [],
       "dependsOnEffects" : [],
       "targets" : [
@@ -23,6 +24,7 @@
       "effectId" : "phase_glide",
       "name" : "Phase Glide",
       "type" : "MOVEMENT",
+      "description" : "Move 1 or 2 squares. This effect can be used either before or after the basic effect.",
       "cost" : [],
       "dependsOnEffects" : [],
       "playerMoves" : 2
@@ -31,6 +33,7 @@
       "effectId" : "charged_shot",
       "name" : "Charged Shot",
       "type" : "OPTIONAL",
+      "description" : "Deal 1 additional damage to your target.",
       "cost" : ["BLUE"],
       "dependsOnEffects" : ["basic"],
       "targets" : [

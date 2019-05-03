@@ -9,6 +9,7 @@
       "effectId" : "basic",
       "name" : "Basic Mode",
       "type" : "MODE",
+      "description" : "Choose a cardinal direction and 1 target in that direction. Deal 3 damage to it.",
       "targets" : [
         {
           "targetId" : "red",
@@ -22,6 +23,7 @@
       "effectId" : "piercing_mode",
       "name" : "Piercing Mode",
       "type" : "MODE",
+      "description" : "Choose a cardinal direction and 1 or 2 targets in that direction. Deal 2 damage to each.",
       "cost" : [],
       "targets" : [
         {

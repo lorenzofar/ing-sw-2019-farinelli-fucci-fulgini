@@ -8,6 +8,7 @@
       "effectId" : "basic",
       "name" : "Basic effect",
       "type" : "BASIC",
+      "description" : "Deal 1 damage to 1 target you can see. Then you may move the target 1 square.",
       "cost" : [],
       "dependsOnEffects" : [],
       "targets" : [
@@ -24,6 +25,7 @@
       "effectId" : "extra_grenade",
       "name" : "Extra Grenade",
       "type" : "OPTIONAL",
+      "description" : "Deal 1 damage to every player on a square you can see. You can use this before or after the basic effect's move.",
       "cost" : ["RED"],
       "dependsOnEffects" : [],
       "targets" : [

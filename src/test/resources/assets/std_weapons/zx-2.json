@@ -8,6 +8,7 @@
       "effectId" : "basic",
       "name" : "Basic Mode",
       "type" : "MODE",
+      "description" : "Deal 1 damage and 2 marks to 1 target you can see.",
       "targets" : [
         {
           "targetId" : "red",
@@ -22,6 +23,7 @@
       "effectId" : "scanner_mode",
       "name" : "Scanner Mode",
       "type" : "MODE",
+      "description" : "Choose up to 3 targets you can see and deal 1 mark to each.",
       "cost" : [],
       "targets" : [
         {

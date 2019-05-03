@@ -8,6 +8,7 @@
       "effectId" : "basic",
       "name" : "Basic effect",
       "type" : "BASIC",
+      "description" : "Deal 2 damage to 1 target you can see.",
       "cost" : [],
       "dependsOnEffects" : [],
       "targets" : [
@@ -23,6 +24,7 @@
       "effectId" : "chain_reaction",
       "name" : "Chain Reaction",
       "type" : "OPTIONAL",
+      "description" : "Deal 1 damage to a second target that your first target can see.",
       "cost" : ["BLUE"],
       "dependsOnEffects" : ["basic"],
       "targets" : [
@@ -40,6 +42,7 @@
       "effectId" : "high_voltage",
       "name" : "High Voltage",
       "type" : "OPTIONAL",
+      "description" : "Deal 2 damage to a third target that your second target can see. You cannot use this effect unless you first use the chain reaction.",
       "cost" : ["BLUE"],
       "dependsOnEffects" : ["basic", "chain_reaction"],
       "targets" : [
