@@ -117,7 +117,7 @@ public class Match {
     /**
      * Determines whether the current turn belongs to the provided player.
      * @param player The object representing the player, not null
-     *      * @return {@code true} if the turn belongs to the player, {@code false} otherwise
+     * @return {@code true} if the turn belongs to the player, {@code false} otherwise
      */
     public boolean isPlayerTurn(Player player){
         if(player == null){

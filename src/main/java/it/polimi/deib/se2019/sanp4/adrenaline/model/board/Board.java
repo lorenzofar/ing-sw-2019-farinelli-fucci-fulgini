@@ -135,7 +135,7 @@ public class Board {
      * @param minDist the minimum amount of moves from the starting square
      * @param maxDist the maximum amount of moves from the starting square
      * @return the set of visited squares matching the specified filters
-     * @throws IllegalArgumentException if distances are negative or minDist > maxDist
+     * @throws IllegalArgumentException if distances are negative or minDist &gt; maxDist
      * @throws NullPointerException if start or visibility are null
      */
     public Set<Square> getScopedSquares (CoordPair start, VisibilityEnum visibility, CardinalDirection direction,
