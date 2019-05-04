@@ -1,9 +1,13 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.controller;
 
+import it.polimi.deib.se2019.sanp4.adrenaline.model.board.AmmoSquare;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.board.Square;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.match.PlayerTurn;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.PlayerException;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +33,26 @@ public class MatchController {
         if(controller == null){
             throw new NullPointerException("Controller cannot be null");
         }
+    }
+
+    private void refillAmmoSquares(){
+        // First we get all the ammo squares where there are no ammo tiles left
+        // We first retrieve all the squares composing the board
+        List<AmmoSquare> emptyAmmoSquares = controller.getModel().getMatch().getBoard().getSquares()
+                .stream()
+                // Then we keep only the ammo squares
+                .filter(square -> square instanceof AmmoSquare)
+                .map(square -> (AmmoSquare)square)
+                // And we further filter only the empty ones
+                .filter(ammoSquare -> ammoSquare.getAmmoCard() == null)
+                .collect(Collectors.toList());
+        // Then we add for each of them a new ammo card drawn from the ammo stack
+        emptyAmmoSquares.forEach(ammoSquare -> {
+            // The draw a new card from the stack
+            AmmoCard ammoCard = controller.getModel().getMatch().getAmmoStack().draw();
+            // We put the card inside the ammo square
+            ammoSquare.insertAmmo(ammoCard);
+        });
     }
 
     /**
@@ -96,6 +120,10 @@ public class MatchController {
         controller.getModel().getMatch().endCurrentTurn();
         // We tell the score manager to perform scoring of the turn
         controller.getScoreManager().scoreTurn(controller.getModel().getMatch());
+
+        // We put new ammo tiles on square where there are none
+        refillAmmoSquares();
+
         // After scoring, check whether to turn frenzy
         if(controller.getModel().getMatch().getSkulls() == 0){
             // There is no room left on the killshots track
