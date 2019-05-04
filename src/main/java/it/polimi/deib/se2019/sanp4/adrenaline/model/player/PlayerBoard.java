@@ -42,7 +42,7 @@ public class PlayerBoard{
      */
     protected PlayerBoard(Player player){
         if (player == null) {
-            throw new IllegalArgumentException(NULL_PLAYER_ERROR);
+            throw new NullPointerException(NULL_PLAYER_ERROR);
         }
         damages = new ArrayList<>();
         marks = new HashMap<>();
@@ -236,6 +236,8 @@ public class PlayerBoard{
         // For each shooter, increase its damage count by 1
         damages.forEach(shooter -> damageCounts.merge(shooter, 1, Integer::sum));
 
+        Set<Player> playersToKeep = new HashSet<>();
+
         /* ===== DRAWS MANAGEMENT ===== */
         // We have to determine whether there are draws and resolve them
         damageCounts.values().forEach(count -> {
@@ -246,16 +248,17 @@ public class PlayerBoard{
                     // We keep only the player object of each entry
                     .map(Map.Entry::getKey)
                     .collect(Collectors.toList());
-            // Check whether there are two or more players with the same amount of damages
-            if(playersWithSameDamageCount.size() > 1){
-                // Determine which one shoot first (it always exists)
-                Player firstShooter = damages.stream().filter(playersWithSameDamageCount::contains).findFirst().get();
-                // We remove the first shooter from the list
-                playersWithSameDamageCount.remove(firstShooter);
-                // We remove players in the list from the map
-                playersWithSameDamageCount.forEach(damageCounts::remove);
-            }
+
+            // We determine which one shoot first (it always exists)
+            // If there are no draws, we just get the only shooter
+            Optional<Player> firstShooter = damages.stream().filter(playersWithSameDamageCount::contains).findFirst();
+
+            // We add the first shooter to the list of players to keep
+            firstShooter.ifPresent(playersToKeep::add);
         });
+
+        // Then we keep only the selected players
+        damageCounts.entrySet().removeIf(damageEntry -> !(playersToKeep.contains(damageEntry.getKey())));
 
         /* ===== SCORES ASSIGNMENT ===== */
         // We get the iterator to assign scores
@@ -267,9 +270,10 @@ public class PlayerBoard{
                 .sorted(Collections.reverseOrder(comparingByValue()))
                 .forEachOrdered(playerDamageEntry -> playerScores.put(playerDamageEntry.getKey(), scores.next()));
 
-        // Then assign a point for first blood
+        // Then determine who performed the first damage
         Player firstBloodShooter = damages.get(0);
-        playerScores.put(firstBloodShooter, playerScores.get(firstBloodShooter) + 1);
+        // And assign an extra point for first blood
+        playerScores.merge(firstBloodShooter, 1, Integer::sum);
         return playerScores;
     }
 
