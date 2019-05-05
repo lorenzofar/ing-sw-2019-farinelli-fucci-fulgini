@@ -3,7 +3,7 @@ package it.polimi.deib.se2019.sanp4.adrenaline.controller.events;
 /**
  * A specialized class describing an event generated when a player makes a choice
  */
-public class ChoiceEvent<T> extends Event {
+public class ChoiceEvent<T> extends ViewEvent {
 
     /** The choice made by the player */
     private T choice;

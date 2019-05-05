@@ -1,10 +1,10 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.controller;
 
-import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.Observer;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.RemoteObserver;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.events.*;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.Model;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
-import it.polimi.deib.se2019.sanp4.adrenaline.view.View;
+import it.polimi.deib.se2019.sanp4.adrenaline.view.RemoteView;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,7 +14,7 @@ import java.util.Map;
  * It is responsible of listening to events and take actions accordingly.
  * It also manages interactions with the players when they have to choose something (e.g. targets, destinations, ...).
  */
-public class Controller implements CallbackInterface, Observer<Event> {
+public class Controller implements CallbackInterface, RemoteObserver<ViewEvent> {
 
     //TODO: Implement observable
 
@@ -27,7 +27,7 @@ public class Controller implements CallbackInterface, Observer<Event> {
     private Map<Player, RequestContext> pendingRequests;
 
     /** A map of the view corresponding to each player */
-    private Map<Player, View> views;
+    private Map<Player, RemoteView> views;
 
     /** The helper class to manage the match */
     private MatchController matchController;
@@ -125,7 +125,7 @@ public class Controller implements CallbackInterface, Observer<Event> {
     }
 
     @Override
-    public void update(Event event) {
+    public void update(ViewEvent event) {
         //TODO: Implement this method
     }
 }

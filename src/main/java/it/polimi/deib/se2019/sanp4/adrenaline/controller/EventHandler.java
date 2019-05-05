@@ -1,6 +1,6 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.controller;
 
-import it.polimi.deib.se2019.sanp4.adrenaline.controller.events.Event;
+import it.polimi.deib.se2019.sanp4.adrenaline.controller.events.ViewEvent;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.match.Match;
 
 /**
@@ -13,7 +13,7 @@ public interface EventHandler {
      * @param event The object representing the event, not null
      * @param match The objects representing the match, not null
      */
-    static void handle(Event event, Match match){
+    static void handle(ViewEvent event, Match match){
         if(event == null || match == null) {
             throw new NullPointerException("Found null parameters");
         }
