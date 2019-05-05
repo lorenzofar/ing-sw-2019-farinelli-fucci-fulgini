@@ -2,6 +2,7 @@ package it.polimi.deib.se2019.sanp4.adrenaline.common.observer;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -15,7 +16,7 @@ import java.util.Set;
  */
 public abstract class RemoteObservable<T> {
 
-    private Set<RemoteObserver<T>> observers = Collections.emptySet();
+    private Set<RemoteObserver<T>> observers = new HashSet<>();
 
     /**
      * Subscribes given observer for events.
