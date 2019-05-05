@@ -1,6 +1,5 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.controller;
 
-import it.polimi.deib.se2019.sanp4.adrenaline.common.Observable;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.Observer;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.events.*;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.Model;
@@ -126,7 +125,7 @@ public class Controller implements CallbackInterface, Observer<Event> {
     }
 
     @Override
-    public void update(Observable<Event> observable, Event event) {
+    public void update(Event event) {
         //TODO: Implement this method
     }
 }

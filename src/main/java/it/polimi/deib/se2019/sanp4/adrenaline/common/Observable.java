@@ -1,27 +1,45 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.common;
 
-import it.polimi.deib.se2019.sanp4.adrenaline.controller.events.Event;
-
 import java.util.Collections;
 import java.util.Set;
 
-public abstract class Observable<T>{
+/**
+ * Observable in the <i>observer pattern</i>.
+ * {@link Observable} objects can subscribe to this to receive events/updates.
+ * Classes extending this interface should use the {@link #notifyObservers(Object)} method to send updates to their
+ * observers.
+ * @param <T> The type of events dispatched by this class
+ * @see Observer
+ */
+public abstract class Observable<T> extends RemoteObservable<T> {
 
-    private Set<Observer<T>> observers;
+    private Set<Observer<T>> observers = Collections.emptySet();
 
-    Observable(){
-        observers = Collections.emptySet();
-    }
-
+    /**
+     * Subscribes given observer for events.
+     * In case the observer was already subscribed nothing happens (i.e. it won't get double events).
+     * @param observer observer to subscribe
+     */
     public void addObserver(Observer<T> observer){
         observers.add(observer);
     }
 
+    /**
+     * Unsubscribe observer for events.
+     * In case the observer was not subscribed nothing happens.
+     * @param observer observer to be unsubscribed
+     */
+    @Override
     public void removeObserver(Observer<T> observer){
         observers.remove(observer);
     }
 
-    public void notifyObservers(Event event){
-        observers.forEach(observer -> observer.update(this, event));
+    /**
+     * Sends the given event to all subscribed observers (i.e. calls {@link Observer#update(Object)} on them).
+     * @param event event to be sent to observers
+     */
+    @Override
+    protected void notifyObservers(T event){
+        observers.forEach(observer -> observer.update(event));
     }
 }
