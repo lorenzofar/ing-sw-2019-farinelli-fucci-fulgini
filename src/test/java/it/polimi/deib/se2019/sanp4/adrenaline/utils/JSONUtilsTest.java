@@ -48,7 +48,7 @@ public class JSONUtilsTest {
 
     @Test(expected = IllegalStateException.class)
     public void validateWeapon_schemaNotLoaded_shouldThrow() {
-        JSONObject weapon = JSONUtils.loadJSONResource("/assets/test_weapons/validWeapon.json");
+        JSONObject weapon = JSONUtils.loadJSONResource("/assets/test_weapons/validweapon.json");
         /* Ask the class to validate an object for a schema that has not been loaded yet */
         JSONUtils.validateWeapon(weapon);
     }
