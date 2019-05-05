@@ -1,4 +1,4 @@
-package it.polimi.deib.se2019.sanp4.adrenaline.common;
+package it.polimi.deib.se2019.sanp4.adrenaline.common.observer;
 
 /**
  * Observer in the <i>observer pattern</i>.

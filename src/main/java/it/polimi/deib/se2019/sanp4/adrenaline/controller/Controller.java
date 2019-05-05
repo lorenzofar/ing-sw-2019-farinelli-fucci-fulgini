@@ -1,6 +1,6 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.controller;
 
-import it.polimi.deib.se2019.sanp4.adrenaline.common.Observer;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.Observer;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.events.*;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.Model;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
