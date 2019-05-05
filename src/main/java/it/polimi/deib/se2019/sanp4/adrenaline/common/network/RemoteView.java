@@ -1,8 +1,10 @@
-package it.polimi.deib.se2019.sanp4.adrenaline.view;
+package it.polimi.deib.se2019.sanp4.adrenaline.common.network;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.RemoteObserver;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.Request;
-import it.polimi.deib.se2019.sanp4.adrenaline.controller.events.ViewEvent;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.events.ViewEvent;
+import it.polimi.deib.se2019.sanp4.adrenaline.view.MessageType;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.ModelUpdate;
 
 import java.rmi.Remote;
 

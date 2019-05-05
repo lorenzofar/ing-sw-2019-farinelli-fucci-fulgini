@@ -1,4 +1,4 @@
-package it.polimi.deib.se2019.sanp4.adrenaline.controller.events;
+package it.polimi.deib.se2019.sanp4.adrenaline.common.events;
 
 /**
  * An abstract class representing a generic event the controller can handle.

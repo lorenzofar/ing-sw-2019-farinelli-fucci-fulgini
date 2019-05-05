@@ -1,6 +1,6 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.client;
 
-import it.polimi.deib.se2019.sanp4.adrenaline.view.ModelUpdate;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.ModelUpdate;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.Observer;
 
 public class SocketServerConnection implements ServerConnection {
