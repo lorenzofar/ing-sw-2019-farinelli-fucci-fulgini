@@ -49,4 +49,11 @@ public class ObservableObserverTest {
         observableImpl.notifyObservers(message);
     }
 
+    @Test
+    public void removeNotAddedObserver_ShouldNotThrowException(){
+        ObservableImpl observableImpl = new ObservableImpl();
+        ObserverImpl observer = new ObserverImpl();
+        observableImpl.removeObserver(observer);
+    }
+
 }
