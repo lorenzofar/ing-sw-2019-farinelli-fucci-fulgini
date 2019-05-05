@@ -9,7 +9,7 @@ import java.rmi.Remote;
  * A class implementing this interface can subscribe to a {@link RemoteObservable} and receive updates/events.
  * @param <T> The type of events this interface subscribes to
  * @see RemoteObservable
- * @see Observer
+ * @see Observer for a version of this that does not throw IOException
  */
 public interface RemoteObserver<T> extends Remote {
     /**

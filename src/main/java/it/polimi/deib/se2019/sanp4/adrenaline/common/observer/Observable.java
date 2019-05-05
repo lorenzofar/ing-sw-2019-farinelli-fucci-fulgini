@@ -1,6 +1,5 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.common.observer;
 
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -10,6 +9,8 @@ import java.util.Set;
  * Classes extending this interface should use the {@link #notifyObservers(Object)} method to send updates to their
  * observers.
  * @param <T> The type of events dispatched by this class
+ * @see RemoteObservable for a version of this that accepts remote observers
+ * @see RoutingObservable for a version of this that routes events based on username of the subscriber
  * @see Observer
  */
 public abstract class Observable<T> {

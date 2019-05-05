@@ -1,7 +1,6 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.common.observer;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
