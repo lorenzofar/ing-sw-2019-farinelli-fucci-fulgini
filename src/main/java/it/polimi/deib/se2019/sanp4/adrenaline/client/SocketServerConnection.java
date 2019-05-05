@@ -16,31 +16,36 @@ public class SocketServerConnection implements ServerConnection {
 
     @Override
     public void connect(String hostname) {
-
+        /* TODO: Implement this method */
     }
 
     @Override
     public void connect(String hostname, int port) {
-
+        /* TODO: Implement this method */
     }
 
     @Override
     public void login(String username) {
-
+        /* TODO: Implement this method */
     }
 
     @Override
     public void logout(String username) {
-
+        /* TODO: Implement this method */
     }
 
     @Override
     public void addObserver(Observer<ModelUpdate> observer) {
-
+        /* TODO: Implement this method */
     }
 
     @Override
     public void removeObserver(Observer<ModelUpdate> observer) {
+        /* TODO: Implement this method */
+    }
 
+    @Override
+    public void update(Object event) {
+        /* TODO: Implement this method */
     }
 }

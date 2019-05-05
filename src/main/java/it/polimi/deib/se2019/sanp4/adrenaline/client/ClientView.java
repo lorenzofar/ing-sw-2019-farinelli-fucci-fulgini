@@ -19,21 +19,21 @@ public class ClientView extends RemoteObservable<ViewEvent> implements RemoteVie
 
     @Override
     public void performRequest(Request request) {
-
+        /* TODO: Implement this method */
     }
 
     @Override
     public void showMessage(String text, MessageType type) {
-
+        /* TODO: Implement this method */
     }
 
     @Override
     public void removeObserver(RemoteObserver<ViewEvent> observer) {
-
+        /* TODO: Implement this method */
     }
 
     @Override
     public void update(ModelUpdate event) throws IOException {
-
+        /* TODO: Implement this method */
     }
 }
