@@ -12,7 +12,7 @@ import java.util.Set;
  * @param <T> The type of events dispatched by this class
  * @see Observer
  */
-public abstract class Observable<T> extends RemoteObservable<T> {
+public abstract class Observable<T> {
 
     private Set<Observer<T>> observers = new HashSet<>();
 
@@ -30,7 +30,6 @@ public abstract class Observable<T> extends RemoteObservable<T> {
      * In case the observer was not subscribed nothing happens.
      * @param observer observer to be unsubscribed
      */
-    @Override
     public void removeObserver(Observer<T> observer){
         observers.remove(observer);
     }
@@ -39,7 +38,6 @@ public abstract class Observable<T> extends RemoteObservable<T> {
      * Sends the given event to all subscribed observers (i.e. calls {@link Observer#update(Object)} on them).
      * @param event event to be sent to observers
      */
-    @Override
     protected void notifyObservers(T event){
         observers.forEach(observer -> observer.update(event));
     }

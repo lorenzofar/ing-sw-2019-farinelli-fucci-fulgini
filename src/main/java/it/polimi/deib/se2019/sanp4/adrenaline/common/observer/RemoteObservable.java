@@ -32,7 +32,7 @@ public abstract class RemoteObservable<T> {
      * In case the observer was not subscribed nothing happens.
      * @param observer observer to be unsubscribed
      */
-    public void removeObserver(Observer<T> observer) {
+    public void removeObserver(RemoteObserver<T> observer) {
         observers.remove(observer);
     }
 
