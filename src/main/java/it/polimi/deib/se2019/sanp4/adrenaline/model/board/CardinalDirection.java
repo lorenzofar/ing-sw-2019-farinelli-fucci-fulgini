@@ -21,4 +21,18 @@ public enum CardinalDirection {
     public String toString(){
         return this.message;
     }
+
+    /**
+     * Retrieve the cardinal direction opposite to the current one
+     * @return The object representing the opposite direction
+     */
+    public CardinalDirection getOppositeDirection(){
+        switch(this){
+            case N: return S;
+            case S: return N;
+            case W: return E;
+            case E: return W;
+            default: return null;
+        }
+    }
 }
