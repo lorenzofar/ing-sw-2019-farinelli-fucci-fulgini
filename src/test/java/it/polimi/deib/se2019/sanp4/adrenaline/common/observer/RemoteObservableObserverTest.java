@@ -28,6 +28,14 @@ public class RemoteObservableObserverTest {
         }
     }
 
+    public class RemoteRoutingObservableImpl extends RoutingObservable<String>{
+        RemoteRoutingObservableImpl(){
+            super();
+        }
+    }
+
+
+
     @Test
     public void addRemoteObserver_Notify_ShouldSucceed(){
         RemoteObservableImpl remoteObservable = new RemoteObservableImpl();
@@ -38,7 +46,7 @@ public class RemoteObservableObserverTest {
     }
 
     @Test
-    public void removeObserver_ShouldSucceed(){
+    public void removeRemoteObserver_ShouldSucceed(){
         RemoteObservableImpl remoteObservable = new RemoteObservableImpl();
         RemoteObserverImpl remoteObserver = new RemoteObserverImpl();
         remoteObservable.addObserver(remoteObserver);
@@ -48,5 +56,7 @@ public class RemoteObservableObserverTest {
         remoteObserver.shouldReceiveUpdate = false;
         remoteObservable.notifyObservers(message);
     }
+
+
 
 }
