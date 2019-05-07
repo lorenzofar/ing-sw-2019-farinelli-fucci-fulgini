@@ -33,6 +33,7 @@ public class Board {
 
     /**
      * Adds given square to the board.
+     * If there is already a square on the same point, the square is replaced and adjacencies are recomputed
      * @param square the square to be added, not null
      */
     public void addSquare(Square square){
@@ -44,8 +45,26 @@ public class Board {
             throw new IndexOutOfBoundsException(
                     String.format("Cannot add a square at coords (%d, %d) because it's outside the board", x, y));
         }
-        /* Add it to the board */
+
+        // Here we first update the adjacency maps of its neighbours
+        Square previousSquare = squares[x][y];
+        // We check whether there was a square on the same place before
+        if(previousSquare != null){
+            // We check all the cardinal directions
+            for (CardinalDirection direction : CardinalDirection.values()) {
+                // We get the connection in the specified direction
+                SquareConnection neighbourSquare = previousSquare.getAdjacentSquares().getConnection(direction);
+                // If the connection is null we have an edge, so we skip this one
+                if(neighbourSquare == null) continue;
+                // We set the connection of the neighbour to point to the newly inserted one
+                this.getSquare(neighbourSquare.getSquare())
+                        .getAdjacentSquares()
+                        .setConnection(direction.getOppositeDirection(), square.getLocation(), neighbourSquare.getConnectionType());
+            }
+        }
+        /* Eventually we put it into the board matrix */
         squares[x][y] = square;
+
     }
 
     /**
