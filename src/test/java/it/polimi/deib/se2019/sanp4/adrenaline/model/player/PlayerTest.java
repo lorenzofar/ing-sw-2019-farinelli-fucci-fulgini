@@ -13,6 +13,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCubeCost;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.powerup.PowerUpCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.EffectDescription;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.WeaponCard;
+import it.polimi.deib.se2019.sanp4.adrenaline.utils.JSONUtils;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -22,7 +23,7 @@ import static org.junit.Assert.*;
 
 public class PlayerTest {
 
-    private final static ObjectMapper mapper = new ObjectMapper();
+    private final static ObjectMapper mapper = JSONUtils.getObjectMapper();
 
     private final static String validName = "player1";
     private static ActionCard validActionCard;

@@ -2,6 +2,7 @@ package it.polimi.deib.se2019.sanp4.adrenaline.model.action;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import it.polimi.deib.se2019.sanp4.adrenaline.utils.JSONUtils;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -32,7 +33,7 @@ public class ActionCardTest {
 
         validFinalAction = ActionEnum.RELOAD;
 
-        mapper = new ObjectMapper();
+        mapper = JSONUtils.getObjectMapper();
     }
 
     @Test(expected = IllegalArgumentException.class)

@@ -1,5 +1,8 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.utils;
 
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.everit.json.schema.Schema;
 import org.everit.json.schema.ValidationException;
 import org.everit.json.schema.loader.SchemaLoader;
@@ -25,8 +28,22 @@ public class JSONUtils {
     private static Schema actionCardPackSchema;
     /* TODO: Add more schemas */
 
+    private static final ObjectMapper objectMapper = new ObjectMapper()
+            .configure(JsonGenerator.Feature.AUTO_CLOSE_TARGET, false)
+            .configure(JsonParser.Feature.AUTO_CLOSE_SOURCE, false);
+
     /** This class has only static methods and should not be instantiated */
     private JSONUtils() {}
+
+    /**
+     * Returns a global and pre-configured ObjectMapper instance from Jackson.
+     * Every class that uses an objectmapper should retrieve it from here, since ObjectMapper creation is very slow
+     * but it is also thread-safe.
+     * @return
+     */
+    public static ObjectMapper getObjectMapper() {
+        return objectMapper;
+    }
 
     /**
      * Loads JSON object from given resource path.

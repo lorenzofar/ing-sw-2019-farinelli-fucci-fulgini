@@ -2,6 +2,7 @@ package it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCubeCost;
+import it.polimi.deib.se2019.sanp4.adrenaline.utils.JSONUtils;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -31,7 +32,7 @@ public class EffectDescriptionTest {
         validCost.add(AmmoCubeCost.YELLOW);
         invalidCost.add(null);
 
-        mapper = new ObjectMapper();
+        mapper = JSONUtils.getObjectMapper();
     }
 
     @Test(expected = NullPointerException.class)

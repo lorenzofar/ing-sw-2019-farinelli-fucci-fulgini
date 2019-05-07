@@ -24,7 +24,7 @@ public class ActionCardCreator {
             = new EnumMap<>(ActionCardEnum.class);
 
     /* Commodity */
-    private static ObjectMapper objectMapper = new ObjectMapper();
+    private static ObjectMapper objectMapper = JSONUtils.getObjectMapper();
 
     /* This class is static and should not be instantiated */
     private ActionCardCreator() {}

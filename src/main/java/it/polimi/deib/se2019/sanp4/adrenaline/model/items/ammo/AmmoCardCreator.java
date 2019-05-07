@@ -27,7 +27,7 @@ public class AmmoCardCreator {
     private static Collection<AmmoCard> ammoCards = new ArrayList<>();
 
     /* Commodity */
-    private static ObjectMapper objectMapper = new ObjectMapper();
+    private static ObjectMapper objectMapper = JSONUtils.getObjectMapper();
 
     /** This class is static and it should be impossible to instantiate it */
     private AmmoCardCreator(){}
