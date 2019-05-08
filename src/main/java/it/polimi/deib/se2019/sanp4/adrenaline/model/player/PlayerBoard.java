@@ -1,5 +1,7 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.model.player;
 
+import it.polimi.deib.se2019.sanp4.adrenaline.server.ServerProperties;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -11,12 +13,21 @@ import static java.util.Map.Entry.comparingByValue;
  * the board needs to be scored (e.g. killshot), based on the state (regular or frenzy).
  */
 public class PlayerBoard{
-    /** Maximum marks each other player can have on this board */
-    public static final int MAX_MARKS_PER_PLAYER = 3;
-    /** Number of damage tokens to perform a killshot */
-    public static final int KILLSHOT_DAMAGE = 11;
+    /**
+     * Maximum marks each other player can have on this board
+     * Fall back to a default value of 3 marks if none is set
+     */
+    public static final int MAX_MARKS_PER_PLAYER = (int) ServerProperties.getProperties().getOrDefault("adrenaline.maxplayermarks", 3);
+
+    /**
+     * Number of damage tokens to perform a killshot
+     * Fall back to a default value of 11 tokens if none is set
+     */
+    public static final int KILLSHOT_DAMAGE = (int)ServerProperties.getProperties().getOrDefault("adrenaline.killshotdamage", 11);
+
     /** Number of damage tokens to perform an overkill */
     public static final int OVERKILL_DAMAGE = KILLSHOT_DAMAGE + 1;
+
     /** Number of maximum damage tokens */
     public static final int MAX_DAMAGES = OVERKILL_DAMAGE;
 

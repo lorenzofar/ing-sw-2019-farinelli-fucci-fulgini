@@ -1,18 +1,21 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.controller;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.common.events.ViewEvent;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.network.RemoteView;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.Model;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
-import it.polimi.deib.se2019.sanp4.adrenaline.common.network.RemoteView;
+import it.polimi.deib.se2019.sanp4.adrenaline.server.ServerProperties;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class ControllerImpl implements Controller {
 
-    //TODO: Implement observable
-
-    private static final int MAX_TIMER_TICKS = 180; // 3 minutes TODO: check this attribute
+    /**
+     * Load the maximum time of a turn from properties
+     * Fall back to a default value of 3 minutes if none is set
+     */
+    private static final int MAX_TURN_TICKS = (int)ServerProperties.getProperties().getOrDefault("adrenaline.turntime", 1800);
 
     /** Associated model instance */
     private Model model;
@@ -34,7 +37,7 @@ public class ControllerImpl implements Controller {
 
     public ControllerImpl(Model model) {
         this.model = model;
-        this.gameTimer = new GameTimer(this, MAX_TIMER_TICKS);
+        this.gameTimer = new GameTimer(this, MAX_TURN_TICKS);
         this.views = new HashMap<>(); // Create a new empty map for the views
         this.scoreManager = new StandardScoreManager();
         this.matchController = new MatchController(this);

@@ -9,6 +9,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCubeCost;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.powerup.PowerUpCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.WeaponCard;
+import it.polimi.deib.se2019.sanp4.adrenaline.server.ServerProperties;
 
 import java.util.*;
 
@@ -16,10 +17,30 @@ import java.util.*;
  * Represents a player of the match.
  */
 public class Player{
-    public static final int INITIAL_AMMO = 1;
-    public static final int MAX_AMMO_CUBES = 3;
-    public static final int MAX_WEAPONS = 3;
-    public static final int MAX_POWERUPS = 3;
+
+    /**
+     * Load the inital cubes of each color a player has at the beginning of a match
+     * Fall back to a default value of 1 cube per color if none is set
+     */
+    public static final int INITIAL_AMMO = (int)ServerProperties.getProperties().getOrDefault("adrenaline.initialplayerammo", 1);
+
+    /**
+     * Load the maximum number of cubes for each color a player can have
+     * Fall back to a default value of 3 cubes per color if none is set
+     */
+    public static final int MAX_AMMO_CUBES = (int)ServerProperties.getProperties().getOrDefault("adrenaline.maxplayerammocubes", 3);
+
+    /**
+     * Load the maximum number of weapons cards a player can hold
+     * Fall back to a default value of 3 weapon cards if none is set
+     */
+    public static final int MAX_WEAPONS = (int) ServerProperties.getProperties().getOrDefault("adrenaline.maxplayerweapons", 3);
+
+    /**
+     * Load the maximum number of powerup cards a player can hold
+     * Fall back to a default value of 3 powerup cards if none is set
+     */
+    public static final int MAX_POWERUPS = (int)ServerProperties.getProperties().getOrDefault("adrenaline.maxplayerpowerups", 3);
 
     /** Nickname of the player, must be unique on the whole server */
     private final String name;
