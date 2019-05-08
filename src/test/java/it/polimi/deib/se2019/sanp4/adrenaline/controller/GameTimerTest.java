@@ -27,7 +27,7 @@ public class GameTimerTest {
     @BeforeClass
     public static void setup(){
         callbackInterface = new TestCallback();
-        properMaxTicks = 5;
+        properMaxTicks = 2;
     }
 
     @Test(expected = NullPointerException.class)
@@ -43,13 +43,14 @@ public class GameTimerTest {
     @Test
     public void createTimer_properParametersProvided_shouldNotThrowException(){
         timer = new GameTimer(callbackInterface, properMaxTicks);
-        assertTrue(true);
+        assertFalse(timer.isRunning());
     }
 
     @Test
     public void createTimer_notStartedCheckTime_shouldReturnZero(){
         timer = new GameTimer(callbackInterface, properMaxTicks);
         assertEquals(0, timer.getElapsedTime());
+        assertFalse(timer.isRunning());
     }
 
     @Test
@@ -57,13 +58,14 @@ public class GameTimerTest {
         timer = new GameTimer(callbackInterface, properMaxTicks);
         timer.reset();
         assertEquals(0, timer.getElapsedTime());
+        assertFalse(timer.isRunning());
     }
 
     @Test
     public void startTimer_properParametersProvided_shouldNotThrowException(){
         timer = new GameTimer(callbackInterface, properMaxTicks);
         timer.start();
-        assertTrue(true);
+        assertTrue(timer.isRunning());
     }
 
     @Test
@@ -86,6 +88,7 @@ public class GameTimerTest {
     public void stopTimer_timerNotStarted_shouldNotThrowException(){
         timer = new GameTimer(callbackInterface, properMaxTicks);
         timer.stop();
-        assertTrue(true);
+        assertFalse(timer.isRunning());
+
     }
 }

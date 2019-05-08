@@ -15,6 +15,8 @@ public class GameTimer {
     private int ticks;
     private Timer timer;
 
+    private boolean running;
+
     /** The object representing the callback */
     private CallbackInterface expiredCallback;
 
@@ -23,7 +25,7 @@ public class GameTimer {
      * @param expiredCallback The object representing the callback, not null
      * @param maxTicks The maximum number of seconds to count, must be positive
      */
-    GameTimer(CallbackInterface expiredCallback, int maxTicks){
+    public GameTimer(CallbackInterface expiredCallback, int maxTicks){
         if(expiredCallback == null){
             throw new NullPointerException("Callback cannot be null");
         }
@@ -32,6 +34,7 @@ public class GameTimer {
         }
         this.expiredCallback = expiredCallback;
         this.maxTicks = maxTicks;
+        running = false;
         timer = new Timer();
         ticks = 0;
     }
@@ -55,6 +58,7 @@ public class GameTimer {
     public void start(){
         reset();
         timer = new Timer();
+        running = true;
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
@@ -69,6 +73,7 @@ public class GameTimer {
     public void stop(){
         try{
             timer.cancel();
+            running = false;
         }
         catch(IllegalStateException ex){
             // The timer has already been  cancelled
@@ -80,6 +85,7 @@ public class GameTimer {
      */
     public void reset(){
         stop();
+        running = false;
         ticks = 0;
     }
 
@@ -89,5 +95,13 @@ public class GameTimer {
      */
     public int getElapsedTime(){
         return ticks;
+    }
+
+    /**
+     * Determines whether the timer is running
+     * @return {@code true} if the timer is running, {@code false} otherwise
+     */
+    public boolean isRunning(){
+        return running;
     }
 }

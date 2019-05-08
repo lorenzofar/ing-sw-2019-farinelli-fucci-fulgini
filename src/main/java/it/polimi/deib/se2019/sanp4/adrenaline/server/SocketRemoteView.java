@@ -1,12 +1,11 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.server;
 
-import it.polimi.deib.se2019.sanp4.adrenaline.common.network.SocketServer;
-import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.ModelUpdate;
-import it.polimi.deib.se2019.sanp4.adrenaline.common.network.RemoteView;
-import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.RemoteObservable;
-import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.RemoteObserver;
-import it.polimi.deib.se2019.sanp4.adrenaline.controller.Request;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.events.ViewEvent;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.network.RemoteView;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.network.SocketServer;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.RemoteObservable;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.ModelUpdate;
+import it.polimi.deib.se2019.sanp4.adrenaline.controller.Request;
 import it.polimi.deib.se2019.sanp4.adrenaline.view.MessageType;
 
 import java.io.IOException;
@@ -49,16 +48,6 @@ public class SocketRemoteView extends RemoteObservable<ViewEvent> implements Rem
 
     @Override
     public void showMessage(String text, MessageType type) {
-        /* TODO: Implement this method */
-    }
-
-    @Override
-    public void addObserver(RemoteObserver<ViewEvent> observer) {
-        /* TODO: Implement this method */
-    }
-
-    @Override
-    public void removeObserver(RemoteObserver<ViewEvent> observer) {
         /* TODO: Implement this method */
     }
 

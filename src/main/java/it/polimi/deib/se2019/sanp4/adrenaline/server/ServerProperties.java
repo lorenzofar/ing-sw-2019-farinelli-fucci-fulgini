@@ -15,7 +15,15 @@ public class ServerProperties extends Properties {
     private static final String CONFIG_FILENAME = "server.properties";
 
     /** Arguments that can be provided by the user */
-    private static final String[] ARGUMENTS = {"adrenaline.skulls"}; //TODO: Add more arguments
+    private static final String[] ARGUMENTS = {
+            "adrenaline.skulls",
+            "adrenaline.rmiport", "adrenaline.socketpoort",
+            "adrenaline.turntime", "adrenaline.waitingtime",
+            "adrenaline.maxspawnweapons",
+            "adrenaline.initialplayerammo", "adrenaline.maxplayerammocubes", "adrenaline.maxplayerweapons", "adrenaline.maxplayerpowerups",
+            "adrenaline.maxplayermarks", "adrenaline.killshotdamage",
+            "adrenaline.skullscount"
+    };
 
     private static ServerProperties instance = new ServerProperties();
 

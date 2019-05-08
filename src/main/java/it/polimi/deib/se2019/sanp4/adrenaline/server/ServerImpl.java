@@ -4,6 +4,8 @@ import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.LoginException;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.network.RemoteServer;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.network.RemoteView;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.network.SocketServer;
+import it.polimi.deib.se2019.sanp4.adrenaline.controller.CallbackInterface;
+import it.polimi.deib.se2019.sanp4.adrenaline.controller.GameTimer;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -25,14 +27,26 @@ import java.util.logging.Logger;
  * A class representing the implementation of a server
  * it implements both the server and remote server interfaces
  */
-public class ServerImpl implements SocketServer, RemoteServer, Runnable {
+public class ServerImpl implements SocketServer, RemoteServer, Runnable, CallbackInterface {
     private static final int DEFAULT_SOCKET_THREADS = 64;
+
+    /**
+     * Load the time to wait before starting a new game
+     * Fall back to a default value of 3 minutes if none is set
+     */
+    private static final int WAITING_TIME = (int)ServerProperties.getProperties().getOrDefault("adrenaline.waitingtime", 1800);
+
+    private static final int MIN_GAME_PLAYERS = 3;
 
     /** Used to accept Socket connections */
     private ServerSocket serverSocket;
 
     /** Used to manage Socket connections in separate threads */
     private ExecutorService executor = Executors.newFixedThreadPool(DEFAULT_SOCKET_THREADS);
+
+    private boolean gameActive; //TODO: Check whether to keep using this
+
+    private GameTimer waitingGameTimer = new GameTimer(this, WAITING_TIME);
 
     /** Map with view for each player */
     private ConcurrentMap<String, RemoteView> playerViews;
@@ -41,6 +55,7 @@ public class ServerImpl implements SocketServer, RemoteServer, Runnable {
 
     public ServerImpl(){
         playerViews = new ConcurrentHashMap<>();
+        gameActive = false;
         //TODO: Complete constructor and methods implementation
     }
 
@@ -50,9 +65,10 @@ public class ServerImpl implements SocketServer, RemoteServer, Runnable {
      */
     @Override
     public void run() {
-        /* TODO: Load ports from external config */
-        startRMI(1099);
-        startSocket(3000);
+        int rmiPort = (int)ServerProperties.getProperties().getOrDefault("adrenaline.rmiport", 1099);
+        int socketPort = (int)ServerProperties.getProperties().getOrDefault("adrenaline.socketport", 3000);
+        startRMI(rmiPort);
+        startSocket(socketPort);
     }
 
     /**
@@ -100,7 +116,7 @@ public class ServerImpl implements SocketServer, RemoteServer, Runnable {
      * Accepts incoming connection on socket and runs it in a separate thread using the executor.
      */
     private void acceptConnection(){
-        try {
+        try{
             Socket client = serverSocket.accept();
             logger.log(Level.FINE, "Accepting connection from {0}", client.getInetAddress().getHostAddress());
             /* Create the view and execute it in a separate thread */
@@ -114,16 +130,42 @@ public class ServerImpl implements SocketServer, RemoteServer, Runnable {
     @Override
     public void playerLogin(String username, RemoteView view) throws IOException, LoginException {
         /* TODO: Implement this method */
+        if(!gameActive && !(waitingGameTimer.isRunning()) && playerViews.entrySet().size() >= MIN_GAME_PLAYERS){
+            // There is a sufficient number of players for the game to start
+            logger.log(Level.FINE, "Reached sufficient players number ({0}), starting timer...", playerViews.entrySet().size());
+            // We start the timer
+            waitingGameTimer.start();
+        }
     }
 
     @Override
     public void playerLogout(String username) throws IOException {
         /* TODO: Implement this method */
+        // We first check whethere there are still sufficient players for a game
+        // Filtering these events when the game has started
+        if(!gameActive && waitingGameTimer.isRunning() && playerViews.entrySet().size() < MIN_GAME_PLAYERS){
+            logger.log(Level.FINE, "Players count below sufficient threshold ({0}), stopping timer...", playerViews.entrySet().size());
+            // We reset the timer
+            waitingGameTimer.reset();
+        }
     }
 
     @Override
     public void ping() {
         /* This method actually does nothing: it only exists because if an object with a remote reference to this
         calls it, it would get a RemoteException if there is no connection. */
+    }
+
+    @Override
+    public void callback() {
+        // Here we check whether in the meantime someone disconnected
+        // And whether the conditions are right for the game to start
+        if(!gameActive && playerViews.entrySet().size() < MIN_GAME_PLAYERS){
+            return;
+        }
+        logger.log(Level.FINE, "Timer expired, starting the game");
+        // We then start the game
+        //TODO: Finish implementing this method
+        gameActive = true;
     }
 }
