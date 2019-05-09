@@ -125,7 +125,7 @@ public class Board {
      * @param start The object representing the square
      * @return The set of objects representing the visible squares
      */
-    private Set<Square> getVisibleSquares(Square start){
+    Set<Square> getVisibleSquares(Square start){
         // Here we have to determine which squares are visible from the provided square
         // First we add all the squares that are in its same room
         Set<Square> visibleSquares = new HashSet<>(start.getRoom().getSquares());
@@ -217,10 +217,29 @@ public class Board {
                 (minDist != null && maxDist != null && minDist > maxDist)) {
             throw new IllegalArgumentException();
         }
-
-        //TODO: implement this method
-
-        return Collections.emptySet();
+        // We first retrieve the surrounding squares
+        Set<Square> surroundingSquares = this.getSurroundingSquares(this.getSquare(start), minDist, maxDist);
+        // Then we apply the visibility filter
+        Set<Square> scopedSquares = visibility.getFilterFunction().apply(this.getSquare(start), this, surroundingSquares);
+        // Then we apply the cardinality filter (if present)
+        if(direction != null){
+            // we retrieve the squares that are aligned, in the provided direction, to the square
+            Set<Square> alignedSquares = new HashSet<>(Collections.singletonList(this.getSquare(start)));
+            // We get the connection until we find a null value (board edge)
+            // Or until we find a wall (if the visibility is not set to IGNORE_WALLS)
+            SquareConnection connection = this.getSquare(start).getAdjacentSquares().getConnection(direction);
+            while(connection!=null && (visibility == VisibilityEnum.IGNORE_WALLS || connection.getConnectionType() != SquareConnectionType.WALL)){
+                // We retrieve the connected square
+                Square connectedSquare = this.getSquare(connection.getSquare());
+                // And add it to the set
+                alignedSquares.add(connectedSquare);
+                // Then we get the next connection
+                connection = connectedSquare.getAdjacentSquares().getConnection(direction);
+            }
+            // We eventually remove from the set those squares that are not aligned
+            scopedSquares = scopedSquares.stream().filter(alignedSquares::contains).collect(Collectors.toSet());
+        }
+        return scopedSquares;
     }
 
     /**
