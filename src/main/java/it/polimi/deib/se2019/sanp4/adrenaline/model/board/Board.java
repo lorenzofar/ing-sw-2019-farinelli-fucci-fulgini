@@ -146,6 +146,57 @@ public class Board {
     }
 
     /**
+     * Retrieve all the squares that surround the provided square and are at certain minimum and maximum distances
+     * If the provided distances are null it retrieves all surrounding squares on the board
+     * @param start The object representing the square
+     * @param minDist The minimum distance
+     * @param maxDist The maximum distance
+     * @return The set of objects representing the surrounding squares
+     */
+    private Set<Square> getSurroundingSquares(Square start, Integer minDist, Integer maxDist){
+        Set<Square> surroundingSquares = new HashSet<>();
+
+        // If the provided distances are null, we set their value to cover the whole board
+        if(minDist == null){
+            minDist = 0;
+        }
+        if(maxDist == null){
+            maxDist = squares.length;
+        }
+
+        // First we retrieve the X and Y coordinates of the square
+        int startX = start.getLocation().getX();
+        int startY = start.getLocation().getY();
+
+        // Then we determine horizontal and vertical bounds
+        int sxBound = startX-maxDist;
+        int dxBound = startX+maxDist;
+        int upBound = startY-maxDist;
+        int dwBound = startY+maxDist;
+
+        // Then we check whether they exceed the bounds of the matrix
+        // In those cases we cap their value with the edge value
+        sxBound = sxBound < 0 ? 0 : sxBound;
+        dxBound = dxBound >= squares.length ? squares.length - 1: dxBound;
+        upBound = upBound < 0 ? 0 : upBound;
+        dwBound = dwBound >= squares[0].length ? squares[0].length - 1 : dwBound;
+
+        // Then we scan the squares inside the computed area
+        for(int x = sxBound; x <= dxBound; x++){
+            for(int y = upBound; y <= dwBound; y++){
+                // Here we compute the distance of the square from the provided one (manhattan distance)
+                int distance = Math.abs(x-startX) + Math.abs(y-startY);
+                // Here we require that the square is inside the distance bounds
+                if(distance <= maxDist && distance >= minDist){
+                    // Eventually we add it to the set
+                    surroundingSquares.add(squares[x][y]);
+                }
+            }
+        }
+        return surroundingSquares;
+    }
+
+    /**
      * Given a starting square, this method navigates the board and returns the set of visited squares
      * matching the specified filters
      * @param start the square from which start, not null
