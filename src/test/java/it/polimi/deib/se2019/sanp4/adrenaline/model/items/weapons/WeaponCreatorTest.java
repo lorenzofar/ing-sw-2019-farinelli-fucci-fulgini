@@ -1,11 +1,18 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons;
 
+import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.CardNotFoundException;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.weapon.WeaponCreator;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCubeCost;
 import it.polimi.deib.se2019.sanp4.adrenaline.utils.JSONUtils;
 import org.everit.json.schema.ValidationException;
 import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -52,5 +59,48 @@ public class WeaponCreatorTest {
     public void loadWeaponPack_standardPack_shouldSucceed() {
         WeaponCreator.loadWeaponPack("/assets/standard_weapons.json");
         assertTrue(true);
+    }
+
+    @Test
+    public void createWeaponCard_validWeapon_shouldCreate() throws CardNotFoundException, IOException {
+        /* Load a test cyberblade */
+        WeaponCreator.loadWeapon("/assets/test_weapons/validweapon.json");
+
+        WeaponCard weapon = WeaponCreator.createWeaponCard("cyberblade");
+
+        /* Check that everything has been built correctly */
+        assertEquals("cyberblade", weapon.getId());
+        assertEquals("Cyberblade", weapon.getName());
+        assertEquals(Arrays.asList(AmmoCubeCost.YELLOW, AmmoCubeCost.RED), weapon.getCost());
+
+        List<EffectDescription> effects = weapon.getEffects();
+        assertEquals(3, effects.size());
+
+        /* First effect */
+        EffectDescription effect = effects.get(0);
+        assertEquals("basic", effect.getId());
+        assertEquals("Basic Effect", effect.getName());
+        assertEquals("This is the basic effect", effect.getDescription());
+        assertEquals(Collections.EMPTY_LIST, effect.getCost());
+
+
+        /* Second effect */
+        effect = effects.get(1);
+        assertEquals("shadowstep", effect.getId());
+        assertEquals("Shadowstep", effect.getName());
+        assertEquals("This a movement effect", effect.getDescription());
+        assertEquals(Collections.EMPTY_LIST, effect.getCost());
+
+        /* Third effect */
+        effect = effects.get(2);
+        assertEquals("slice_and_dice", effect.getId());
+        assertEquals("Slice and dice", effect.getName());
+        assertEquals("This is an optional effect", effect.getDescription());
+        assertEquals(Collections.singletonList(AmmoCubeCost.YELLOW), effect.getCost());
+    }
+
+    @Test(expected = CardNotFoundException.class)
+    public void createWeaponCard_notLoaded_shouldThrow() throws CardNotFoundException, IOException {
+        WeaponCreator.createWeaponCard("cyberblade");
     }
 }

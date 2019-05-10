@@ -1,11 +1,17 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.controller.weapon;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.CardNotFoundException;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.WeaponCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.utils.JSONUtils;
 import org.everit.json.schema.ValidationException;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.MissingResourceException;
@@ -18,6 +24,10 @@ import java.util.MissingResourceException;
 public class WeaponCreator {
     /** The key is the weapon id, the value is the path of its configuration file */
     private static final Map<String, String> weaponConfigMap = new HashMap<>();
+
+    /** Object mapper used to deserialize weapon cards */
+    private static final ObjectMapper objectMapper = JSONUtils.getObjectMapper().copy()
+            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
     private WeaponCreator() {}
 
@@ -71,6 +81,21 @@ public class WeaponCreator {
      */
     public static boolean isWeaponAvailable(String weaponId) {
         return weaponConfigMap.containsKey(weaponId);
+    }
+
+    /**
+     * Creates a new instance of the required WeaponCard.
+     * The weapon with specified id must have been previously loaded by the creator.
+     * @param weaponId id of the weapon you want to create
+     * @return an object representing the WeaponCard, in its default state
+     * @throws CardNotFoundException if the required weapon has not been loaded
+     * @throws IOException if anything goes wrong while parsing the JSON
+     */
+    public static WeaponCard createWeaponCard(String weaponId) throws CardNotFoundException, IOException {
+        if (!isWeaponAvailable(weaponId)) throw new CardNotFoundException("Card \"%s\" has not been loaded");
+
+        InputStream input = JSONUtils.class.getResourceAsStream(weaponConfigMap.get(weaponId));
+        return objectMapper.readValue(input, WeaponCard.class);
     }
 
     /**
