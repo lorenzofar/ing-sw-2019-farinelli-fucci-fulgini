@@ -3,6 +3,7 @@ package it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCubeCost;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /** A class describing a light representation of an effect provided by a weapon*/
@@ -21,7 +22,9 @@ public class EffectDescription {
     private List<AmmoCubeCost> cost;
 
     /** Default constructor only to be used by Jackson */
-    private EffectDescription(){}
+    private EffectDescription(){
+        cost = new ArrayList<>(0); /* Default cost is zero */
+    }
 
     /**
      * Creates a new object describing an effect
@@ -75,10 +78,10 @@ public class EffectDescription {
 
     /**
      * Retrieves the cost of the effect
-     * @return The list of objects representing the cost of the effect
+     * @return An unmodifiable list of objects representing the cost of the effect
      */
     public List<AmmoCubeCost> getCost(){
-        return new ArrayList<>(cost);
+        return Collections.unmodifiableList(cost);
     }
 
     @Override
