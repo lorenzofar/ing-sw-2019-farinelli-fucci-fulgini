@@ -1,17 +1,17 @@
 {
-  "weaponId" : "furnace",
+  "id" : "furnace",
   "name" : "Furnace",
   "type" : "ALTERNATIVE_MODES",
   "cost" : ["RED", "BLUE"],
   "effects" : [
     {
-      "effectId" : "basic",
+      "id" : "basic",
       "name" : "Basic Mode",
       "type" : "MODE",
       "description" : "Choose a room you can see, but not the room you are in. Deal 1 damage to everyone in that room.",
       "targets" : [
         {
-          "targetId" : "room",
+          "id" : "room",
           "targetMode" : "ROOM",
           "visibility" : "VISIBLE",
           "minDist" : 1,
@@ -20,14 +20,14 @@
       ]
     },
     {
-      "effectId" : "cozy_fire_mode",
+      "id" : "cozy_fire_mode",
       "name" : "Cozy Fire Mode",
       "type" : "MODE",
       "description" : "Choose a square exactly one move away. Deal 1 damage and 1 mark to everyone on that square.",
       "cost" : [],
       "targets" : [
         {
-          "targetId" : "room",
+          "id" : "room",
           "targetMode" : "SQUARE",
           "visibility" : "VISIBLE",
           "minDist" : 1,

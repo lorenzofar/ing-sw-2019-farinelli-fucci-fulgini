@@ -1,17 +1,17 @@
 {
-  "weaponId" : "shotgun",
+  "id" : "shotgun",
   "name" : "Shotgun",
   "type" : "ALTERNATIVE_MODES",
   "cost" : ["YELLOW", "YELLOW"],
   "effects" : [
     {
-      "effectId" : "basic",
+      "id" : "basic",
       "name" : "Basic Mode",
       "type" : "MODE",
       "description" : "Deal 3 damage to 1 target on your square. If you want, you may then move the target 1 square.",
       "targets" : [
         {
-          "targetId" : "red",
+          "id" : "red",
           "targetMode" : "PLAYER",
           "visibility" : "ANY",
           "maxDist" : 0,
@@ -21,14 +21,14 @@
       ]
     },
     {
-      "effectId" : "long_barrel_mode",
+      "id" : "long_barrel_mode",
       "name" : "Long Barrell Mode",
       "type" : "MODE",
       "description" : "Deal 2 damage to 1 target on any square exactly one move away.",
       "cost" : [],
       "targets" : [
         {
-          "targetId" : "red",
+          "id" : "red",
           "targetMode" : "PLAYER",
           "visibility" : "VISIBLE",
           "minDist" : 1,

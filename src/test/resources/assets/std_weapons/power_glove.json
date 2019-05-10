@@ -1,18 +1,18 @@
 {
-  "weaponId" : "power_glove",
+  "id" : "power_glove",
   "name" : "Power Glove",
   "type" : "ALTERNATIVE_MODES",
   "cost" : ["YELLOW", "BLUE"],
   "direction" : "CARDINAL",
   "effects" : [
     {
-      "effectId" : "basic",
+      "id" : "basic",
       "name" : "Basic Mode",
       "type" : "MODE",
       "description" : "Choose 1 target on any square exactly 1 move away. Move onto that square and give the target 1 damage and 2 marks.",
       "targets" : [
         {
-          "targetId" : "red",
+          "id" : "red",
           "targetMode" : "PLAYER",
           "visibility" : "ANY",
           "minDist": 1,
@@ -24,14 +24,14 @@
       ]
     },
     {
-      "effectId" : "rocket_fist_mode",
+      "id" : "rocket_fist_mode",
       "name" : "Rocket Fist Mode",
       "type" : "MODE",
       "description" : "Choose a square exactly 1 move away. Move onto that square. You may deal 2 damage to 1 target there. If you want, you may move 1 more square in that same direction (but only if it is a legal move). You may deal 2 damage to 1 target there, as well.",
       "cost" : ["BLUE"],
       "targets" : [
         {
-          "targetId" : "red",
+          "id" : "red",
           "targetMode" : "PLAYER",
           "visibility" : "ANY",
           "minDist": 1,
@@ -40,7 +40,7 @@
           "damage" : 2
         },
         {
-          "targetId" : "blue",
+          "id" : "blue",
           "targetMode" : "PLAYER",
           "visibility" : "ANY",
           "minDist": 1,

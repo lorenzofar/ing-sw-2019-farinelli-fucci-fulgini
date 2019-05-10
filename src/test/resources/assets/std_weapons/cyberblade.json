@@ -1,17 +1,17 @@
 {
-  "weaponId" : "cyberblade",
+  "id" : "cyberblade",
   "name" : "Cyberblade",
   "type" : "OPTIONAL_EFFECTS",
   "cost" : ["YELLOW", "RED"],
   "effects" : [
     {
-      "effectId" : "basic",
+      "id" : "basic",
       "name" : "Basic Effect",
       "type" : "BASIC",
       "description" : "Deal 2 damage to 1 target on your square.",
       "targets" : [
         {
-          "targetId" : "red",
+          "id" : "red",
           "targetMode" : "PLAYER",
           "visibility" : "ANY",
           "maxDist" : 0,
@@ -21,7 +21,7 @@
     },
 
     {
-      "effectId" : "shadowstep",
+      "id" : "shadowstep",
       "name" : "Shadowstep",
       "type" : "MOVEMENT",
       "description" : "Move 1 square before or after the basic effect.",
@@ -31,7 +31,7 @@
     },
 
     {
-      "effectId" : "slice_and_dice",
+      "id" : "slice_and_dice",
       "name" : "Slice and dice",
       "type" : "OPTIONAL",
       "description" : "Deal 2 damage to a different target on your square. The shadowstep may be used before or after this effect",
@@ -39,7 +39,7 @@
       "dependsOnEffects" : ["basic"],
       "targets" : [
         {
-          "targetId" : "blue",
+          "id" : "blue",
           "targetMode" : "PLAYER",
           "visibility" : "ANY",
           "excludePlayers" : ["red"],

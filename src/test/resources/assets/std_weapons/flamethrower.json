@@ -1,18 +1,18 @@
 {
-  "weaponId" : "flamethrower",
+  "id" : "flamethrower",
   "name" : "Flamethrower",
   "type" : "ALTERNATIVE_MODES",
   "direction" : "CARDINAL",
   "cost" : ["RED"],
   "effects" : [
     {
-      "effectId" : "basic",
+      "id" : "basic",
       "name" : "Basic Mode",
       "type" : "MODE",
       "description" : "Choose a square 1 move away and possibly a second square 1 more move away in the same direction. On each square, you may choose 1 target and give it 1 damage.",
       "targets" : [
         {
-          "targetId" : "red",
+          "id" : "red",
           "targetMode" : "PLAYER",
           "visibility" : "ANY",
           "minDist" : 1,
@@ -20,7 +20,7 @@
           "damage" : 1
         },
         {
-          "targetId" : "blue",
+          "id" : "blue",
           "targetMode" : "PLAYER",
           "visibility" : "ANY",
           "minDist" : 2,
@@ -30,14 +30,14 @@
       ]
     },
     {
-      "effectId" : "barbecue_mode",
+      "id" : "barbecue_mode",
       "name" : "Barbecue Mode",
       "type" : "MODE",
       "description" : "Choose 2 squares as above. Deal 2 damage to everyone on the first square and 1 damage to everyone on the second square.",
       "cost" : ["YELLOW", "YELLOW"],
       "targets" : [
         {
-          "targetId" : "sqr1",
+          "id" : "sqr1",
           "targetMode" : "SQUARE",
           "visibility" : "ANY",
           "minDist" : 1,
@@ -45,7 +45,7 @@
           "damage" : 2
         },
         {
-          "targetId" : "blue",
+          "id" : "blue",
           "targetMode" : "SQUARE",
           "visibility" : "ANY",
           "minDist" : 2,

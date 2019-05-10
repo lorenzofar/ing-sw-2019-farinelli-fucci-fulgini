@@ -1,16 +1,17 @@
 {
-  "weaponId" : "cyberblade",
+  "id" : "cyberblade",
   "name" : "Cyberblade",
   "type" : "OPTIONAL_EFFECTS",
   "cost" : ["YELLOW", "RED"],
   "effects" : [
     {
-      "effectId" : "basic",
+      "id" : "basic",
       "name" : "Basic Effect",
+      "description" : "This is the basic effect",
       "type" : "BASIC",
       "targets" : [
         {
-          "targetId" : "red",
+          "id" : "red",
           "targetMode" : "PLAYER",
           "visibility" : "ANY",
           "maxDist" : 0,
@@ -20,8 +21,9 @@
     },
 
     {
-      "effectId" : "shadowstep",
+      "id" : "shadowstep",
       "name" : "Shadowstep",
+      "description" : "This a movement effect",
       "type" : "MOVEMENT",
       "cost" : [],
       "dependsOnEffects" : [],
@@ -29,14 +31,15 @@
     },
 
     {
-      "effectId" : "slice_and_dice",
+      "id" : "slice_and_dice",
       "name" : "Slice and dice",
+      "description" : "This is an optional effect",
       "type" : "OPTIONAL",
       "cost" : ["YELLOW"],
       "dependsOnEffects" : ["basic"],
       "targets" : [
         {
-          "targetId" : "blue",
+          "id" : "blue",
           "targetMode" : "PLAYER",
           "visibility" : "ANY",
           "excludePlayers" : ["red"],

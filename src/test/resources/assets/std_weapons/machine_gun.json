@@ -1,11 +1,11 @@
 {
-  "weaponId" : "machine_gun",
+  "id" : "machine_gun",
   "name" : "Machine Gun",
   "type" : "OPTIONAL_EFFECTS",
   "cost" : ["BLUE", "RED"],
   "effects" : [
     {
-      "effectId" : "basic",
+      "id" : "basic",
       "name" : "Basic effect",
       "type" : "BASIC",
       "description" : "Choose 1 or 2 targets you can see and deal 1 damage to each.",
@@ -13,13 +13,13 @@
       "dependsOnEffects" : [],
       "targets" : [
         {
-          "targetId" : "red",
+          "id" : "red",
           "targetMode" : "PLAYER",
           "visibility" : "VISIBLE",
           "damage" : 1
         },
         {
-          "targetId" : "blue",
+          "id" : "blue",
           "targetMode" : "PLAYER",
           "visibility" : "VISIBLE",
           "optional" : true,
@@ -29,7 +29,7 @@
       ]
     },
     {
-      "effectId" : "focus_shot",
+      "id" : "focus_shot",
       "name" : "Focus Shot",
       "type" : "OPTIONAL",
       "description" : "Deal 1 additional damage to one of those targets.",
@@ -37,7 +37,7 @@
       "dependsOnEffects" : ["base"],
       "targets" : [
         {
-          "targetId" : "red2",
+          "id" : "red2",
           "targetMode" : "PLAYER",
           "visibility" : "VISIBLE",
           "chooseBetweenTargets" : ["red", "blue"],
@@ -46,7 +46,7 @@
       ]
     },
     {
-      "effectId" : "turret_tripod",
+      "id" : "turret_tripod",
       "name" : "Turret Tripod",
       "type" : "OPTIONAL",
       "description" : "Deal 1 additional damage to the other of those targets and/or deal 1 damage to a different target you can see.",
@@ -54,7 +54,7 @@
       "dependsOnEffects" : ["base"],
       "targets" : [
         {
-          "targetId" : "blue2",
+          "id" : "blue2",
           "targetMode" : "PLAYER",
           "visibility" : "VISIBLE",
           "chooseBetweenTargets" : ["blue"],
@@ -62,7 +62,7 @@
           "damage" : 1
         },
         {
-          "targetId" : "green",
+          "id" : "green",
           "targetMode" : "PLAYER",
           "visibility" : "VISIBLE",
           "optional" : true,

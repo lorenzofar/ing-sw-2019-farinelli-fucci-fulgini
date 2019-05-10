@@ -1,17 +1,17 @@
 {
-  "weaponId" : "tractor_beam",
+  "id" : "tractor_beam",
   "name" : "Tractor Beam",
   "type" : "ALTERNATIVE_MODES",
   "cost" : ["BLUE"],
   "effects" : [
     {
-      "effectId" : "basic",
+      "id" : "basic",
       "name" : "Basic Mode",
       "type" : "MODE",
       "description" : "Move a target 0, 1, or 2 squares to a square you can see, and give it 1 damage.",
       "targets" : [
         {
-          "targetId" : "red",
+          "id" : "red",
           "targetMode" : "PLAYER",
           "moveTargetBefore" : 2,
           "visibility" : "VISIBLE",
@@ -20,14 +20,14 @@
       ]
     },
     {
-      "effectId" : "punisher_mode",
+      "id" : "punisher_mode",
       "name" : "Punisher Mode",
       "type" : "MODE",
       "description" : "Choose a target 0, 1, or 2 moves away from you. Move the target to your square and deal 3 damage to it.",
       "cost" : ["RED", "YELLOW"],
       "targets" : [
         {
-          "targetId" : "red",
+          "id" : "red",
           "targetMode" : "PLAYER",
           "moveTargetBefore" : 2,
           "visibility" : "ANY",

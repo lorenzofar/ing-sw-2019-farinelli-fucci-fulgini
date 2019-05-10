@@ -5,6 +5,7 @@ import org.everit.json.schema.ValidationException;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.MissingResourceException;
@@ -59,7 +60,7 @@ public class WeaponCreator {
         JSONUtils.validateWeapon(weapon);
 
         /* If we got here it is valid, so save the values in the map */
-        String weaponId = weapon.getString("weaponId");
+        String weaponId = weapon.getString("id");
         weaponConfigMap.put(weaponId, filePath);
     }
 

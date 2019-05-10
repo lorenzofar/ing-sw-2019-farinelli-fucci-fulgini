@@ -1,17 +1,17 @@
 {
-  "weaponId" : "hellion",
+  "id" : "hellion",
   "name" : "Hellion",
   "type" : "ALTERNATIVE_MODES",
   "cost" : ["RED", "YELLOW"],
   "effects" : [
     {
-      "effectId" : "basic",
+      "id" : "basic",
       "name" : "Basic Mode",
       "type" : "MODE",
       "description" : "Deal 1 damage to 1 target you can see at least 1 move away. Then give 1 mark to that target and everyone else on that square.",
       "targets" : [
         {
-          "targetId" : "red",
+          "id" : "red",
           "targetMode" : "PLAYER",
           "visibility" : "VISIBLE",
           "minDist" : 1,
@@ -19,7 +19,7 @@
           "damage" : 1
         },
         {
-          "targetId" : "sqr",
+          "id" : "sqr",
           "targetMode" : "SQUARE",
           "visibility" : "VISIBLE",
           "mark" : 1
@@ -27,13 +27,13 @@
       ]
     },
     {
-      "effectId" : "nano_tracer_mode",
+      "id" : "nano_tracer_mode",
       "name" : "Nano-tracer Mode",
       "type" : "MODE",
       "description" : "Deal 1 damage to 1 target you can see at least 1 move away. Then give 2 marks to that target and everyone else on that square.",
       "targets" : [
         {
-          "targetId" : "red",
+          "id" : "red",
           "targetMode" : "PLAYER",
           "visibility" : "VISIBLE",
           "minDist" : 1,
@@ -41,7 +41,7 @@
           "damage" : 1
         },
         {
-          "targetId" : "sqr",
+          "id" : "sqr",
           "targetMode" : "SQUARE",
           "visibility" : "VISIBLE",
           "mark" : 2

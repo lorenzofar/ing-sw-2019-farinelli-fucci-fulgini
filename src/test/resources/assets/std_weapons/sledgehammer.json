@@ -1,17 +1,17 @@
 {
-  "weaponId" : "sledgehammer",
+  "id" : "sledgehammer",
   "name" : "Sledgehammer",
   "type" : "ALTERNATIVE_MODES",
   "cost" : ["YELLOW"],
   "effects" : [
     {
-      "effectId" : "basic",
+      "id" : "basic",
       "name" : "Basic Mode",
       "type" : "MODE",
       "description" : "Deal 2 damage to 1 target on your square.",
       "targets" : [
         {
-          "targetId" : "red",
+          "id" : "red",
           "targetMode" : "PLAYER",
           "visibility" : "ANY",
           "maxDist" : 0,
@@ -20,14 +20,14 @@
       ]
     },
     {
-      "effectId" : "pulverize_mode",
+      "id" : "pulverize_mode",
       "name" : "Pulverize Mode",
       "type" : "MODE",
       "description" : "Deal 3 damage to 1 target on your square, then move that target 0, 1, or 2 squares in one direction.",
       "cost" : ["RED"],
       "targets" : [
         {
-          "targetId" : "red",
+          "id" : "red",
           "targetMode" : "PLAYER",
           "visibility" : "ANY",
           "maxDist" : 0,

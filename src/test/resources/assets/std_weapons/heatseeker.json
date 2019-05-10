@@ -1,17 +1,17 @@
 {
-  "weaponId" : "heatseeker",
+  "id" : "heatseeker",
   "name" : "Heatseeker",
   "type" : "ALTERNATIVE_MODES",
   "cost" : ["RED", "RED", "YELLOW"],
   "effects" : [
     {
-      "effectId" : "basic",
+      "id" : "basic",
       "name" : "Basic Mode",
       "type" : "MODE",
       "description" : "Choose 1 target you cannot see and deal 3 damage to it.",
       "targets" : [
         {
-          "targetId" : "red",
+          "id" : "red",
           "targetMode" : "PLAYER",
           "visibility" : "NOT_VISIBLE",
           "damage" : 3

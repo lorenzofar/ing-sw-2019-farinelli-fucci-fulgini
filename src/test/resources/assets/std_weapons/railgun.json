@@ -1,18 +1,18 @@
 {
-  "weaponId" : "railgun",
+  "id" : "railgun",
   "name" : "Railgun",
   "type" : "ALTERNATIVE_MODES",
   "cost" : ["YELLOW", "YELLOW", "BLUE"],
   "direction" : "CARDINAL",
   "effects" : [
     {
-      "effectId" : "basic",
+      "id" : "basic",
       "name" : "Basic Mode",
       "type" : "MODE",
       "description" : "Choose a cardinal direction and 1 target in that direction. Deal 3 damage to it.",
       "targets" : [
         {
-          "targetId" : "red",
+          "id" : "red",
           "targetMode" : "PLAYER",
           "visibility" : "IGNORE_WALLS",
           "damage" : 3
@@ -20,20 +20,20 @@
       ]
     },
     {
-      "effectId" : "piercing_mode",
+      "id" : "piercing_mode",
       "name" : "Piercing Mode",
       "type" : "MODE",
       "description" : "Choose a cardinal direction and 1 or 2 targets in that direction. Deal 2 damage to each.",
       "cost" : [],
       "targets" : [
         {
-          "targetId" : "red",
+          "id" : "red",
           "targetMode" : "PLAYER",
           "visibility" : "IGNORE_WALLS",
           "damage" : 2
         },
         {
-          "targetId" : "blue",
+          "id" : "blue",
           "targetMode" : "PLAYER",
           "visibility" : "IGNORE_WALLS",
           "optional" : true,

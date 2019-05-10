@@ -1,5 +1,5 @@
 {
-  "weaponId" : "cyberblade",
+  "id" : "cyberblade",
   "name" : "I won't be valid",
   "type" : false,
   "cost" : "I should be an array"

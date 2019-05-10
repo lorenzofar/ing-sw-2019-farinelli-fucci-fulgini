@@ -1,11 +1,11 @@
 {
-  "weaponId" : "plasma_gun",
+  "id" : "plasma_gun",
   "name" : "Plasma Gun",
   "type" : "OPTIONAL_EFFECTS",
   "cost" : ["BLUE", "YELLOW"],
   "effects" : [
     {
-      "effectId" : "basic",
+      "id" : "basic",
       "name" : "Basic effect",
       "type" : "BASIC",
       "description" : "Deal 2 damage to 1 target you can see.",
@@ -13,7 +13,7 @@
       "dependsOnEffects" : [],
       "targets" : [
         {
-          "targetId" : "red",
+          "id" : "red",
           "targetMode" : "PLAYER",
           "visibility" : "VISIBLE",
           "damage" : 2
@@ -21,7 +21,7 @@
       ]
     },
     {
-      "effectId" : "phase_glide",
+      "id" : "phase_glide",
       "name" : "Phase Glide",
       "type" : "MOVEMENT",
       "description" : "Move 1 or 2 squares. This effect can be used either before or after the basic effect.",
@@ -30,7 +30,7 @@
       "playerMoves" : 2
     },
     {
-      "effectId" : "charged_shot",
+      "id" : "charged_shot",
       "name" : "Charged Shot",
       "type" : "OPTIONAL",
       "description" : "Deal 1 additional damage to your target.",
@@ -38,7 +38,7 @@
       "dependsOnEffects" : ["basic"],
       "targets" : [
         {
-          "targetId" : "red",
+          "id" : "red",
           "targetMode" : "PLAYER",
           "visibility" : "ANY",
           "damage" : 1

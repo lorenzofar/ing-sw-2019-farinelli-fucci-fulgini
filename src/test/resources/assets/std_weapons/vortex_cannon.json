@@ -1,11 +1,11 @@
 {
-  "weaponId" : "vortex_cannon",
+  "id" : "vortex_cannon",
   "name" : "Vortex Cannon",
   "type" : "OPTIONAL_EFFECTS",
   "cost" : ["RED", "BLUE"],
   "effects" : [
     {
-      "effectId" : "basic",
+      "id" : "basic",
       "name" : "Basic effect",
       "type" : "BASIC",
       "description" : "Choose a square you can see, but not your square. Call it \"the vortex\". Choose a target on the vortex or 1 move away from it. Move it onto the vortex and give it 2 damage.",
@@ -13,7 +13,7 @@
       "dependsOnEffects" : [],
       "targets" : [
         {
-          "targetId" : "red",
+          "id" : "red",
           "targetMode" : "VORTEX",
           "visibility" : "VISIBLE",
           "maxDist": 1,
@@ -22,7 +22,7 @@
       ]
     },
     {
-      "effectId" : "black_hole",
+      "id" : "black_hole",
       "name" : "Black Hole",
       "type" : "OPTIONAL",
       "description" : "Choose up to 2 other targets on the vortex or 1 move away from it. Move them onto the vortex and give them each 1 damage.",
@@ -30,7 +30,7 @@
       "dependsOnEffects" : ["basic"],
       "targets" : [
         {
-          "targetId" : "blue",
+          "id" : "blue",
           "targetMode" : "VORTEX",
           "visibility" : "VISIBLE",
           "excludePlayers" : ["red"],
@@ -38,7 +38,7 @@
           "damage" : 1
         },
         {
-          "targetId" : "green",
+          "id" : "green",
           "targetMode" : "VORTEX",
           "visibility" : "VISIBLE",
           "excludePlayers" : ["red", "blue"],

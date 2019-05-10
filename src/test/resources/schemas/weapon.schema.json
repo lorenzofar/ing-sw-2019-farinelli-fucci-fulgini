@@ -58,7 +58,7 @@
       "description": "Weapon usable by a player during a Shoot action",
       "type": "object",
       "properties": {
-        "weaponId": {
+        "id": {
           "description": "Unique identifier of the weapon",
           "type": "string",
           "minLength": 1
@@ -87,14 +87,14 @@
           "default": "ANY"
         }
       },
-      "required": ["weaponId", "name", "type", "cost"]
+      "required": ["id", "name", "type", "cost"]
     },
     "abstractEffect": {
       "title" : "Weapon effect",
       "description": "Weapon effect",
       "type" : "object",
       "properties": {
-        "effectId": {
+        "id": {
           "description": "Unique identifier of the effect in this card",
           "type": "string",
           "minLength": 1
@@ -103,6 +103,9 @@
           "description": "Printable name of the effect",
           "type": "string",
           "minLength": 1
+        },
+        "description": {
+          "type": "string"
         },
         "type": {
           "type": "string",
@@ -119,7 +122,7 @@
           }
         }
       },
-      "required": ["effectId", "name", "type"]
+      "required": ["id", "name", "description","type"]
     },
     "basicOptionalEffect": {
       "allOf": [
@@ -200,7 +203,7 @@
     "abstractTarget": {
       "type" : "object",
       "properties": {
-        "targetId" : {
+        "id" : {
           "description": "unique identifier for this target in this weapon",
           "type": "string",
           "minLength": 1
@@ -234,7 +237,7 @@
           "default": "VISIBLE"
         }
       },
-      "required": ["targetId", "targetMode"]
+      "required": ["id", "targetMode"]
     },
     "playerTarget": {
       "allOf": [
