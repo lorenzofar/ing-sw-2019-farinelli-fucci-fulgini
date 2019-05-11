@@ -68,27 +68,20 @@ public class Board {
     }
 
     /**
-     * Determines if a square can be reached from another one with at most the provided number of moves
-     * @param start The object representing the initial square, not null
-     * @param end The object representing the final square, not null
-     * @param maxMoves The upper bound of allowed moves, must be positive
-     * @return {@code true} if the final square is reachable, {@code false} otherwise
+     * Retrieve the set of the squares that can be reached from the provided one with the provided maximum number of moves
+     * @param start The object representing the starting square, not null
+     * @param maxMoves The maximum number of moves, not negative
+     * @return The set of objects representing the navigable squares
      */
-    private boolean isReachable(Square start, Square end, int maxMoves){
-        if(start == null || end == null){
-            throw new NullPointerException("Squares cannot be null");
+    public Set<CoordPair> getNavigableSquares(CoordPair start, int maxMoves){
+        if(start == null){
+            throw new NullPointerException("Square cannot be null");
         }
         if(maxMoves < 0){
             throw new IllegalArgumentException("Square cannot be reached by a negative amount of moves");
         }
-        if(maxMoves == 0){
-            // A 0 amount of moves we have to stay in the current square,
-            // hence the destination can be reached only if it the starting point
-            return start.equals(end);
-        }
-
         // We initialize the list of navigable squares with those I can reach with 1 move from the start
-        Set<CoordPair> navigableSquares = new LinkedHashSet<>(start.getAdjacentSquares().getReachableSquares());
+        Set<CoordPair> navigableSquares = new LinkedHashSet<>(this.getSquare(start).getAdjacentSquares().getReachableSquares());
 
         int startIndex = 0;
 
@@ -104,20 +97,42 @@ public class Board {
                         Collection<CoordPair> squareNeighbours = getSquare(location)
                                 .getAdjacentSquares()
                                 .getReachableSquares();
-                        squareNeighbours.remove(start.getLocation());
+                        squareNeighbours.remove(start);
                         return squareNeighbours.stream();
                     });
             // We update the startIndex to point at the last element of the list (before insertion)
             startIndex = navigableSquares.size();
             // And eventually we put all the new squares inside the list
             navigableSquaresToAdd.forEach(navigableSquares::add);
-            // We check whether we have found the destination and if yes we stop and return
-            if(navigableSquares.stream().anyMatch(coordPair -> coordPair.equals(end.getLocation()))){
-                return true;
-            }
         }
-        // At the end we check whether we can reach the destination and we return accordingly
-        return navigableSquares.stream().anyMatch(coordPair -> coordPair.equals(end.getLocation()));
+        return navigableSquares;
+    }
+
+    /**
+     * Determines if a square can be reached from another one with at most the provided number of moves
+     * @param start The object representing the initial square, not null
+     * @param end The object representing the final square, not null
+     * @param maxMoves The upper bound of allowed moves, must be positive
+     * @return {@code true} if the final square is reachable, {@code false} otherwise
+     */
+    private boolean isReachable(CoordPair start, CoordPair end, int maxMoves){
+        if(start == null || end == null){
+            throw new NullPointerException("Squares cannot be null");
+        }
+        if(maxMoves < 0){
+            throw new IllegalArgumentException("Square cannot be reached by a negative amount of moves");
+        }
+        if(maxMoves == 0){
+            // A 0 amount of moves we have to stay in the current square,
+            // hence the destination can be reached only if it the starting point
+            return start.equals(end);
+        }
+
+        // We retrieve the squares we can navigate to from the starting one
+        Set<CoordPair> navigableSquares = getNavigableSquares(start, maxMoves);
+
+        // We check whether we can reach the destination and we return accordingly
+        return navigableSquares.stream().anyMatch(coordPair -> coordPair.equals(end));
     }
 
     /**
@@ -243,7 +258,7 @@ public class Board {
     }
 
     /**
-     * Retrieves the square composing a path between two provided squares
+     * Retrieves the squares composing a path between two provided squares
      * @param start The object representing the starting square
      * @param end The object representing the destination square
      * @return A list of objects representing the squares composing the path
