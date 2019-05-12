@@ -17,13 +17,17 @@ public class SpawnSquare extends Square {
      * Load the maximum number of weapons a spawn square can hold
      * Fall back to a default value of 3 weapons if none is set
      */
-    public static final int MAX_WEAPON_CARDS = (int)ServerProperties.getProperties().getOrDefault("adrenaline.maxspawnweapons", 3);
+    public static final int MAX_WEAPON_CARDS = (int) ServerProperties.getProperties()
+            .getOrDefault("adrenaline.maxspawnweapons", 3);
 
     /** The list of weapon cards contained in the square */
     private List<WeaponCard> weaponCards;
 
     /** Default constructor only to be used by Jackson */
-    protected SpawnSquare(){}
+    protected SpawnSquare(){
+        super();
+        this.weaponCards = new ArrayList<>(MAX_WEAPON_CARDS);
+    }
 
     /**
      * Creates a new spawn square at the specified location

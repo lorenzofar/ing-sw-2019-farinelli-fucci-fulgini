@@ -9,7 +9,9 @@ public class AmmoSquare extends Square {
     private AmmoCard ammoCard;
 
     /** Default constructor only to be used by Jackson */
-    protected AmmoSquare(){}
+    protected AmmoSquare(){
+        this.ammoCard = null;
+    }
 
     /**
      * Creates a new ammo square at the specified location
