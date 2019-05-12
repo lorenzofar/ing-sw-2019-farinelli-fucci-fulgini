@@ -1,0 +1,79 @@
+{
+  "id": 0,
+  "xSize": 3,
+  "ySize": 2,
+  "squares": [
+    {
+      "location": { "x": 200, "y": 500 },
+      "type": "SPAWN_SQUARE",
+      "adjacentSquares": {
+        "E": { "square": { "x": 1, "y": 0 }, "connectionType": "DOOR" }
+      }
+    },
+    {
+      "location": { "x": 1, "y": 0 },
+      "type": "AMMO_SQUARE",
+      "adjacentSquares": {
+        "W": { "square": { "x": 0, "y": 0 }, "connectionType": "DOOR" },
+        "E": { "square": { "x": 2, "y": 0 }, "connectionType": "DOOR" },
+        "S": { "square": { "x": 1, "y": 1 }, "connectionType": "DOOR" }
+      }
+    },
+    {
+      "location": { "x": 2, "y": 0 },
+      "type": "SPAWN_SQUARE",
+      "adjacentSquares": {
+        "W": { "square": { "x": 1, "y": 0 }, "connectionType": "DOOR" },
+        "S": { "square": { "x": 2, "y": 1 }, "connectionType": "FLOOR" }
+      }
+    },
+    {
+      "location": { "x": 1, "y": 1 },
+      "type": "SPAWN_SQUARE",
+      "adjacentSquares": {
+        "N": { "square": { "x": 1, "y": 0 }, "connectionType": "DOOR" },
+        "E": { "square": { "x": 2, "y": 1 }, "connectionType": "WALL" },
+      }
+    },
+    {
+      "location": { "x": 2, "y": 1 },
+      "type": "AMMO_SQUARE",
+      "adjacentSquares": {
+        "N": { "square": { "x": 2, "y": 0 }, "connectionType": "FLOOR" },
+        "W": { "square": { "x": 1, "y": 1 }, "connectionType": "WALL" },
+      }
+    }
+  ],
+  "rooms": [
+    {
+      "color": "PURPLE",
+      "squares": [
+        { "x": 0, "y": 0 }
+      ]
+    },
+    {
+      "color": "GREEN",
+      "squares": [
+        { "x": 1, "y": 0 }
+      ]
+    },
+    {
+      "color": "BLUE",
+      "squares": [
+        { "x": 2, "y": 0 },
+        { "x": 2, "y": 1 }
+      ]
+    },
+    {
+      "color": "YELLOW",
+      "squares": [
+        { "x": 1, "y": 1 }
+      ]
+    }
+  ],
+  "spawnPoints": {
+    "RED": { "x": 0, "y": 0 },
+    "BLUE": { "x": 1, "y": 0 },
+    "YELLOW": { "x": 1, "y": 1 }
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "packName": "Valid board pack",
+  "boardFiles": [
+    "/assets/test_boards/board_valid.json"
+  ]
+}

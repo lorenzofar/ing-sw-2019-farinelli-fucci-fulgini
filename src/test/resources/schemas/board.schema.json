@@ -1,0 +1,114 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "board.schema.json",
+  "title": "Board",
+  "type": "object",
+  "definitions": {
+    "coordinate": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "size": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "coordPair": {
+      "type": "object",
+      "properties": {
+        "x": { "$ref": "#/definitions/coordinate" },
+        "y": { "$ref": "#/definitions/coordinate" }
+      },
+      "required": ["x", "y"],
+      "additionalProperties": false
+    },
+    "connectionType": {
+      "type": "string",
+      "enum": ["DOOR", "WALL", "FLOOR"]
+    },
+    "squareConnection": {
+      "type": "object",
+      "properties": {
+        "square": { "$ref": "#/definitions/coordPair" },
+        "connectionType": { "$ref": "#/definitions/connectionType" }
+      },
+      "required": ["square", "connectionType"]
+    },
+    "square": {
+      "type": "object",
+      "properties": {
+        "location": {
+          "$ref": "#/definitions/coordPair"
+        },
+        "type": {
+          "type": "string",
+          "enum": ["SPAWN_SQUARE", "AMMO_SQUARE"]
+        },
+        "adjacentSquares": {
+          "type": "object",
+          "properties": {
+            "N": { "$ref": "#/definitions/squareConnection" },
+            "E": { "$ref": "#/definitions/squareConnection" },
+            "S": { "$ref": "#/definitions/squareConnection" },
+            "W": { "$ref": "#/definitions/squareConnection" }
+          },
+          "additionalProperties": false
+        }
+      },
+      "required": ["location", "type", "adjacentSquares"],
+      "additionalProperties": false
+    },
+    "room": {
+      "type": "object",
+      "properties": {
+        "color": {
+          "type": "string",
+          "enum": ["BLUE", "GRAY", "YELLOW", "PURPLE", "GREEN"]
+        },
+        "squares": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/coordPair"
+          }
+        }
+      },
+      "required": ["color", "squares"],
+      "additionalProperties": false
+    }
+  },
+  "properties": {
+    "id": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "xSize": {
+      "$ref": "#/definitions/size"
+    },
+    "ySize": {
+      "$ref": "#/definitions/size"
+    },
+    "squares": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/definitions/square"
+      }
+    },
+    "rooms": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/room"
+      }
+    },
+    "spawnPoints": {
+      "type": "object",
+      "properties": {
+        "RED" : { "$ref": "#/definitions/coordPair" },
+        "BLUE" : { "$ref": "#/definitions/coordPair" },
+        "YELLOW" : { "$ref": "#/definitions/coordPair" }
+      },
+      "required": ["RED", "BLUE", "YELLOW"]
+    }
+  },
+  "required": ["id", "xSize", "ySize", "squares", "rooms"],
+  "additionalProperties": false
+}

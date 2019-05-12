@@ -26,6 +26,8 @@ public class JSONUtils {
     private static Schema powerupPackSchema;
     private static Schema ammoCardPackSchema;
     private static Schema actionCardPackSchema;
+    private static Schema boardPackSchema;
+    private static Schema boardSchema;
     /* TODO: Add more schemas */
 
     private static final ObjectMapper objectMapper = new ObjectMapper()
@@ -156,6 +158,44 @@ public class JSONUtils {
     }
 
     /**
+     * Loads board pack schema.
+     * @param schemaPath absolute path of the schema resource
+     */
+    public static void loadBoardPackSchema(String schemaPath){
+        boardPackSchema = loadSchema(schemaPath);
+    }
+
+    /**
+     * Validates board pack against its schema.
+     * @param pack board pack JSON to validate
+     * @throws ValidationException if the pack is not valid
+     * @throws IllegalStateException if the validation schema had not been previously loaded
+     */
+    public static void validateBoardPack(JSONObject pack){
+        if (boardPackSchema == null) throw new IllegalStateException("You must load the board pack schema first!");
+        boardPackSchema.validate(pack);
+    }
+
+    /**
+     * Loads given board schema.
+     * @param schemaPath absolute path of the schema resource
+     */
+    public static void loadBoardSchema(String schemaPath) {
+        boardSchema = loadSchema(schemaPath);
+    }
+
+    /**
+     * Validates board description against its schema.
+     * @param board board JSON to validate
+     * @throws ValidationException if the pack is not valid
+     * @throws IllegalStateException if the validation schema had not been previously loaded
+     */
+    public static void validateBoard(JSONObject board) {
+        if (boardSchema == null) throw new IllegalStateException("You must load the schema first!");
+        boardSchema.validate(board);
+    }
+
+    /**
      * Loads and returns a schema from given path.
      * @param schemaPath absolute file path to the schema
      * @return loaded schema
@@ -188,5 +228,7 @@ public class JSONUtils {
         powerupPackSchema = null;
         ammoCardPackSchema = null;
         actionCardPackSchema = null;
+        boardPackSchema = null;
+        boardSchema = null;
     }
 }

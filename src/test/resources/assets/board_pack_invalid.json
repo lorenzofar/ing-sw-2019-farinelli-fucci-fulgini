@@ -1,0 +1,11 @@
+{
+  "packName": "Invalid board pack",
+  "boardFiles": [
+    "/assets/test_boards/board_valid.json",
+    {
+      "do i look like a string?": false
+    },
+    1.12,
+    ["just some more crap"]
+  ]
+}

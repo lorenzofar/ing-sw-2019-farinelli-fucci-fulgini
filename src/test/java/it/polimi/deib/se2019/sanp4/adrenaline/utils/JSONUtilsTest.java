@@ -81,6 +81,20 @@ public class JSONUtilsTest {
         JSONUtils.validateActionCardPack(actionCardPack);
     }
 
+    @Test(expected = IllegalStateException.class)
+    public void validateBoardPack_schemaNotLoaded_shouldThrow() {
+        JSONObject boardPack = JSONUtils.loadJSONResource("/assets/board_pack_valid.json");
+        /* Ask the class to validate an object for a schema that has not been loaded yet */
+        JSONUtils.validateBoardPack(boardPack);
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void validateBoard_schemaNotLoaded_shouldThrow() {
+        JSONObject board = JSONUtils.loadJSONResource("/assets/test_boards/board_valid.json");
+        /* Ask the class to validate an object for a schema that has not been loaded yet */
+        JSONUtils.validateBoard(board);
+    }
+
     @Test
     public void arrayToStringSet_stringArray_shouldSucceed() {
         /* Build valid string array and convert it */
