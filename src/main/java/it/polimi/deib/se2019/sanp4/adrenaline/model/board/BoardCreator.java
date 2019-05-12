@@ -184,7 +184,7 @@ public class BoardCreator {
         try {
             /* Get the coordpair */
             CoordPair location = objectMapper.readValue(
-                    spawnPoints.getJSONObject((color.toString())).toString(),
+                    spawnPoints.getJSONObject((color.name())).toString(),
                     CoordPair.class
             );
 

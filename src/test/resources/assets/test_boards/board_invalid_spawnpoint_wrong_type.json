@@ -4,7 +4,7 @@
   "ySize": 2,
   "squares": [
     {
-      "location": { "x": 200, "y": 500 },
+      "location": { "x": 0, "y": 0 },
       "type": "SPAWN_SQUARE",
       "adjacentSquares": {
         "E": { "square": { "x": 1, "y": 0 }, "connectionType": "DOOR" }

@@ -60,9 +60,25 @@ public class BoardCreatorTest {
 
     @Ignore
     @Test
-    public void createBoard_validBoard_shouldSucceed() {
-        /* TODO: Implement this method */
-        /* Load valid_board.json and test that it has been created successfully by checking all the fields */
+    public void createBoard_validBoard_shouldSucceed() throws BoardNotFoundException {
+        BoardCreator.loadBoard("/assets/test_boards/board_valid.json");
+        Board board = BoardCreator.createBoard(0);
+
+        /* TODO: Check that the board has the required properties */
+        fail();
+    }
+
+    @Ignore
+    @Test
+    public void createBoard_redundantSquareInRoom_shouldSucceed() throws BoardNotFoundException {
+        // This board is equal to board_valid, but square (0,1) in the BLUE room has not been previously declared
+        // As a result, it won't be added to the room and the result is identical to board_valid
+
+        BoardCreator.loadBoard("/assets/test_boards/board_valid.json");
+        Board board = BoardCreator.createBoard(0);
+
+        /* TODO: Check that the board has the required properties */
+        fail();
     }
 
     @Test(expected = BoardNotFoundException.class)

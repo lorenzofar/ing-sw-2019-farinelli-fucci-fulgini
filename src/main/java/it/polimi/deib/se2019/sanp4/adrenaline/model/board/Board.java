@@ -38,7 +38,9 @@ public class Board {
 
         /* Create the empty rooms */
         rooms = new EnumMap<>(RoomColor.class);
-        rooms.keySet().forEach(color -> rooms.put(color, new Room(color)));
+        for (RoomColor color : RoomColor.values()) {
+            rooms.put(color, new Room(color));
+        }
 
         /* Create empty map of spawn points */
         spawnPoints = new EnumMap<>(AmmoCube.class);
