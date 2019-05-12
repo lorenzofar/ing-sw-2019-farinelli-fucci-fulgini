@@ -1,16 +1,26 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.model.board;
 
+import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCube;
+
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-/* A class representing the board game */
+/**
+ * This class represents the game board.
+ * It holds the squares and the rooms in which the squares are organised.
+ * By convention the square with coordinate (0,0) is in the upper-left corner; square (1,0) is immediately at its right,
+ * while square (0,1) is immediately beneath it.
+ */
 public class Board {
 
     /** A matrix of objects representing the squares the board is composed of. The addressing is [x][y] */
     private Square[][] squares;
 
     private Map<RoomColor, Room> rooms;
+
+    /** Maps each color in the powerups to its spawn point */
+    private Map<AmmoCube, SpawnSquare> spawnPoints;
 
     /** Default constructor only to be used by Jackson */
     protected Board(){}
@@ -29,6 +39,9 @@ public class Board {
         /* Create the empty rooms */
         rooms = new EnumMap<>(RoomColor.class);
         rooms.keySet().forEach(color -> rooms.put(color, new Room(color)));
+
+        /* Create empty map of spawn points */
+        spawnPoints = new EnumMap<>(AmmoCube.class);
     }
 
     /**
@@ -281,7 +294,11 @@ public class Board {
             throw new NullPointerException("Location cannot be null");
         }
 
-        return squares[location.getX()][location.getY()];
+        try {
+            return squares[location.getX()][location.getY()];
+        } catch (IndexOutOfBoundsException e) {
+            return null;
+        }
     }
 
     /**
@@ -298,5 +315,22 @@ public class Board {
      */
     public Map<RoomColor, Room> getRooms() {
         return Collections.unmodifiableMap(rooms);
+    }
+
+    /**
+     * Returns a map with the spawn points
+     * @return unmodifiable map of spawn points
+     */
+    public Map<AmmoCube, Square> getSpawnPoints() {
+        return Collections.unmodifiableMap(spawnPoints);
+    }
+
+    /**
+     * Set a square as the spawn point for a specific color
+     * @param color color of the spawn point
+     * @param square square where to spawn
+     */
+    public void setSpawnPoint(AmmoCube color, SpawnSquare square) {
+        spawnPoints.put(color, square);
     }
 }
