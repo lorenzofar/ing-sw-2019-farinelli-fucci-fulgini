@@ -1,13 +1,26 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.model.board;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.PlayerNotFoundException;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * A class representing a square of the game board
  */
+@JsonTypeInfo(
+        use = JsonTypeInfo.Id.NAME,
+        include = JsonTypeInfo.As.PROPERTY,
+        property = "type")
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = SpawnSquare.class, name = "SPAWN_SQUARE"),
+        @JsonSubTypes.Type(value = AmmoSquare.class, name = "AMMO_SQUARE"),
+})
 public abstract class Square {
 
     /** The location of the square in cartesian coordinates */
@@ -23,7 +36,10 @@ public abstract class Square {
     private Room room;
 
     /** Default constructor, only to be used by Jackson */
-    protected Square(){}
+    protected Square(){
+        this.players = new HashSet<>(5);
+        this.room = null;
+    }
 
     /**
      * Creates a new square at the specified location with no players inside
@@ -37,7 +53,6 @@ public abstract class Square {
         this.adjacentSquares = new AdjacentMap();
         this.players = new HashSet<>(5);
         this.room = null;
-        //TODO: Complete the constructor
     }
 
     /**
