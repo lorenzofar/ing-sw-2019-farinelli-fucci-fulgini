@@ -34,6 +34,22 @@ public class AdjacentMapTest {
 
     }
 
+    @Test
+    public void getReachableSquares_ShouldContainProvidedSquare(){
+        AdjacentMap adjacentMap = new AdjacentMap();
+        CoordPair coordPair = new CoordPair(5,5);
+        adjacentMap.setConnection(CardinalDirection.N, coordPair, SquareConnectionType.DOOR);
+        assertTrue(adjacentMap.getReachableSquares().contains(coordPair));
+    }
+
+    @Test
+    public void getSquares_ShouldContainProvidedSquare(){
+        AdjacentMap adjacentMap = new AdjacentMap();
+        CoordPair coordPair = new CoordPair(5,5);
+        adjacentMap.setConnection(CardinalDirection.N, coordPair, SquareConnectionType.DOOR);
+        assertTrue(adjacentMap.getSquares().contains(coordPair));
+    }
+
     @Ignore
     public void getConnection_SingleDirectionMap_getConnectionShouldReturnSameConnection() {
         fail();

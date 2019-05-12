@@ -37,7 +37,26 @@ public class BoardTest {
         board.addSquare(new AmmoSquare(location));
     }
 
+    @Test(expected = NullPointerException.class)
+    public void getPath_NullSquareProvided_ShouldThrowNullPointerException(){
+        Board board = new Board(4,3);
+        board.getPath(null, null);
+    }
 
+    @Test(expected = NullPointerException.class)
+    public void getSquare_NullSquareProvided_ShouldThrowNullPointerException(){
+        Board board = new Board(4,3);
+        board.getSquare(null);
+    }
 
+    @Test
+    public void getSquare_ShouldReturnSameSquare(){
+        Board board = new Board(4,3);
+        CoordPair location = new CoordPair(3,2);
+        Square square = new AmmoSquare(location);
+        board.addSquare(square);
+        assertEquals(square, board.getSquare(location));
+        assertTrue(board.getSquares().contains(square));
+    }
 
 }
