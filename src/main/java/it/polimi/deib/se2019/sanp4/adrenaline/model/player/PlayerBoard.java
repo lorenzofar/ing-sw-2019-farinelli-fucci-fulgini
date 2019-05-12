@@ -1,6 +1,10 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.model.player;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import it.polimi.deib.se2019.sanp4.adrenaline.server.ServerProperties;
+import it.polimi.deib.se2019.sanp4.adrenaline.utils.jackson.PlayerStringSerializer;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -35,14 +39,22 @@ public class PlayerBoard{
 
     /** Damages received by other players */
     private List<Player> damages;
+
     /** Number of marks received by each player */
+    @JsonSerialize(keyUsing = PlayerStringSerializer.class)
     private Map<Player, Integer> marks;
+
     /** Number of revenge marks received by other players*/
+    @JsonSerialize(keyUsing = PlayerStringSerializer.class)
     private Map<Player, Integer> revengeMarks;
+
     /** Number of times the player died, either by killshot or overkill */
     private int deaths;
+
     /** Owner of the player board */
+    @JsonBackReference
     private final Player player;
+
     /** State of the board for scoring purposes */
     private PlayerBoardState state;
 
@@ -234,6 +246,7 @@ public class PlayerBoard{
      * Players who delivered no damage won't be in the map.
      * @return {@code map<player, score>} with each player who got points
      */
+    @JsonIgnore /* Tell Jackson that this is not a property */
     public Map<Player, Integer> getPlayerScores() {
         // We create a map holding the count of performed damages
         Map<Player, Integer> damageCounts = new HashMap<>();
