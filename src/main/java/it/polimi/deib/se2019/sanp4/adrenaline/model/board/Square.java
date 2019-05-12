@@ -5,10 +5,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.PlayerNotFoundException;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * A class representing a square of the game board
@@ -83,10 +80,10 @@ public abstract class Square {
 
     /**
      * Retrieves all the players that are currently inside the square
-     * @return A list of objects representing the players
+     * @return A set of objects representing the players
      */
-    public List<Player> getPlayers(){
-        return new ArrayList<>(this.players);
+    public Set<Player> getPlayers(){
+        return Collections.unmodifiableSet(players);
     }
 
     /**
