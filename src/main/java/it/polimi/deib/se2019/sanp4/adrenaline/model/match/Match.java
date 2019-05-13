@@ -91,7 +91,7 @@ public class Match {
      * @param playerName The name of the player, not null and not empty
      * @return The object representing the player, null if the player does not exist
      */
-    private Player getPlayerByName(String playerName){
+    public Player getPlayerByName(String playerName){
         if(playerName == null){
             throw new NullPointerException("Player name cannot be null");
         }
@@ -99,7 +99,7 @@ public class Match {
             throw new IllegalArgumentException("Player name cannot be empty");
         }
         Optional<Player> player = players.stream().filter(p -> p.getName().equals(playerName)).findFirst();
-        return player.isPresent() ? player.get() : null;
+        return player.orElse(null);
     }
 
     /**

@@ -130,7 +130,7 @@ public class Board {
      * @param maxMoves The upper bound of allowed moves, must be positive
      * @return {@code true} if the final square is reachable, {@code false} otherwise
      */
-    private boolean isReachable(CoordPair start, CoordPair end, int maxMoves){
+    public boolean isReachable(CoordPair start, CoordPair end, int maxMoves){
         if(start == null || end == null){
             throw new NullPointerException("Squares cannot be null");
         }
