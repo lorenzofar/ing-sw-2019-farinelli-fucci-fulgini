@@ -9,8 +9,10 @@ public interface ChoiceHandler<T> {
     /**
      * Handles the provided choice
      * @param choice The object representing the choice, not null
+     * @param playerUsername The username of the player that made the choice
+     * @param controller The object representing the controller, not null
      */
-    void handleChoice(T choice);
+    void handleChoice(T choice, String playerUsername, Controller controller);
 
     /**
      * Handles failures in retrieving the state and stops waiting for the input

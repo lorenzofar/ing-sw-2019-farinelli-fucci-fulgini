@@ -1,6 +1,7 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.controller;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -13,7 +14,7 @@ public abstract class Request<T>{
     private String message;
 
     /** A list of objects representing the available choices */
-    private List<T> choices;
+    private Collection<T> choices;
 
     /** Indicates whether the request is optional */
     private boolean optional;
@@ -24,7 +25,7 @@ public abstract class Request<T>{
      * @param choices The list of objects representing the available choices
      * @param optional {@code true} if the request is optional, {@code false} otherwise
      */
-    public Request(String message, List<T> choices, boolean optional){
+    public Request(String message, Collection<T> choices, boolean optional){
         if(message == null || choices == null){
             throw new NullPointerException("Found null parameters");
         }

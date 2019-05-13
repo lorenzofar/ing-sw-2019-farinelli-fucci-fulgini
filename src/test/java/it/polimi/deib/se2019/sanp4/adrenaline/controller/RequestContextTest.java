@@ -16,7 +16,7 @@ public class RequestContextTest {
     public static void setup(){
         validHandler = new ChoiceHandler<Object>() {
             @Override
-            public void handleChoice(Object choice) {}
+            public void handleChoice(Object choice, String player, Controller controller) {}
 
             @Override
             public void cancel() {}
