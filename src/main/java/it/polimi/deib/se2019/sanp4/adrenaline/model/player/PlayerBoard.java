@@ -44,10 +44,6 @@ public class PlayerBoard{
     @JsonSerialize(keyUsing = PlayerStringSerializer.class)
     private Map<Player, Integer> marks;
 
-    /** Number of revenge marks received by other players*/
-    @JsonSerialize(keyUsing = PlayerStringSerializer.class)
-    private Map<Player, Integer> revengeMarks;
-
     /** Number of times the player died, either by killshot or overkill */
     private int deaths;
 
@@ -69,7 +65,6 @@ public class PlayerBoard{
         }
         damages = new ArrayList<>();
         marks = new HashMap<>();
-        revengeMarks = new HashMap<>();
         deaths = 0;
         this.player = player;
         state = new RegularPlayerBoardState();
@@ -151,55 +146,6 @@ public class PlayerBoard{
         // If I reached the maximum amount of marks, cap the value to it
         playerMarks = playerMarks > MAX_MARKS_PER_PLAYER ? MAX_MARKS_PER_PLAYER : playerMarks;
         marks.put(shooter, playerMarks);
-    }
-
-    /**
-     * Adds one revenge mark from the given player.
-     * @param shooter The player who sent the mark, not the owner of the player board, not null
-     */
-    public void addRevengeMark(Player shooter){
-        if(shooter == null){
-            throw new NullPointerException(NULL_PLAYER_ERROR);
-        }
-        if(shooter.getPlayerBoard() == this){
-            throw new IllegalArgumentException("The player cannot add a revenge mark to himself");
-        }
-        // Increase the count by 1
-        revengeMarks.merge(shooter, 1, Integer::sum);
-    }
-
-    /**
-     * Removes a revenge mark from the provided player
-     * It automatically removev the player from the map if he does not have marks remaining
-     * @param shooter The object representing the mark shooter, not null
-     */
-    public void removeRevengeMark(Player shooter){
-        if(shooter == null){
-            throw new NullPointerException(NULL_PLAYER_ERROR);
-        }
-        Integer shooterRevengeMarks = revengeMarks.get(shooter);
-        if(shooterRevengeMarks==null) {
-            return;
-        }
-        shooterRevengeMarks--;
-        if(shooterRevengeMarks == 0){
-            revengeMarks.remove(shooter);
-        }
-        else{
-            revengeMarks.put(shooter, shooterRevengeMarks);
-        }
-    }
-
-    /**
-     * Determine whether the provided player has a pending revenge mark on the board owner
-     * @param shooter The object representing the player
-     * @return {@code true} if there is a revenge mark, {@code false} otherwise
-     */
-    public boolean hasRevengeMark(Player shooter){
-        if(shooter == null){
-            throw new NullPointerException(NULL_PLAYER_ERROR);
-        }
-        return revengeMarks.get(shooter) != null;
     }
 
     /**

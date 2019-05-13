@@ -160,57 +160,6 @@ public class PlayerBoardTest {
         assertTrue(playerBoard.getMarksByPlayer(shooter) >= 0);
     }
 
-    /* ===== REVENGE MARKS ===== */
-    @Test(expected = NullPointerException.class)
-    public void addRevengeMark_nullPlayerProvided_shouldThrowException(){
-        Player player = new Player(validName, validActionCard, validCharacter);
-        PlayerBoard playerBoard = new PlayerBoard(player);
-        playerBoard.addRevengeMark(null);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void addRevengeMark_playerIsBoardOwner_shouldThrowException() {
-        Player player = new Player(validName, validActionCard, validCharacter);
-        player.getPlayerBoard().addRevengeMark(player);
-    }
-
-    @Test
-    public void addRevengeMark_validParametersProvided_shooterShouldHaveRevengeMarks(){
-        Player player = new Player(validName, validActionCard, validCharacter);
-        Player shooter = new Player("Another name", validActionCard, validCharacter);
-        player.getPlayerBoard().addRevengeMark(shooter);
-        assertTrue(player.getPlayerBoard().hasRevengeMark(shooter));
-    }
-
-    @Test(expected = NullPointerException.class)
-    public void removeRevengeMark_nullPlayerProvided_shouldThrowException(){
-        Player player = new Player(validName, validActionCard, validCharacter);
-        player.getPlayerBoard().removeRevengeMark(null);
-    }
-
-    @Test
-    public void removeRevengeMark_validPlayerProvided_shouldRemoveMark(){
-        Player player = new Player(validName, validActionCard, validCharacter);
-        Player shooterWithNoMarks = new Player("SWNM", validActionCard, validCharacter);
-        Player shooterWithOneMark = new Player("SW1M", validActionCard, validCharacter);
-        Player shooterWithTwoMarks = new Player("SW2M", validActionCard, validCharacter);
-        player.getPlayerBoard().addRevengeMark(shooterWithOneMark);
-        player.getPlayerBoard().addRevengeMark(shooterWithTwoMarks);
-        player.getPlayerBoard().addRevengeMark(shooterWithTwoMarks);
-        player.getPlayerBoard().removeRevengeMark(shooterWithNoMarks);
-        assertFalse(player.getPlayerBoard().hasRevengeMark(shooterWithNoMarks));
-        player.getPlayerBoard().removeRevengeMark(shooterWithOneMark);
-        assertFalse(player.getPlayerBoard().hasRevengeMark(shooterWithOneMark));
-        player.getPlayerBoard().removeRevengeMark(shooterWithTwoMarks);
-        assertTrue(player.getPlayerBoard().hasRevengeMark(shooterWithTwoMarks));
-    }
-
-    @Test(expected = NullPointerException.class)
-    public void checkHasRevengeMark_nullPlayerProvided_shouldThrowException(){
-        Player player = new Player(validName, validActionCard, validCharacter);
-        player.getPlayerBoard().hasRevengeMark(null);
-    }
-
     @Test
     public void getKillshot_playerDead_shouldReturnNonNullPlayer(){
         Player player = new Player(validName, validActionCard, validCharacter);

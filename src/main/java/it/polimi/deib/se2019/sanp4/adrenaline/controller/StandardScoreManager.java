@@ -41,7 +41,7 @@ public class StandardScoreManager extends ScoreManager {
             Player overkillShooter = player.getPlayerBoard().getOverkill();
             if(overkillShooter != null){
                 // Add a revenge mark to him from the current player
-                overkillShooter.getPlayerBoard().addRevengeMark(player);
+                overkillShooter.getPlayerBoard().addMark(player, 1);
             }
         });
     }
