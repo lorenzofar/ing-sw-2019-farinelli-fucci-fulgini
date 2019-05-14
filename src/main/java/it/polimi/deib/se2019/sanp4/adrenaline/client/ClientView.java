@@ -11,10 +11,44 @@ import it.polimi.deib.se2019.sanp4.adrenaline.view.MessageType;
 import java.io.IOException;
 
 public class ClientView extends RemoteObservable<ViewEvent> implements RemoteView {
+    /** The username of the player owning the view */
     private String player;
+
+    /** The rendering engine used by the client */
+    private UIRenderer renderer;
+    /** The connection method used to connect to the server */
+    private ServerConnection serverConnection;
 
     ClientView(){
         //TODO: Complete constructor and methods implementation
+    }
+
+    /**
+     * Set the rendering engine used by the client
+     * @param renderer The object representing the rendering engine, not null
+     */
+    void setRenderer(UIRenderer renderer){
+        if(renderer == null){
+            throw new NullPointerException("Server connection cannot be null");
+        }
+        this.renderer = renderer;
+    }
+
+    /**
+     * Set the connection method used to connect to the server
+     * @param serverConnection The object representing the connection, not nu
+     */
+    void setServerConnection(ServerConnection serverConnection){
+        if(serverConnection == null){
+            throw new NullPointerException("Server connection cannot be null");
+        }
+        this.serverConnection = serverConnection;
+    }
+
+    /** Start the client */
+    protected void start(){
+        renderer.showSplashScreen();
+        //TODO: Retrieve connection parameters
     }
 
     @Override
