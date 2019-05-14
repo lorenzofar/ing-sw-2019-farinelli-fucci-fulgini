@@ -9,6 +9,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/* TODO: Refactor this into GrabActionController */
 /** A specialized choice handler to handle the choice of a destination square when a player wants to move */
 public class MoveDestinationChoiceHandler implements ChoiceHandler<CoordPair> {
 

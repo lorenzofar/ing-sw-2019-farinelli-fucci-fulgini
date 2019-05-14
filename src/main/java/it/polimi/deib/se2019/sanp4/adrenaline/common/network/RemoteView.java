@@ -1,7 +1,7 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.common.network;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.RemoteObserver;
-import it.polimi.deib.se2019.sanp4.adrenaline.controller.Request;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.ChoiceRequest;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.events.ViewEvent;
 import it.polimi.deib.se2019.sanp4.adrenaline.view.MessageType;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.ModelUpdate;
@@ -14,7 +14,7 @@ public interface RemoteView extends RemoteObserver<ModelUpdate>, Remote {
      * Performs the provided request on the view
      * @param request The object representing the request, not null
      */
-    void performRequest(Request request);
+    void performRequest(ChoiceRequest request);
 
     /**
      * Displays the provided message

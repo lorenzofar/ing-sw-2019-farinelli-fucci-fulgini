@@ -1,5 +1,8 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.controller;
 
+import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.ChoiceRequest;
+
+/* TODO: Get rid of this */
 /**
  * A class describing the context of a request made to a player
  * @param <T> The type of object requested to the player
@@ -7,7 +10,7 @@ package it.polimi.deib.se2019.sanp4.adrenaline.controller;
 public class RequestContext<T> {
 
     private ChoiceHandler<T> handler;
-    private Request<T> request;
+    private ChoiceRequest<T> request;
 
     /**
      * Creates a new request for the provided request,
@@ -15,7 +18,7 @@ public class RequestContext<T> {
      * @param req The object representing the request, not null
      * @param handler The object representing the handler, not null
      */
-    RequestContext(Request<T> req,  ChoiceHandler<T> handler){
+    RequestContext(ChoiceRequest<T> req, ChoiceHandler<T> handler){
         if(req == null || handler == null){
             throw new NullPointerException("Found null parameters");
         }
@@ -35,7 +38,7 @@ public class RequestContext<T> {
      * Retrieves the associated request
      * @return The object associated with the request
      */
-    public Request<T> getRequest() {
+    public ChoiceRequest<T> getRequest() {
         return request;
     }
 }

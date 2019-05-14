@@ -1,8 +1,9 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.controller;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.common.events.GrabEvent;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.ChoiceRequest;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.choice.GrabWeaponChoiceHandler;
-import it.polimi.deib.se2019.sanp4.adrenaline.controller.request.WeaponCardRequest;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.WeaponCardRequest;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.AmmoSquare;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.SpawnSquare;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.Square;
@@ -12,6 +13,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
 
 import java.util.List;
 
+/* TODO: Refactor this into GrabActionController */
 public class GrabHandler implements EventHandler{
 
     // Private constructor to hide public one
@@ -40,11 +42,13 @@ public class GrabHandler implements EventHandler{
             // Here the player can grab one of the weapons
             // Hence we have to retrieve the list of available weapons and show it to the player
             List<WeaponCard> availableWeaponCards = ((SpawnSquare)playerSquare).getWeaponCards();
-            Request<WeaponCard> weaponCardRequest = new WeaponCardRequest(
+            ChoiceRequest<WeaponCard> weaponCardRequest = new WeaponCardRequest(
                     "Select a weapon card to grab from the square",
                     availableWeaponCards,
                     false
             );
+
+            /* TODO: Send the request and hadle the response */
             // Create a new request context to store the request, and make it handle by the proper handler
             RequestContext<WeaponCard> weaponCardRequestContext = new RequestContext<>(weaponCardRequest, new GrabWeaponChoiceHandler());
             // Send the request to the player
