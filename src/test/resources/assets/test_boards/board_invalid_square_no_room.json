@@ -32,7 +32,7 @@
       "type": "SPAWN_SQUARE",
       "adjacentSquares": {
         "N": { "square": { "x": 1, "y": 0 }, "connectionType": "DOOR" },
-        "E": { "square": { "x": 2, "y": 1 }, "connectionType": "WALL" },
+        "E": { "square": { "x": 2, "y": 1 }, "connectionType": "WALL" }
       }
     },
     {
@@ -40,7 +40,7 @@
       "type": "AMMO_SQUARE",
       "adjacentSquares": {
         "N": { "square": { "x": 2, "y": 0 }, "connectionType": "FLOOR" },
-        "W": { "square": { "x": 1, "y": 1 }, "connectionType": "WALL" },
+        "W": { "square": { "x": 1, "y": 1 }, "connectionType": "WALL" }
       }
     }
   ],
