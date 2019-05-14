@@ -1,6 +1,7 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.model.board;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.BoardNotFoundException;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCube;
 import it.polimi.deib.se2019.sanp4.adrenaline.utils.JSONUtils;
 import org.everit.json.schema.ValidationException;
 import org.json.JSONException;
@@ -58,17 +59,77 @@ public class BoardCreatorTest {
         /* TODO: Test the standard pack once we have one */
     }
 
-    @Ignore
+    public void checkTestBoard(Board board){
+        /* Verifying that the (0,0) square respects our test board structure */
+        CoordPair currSquare = new CoordPair(0,0);
+        assertEquals(RoomColor.PURPLE, board.getSquare(currSquare).getRoom().getColor());
+        AdjacentMap currAdjacent = board.getSquare(currSquare).getAdjacentSquares();
+        assertNull(currAdjacent.get(CardinalDirection.N));
+        assertNull(currAdjacent.get(CardinalDirection.W));
+        assertNull(currAdjacent.get(CardinalDirection.S));
+        assertEquals(SquareConnectionType.DOOR,  currAdjacent.get(CardinalDirection.E).getConnectionType());
+        CoordPair connectedSquare = new CoordPair(1,0);
+        assertEquals(board.getSquare(connectedSquare), board.getSquare(currAdjacent.getConnection(CardinalDirection.E).getSquare()));
+        /* (1,0) square */
+        currSquare = new CoordPair(1,0);
+        assertEquals(RoomColor.GREEN, board.getSquare(currSquare).getRoom().getColor());
+        currAdjacent = board.getSquare(currSquare).getAdjacentSquares();
+        assertNull(currAdjacent.get(CardinalDirection.N));
+        assertEquals(SquareConnectionType.DOOR, currAdjacent.get(CardinalDirection.W).getConnectionType());
+        assertEquals(SquareConnectionType.DOOR, currAdjacent.get(CardinalDirection.S).getConnectionType());
+        assertEquals(SquareConnectionType.DOOR, currAdjacent.get(CardinalDirection.E).getConnectionType());
+        connectedSquare = new CoordPair(0,0);
+        assertEquals(board.getSquare(connectedSquare), board.getSquare(currAdjacent.getConnection(CardinalDirection.W).getSquare()));
+        connectedSquare = new CoordPair(2,0);
+        assertEquals(board.getSquare(connectedSquare), board.getSquare(currAdjacent.getConnection(CardinalDirection.E).getSquare()));
+        connectedSquare = new CoordPair(1,1);
+        assertEquals(board.getSquare(connectedSquare), board.getSquare(currAdjacent.getConnection(CardinalDirection.S).getSquare()));
+        /* (2,0) square */
+        currSquare = new CoordPair(2,0);
+        assertEquals(RoomColor.BLUE, board.getSquare(currSquare).getRoom().getColor());
+        currAdjacent = board.getSquare(currSquare).getAdjacentSquares();
+        assertNull(currAdjacent.get(CardinalDirection.N));
+        assertEquals(SquareConnectionType.DOOR, currAdjacent.get(CardinalDirection.W).getConnectionType());
+        assertEquals(SquareConnectionType.FLOOR, currAdjacent.get(CardinalDirection.S).getConnectionType());
+        assertNull(currAdjacent.get(CardinalDirection.E));
+        connectedSquare = new CoordPair(1,0);
+        assertEquals(board.getSquare(connectedSquare), board.getSquare(currAdjacent.getConnection(CardinalDirection.W).getSquare()));
+        connectedSquare = new CoordPair(2,1);
+        assertEquals(board.getSquare(connectedSquare), board.getSquare(currAdjacent.getConnection(CardinalDirection.S).getSquare()));
+        /* (1,1) square */
+        currSquare = new CoordPair(1,1);
+        assertEquals(RoomColor.YELLOW, board.getSquare(currSquare).getRoom().getColor());
+        currAdjacent = board.getSquare(currSquare).getAdjacentSquares();
+        assertEquals(SquareConnectionType.DOOR, currAdjacent.get(CardinalDirection.N).getConnectionType());
+        assertNull(currAdjacent.get(CardinalDirection.W));
+        assertEquals(SquareConnectionType.WALL, currAdjacent.get(CardinalDirection.E).getConnectionType());
+        assertNull(currAdjacent.get(CardinalDirection.S));
+        connectedSquare = new CoordPair(1,0);
+        assertEquals(board.getSquare(connectedSquare), board.getSquare(currAdjacent.getConnection(CardinalDirection.N).getSquare()));
+        connectedSquare = new CoordPair(2,1);
+        assertEquals(board.getSquare(connectedSquare), board.getSquare(currAdjacent.getConnection(CardinalDirection.E).getSquare()));
+        /* (2,1) square */
+        currSquare = new CoordPair(2,1);
+        assertEquals(RoomColor.BLUE, board.getSquare(currSquare).getRoom().getColor());
+        currAdjacent = board.getSquare(currSquare).getAdjacentSquares();
+        assertEquals(SquareConnectionType.FLOOR, currAdjacent.get(CardinalDirection.N).getConnectionType());
+        assertNull(currAdjacent.get(CardinalDirection.E));
+        assertEquals(SquareConnectionType.WALL, currAdjacent.get(CardinalDirection.W).getConnectionType());
+        assertNull(currAdjacent.get(CardinalDirection.S));
+        connectedSquare = new CoordPair(2,0);
+        assertEquals(board.getSquare(connectedSquare), board.getSquare(currAdjacent.getConnection(CardinalDirection.N).getSquare()));
+        connectedSquare = new CoordPair(1,1);
+        assertEquals(board.getSquare(connectedSquare), board.getSquare(currAdjacent.getConnection(CardinalDirection.W).getSquare()));
+
+    }
+
     @Test
     public void createBoard_validBoard_shouldSucceed() throws BoardNotFoundException {
         BoardCreator.loadBoard("/assets/test_boards/board_valid.json");
         Board board = BoardCreator.createBoard(0);
-
-        /* TODO: Check that the board has the required properties */
-        fail();
+        checkTestBoard(board);
     }
 
-    @Ignore
     @Test
     public void createBoard_redundantSquareInRoom_shouldSucceed() throws BoardNotFoundException {
         // This board is equal to board_valid, but square (0,1) in the BLUE room has not been previously declared
@@ -76,13 +137,11 @@ public class BoardCreatorTest {
 
         BoardCreator.loadBoard("/assets/test_boards/board_valid.json");
         Board board = BoardCreator.createBoard(0);
-
-        /* TODO: Check that the board has the required properties */
-        fail();
+        checkTestBoard(board);
     }
 
     @Test(expected = BoardNotFoundException.class)
-    public void createboard_notLoaded_shouldThrow() throws BoardNotFoundException {
+    public void createBoard_notLoaded_shouldThrow() throws BoardNotFoundException {
         BoardCreator.createBoard(42);
     }
 
