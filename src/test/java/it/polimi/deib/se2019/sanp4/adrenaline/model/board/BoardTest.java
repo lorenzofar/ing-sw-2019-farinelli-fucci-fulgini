@@ -59,4 +59,19 @@ public class BoardTest {
         assertTrue(board.getSquares().contains(square));
     }
 
+    @Test(expected = NullPointerException.class)
+    public void getNavigableSquares_NullStartProvided_ShouldThrowNullPointerException(){
+        Board board = new Board(4,3);
+        board.getNavigableSquares(null, 1);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void getNavigableSquares_NegativeMaxMoves_ShouldThrowIllegalArgumentException(){
+        Board board = new Board(4,3);
+        CoordPair start = new CoordPair(1,1);
+        board.getNavigableSquares(start, -1);
+    }
+
+
+
 }
