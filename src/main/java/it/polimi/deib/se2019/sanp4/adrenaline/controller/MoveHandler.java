@@ -1,14 +1,17 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.controller;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.common.events.MoveEvent;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.ChoiceRequest;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.choice.MoveDestinationChoiceHandler;
-import it.polimi.deib.se2019.sanp4.adrenaline.controller.request.CoordPairRequest;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.SquareRequest;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.CoordPair;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.Square;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
 
+import java.util.ArrayList;
 import java.util.Set;
 
+/* TODO: Refactor this into MoveActionController */
 public class MoveHandler implements EventHandler{
 
     // Private constructor to hide public one
@@ -28,9 +31,9 @@ public class MoveHandler implements EventHandler{
         // And we retrieve the set of squares he can reach
         Set<CoordPair> navigableSquares= controller.getModel().getMatch().getBoard().getNavigableSquares(playerSquare.getLocation(), ControllerImpl.MAX_MOVE_STEPS);
 
-        Request<CoordPair> destinationRequest = new CoordPairRequest(
+        ChoiceRequest<CoordPair> destinationRequest = new SquareRequest(
                 "Select a destination square",
-                navigableSquares,
+                new ArrayList<>(navigableSquares),
                 false
         );
 

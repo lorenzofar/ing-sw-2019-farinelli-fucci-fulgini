@@ -11,6 +11,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/* TODO: Refactor this into GrabActionController */
 /** A specialized choice handler to handle the choice of a weapon card to grab from the square the player is on */
 public class GrabWeaponChoiceHandler implements ChoiceHandler<WeaponCard> {
 

@@ -1,5 +1,6 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.controller;
 
+import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.ChoiceRequest;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -10,7 +11,7 @@ import static org.junit.Assert.assertEquals;
 public class RequestContextTest {
 
     private static ChoiceHandler<Object> validHandler;
-    private static Request<Object> validRequest;
+    private static ChoiceRequest<Object> validRequest;
 
     @BeforeClass
     public static void setup(){
@@ -21,9 +22,9 @@ public class RequestContextTest {
             @Override
             public void cancel() {}
         };
-        validRequest = new Request<Object>("message", new ArrayList<>(), true) {
+        validRequest = new ChoiceRequest<Object>("message", new ArrayList<>(), true, Object.class) {
             @Override
-            public boolean isValid(Object choice) {
+            public boolean isChoiceValid(Object choice) {
                 return true;
             }
         };
