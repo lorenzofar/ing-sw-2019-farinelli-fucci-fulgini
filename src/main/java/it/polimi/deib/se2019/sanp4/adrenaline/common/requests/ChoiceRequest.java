@@ -1,7 +1,6 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.common.requests;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
