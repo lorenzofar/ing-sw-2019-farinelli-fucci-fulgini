@@ -3,7 +3,7 @@ package it.polimi.deib.se2019.sanp4.adrenaline.server;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.LoginException;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.network.RemoteServer;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.network.RemoteView;
-import it.polimi.deib.se2019.sanp4.adrenaline.common.network.SocketServer;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.network.socket.SocketServer;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.CallbackInterface;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.GameTimer;
 
