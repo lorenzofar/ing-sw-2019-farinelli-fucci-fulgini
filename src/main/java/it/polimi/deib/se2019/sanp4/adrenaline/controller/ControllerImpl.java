@@ -11,9 +11,6 @@ import java.util.Map;
 
 public class ControllerImpl implements Controller {
 
-    /** The maximum number of squares a player can move */
-    public static final int MAX_MOVE_STEPS = 3; //TODO: Check this attribute
-
     /** The maximum time of a turn, loaded from properties with a default value of 3 minutes */
     private static final int MAX_TURN_TICKS = (int) ServerProperties.getProperties().getOrDefault("adrenaline.turntime", 1800);
 
@@ -60,6 +57,7 @@ public class ControllerImpl implements Controller {
 
     @Override
     public void sendRequest(Player player, RequestContext req) {
+        /* TODO: Reimplement this with RequestManager */
         if(player == null || req == null){
             throw new NullPointerException("Found null parameters");
         }
@@ -68,7 +66,6 @@ public class ControllerImpl implements Controller {
         if(playerView != null){
             playerView.performRequest(req.getRequest());
         }
-        //TODO: Finish implementing this method
     }
 
     @Override
