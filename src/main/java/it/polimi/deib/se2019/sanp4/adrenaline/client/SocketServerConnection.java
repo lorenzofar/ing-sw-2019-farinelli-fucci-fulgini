@@ -5,7 +5,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.Observer;
 
 public class SocketServerConnection implements ServerConnection {
 
-    SocketServerConnection(){
+    public SocketServerConnection(){
         //TODO: Complete constructor and implementation of methods
     }
 

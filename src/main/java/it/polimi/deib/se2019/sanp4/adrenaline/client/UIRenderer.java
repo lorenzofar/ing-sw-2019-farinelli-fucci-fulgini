@@ -1,9 +1,12 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.client;
 
-public abstract class UIRenderer {
+public interface UIRenderer {
 
-    /** Show a splash screen when starting the game */
-    public abstract void showSplashScreen();
+    /**
+     * Initialize the renderer and show the launch screen of the game,
+     * where the user can set up the network connection and username
+     */
+    void initialize();
 
     //TODO: Add methods
 }

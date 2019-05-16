@@ -24,7 +24,7 @@ public class RMIServerConnection implements ServerConnection {
      * Creates an disconnected RMI connection
      * @param view The view using this connection
      */
-    RMIServerConnection(ClientView view){
+    public RMIServerConnection(ClientView view){
         this.view = view;
         //TODO: Complete constructor and finish implementation of methods
     }
