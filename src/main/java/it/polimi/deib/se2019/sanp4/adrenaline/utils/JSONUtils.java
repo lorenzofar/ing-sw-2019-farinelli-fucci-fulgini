@@ -30,21 +30,33 @@ public class JSONUtils {
     private static Schema boardSchema;
     /* TODO: Add more schemas */
 
-    private static final ObjectMapper objectMapper = new ObjectMapper()
+    /** Object mapper specifically configured for network streams */
+    private static final ObjectMapper networkObjectMapper = new ObjectMapper()
             .configure(JsonGenerator.Feature.AUTO_CLOSE_TARGET, false)
             .configure(JsonParser.Feature.AUTO_CLOSE_SOURCE, false);
+
+    private static final ObjectMapper objectMapper = new ObjectMapper();
 
     /** This class has only static methods and should not be instantiated */
     private JSONUtils() {}
 
     /**
-     * Returns a global and pre-configured ObjectMapper instance from Jackson.
+     * Returns a global ObjectMapper instance from Jackson, with default configuration.
      * Every class that uses an objectmapper should retrieve it from here, since ObjectMapper creation is very slow
      * but it is also thread-safe.
-     * @return
+     * @return a global ObjectMapper instance
      */
     public static ObjectMapper getObjectMapper() {
         return objectMapper;
+    }
+
+    /**
+     * Returns a global ObjectMapper instance specifically configured to read/write on network streams.
+     * This instance is configured not to automatically close streams when reading/writing.
+     * @return a global ObjectMapper instance
+     */
+    public static ObjectMapper getNetworkObjectMapper() {
+        return networkObjectMapper;
     }
 
     /**
