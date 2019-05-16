@@ -11,6 +11,9 @@ import java.util.Map;
 
 public class ControllerImpl implements Controller {
 
+    /** The maximum number of squares a player can move */
+    public static final int MAX_MOVE_STEPS = 3; //TODO: Check this attribute
+
     /** The maximum time of a turn, loaded from properties with a default value of 3 minutes */
     private static final int MAX_TURN_TICKS = (int) ServerProperties.getProperties().getOrDefault("adrenaline.turntime", 1800);
 
