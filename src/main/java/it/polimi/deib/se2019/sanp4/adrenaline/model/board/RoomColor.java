@@ -4,6 +4,8 @@ package it.polimi.deib.se2019.sanp4.adrenaline.model.board;
 public enum RoomColor {
     /** Blue color */
     BLUE("Blue"),
+    /** Red color */
+    RED("Red"),
     /** Gray color */
     GRAY("Gray"),
     /** Yellow color */
