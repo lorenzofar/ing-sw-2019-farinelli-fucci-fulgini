@@ -1,5 +1,7 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.common.network.socket;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.LoginException;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.network.RemoteView;
 
@@ -16,7 +18,9 @@ public class LoginCommand implements SocketServerCommand {
      * Creates a new login command with given username
      * @param username the name of the player who wants to log in
      */
-    public LoginCommand(String username) {
+    @JsonCreator
+    public LoginCommand(@JsonProperty("username") String username) {
+        if (username == null) throw new NullPointerException("Username cannot be null");
         this.username = username;
     }
 

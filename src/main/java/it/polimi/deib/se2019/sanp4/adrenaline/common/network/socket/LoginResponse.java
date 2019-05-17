@@ -1,5 +1,8 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.common.network.socket;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Response to {@link LoginCommand}
  */
@@ -11,7 +14,8 @@ public class LoginResponse implements SocketClientCommand {
      * Creates a new login response
      * @param succesful indicates whether the login succeeded or failed
      */
-    public LoginResponse(boolean succesful) {
+    @JsonCreator
+    public LoginResponse(@JsonProperty("successful") boolean succesful) {
         this.succesful = succesful;
     }
 
