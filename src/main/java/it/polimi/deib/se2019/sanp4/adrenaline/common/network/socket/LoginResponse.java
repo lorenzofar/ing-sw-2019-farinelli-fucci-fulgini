@@ -20,6 +20,14 @@ public class LoginResponse implements SocketClientCommand {
     }
 
     /**
+     * Returns whether the login succeeded or failed
+     * @return {@code true} if the login succeeded, {@code false} if it failed
+     */
+    public boolean isSuccesful() {
+        return succesful;
+    }
+
+    /**
      * Applies the command to given target, namely it is a {@code SocketServerConnection}
      *
      * @param target target of the command

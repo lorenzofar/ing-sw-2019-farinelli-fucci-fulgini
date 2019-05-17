@@ -25,6 +25,14 @@ public class LoginCommand implements SocketServerCommand {
     }
 
     /**
+     * Returns the username
+     * @return the username
+     */
+    public String getUsername() {
+        return username;
+    }
+
+    /**
      * Applies the command to given target, namely it is the {@code SocketRemoteView}
      *
      * @param target target of the command
@@ -38,6 +46,7 @@ public class LoginCommand implements SocketServerCommand {
         /* Execute the login on the server */
         try {
             server.playerLogin(username, stub);
+            target.setUsername(username);
             success = true; /* Logged in correctly */
         } catch (LoginException e) {
             success = false; /* The name was already taken */
