@@ -143,7 +143,7 @@ public class SocketRemoteView extends RemoteObservable<ViewEvent>
 
     @Override
     public void selectScene(ViewScene scene) throws IOException {
-        //TODO: Implement this method
+        sendCommand(new SelectSceneCommand(scene));
     }
 
     /**
