@@ -3,6 +3,8 @@ package it.polimi.deib.se2019.sanp4.adrenaline.common.network.socket;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.events.ViewEvent;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.network.RemoteView;
 
+import java.io.IOException;
+
 /**
  * Represents the target on which a {@link SocketServerCommand} is applied.
  * The target is normally a {@code SocketRemoteView} which resides on the server
@@ -31,6 +33,7 @@ public interface SocketServerCommandTarget {
      * Sends a command to the client attached to this target,
      * usually as a response to the execution of this command
      * @param command the command that has to be sent
+     * @throws IOException if the command cannot be sent due to network problems
      */
-    void sendCommand(SocketClientCommand command);
+    void sendCommand(SocketClientCommand command) throws IOException;
 }

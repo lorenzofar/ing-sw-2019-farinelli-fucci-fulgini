@@ -128,7 +128,7 @@ public class ServerImpl implements SocketServer, RemoteServer, Runnable, Callbac
     }
 
     @Override
-    public void playerLogin(String username, RemoteView view) throws IOException, LoginException {
+    public void playerLogin(String username, RemoteView view) throws LoginException {
         /* TODO: Implement this method */
         if(!gameActive && !(waitingGameTimer.isRunning()) && playerViews.entrySet().size() >= MIN_GAME_PLAYERS){
             // There is a sufficient number of players for the game to start
@@ -139,7 +139,7 @@ public class ServerImpl implements SocketServer, RemoteServer, Runnable, Callbac
     }
 
     @Override
-    public void playerLogout(String username) throws IOException {
+    public void playerLogout(String username) {
         /* TODO: Implement this method */
         // We first check whethere there are still sufficient players for a game
         // Filtering these events when the game has started

@@ -1,16 +1,24 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.server;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.events.ViewEvent;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.network.RemoteView;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.network.socket.SocketClientCommand;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.network.socket.SocketServer;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.network.socket.SocketServerCommand;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.network.socket.SocketServerCommandTarget;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.RemoteObservable;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.ModelUpdate;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.ChoiceRequest;
+import it.polimi.deib.se2019.sanp4.adrenaline.utils.JSONUtils;
 import it.polimi.deib.se2019.sanp4.adrenaline.view.MessageType;
 
+import java.io.*;
 import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * A class representing a remote view connected via a socket connection
@@ -24,27 +32,75 @@ public class SocketRemoteView extends RemoteObservable<ViewEvent>
     /** The server who accepted the connection */
     private SocketServer server;
 
+    /** Socket output stream */
+    private OutputStream out;
+
+    /** Socket input stream */
+    private InputStream in;
+
+
+    /* Commodities */
+    private static final ObjectMapper objectMapper = JSONUtils.getObjectMapper();
+    private static final Logger logger = Logger.getLogger(SocketRemoteView.class.getName());
+
     /**
      * Creates a stub of the view communicating via socket
+     *
      * @param socket the socket to communicate with the client
      * @param server the server who accepted the connection
      */
-    SocketRemoteView(Socket socket, SocketServer server){
+    SocketRemoteView(Socket socket, SocketServer server) throws IOException {
         this.socket = socket;
         this.server = server;
-        //TODO: Complete constructor and method implementation
+        /* Bind the streams */
+        out = new BufferedOutputStream(socket.getOutputStream());
+        in = new BufferedInputStream(socket.getInputStream());
     }
 
     /**
-     * Runs the connection after it has been established.
+     * Running the connection consists in the following loop:
+     * <ol>
+     * <li>wait for a command from the client</li>
+     * <li>deserialize the command</li>
+     * <li>execute the command</li>
+     * <li>wait for the next command</li>
+     * </ol>
+     * The loop interrupts when the connection closes
      */
     @Override
     public void run() {
-        /* TODO: Implement this method */
+        /* NOTE: The server has just accepted the connection */
+        try {
+            while (!socket.isClosed()) {
+                commandLoop();
+            }
+        } catch (IOException e) {
+            /* TODO: Handle disconnection */
+        }
+    }
+
+    /** See {@link #run()} */
+    private void commandLoop() throws IOException {
+        try {
+            /* Wait for the incoming command and deserialize it */
+            SocketServerCommand command = objectMapper.readValue(in, SocketServerCommand.class);
+
+            /* Now apply the command */
+            command.applyOn(this);
+
+            /* Go on with another iteration of the cycle */
+        } catch (JsonParseException e) {
+            logger.log(Level.WARNING, "Could not parse incoming JSON", e);
+        } catch (JsonMappingException e) {
+            logger.log(Level.WARNING, "Could not unmarshall incoming command", e);
+        } catch (NullPointerException e) {
+            logger.log(Level.WARNING, "Cannot execute null command", e);
+        }
     }
 
     /**
      * Performs the provided request on the client
+     *
      * @param request The object representing the request, not null
      */
     @Override
@@ -54,6 +110,7 @@ public class SocketRemoteView extends RemoteObservable<ViewEvent>
 
     /**
      * Shows given message on the client
+     *
      * @param text The text of the message, not null
      * @param type The type of the message, not null
      */
@@ -64,6 +121,7 @@ public class SocketRemoteView extends RemoteObservable<ViewEvent>
 
     /**
      * Sends given update to the client
+     *
      * @param update update to be sent
      */
     @Override
@@ -76,11 +134,11 @@ public class SocketRemoteView extends RemoteObservable<ViewEvent>
      * usually as a response to the execution of this command
      *
      * @param command the command that has to be sent
+     * @throws IOException if the command cannot be sent due to network problems
      */
     @Override
-    public void sendCommand(SocketClientCommand command) {
-        /* TODO: Implement this method */
-        /* QUESTION: Should this be async? */
+    public void sendCommand(SocketClientCommand command) throws IOException {
+        objectMapper.writeValue(out, command);
     }
 
     /**

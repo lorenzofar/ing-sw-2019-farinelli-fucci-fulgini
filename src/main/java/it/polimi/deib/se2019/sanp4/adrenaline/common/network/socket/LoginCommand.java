@@ -3,6 +3,8 @@ package it.polimi.deib.se2019.sanp4.adrenaline.common.network.socket;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.LoginException;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.network.RemoteView;
 
+import java.io.IOException;
+
 /**
  * Sent when a user with Socket connection wants to log in
  */
@@ -38,6 +40,10 @@ public class LoginCommand implements SocketServerCommand {
         }
 
         /* Send the response to the client */
-        target.sendCommand(new LoginResponse(success));
+        try {
+            target.sendCommand(new LoginResponse(success));
+        } catch (IOException e) {
+            /* If sending the command fails, do nothing */
+        }
     }
 }
