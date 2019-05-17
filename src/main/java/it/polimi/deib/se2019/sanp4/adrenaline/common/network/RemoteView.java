@@ -5,6 +5,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.ChoiceRequest;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.events.ViewEvent;
 import it.polimi.deib.se2019.sanp4.adrenaline.view.MessageType;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.ModelUpdate;
+import it.polimi.deib.se2019.sanp4.adrenaline.view.ViewScene;
 
 import java.io.IOException;
 import java.rmi.Remote;
@@ -35,6 +36,13 @@ public interface RemoteView extends RemoteObserver<ModelUpdate>, Remote {
      * @throws IOException if the remote call fails
      */
     void showMessage(String text, MessageType type) throws IOException;
+
+    /**
+     * Displays the selected scene
+     * @param scene The object representing the scene
+     * @throws IOException If the remote call fails
+     */
+    void selectScene(ViewScene scene) throws IOException;
 
     /**
      * Adds an observer to listen for updates

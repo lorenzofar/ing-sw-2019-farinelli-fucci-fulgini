@@ -11,6 +11,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.ModelUpdate;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.ChoiceRequest;
 import it.polimi.deib.se2019.sanp4.adrenaline.utils.JSONUtils;
 import it.polimi.deib.se2019.sanp4.adrenaline.view.MessageType;
+import it.polimi.deib.se2019.sanp4.adrenaline.view.ViewScene;
 
 import java.io.*;
 import java.net.Socket;
@@ -138,6 +139,11 @@ public class SocketRemoteView extends RemoteObservable<ViewEvent>
     @Override
     public void showMessage(String text, MessageType type) throws IOException {
         sendCommand(new ShowMessageCommand(text, type));
+    }
+
+    @Override
+    public void selectScene(ViewScene scene) throws IOException {
+        //TODO: Implement this method
     }
 
     /**

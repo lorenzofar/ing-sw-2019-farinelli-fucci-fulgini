@@ -7,6 +7,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.RemoteObserver;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.ChoiceRequest;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.ModelUpdate;
 import it.polimi.deib.se2019.sanp4.adrenaline.view.MessageType;
+import it.polimi.deib.se2019.sanp4.adrenaline.view.ViewScene;
 
 import java.io.IOException;
 
@@ -32,10 +33,11 @@ public class ClientView extends RemoteObservable<ViewEvent> implements RemoteVie
 
     /**
      * Creates a new socket connection
+     *
      * @throws IllegalStateException When the connection is already present
      */
-    public void setSocketConnection(){
-        if(this.serverConnection != null){
+    public void setSocketConnection() {
+        if (this.serverConnection != null) {
             throw new IllegalStateException("Server connection is already set");
         }
         this.serverConnection = new SocketServerConnection();
@@ -43,10 +45,11 @@ public class ClientView extends RemoteObservable<ViewEvent> implements RemoteVie
 
     /**
      * Creates a new RMI connection
+     *
      * @throws IllegalStateException When the connection is already present
      */
-    public void setRMIConnection(){
-        if(this.serverConnection != null){
+    public void setRMIConnection() {
+        if (this.serverConnection != null) {
             throw new IllegalStateException("Server connection is already set");
         }
         this.serverConnection = new RMIServerConnection(this);
@@ -99,16 +102,16 @@ public class ClientView extends RemoteObservable<ViewEvent> implements RemoteVie
     }
 
     /**
-     * Set the rendering engine used by the client
+     * Set the rendering engine used by the client     *
+     *
      * @param renderer The object representing the rendering engine, not null
      */
-    public void setRenderer(UIRenderer renderer){
-        if(renderer == null){
+    public void setRenderer(UIRenderer renderer) {
+        if (renderer == null) {
             throw new NullPointerException("Server connection cannot be null");
         }
         this.renderer = renderer;
     }
-
 
 
     @Override
@@ -119,6 +122,11 @@ public class ClientView extends RemoteObservable<ViewEvent> implements RemoteVie
     @Override
     public void showMessage(String text, MessageType type) {
         /* TODO: Implement this method */
+    }
+
+    @Override
+    public void selectScene(ViewScene scene) {
+        //TODO: Implement this method
     }
 
     @Override
