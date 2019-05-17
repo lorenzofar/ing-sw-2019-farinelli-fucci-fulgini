@@ -1,20 +1,46 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.client;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.events.ViewEvent;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.LoginException;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.network.socket.LogoutCommand;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.network.socket.SocketClientCommandTarget;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.network.socket.SocketServerCommand;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.Observable;
-import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.Observer;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.ModelUpdate;
+import it.polimi.deib.se2019.sanp4.adrenaline.utils.JSONUtils;
 
-import java.io.IOException;
+import java.io.*;
+import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-public class SocketServerConnection implements ServerConnection, SocketClientCommandTarget {
+public class SocketServerConnection extends Observable<ModelUpdate>
+        implements ServerConnection, SocketClientCommandTarget {
 
+    /** The client view which uses this connection */
     private final ClientView view;
 
+    /** The socket to communicate to the server */
+    private Socket socket;
+
+    /** Socket output stream */
+    private OutputStream out;
+
+    /** Socket input stream */
+    private InputStream in;
+
+    /* Commodities */
+    private static final ObjectMapper objectMapper = JSONUtils.getObjectMapper();
+    private static final Logger logger = Logger.getLogger(SocketServerConnection.class.getName());
+
+    /* TODO: Remove this constructor */
     public SocketServerConnection() {
-        //TODO: Complete constructor
         view = null;
+    }
+
+    public SocketServerConnection(ClientView view) {
+        this.view = view;
     }
 
     /**
@@ -36,7 +62,8 @@ public class SocketServerConnection implements ServerConnection, SocketClientCom
      */
     @Override
     public void connect(String hostname) throws IOException {
-        /* TODO: Implement this method */
+        /* TODO: Load default port from properties */
+        connect(hostname, 3000);
     }
 
     /**
@@ -48,7 +75,10 @@ public class SocketServerConnection implements ServerConnection, SocketClientCom
      */
     @Override
     public void connect(String hostname, int port) throws IOException {
-        /* TODO: Implement this method */
+        socket = new Socket(hostname, port);
+        out = new BufferedOutputStream(socket.getOutputStream());
+        in = new BufferedInputStream(socket.getInputStream());
+        logger.log(Level.INFO, () -> String.format("Successfully connected to %s:%d", hostname, port));
     }
 
     /**
@@ -72,28 +102,7 @@ public class SocketServerConnection implements ServerConnection, SocketClientCom
      */
     @Override
     public void logout(String username) throws IOException {
-        /* TODO: Implement this method */
-    }
-
-    /**
-     * Adds an observer to listen for updates
-     *
-     * @param observer The object representing the observer, not null
-     */
-    @Override
-    public void addObserver(Observer<ModelUpdate> observer) {
-        /* TODO: Implement this method */
-    }
-
-    /**
-     * Removes an observer from listening for updates
-     * If it hasn't previously subscribed, does nothing
-     *
-     * @param observer The object representing the observer, not null
-     */
-    @Override
-    public void removeObserver(Observer<ModelUpdate> observer) {
-        /* TODO: Implement this method */
+        sendCommand(new LogoutCommand());
     }
 
     /**
@@ -112,7 +121,18 @@ public class SocketServerConnection implements ServerConnection, SocketClientCom
      * @param event event/update to be sent
      */
     @Override
-    public void update(Object event) {
+    public void update(ViewEvent event) {
         /* TODO: Implement this method */
+    }
+
+    /**
+     * Sends a command to the remote server attached to this target
+     *
+     * @param command the command that has to be sent
+     * @throws IOException if the command cannot be sent due to network problems
+     */
+    @Override
+    public void sendCommand(SocketServerCommand command) throws IOException {
+        objectMapper.writeValue(out, command);
     }
 }

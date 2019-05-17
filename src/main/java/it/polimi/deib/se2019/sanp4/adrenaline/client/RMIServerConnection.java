@@ -1,10 +1,12 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.client;
 
+import it.polimi.deib.se2019.sanp4.adrenaline.common.events.ViewEvent;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.LoginException;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.network.RemoteServer;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.network.RemoteView;
-import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.ModelUpdate;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.Observable;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.Observer;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.ModelUpdate;
 
 import java.io.IOException;
 import java.rmi.Naming;
@@ -13,7 +15,7 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class RMIServerConnection implements ServerConnection {
+public class RMIServerConnection extends Observable<ModelUpdate> implements ServerConnection {
     private RemoteServer server;
     private ClientView view;
     private RemoteView viewStub;
@@ -83,17 +85,7 @@ public class RMIServerConnection implements ServerConnection {
     }
 
     @Override
-    public void addObserver(Observer<ModelUpdate> observer) {
-        /* TODO: Implement this method */
-    }
-
-    @Override
-    public void removeObserver(Observer<ModelUpdate> observer) {
-        /* TODO: Implement this method */
-    }
-
-    @Override
-    public void update(Object event) {
+    public void update(ViewEvent event) {
         /* TODO: Handle updates coming from ClientView, if we need to */
     }
 }
