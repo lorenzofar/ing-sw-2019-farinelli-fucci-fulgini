@@ -68,6 +68,17 @@ public class RMIServerConnection extends Observable<ModelUpdate> implements Serv
         }
     }
 
+    /**
+     * Attempts to close the connection with the server.
+     * If the connection was active, it will be closed,
+     * if it was already inactive or closed, nothing will happen.
+     * Subsequent calls to {@link #isActive()} will return {@code false}
+     */
+    @Override
+    public void close() {
+        /* TODO: Implement this method */
+    }
+
     @Override
     public void login(String username) throws IOException, LoginException {
         if (server == null) throw new IOException("Connection is not active");

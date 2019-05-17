@@ -34,6 +34,14 @@ public interface ServerConnection extends RemoteObserver<ViewEvent> {
     void connect(String hostname, int port) throws IOException;
 
     /**
+     * Attempts to close the connection with the server.
+     * If the connection was active, it will be closed,
+     * if it was already inactive or closed, nothing will happen.
+     * Subsequent calls to {@link #isActive()} will return {@code false}
+     */
+    void close();
+
+    /**
      * Send a login request to the server
      * @param username The username of the user
      * @throws IOException if the server cannot be reached
