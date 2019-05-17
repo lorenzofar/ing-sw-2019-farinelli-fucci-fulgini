@@ -3,12 +3,13 @@ package it.polimi.deib.se2019.sanp4.adrenaline.client;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.events.ViewEvent;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.LoginException;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.Observer;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.RemoteObserver;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.ModelUpdate;
 
 import java.io.IOException;
 
 /** Describes a connection the client has with the server, regardless of the connection method */
-public interface ServerConnection extends Observer<ViewEvent> {
+public interface ServerConnection extends RemoteObserver<ViewEvent> {
 
     /**
      * Determines whether the connection is active or not
