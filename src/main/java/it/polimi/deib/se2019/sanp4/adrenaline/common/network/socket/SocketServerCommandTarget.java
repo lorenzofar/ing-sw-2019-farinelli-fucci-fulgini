@@ -30,6 +30,20 @@ public interface SocketServerCommandTarget {
     void notifyEvent(ViewEvent event);
 
     /**
+     * Returns the username of the player associated with this view.
+     * It returns {@code null} if the username has not already been set
+     * (prior to login)
+     * @return username of the player, if it has been set, {@code null} otherwise
+     */
+    String getUsername();
+
+    /**
+     * Set the username of the remote view
+     * @param username name of the user
+     */
+    void setUsername(String username);
+
+    /**
      * Sends a command to the client attached to this target,
      * usually as a response to the execution of this command
      * @param command the command that has to be sent
