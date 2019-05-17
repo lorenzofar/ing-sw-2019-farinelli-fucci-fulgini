@@ -14,10 +14,10 @@ public interface RemoteServer extends Remote {
      * The client tries to log in with the required username and also passes a stub of his view.
      * The cases are:
      * <ol>
-     *     <li>The player is completely unknown to the server => he will be put in the waiting room</li>
-     *     <li>The player belongs to an active/suspended match => he will join the match</li>
+     *     <li>The player is completely unknown to the server =&gt; he will be put in the waiting room</li>
+     *     <li>The player belongs to an active/suspended match =&gt; he will join the match</li>
      *     <li>
-     *         There is a logged in player with the same username => the request will be rejected with
+     *         There is a logged in player with the same username =&gt; the request will be rejected with
      *         {@link LoginException}
      *     </li>
      * </ol>

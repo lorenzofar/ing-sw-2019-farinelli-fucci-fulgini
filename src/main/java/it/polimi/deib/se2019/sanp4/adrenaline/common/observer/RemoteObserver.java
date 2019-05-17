@@ -15,6 +15,7 @@ public interface RemoteObserver<T> extends Remote {
     /**
      * Send an update/event from a {@link RemoteObservable} object.
      * @param event event/update to be sent
+     * @throws IOException if the remote call fails
      */
     void update(T event) throws IOException;
 }
