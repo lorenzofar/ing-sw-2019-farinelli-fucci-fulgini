@@ -1,9 +1,5 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.client.gui;
 
-import it.polimi.deib.se2019.sanp4.adrenaline.client.ClientView;
-import it.polimi.deib.se2019.sanp4.adrenaline.client.RMIServerConnection;
-import it.polimi.deib.se2019.sanp4.adrenaline.client.ServerConnection;
-import it.polimi.deib.se2019.sanp4.adrenaline.client.SocketServerConnection;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.LoginException;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -12,7 +8,7 @@ import javafx.scene.control.*;
 
 import java.io.IOException;
 
-public class LoginController {
+public class LoginController extends GUIController {
 
     @FXML
     private TextField hostnameTextField;
@@ -27,8 +23,6 @@ public class LoginController {
     private StringProperty serverHostname;
     /** Property to store the inserted username */
     private StringProperty username;
-
-    private ClientView clientView;
 
     @FXML
     public void initialize(){
@@ -45,13 +39,13 @@ public class LoginController {
      * When error occur, an alert is shown to the user and he can then try again
      */
     public void login(){
-        // Set up the network connection
-        ServerConnection serverConnection =
-                networkToggleGroup.getSelectedToggle().getUserData().toString().equals("socket") ?
-                        new SocketServerConnection() :
-                        new RMIServerConnection(clientView);
-
-        clientView.setServerConnection(serverConnection);
+        // Retrieve the selected network connection and set it up in the client view accordingly
+        if(networkToggleGroup.getSelectedToggle().getUserData().toString().equals("socket")){
+            clientView.setSocketConnection();
+        }
+        else{
+            clientView.setRMIConnection();
+        }
 
         try {
             clientView.getServerConnection().connect(serverHostname.get());
@@ -74,16 +68,5 @@ public class LoginController {
             serverHostname.set("");
             username.set("");
         }
-    }
-
-    /**
-     * Set the provided client view
-     * @param clientView The object representing the client view, not null
-     */
-    void setClientView(ClientView clientView){
-        if(clientView == null){
-            throw new NullPointerException("Server connection cannot be null");
-        }
-        this.clientView = clientView;
     }
 }

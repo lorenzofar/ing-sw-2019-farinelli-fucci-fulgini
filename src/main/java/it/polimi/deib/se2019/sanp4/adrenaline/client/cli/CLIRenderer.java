@@ -22,10 +22,7 @@ public class CLIRenderer implements UIRenderer {
     @Override
     public void initialize() {
         // Create a new client view
-        this.clientView = new ClientView();
-
-        // We create the default server connection (SOCKET)
-        this.clientView.setServerConnection(new SocketServerConnection());
+        clientView = new ClientView();
 
         // We print the title
         CLIHelper.print(ADRENALINE_TITLE);
@@ -33,11 +30,12 @@ public class CLIRenderer implements UIRenderer {
 
         // We ask the user to select a network connection mode
         CLIHelper.printTitle("network configuration");
-        int selectedNetworkMode = CLIHelper.askOptionFromList(
-                "Select the network connection to use",
-                Arrays.asList("socket", "rmi"));
-        if(selectedNetworkMode == 1) {
-            this.clientView.setServerConnection(new RMIServerConnection(clientView));
+        int selectedNetworkMode = CLIHelper.askOptionFromList("Select the network connection to use", Arrays.asList("socket", "rmi"));
+        if(selectedNetworkMode == 0) {
+            clientView.setSocketConnection();
+        }
+        else {
+            clientView.setRMIConnection();
         }
 
         // First ask the user to set up network connection
@@ -58,7 +56,7 @@ public class CLIRenderer implements UIRenderer {
         while(!connected){
             try {
                 String serverHostname = CLIHelper.parseString("Enter the hostname of the server");
-                this.clientView.getServerConnection().connect(serverHostname);
+                clientView.getServerConnection().connect(serverHostname);
                 connected = true;
             } catch (IOException e) {
                 connected = false;
@@ -75,7 +73,7 @@ public class CLIRenderer implements UIRenderer {
         boolean loggedIn = false;
         while(!loggedIn) {
             try {
-                this.clientView.getServerConnection().login(username);
+                clientView.getServerConnection().login(username);
                 loggedIn = true;
             } catch (IOException e) {
                 CLIHelper.print("An error occurred while logging in");

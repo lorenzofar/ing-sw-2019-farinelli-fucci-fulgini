@@ -38,6 +38,7 @@ public class GUIRenderer extends Application implements UIRenderer{
 
         this.stage = primaryStage;
         this.clientView = new ClientView();
+        clientView.setRenderer(this);
 
         LoginController loginController = loader.getController();
         loginController.setClientView(clientView);

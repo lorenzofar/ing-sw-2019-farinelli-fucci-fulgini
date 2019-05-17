@@ -28,28 +28,28 @@ public class ClientView extends RemoteObservable<ViewEvent> implements RemoteVie
         //TODO: Complete constructor and methods implementation
     }
 
+    /* ===== NETWORK CONNECTION SETUP ====== */
+
     /**
-     * Set the rendering engine used by the client
-     *
-     * @param renderer The object representing the rendering engine, not null
+     * Creates a new socket connection
+     * @throws IllegalStateException When the connection is already present
      */
-    public void setRenderer(UIRenderer renderer) {
-        if (renderer == null) {
-            throw new NullPointerException("Server connection cannot be null");
+    public void setSocketConnection(){
+        if(this.serverConnection != null){
+            throw new IllegalStateException("Server connection is already set");
         }
-        this.renderer = renderer;
+        this.serverConnection = new SocketServerConnection();
     }
 
     /**
-     * Set the connection method used to connect to the server
-     *
-     * @param serverConnection The object representing the connection, not nu
+     * Creates a new RMI connection
+     * @throws IllegalStateException When the connection is already present
      */
-    public void setServerConnection(ServerConnection serverConnection) {
-        if (serverConnection == null) {
-            throw new NullPointerException("Server connection cannot be null");
+    public void setRMIConnection(){
+        if(this.serverConnection != null){
+            throw new IllegalStateException("Server connection is already set");
         }
-        this.serverConnection = serverConnection;
+        this.serverConnection = new RMIServerConnection(this);
     }
 
     /**
@@ -60,6 +60,8 @@ public class ClientView extends RemoteObservable<ViewEvent> implements RemoteVie
     public ServerConnection getServerConnection() {
         return serverConnection;
     }
+
+    /* ====================================== */
 
     /**
      * Returns the username of the username associated with this view.
@@ -95,6 +97,19 @@ public class ClientView extends RemoteObservable<ViewEvent> implements RemoteVie
          /* This method actually does nothing: it only exists because if an object with a remote reference to this
         calls it, it would get a RemoteException if there is no connection. */
     }
+
+    /**
+     * Set the rendering engine used by the client
+     * @param renderer The object representing the rendering engine, not null
+     */
+    public void setRenderer(UIRenderer renderer){
+        if(renderer == null){
+            throw new NullPointerException("Server connection cannot be null");
+        }
+        this.renderer = renderer;
+    }
+
+
 
     @Override
     public void performRequest(ChoiceRequest request) {
