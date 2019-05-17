@@ -5,10 +5,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.events.ViewEvent;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.network.RemoteView;
-import it.polimi.deib.se2019.sanp4.adrenaline.common.network.socket.SocketClientCommand;
-import it.polimi.deib.se2019.sanp4.adrenaline.common.network.socket.SocketServer;
-import it.polimi.deib.se2019.sanp4.adrenaline.common.network.socket.SocketServerCommand;
-import it.polimi.deib.se2019.sanp4.adrenaline.common.network.socket.SocketServerCommandTarget;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.network.socket.*;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.RemoteObservable;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.ModelUpdate;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.ChoiceRequest;
@@ -38,6 +35,8 @@ public class SocketRemoteView extends RemoteObservable<ViewEvent>
     /** Socket input stream */
     private InputStream in;
 
+    /** Username of the player this view belongs to */
+    private String username;
 
     /* Commodities */
     private static final ObjectMapper objectMapper = JSONUtils.getObjectMapper();
@@ -99,13 +98,35 @@ public class SocketRemoteView extends RemoteObservable<ViewEvent>
     }
 
     /**
+     * Returns the username of the player associated with this view.
+     * It returns {@code null} if the username has not already been set
+     * (prior to login)
+     *
+     * @return username of the player, if it has been set, {@code null} otherwise
+     */
+    @Override
+    public String getUsername() {
+        return username;
+    }
+
+    /**
+     * Set the username of the remote view
+     *
+     * @param username name of the user
+     */
+    @Override
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    /**
      * Performs the provided request on the client
      *
      * @param request The object representing the request, not null
      */
     @Override
-    public void performRequest(ChoiceRequest request) {
-        /* TODO: Implement this method */
+    public void performRequest(ChoiceRequest request) throws IOException {
+        sendCommand(new PerformRequestCommand(request));
     }
 
     /**
@@ -115,8 +136,8 @@ public class SocketRemoteView extends RemoteObservable<ViewEvent>
      * @param type The type of the message, not null
      */
     @Override
-    public void showMessage(String text, MessageType type) {
-        /* TODO: Implement this method */
+    public void showMessage(String text, MessageType type) throws IOException {
+        sendCommand(new ShowMessageCommand(text, type));
     }
 
     /**
@@ -125,8 +146,8 @@ public class SocketRemoteView extends RemoteObservable<ViewEvent>
      * @param update update to be sent
      */
     @Override
-    public void update(ModelUpdate update) {
-        /* TODO: Implement this method */
+    public void update(ModelUpdate update) throws IOException {
+        sendCommand(new UpdateCommand(update));
     }
 
     /**
@@ -169,5 +190,15 @@ public class SocketRemoteView extends RemoteObservable<ViewEvent>
     @Override
     public void notifyEvent(ViewEvent event) {
         notifyObservers(event);
+    }
+
+    /**
+     * Checks connectivity to the client
+     *
+     * @throws IOException If there is no connectivity
+     */
+    @Override
+    public void ping() throws IOException {
+        /* TODO: Implement this method */
     }
 }
