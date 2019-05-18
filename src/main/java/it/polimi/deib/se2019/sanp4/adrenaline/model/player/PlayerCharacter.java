@@ -1,7 +1,5 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.model.player;
 
-import it.polimi.deib.se2019.sanp4.adrenaline.model.board.RoomColor;
-
 /** A class describing the character of a player */
 public class PlayerCharacter{
     /** The username of the player */
@@ -11,7 +9,7 @@ public class PlayerCharacter{
     private String description;
 
     /** The color of the character */
-    private RoomColor color;
+    private PlayerColor color;
 
     /**
      * Creates a new character for the specified player
@@ -19,7 +17,7 @@ public class PlayerCharacter{
      * @param description A description of the character, not null
      * @param color The object representing the color of the character, not null
      */
-    public PlayerCharacter(String name, String description, RoomColor color) {
+    public PlayerCharacter(String name, String description, PlayerColor color) {
         if(name == null || description == null || color == null){
             throw new NullPointerException("Found null parameters");
         }
@@ -51,7 +49,7 @@ public class PlayerCharacter{
      * Retrieves the color of the character
      * @return The object representing the color of the character
      */
-    public RoomColor getColor() {
+    public PlayerColor getColor() {
         return color;
     }
 }

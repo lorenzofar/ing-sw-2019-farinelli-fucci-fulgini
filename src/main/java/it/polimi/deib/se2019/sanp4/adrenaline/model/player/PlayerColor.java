@@ -1,11 +1,9 @@
-package it.polimi.deib.se2019.sanp4.adrenaline.model.board;
+package it.polimi.deib.se2019.sanp4.adrenaline.model.player;
 
-/** Represents the possible colors a room can have */
-public enum RoomColor {
+/** Represents the possible colors a player can have */
+public enum PlayerColor {
     /** Blue color */
     BLUE("Blue"),
-    /** Red color */
-    RED("Red"),
     /** Gray color */
     GRAY("Gray"),
     /** Yellow color */
@@ -17,7 +15,7 @@ public enum RoomColor {
 
     private String message;
 
-    RoomColor(String message){
+    PlayerColor(String message){
         this.message = message;
     }
 

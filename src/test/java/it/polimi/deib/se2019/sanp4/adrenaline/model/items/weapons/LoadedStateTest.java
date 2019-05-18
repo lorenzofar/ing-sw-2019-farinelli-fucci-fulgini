@@ -4,11 +4,10 @@ import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.FullCapacityExce
 import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionCardEnum;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionEnum;
-import it.polimi.deib.se2019.sanp4.adrenaline.model.board.RoomColor;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCube;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCubeCost;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
-import it.polimi.deib.se2019.sanp4.adrenaline.model.player.PlayerCharacter;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.player.PlayerColor;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -27,7 +26,7 @@ public class LoadedStateTest {
 
     private static ActionCard validActionCard;
     private static String validPlayerName = "player1";
-    private static PlayerCharacter validCharacter;
+    private static PlayerColor validColor = PlayerColor.YELLOW;
     private static Map<AmmoCube, Integer> initialPlayerAmmo;
 
     @BeforeClass
@@ -48,7 +47,6 @@ public class LoadedStateTest {
         for(int i = 0; i<AmmoCube.values().length; i++) {
             initialPlayerAmmo.put(AmmoCube.values()[i], Player.INITIAL_AMMO);
         }
-        validCharacter = new PlayerCharacter("name", "description", RoomColor.BLUE);
     }
 
     @Test
@@ -78,14 +76,14 @@ public class LoadedStateTest {
 
     @Test(expected = NullPointerException.class)
     public void reloadWeapon_nullWeaponProvided_shouldThrowNullPointerException() {
-        Player player = new Player(validPlayerName, validActionCard, validCharacter);
+        Player player = new Player(validPlayerName, validActionCard, validColor);
         weaponCard.setState(new LoadedState());
         weaponCard.getState().reload(player, null);
     }
 
     @Test
     public void reloadWeapon_checkPlayerAmmo_shouldNotBeDecreasedAndWeaponStateShouldBeLoaded(){
-        Player player = new Player(validPlayerName, validActionCard, validCharacter);
+        Player player = new Player(validPlayerName, validActionCard, validColor);
         // Here the player only has initial ammo
         try {
             player.addWeapon(weaponCard);

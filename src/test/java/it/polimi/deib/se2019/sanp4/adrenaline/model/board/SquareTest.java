@@ -5,7 +5,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionCardEnum;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionEnum;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
-import it.polimi.deib.se2019.sanp4.adrenaline.model.player.PlayerCharacter;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.player.PlayerColor;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -32,8 +32,7 @@ public class SquareTest {
         RoomColor validColor = RoomColor.BLUE;
 
         ActionCard validActionCard = new ActionCard(validMaxActions, validType, validActions, validFinalAction);
-        PlayerCharacter validCharacter = new PlayerCharacter(validName, validDescription, validColor);
-        validPlayer = new Player(validName, validActionCard, validCharacter);
+        validPlayer = new Player(validName, validActionCard, PlayerColor.YELLOW);
     }
 
     @Test(expected = NullPointerException.class)
