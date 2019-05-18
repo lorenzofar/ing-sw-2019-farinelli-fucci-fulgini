@@ -69,8 +69,8 @@ public class Player{
     /** Ammo cubes for each color */
     private Map<AmmoCube, Integer> ammo;
 
-    /** Game character chosen by this player */
-    private final PlayerCharacter character;
+    /** Color of the game character chosen by this player */
+    private final PlayerColor color;
 
     /** Board square this player is currently in */
     private Square currentSquare;
@@ -82,10 +82,10 @@ public class Player{
      * Constructs a player who is ready to play: sets counters to zero and sets initial ammo cubes.
      * @param name server-unique nickname
      * @param actionCard pre-built action card, may be shared with other players
-     * @param character chosen game character
+     * @param color color of the chosen character
      */
-    public Player(String name, ActionCard actionCard, PlayerCharacter character){
-        if (actionCard == null || character == null || name == null) {
+    public Player(String name, ActionCard actionCard, PlayerColor color){
+        if (actionCard == null || color == null || name == null) {
             throw new NullPointerException("Found null parameters!");
         }
         if (name.isEmpty()) {
@@ -94,7 +94,7 @@ public class Player{
 
         this.name = name;
         this.actionCard = actionCard;
-        this.character = character;
+        this.color = color;
 
         /* Initialise counters */
         score = performedKillshots = performedOverkills = 0;
@@ -448,14 +448,6 @@ public class Player{
     }
 
     /**
-     * Returns shared object representing the game character this player is associated to.
-     * @return player's character
-     */
-    public PlayerCharacter getCharacter() {
-        return character;
-    }
-
-    /**
      * Returns the square this player is actually in.
      * @return square the player is in, null if the player has not spawned yet
      */
@@ -491,5 +483,13 @@ public class Player{
             throw new NullPointerException("State cannot be null");
         }
         this.state = state;
+    }
+
+    /**
+     * Returns the color of the character chosen by the player
+     * @return the color of the character chosen by the player
+     */
+    public PlayerColor getColor() {
+        return color;
     }
 }

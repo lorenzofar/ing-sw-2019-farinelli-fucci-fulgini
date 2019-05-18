@@ -18,7 +18,7 @@ public class PlayerBoardTest {
 
     private final static String validName = "player1";
     private static ActionCard validActionCard;
-    private static PlayerCharacter validCharacter;
+    private static PlayerColor validColor = PlayerColor.YELLOW;
 
     @BeforeClass
     public static void setup(){
@@ -32,7 +32,6 @@ public class PlayerBoardTest {
         RoomColor validColor = RoomColor.BLUE;
 
         validActionCard = new ActionCard(validMaxActions, validType, validActions, validFinalAction);
-        validCharacter = new PlayerCharacter(validName, validDescription, validColor);
     }
 
     @Test(expected = NullPointerException.class)
@@ -42,7 +41,7 @@ public class PlayerBoardTest {
 
     @Test
     public void createBoard_validPlayerProvided_shouldNotThrowException(){
-        Player player = new Player(validName, validActionCard, validCharacter);
+        Player player = new Player(validName, validActionCard, validColor);
         PlayerBoard playerBoard = new PlayerBoard(player);
         assertEquals(player, playerBoard.getPlayer());
         assertEquals(0, playerBoard.getDeaths());
@@ -56,7 +55,7 @@ public class PlayerBoardTest {
 
     @Test
     public void addDeath_shouldIncreaseDeathsCount(){
-        Player player = new Player(validName, validActionCard, validCharacter);
+        Player player = new Player(validName, validActionCard, validColor);
         PlayerBoard playerBoard = new PlayerBoard(player);
         int oldDeaths = playerBoard.getDeaths();
         playerBoard.addDeath();
@@ -65,30 +64,30 @@ public class PlayerBoardTest {
 
     @Test(expected = NullPointerException.class)
     public void addDamage_nullPlayerProvided_shouldThrowException(){
-        Player player = new Player(validName, validActionCard, validCharacter);
+        Player player = new Player(validName, validActionCard, validColor);
         PlayerBoard playerBoard = new PlayerBoard(player);
         playerBoard.addDamage(null, 1);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void addDamage_negativeCountProvided_shouldThrowException(){
-        Player player = new Player(validName, validActionCard, validCharacter);
-        Player shooter = new Player("Another player", validActionCard, validCharacter);
+        Player player = new Player(validName, validActionCard, validColor);
+        Player shooter = new Player("Another player", validActionCard, validColor);
         PlayerBoard playerBoard = new PlayerBoard(player);
         playerBoard.addDamage(shooter, -1);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void addDamage_playerIsBoardOwner_shouldThrowException() {
-        Player player = new Player(validName, validActionCard, validCharacter);
+        Player player = new Player(validName, validActionCard, validColor);
         PlayerBoard playerBoard = new PlayerBoard(player);
         playerBoard.addDamage(player, 1);
     }
 
     @Test
     public void addDamage_validParametersProvided_shouldIncreaseDamageCount(){
-        Player player = new Player(validName, validActionCard, validCharacter);
-        Player shooter = new Player("Another player", validActionCard, validCharacter);
+        Player player = new Player(validName, validActionCard, validColor);
+        Player shooter = new Player("Another player", validActionCard, validColor);
         PlayerBoard playerBoard = new PlayerBoard(player);
         int damage = 2;
         List<Player> oldDamages = playerBoard.getDamages();
@@ -104,30 +103,30 @@ public class PlayerBoardTest {
     /* ===== MARKS ===== */
     @Test(expected = NullPointerException.class)
     public void addMark_nullPlayerProvided_shouldThrowException(){
-        Player player = new Player(validName, validActionCard, validCharacter);
+        Player player = new Player(validName, validActionCard, validColor);
         PlayerBoard playerBoard = new PlayerBoard(player);
         playerBoard.addMark(null, 1);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void addMark_negativeCountProvided_shouldThrowException(){
-        Player player = new Player(validName, validActionCard, validCharacter);
-        Player shooter = new Player("Another player", validActionCard, validCharacter);
+        Player player = new Player(validName, validActionCard, validColor);
+        Player shooter = new Player("Another player", validActionCard, validColor);
         PlayerBoard playerBoard = new PlayerBoard(player);
         playerBoard.addMark(shooter, -1);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void addMark_playerIsBoardOwner_shouldThrowException() {
-        Player player = new Player(validName, validActionCard, validCharacter);
+        Player player = new Player(validName, validActionCard, validColor);
         PlayerBoard playerBoard = new PlayerBoard(player);
         playerBoard.addMark(player, 1);
     }
 
     @Test
     public void addMark_validParametersProvided_shouldUpdateMarksCount(){
-        Player player = new Player(validName, validActionCard, validCharacter);
-        Player shooter = new Player("Another player", validActionCard, validCharacter);
+        Player player = new Player(validName, validActionCard, validColor);
+        Player shooter = new Player("Another player", validActionCard, validColor);
         PlayerBoard playerBoard = new PlayerBoard(player);
         int marks = 2;
         int oldShooterMarks = playerBoard.getMarksByPlayer(shooter);
@@ -137,8 +136,8 @@ public class PlayerBoardTest {
 
     @Test
     public void addMark_tooManyMarksProvided_marksCountShouldBeCapped(){
-        Player player = new Player(validName, validActionCard, validCharacter);
-        Player shooter = new Player("Another player", validActionCard, validCharacter);
+        Player player = new Player(validName, validActionCard, validColor);
+        Player shooter = new Player("Another player", validActionCard, validColor);
         PlayerBoard playerBoard = new PlayerBoard(player);
         int marks = PlayerBoard.MAX_MARKS_PER_PLAYER + 1;
         playerBoard.addMark(shooter, marks);
@@ -147,42 +146,42 @@ public class PlayerBoardTest {
 
     @Test(expected = NullPointerException.class)
     public void getMarksByPlayer_nullPlayerProvided_shouldThrowException(){
-        Player player = new Player(validName, validActionCard, validCharacter);
+        Player player = new Player(validName, validActionCard, validColor);
         PlayerBoard playerBoard = new PlayerBoard(player);
         playerBoard.getMarksByPlayer(null);
     }
 
     @Test
     public void getMarksByPlayer_validPlayerProvided_shouldReturnNonNegativeNumber(){
-        Player player = new Player(validName, validActionCard, validCharacter);
-        Player shooter = new Player("Another player", validActionCard, validCharacter);
+        Player player = new Player(validName, validActionCard, validColor);
+        Player shooter = new Player("Another player", validActionCard, validColor);
         PlayerBoard playerBoard = new PlayerBoard(player);
         assertTrue(playerBoard.getMarksByPlayer(shooter) >= 0);
     }
 
     @Test
     public void getKillshot_playerDead_shouldReturnNonNullPlayer(){
-        Player player = new Player(validName, validActionCard, validCharacter);
-        Player shooter = new Player("SHOOTER", validActionCard, validCharacter);
+        Player player = new Player(validName, validActionCard, validColor);
+        Player shooter = new Player("SHOOTER", validActionCard, validColor);
         player.getPlayerBoard().addDamage(shooter, PlayerBoard.KILLSHOT_DAMAGE);
         assertEquals(shooter, player.getPlayerBoard().getKillshot());
     }
 
     @Test
     public void getOverkill_playerDead_shouldReturnNonNullPlayer(){
-        Player player = new Player(validName, validActionCard, validCharacter);
-        Player shooter = new Player("SHOOTER", validActionCard, validCharacter);
+        Player player = new Player(validName, validActionCard, validColor);
+        Player shooter = new Player("SHOOTER", validActionCard, validColor);
         player.getPlayerBoard().addDamage(shooter, PlayerBoard.OVERKILL_DAMAGE);
         assertEquals(shooter, player.getPlayerBoard().getOverkill());
     }
 
     @Test
     public void getPlayerScores_damagesNotEmpty_retunedMapShouldOnlyContainShooters(){
-        Player player = new Player(validName, validActionCard, validCharacter);
+        Player player = new Player(validName, validActionCard, validColor);
         List<Player> shooters = new ArrayList<>();
         for(int i=0; i<4; i++){
-            shooters.add(new Player(String.format("Player%d", i), validActionCard, validCharacter));
-        };
+            shooters.add(new Player(String.format("Player%d", i), validActionCard, validColor));
+        }
         shooters.forEach(shooter -> player.getPlayerBoard().addDamage(shooter, 2));
         Map<Player, Integer> playerScores = player.getPlayerBoard().getPlayerScores();
         assertTrue(shooters.containsAll(playerScores.keySet()));
@@ -191,11 +190,11 @@ public class PlayerBoardTest {
 
     @Test
     public void getPlayerScores_damagesNotEmptyAllShootersWithSameDamageCount_retunedMapShouldContainOneShooterOnly(){
-        Player player = new Player(validName, validActionCard, validCharacter);
+        Player player = new Player(validName, validActionCard, validColor);
         List<Player> shooters = new ArrayList<>();
         for(int i=0; i<4; i++){
-            shooters.add(new Player(String.format("Player%d", i), validActionCard, validCharacter));
-        };
+            shooters.add(new Player(String.format("Player%d", i), validActionCard, validColor));
+        }
         shooters.forEach(shooter -> player.getPlayerBoard().addDamage(shooter, 2));
         Map<Player, Integer> playerScores = player.getPlayerBoard().getPlayerScores();
         assertTrue(shooters.containsAll(playerScores.keySet()));
@@ -205,11 +204,11 @@ public class PlayerBoardTest {
 
     @Test
     public void getPlayerScores_damagesNotEmptyAllShootersWithDifferentDamageCount_retunedMapShouldContainAllShooters(){
-        Player player = new Player(validName, validActionCard, validCharacter);
+        Player player = new Player(validName, validActionCard, validColor);
         List<Player> shooters = new ArrayList<>();
         for(int i=0; i<4; i++){
-            shooters.add(new Player(String.format("Player%d", i), validActionCard, validCharacter));
-        };
+            shooters.add(new Player(String.format("Player%d", i), validActionCard, validColor));
+        }
         for(int i=0; i<4; i++){
             player.getPlayerBoard().addDamage(shooters.get(i), i+1);
         }
@@ -221,7 +220,7 @@ public class PlayerBoardTest {
 
     @Test
     public void turnFrenzy_playerHasNoDamages_shouldThrowException(){
-        Player player = new Player(validName, validActionCard, validCharacter);
+        Player player = new Player(validName, validActionCard, validColor);
         PlayerBoard playerBoard = new PlayerBoard(player);
         // Here the player has no damages
         try {
@@ -233,8 +232,8 @@ public class PlayerBoardTest {
 
     @Test
     public void turnFrenzy_playerHasDamages_damagesShouldBeReset(){
-        Player player = new Player(validName, validActionCard, validCharacter);
-        Player shooter = new Player("Another name", validActionCard, validCharacter);
+        Player player = new Player(validName, validActionCard, validColor);
+        Player shooter = new Player("Another name", validActionCard, validColor);
         PlayerBoard playerBoard = new PlayerBoard(player);
         playerBoard.addDamage(shooter, 2);
         try {
@@ -247,7 +246,7 @@ public class PlayerBoardTest {
 
     @Test
     public void updateDeathsAndReset_playerNotDead_shouldThrowException(){
-        Player player = new Player(validName, validActionCard, validCharacter);
+        Player player = new Player(validName, validActionCard, validColor);
         PlayerBoard playerBoard = new PlayerBoard(player);
         try {
             playerBoard.updateDeathsAndReset();
@@ -258,8 +257,8 @@ public class PlayerBoardTest {
 
     @Test
     public void updateDeathsAndReset_playerDead_deathsShouldBeIncrementedAndDamagesReset(){
-        Player player = new Player(validName, validActionCard, validCharacter);
-        Player shooter = new Player("Another name", validActionCard, validCharacter);
+        Player player = new Player(validName, validActionCard, validColor);
+        Player shooter = new Player("Another name", validActionCard, validColor);
         PlayerBoard playerBoard = new PlayerBoard(player);
         playerBoard.addDamage(shooter, PlayerBoard.KILLSHOT_DAMAGE);
         int oldDeaths = playerBoard.getDeaths();
@@ -275,15 +274,15 @@ public class PlayerBoardTest {
 
     @Test
     public void checkPlayerDead_playerNotDead_shouldReturnFalse(){
-        Player player = new Player(validName, validActionCard, validCharacter);
+        Player player = new Player(validName, validActionCard, validColor);
         PlayerBoard playerBoard = new PlayerBoard(player);
         assertFalse(playerBoard.isDead());
     }
 
     @Test
     public void checkPlayerDead_playerDead_shouldReturnTrue(){
-        Player player = new Player(validName, validActionCard, validCharacter);
-        Player shooter = new Player("Another name", validActionCard, validCharacter);
+        Player player = new Player(validName, validActionCard, validColor);
+        Player shooter = new Player("Another name", validActionCard, validColor);
         PlayerBoard playerBoard = new PlayerBoard(player);
         playerBoard.addDamage(shooter, PlayerBoard.KILLSHOT_DAMAGE);
         assertTrue(playerBoard.isDead());

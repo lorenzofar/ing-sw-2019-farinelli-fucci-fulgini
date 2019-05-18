@@ -4,11 +4,10 @@ import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.FullCapacityExce
 import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionCardEnum;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionEnum;
-import it.polimi.deib.se2019.sanp4.adrenaline.model.board.RoomColor;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCube;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCubeCost;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
-import it.polimi.deib.se2019.sanp4.adrenaline.model.player.PlayerCharacter;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.player.PlayerColor;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -24,7 +23,7 @@ public class UnloadedStateTest {
 
     private static ActionCard validActionCard;
     private static String validPlayerName = "player1";
-    private static PlayerCharacter validCharacter;
+    private static PlayerColor validColor = PlayerColor.YELLOW;
     private static Map<AmmoCube, Integer> initialPlayerAmmo;
 
     private static List<AmmoCubeCost> validCost;
@@ -52,7 +51,6 @@ public class UnloadedStateTest {
         for(int i = 0; i<AmmoCube.values().length; i++) {
             initialPlayerAmmo.put(AmmoCube.values()[i], Player.INITIAL_AMMO);
         }
-        validCharacter = new PlayerCharacter("name", "description", RoomColor.BLUE);
     }
 
     @Test
@@ -82,14 +80,14 @@ public class UnloadedStateTest {
 
     @Test(expected = NullPointerException.class)
     public void reloadWeapon_nullWeaponProvided_shouldThrowNullPointerException() {
-        Player player = new Player(validPlayerName, validActionCard, validCharacter);
+        Player player = new Player(validPlayerName, validActionCard, validColor);
         weaponCard.setState(new UnloadedState());
         weaponCard.getState().reload(player, null);
     }
 
     @Test
     public void reloadWeapon_playerDoesNotHaveWeapon_playerAmmoShouldNotBeDecreasedAndWeaponStateShouldBeUnloaded(){
-        Player player = new Player(validPlayerName, validActionCard, validCharacter);
+        Player player = new Player(validPlayerName, validActionCard, validColor);
         weaponCard.setState(new UnloadedState());
         weaponCard.getState().reload(player, weaponCard);
         assertEquals(initialPlayerAmmo, player.getAmmo());
@@ -98,7 +96,7 @@ public class UnloadedStateTest {
 
     @Test
     public void reloadWeapon_playerHasWeaponButNotEnoughAmmo_playerAmmoShouldNotBeDecreasedAndWeaponStateShouldBeUnloaded(){
-        Player player = new Player(validPlayerName, validActionCard, validCharacter);
+        Player player = new Player(validPlayerName, validActionCard, validColor);
         player.addAmmo(Collections.emptyMap());
         weaponCard.setState(new UnloadedState());
         weaponCard.getState().reload(player, weaponCard);
@@ -108,7 +106,7 @@ public class UnloadedStateTest {
 
     @Test
     public void reloadWeapon_playerHasWeaponAndEnoughAmmo_playerAmmoShouldBeDecreasedAndWeaponStateShouldBeLoaded(){
-        Player player = new Player(validPlayerName, validActionCard, validCharacter);
+        Player player = new Player(validPlayerName, validActionCard, validColor);
         try {
             player.addWeapon(weaponCard);
         } catch (FullCapacityException e) {

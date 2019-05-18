@@ -1,15 +1,14 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.model.player;
 
-import it.polimi.deib.se2019.sanp4.adrenaline.model.board.RoomColor;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class PlayerCharacterTest {
 
     private static String validName = "player1";
     private static String validDescription = "description1";
-    private static RoomColor validColor = RoomColor.BLUE;
+    private static PlayerColor validColor = PlayerColor.BLUE;
 
     @Test(expected = NullPointerException.class)
     public void createPlayerCharacter_nullNameProvided_shouldThrowNullPointerException(){

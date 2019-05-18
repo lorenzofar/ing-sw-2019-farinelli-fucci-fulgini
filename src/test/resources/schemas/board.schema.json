@@ -62,7 +62,7 @@
       "properties": {
         "color": {
           "type": "string",
-          "enum": ["BLUE", "GRAY", "YELLOW", "PURPLE", "GREEN"]
+          "enum": ["BLUE", "RED", "GRAY", "YELLOW", "PURPLE", "GREEN"]
         },
         "squares": {
           "type": "array",
