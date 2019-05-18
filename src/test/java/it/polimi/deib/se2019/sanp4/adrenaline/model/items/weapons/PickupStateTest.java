@@ -4,18 +4,16 @@ import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.FullCapacityExce
 import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionCardEnum;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionEnum;
-import it.polimi.deib.se2019.sanp4.adrenaline.model.board.RoomColor;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCube;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCubeCost;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
-import it.polimi.deib.se2019.sanp4.adrenaline.model.player.PlayerCharacter;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.player.PlayerColor;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.*;
 
 import static org.junit.Assert.*;
-import static org.junit.Assert.assertEquals;
 
 public class PickupStateTest {
 
@@ -27,7 +25,7 @@ public class PickupStateTest {
 
     private static ActionCard validActionCard;
     private static String validPlayerName = "player1";
-    private static PlayerCharacter validCharacter;
+    private static PlayerColor validColor = PlayerColor.YELLOW;
     private static Map<AmmoCube, Integer> initialPlayerAmmo;
 
 
@@ -53,7 +51,6 @@ public class PickupStateTest {
         for(int i = 0; i<AmmoCube.values().length; i++) {
             initialPlayerAmmo.put(AmmoCube.values()[i], Player.INITIAL_AMMO);
         }
-        validCharacter = new PlayerCharacter("name", "description", RoomColor.BLUE);
     }
 
     @Test
@@ -83,14 +80,14 @@ public class PickupStateTest {
 
     @Test(expected = NullPointerException.class)
     public void reloadWeapon_nullWeaponProvided_shouldThrowNullPointerException() {
-        Player player = new Player(validPlayerName, validActionCard, validCharacter);
+        Player player = new Player(validPlayerName, validActionCard, validColor);
         weaponCard.setState(new PickupState());
         weaponCard.getState().reload(player, null);
     }
 
     @Test
     public void reloadWeapon_playerDoesNotHaveWeapon_playerAmmoShouldNotBeDecreasedAndWeaponStateShouldBePickup(){
-        Player player = new Player(validPlayerName, validActionCard, validCharacter);
+        Player player = new Player(validPlayerName, validActionCard, validColor);
         weaponCard.setState(new PickupState());
         weaponCard.getState().reload(player, weaponCard);
         assertEquals(initialPlayerAmmo, player.getAmmo());
@@ -99,7 +96,7 @@ public class PickupStateTest {
 
     @Test
     public void reloadWeapon_playerHasWeaponButNotEnoughAmmo_playerAmmoShouldNotBeDecreasedAndWeaponStateShouldBePickup(){
-        Player player = new Player(validPlayerName, validActionCard, validCharacter);
+        Player player = new Player(validPlayerName, validActionCard, validColor);
         WeaponCard expensiveWeaponCard = new WeaponCard(validId, validName, invalidCost, new ArrayList<>());
         expensiveWeaponCard.setState(new PickupState());
         expensiveWeaponCard.getState().reload(player, expensiveWeaponCard);
@@ -109,7 +106,7 @@ public class PickupStateTest {
 
     @Test
     public void reloadWeapon_playerHasWeaponAndEnoughAmmo_playerAmmoShouldBeDecreasedAndWeaponStateShouldBeLoaded(){
-        Player player = new Player(validPlayerName, validActionCard, validCharacter);
+        Player player = new Player(validPlayerName, validActionCard, validColor);
         try {
             player.addWeapon(weaponCard);
         } catch (FullCapacityException e) {
@@ -132,7 +129,7 @@ public class PickupStateTest {
         List<AmmoCubeCost> oneCubeCost = new ArrayList<>();
         oneCubeCost.add(AmmoCubeCost.YELLOW);
         WeaponCard oneCubecard = new WeaponCard(validId ,validName, oneCubeCost, new ArrayList<>());
-        Player player = new Player(validPlayerName, validActionCard, validCharacter);
+        Player player = new Player(validPlayerName, validActionCard, validColor);
         try {
             player.addWeapon(oneCubecard);
         } catch (FullCapacityException e) {

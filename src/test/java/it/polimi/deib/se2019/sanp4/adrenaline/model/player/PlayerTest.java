@@ -27,7 +27,7 @@ public class PlayerTest {
 
     private final static String validName = "player1";
     private static ActionCard validActionCard;
-    private static PlayerCharacter validCharacter;
+    private static PlayerColor validColor = PlayerColor.YELLOW;
     private static WeaponCard validWeaponCard;
 
     private static List<AmmoCubeCost> validWeaponCost;
@@ -50,18 +50,17 @@ public class PlayerTest {
         validWeaponEffects = new ArrayList<>();
 
         validActionCard = new ActionCard(validMaxActions, validType, validActions, validFinalAction);
-        validCharacter = new PlayerCharacter(validName, validDescription, validColor);
         validWeaponCard = new WeaponCard("weapon1", "Weapon 1", validWeaponCost, validWeaponEffects);
     }
 
     @Test(expected = NullPointerException.class)
     public void createPlayer_nullNameProvided_shouldThrowNullPointerException(){
-        new Player(null, validActionCard, validCharacter);
+        new Player(null, validActionCard, validColor);
     }
 
     @Test(expected = NullPointerException.class)
     public void createPlayer_nullActionCardProvided_shouldThrowNullPointerException(){
-        new Player(validName, null, validCharacter);
+        new Player(validName, null, validColor);
     }
 
     @Test(expected = NullPointerException.class)
@@ -71,15 +70,15 @@ public class PlayerTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void createPlayer_emptyNameProvided_shouldThrowIllegalArgumentException(){
-        new Player("", validActionCard, validCharacter);
+        new Player("", validActionCard, validColor);
     }
 
     @Test
     public void createPlayer_properParametersProvided_shouldNotThrowException(){
-        Player player = new Player(validName, validActionCard, validCharacter);
+        Player player = new Player(validName, validActionCard, validColor);
         assertEquals(validName, player.getName());
         assertEquals(validActionCard, player.getActionCard());
-        assertEquals(validCharacter, player.getCharacter());
+        assertEquals(validColor, player.getColor());
         assertEquals(PlayerState.ONLINE, player.getState());
         assertEquals(0, player.getScore());
         assertEquals(0, player.getPerformedOverkills());
@@ -97,13 +96,13 @@ public class PlayerTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void addScorePoints_negativeAmountProvided_shouldThrowIllegalArgumentException(){
-        Player player = new Player(validName, validActionCard, validCharacter);
+        Player player = new Player(validName, validActionCard, validColor);
         player.addScorePoints(-1);
     }
 
     @Test
     public void addScorePoints_validAmountProvided_shouldIncreasePlayerScore(){
-        Player player = new Player(validName, validActionCard, validCharacter);
+        Player player = new Player(validName, validActionCard, validColor);
         int initialScore = player.getScore();
         int validScore = 2;
         player.addScorePoints(validScore);
@@ -112,7 +111,7 @@ public class PlayerTest {
 
     @Test
     public void addKillshot_shouldIncreaseKillshotsCount(){
-        Player player = new Player(validName, validActionCard, validCharacter);
+        Player player = new Player(validName, validActionCard, validColor);
         int initialKillshots = player.getPerformedKillshots();
         player.addPerformedKillshot();
         assertEquals(initialKillshots + 1, player.getPerformedKillshots());
@@ -120,7 +119,7 @@ public class PlayerTest {
 
     @Test
     public void addOverkill_shouldIncreaseOverkillsCount(){
-        Player player = new Player(validName, validActionCard, validCharacter);
+        Player player = new Player(validName, validActionCard, validColor);
         int initialOverkills = player.getPerformedOverkills();
         player.addPerformedOverkill();
         assertEquals(initialOverkills + 1, player.getPerformedOverkills());
@@ -128,13 +127,13 @@ public class PlayerTest {
 
     @Test(expected = NullPointerException.class)
     public void setActionCard_nullActionCardProvided_shouldThrowNullPointerException(){
-        Player player = new Player(validName, validActionCard, validCharacter);
+        Player player = new Player(validName, validActionCard, validColor);
         player.setActionCard(null);
     }
 
     @Test
     public void setActionCard_validActionCardProvided_shouldNotThrowException(){
-        Player player = new Player(validName, validActionCard, validCharacter);
+        Player player = new Player(validName, validActionCard, validColor);
         int validMaxActions = 1;
         Collection<ActionEnum> validActions = new ArrayList<>();
         validActions.add(ActionEnum.ADRENALINE_SHOOT);
@@ -147,13 +146,13 @@ public class PlayerTest {
 
     @Test(expected = NullPointerException.class)
     public void setSquare_nullSquareProvided_shouldThrowNullPointerException(){
-        Player player = new Player(validName, validActionCard, validCharacter);
+        Player player = new Player(validName, validActionCard, validColor);
         player.setCurrentSquare(null);
     }
 
     @Test
     public void setSquare_validSquareProvided_shouldNotThrowException(){
-        Player player = new Player(validName, validActionCard, validCharacter);
+        Player player = new Player(validName, validActionCard, validColor);
         Square newSquare = new SpawnSquare(new CoordPair(1, 1));
         player.setCurrentSquare(newSquare);
         assertEquals(newSquare, player.getCurrentSquare());
@@ -162,13 +161,13 @@ public class PlayerTest {
 
     @Test(expected = NullPointerException.class)
     public void setState_nullStateProvided_shouldThrowNullPointerException(){
-        Player player = new Player(validName, validActionCard, validCharacter);
+        Player player = new Player(validName, validActionCard, validColor);
         player.setState(null);
     }
 
     @Test
     public void setState_validStateProvided_shouldNotThrowException(){
-        Player player = new Player(validName, validActionCard, validCharacter);
+        Player player = new Player(validName, validActionCard, validColor);
         PlayerState newState = PlayerState.SUSPENDED;
         player.setState(newState);
         assertEquals(newState, player.getState());
@@ -176,20 +175,20 @@ public class PlayerTest {
 
     @Test(expected = NullPointerException.class)
     public void addWeapon_nullWeaponProvided_shouldThrowNullPointerException() throws FullCapacityException {
-        Player player = new Player(validName, validActionCard, validCharacter);
+        Player player = new Player(validName, validActionCard, validColor);
         player.addWeapon(null);
     }
 
     @Test(expected = IllegalStateException.class)
     public void addWeapon_playerAlreadyOwnsWeapon_shouldThrowIllegalStateException() throws FullCapacityException {
-        Player player = new Player(validName, validActionCard, validCharacter);
+        Player player = new Player(validName, validActionCard, validColor);
         player.addWeapon(validWeaponCard);
         player.addWeapon(validWeaponCard);
     }
 
     @Test(expected = FullCapacityException.class)
     public void addWeapon_playerHasFullCapacity_shouldThrowFullCapacityException() throws FullCapacityException {
-        Player player = new Player(validName, validActionCard, validCharacter);
+        Player player = new Player(validName, validActionCard, validColor);
         for(int i = 0; i<Player.MAX_WEAPONS; i++){
             WeaponCard weaponCard = new WeaponCard(String.format("weapon%d", i), "Weapon", validWeaponCost, validWeaponEffects);
             player.addWeapon(weaponCard);
@@ -200,26 +199,26 @@ public class PlayerTest {
 
     @Test
     public void addWeapon_weaponCanBeAdded_playerShouldHaveWeapon() throws FullCapacityException {
-        Player player = new Player(validName, validActionCard, validCharacter);
+        Player player = new Player(validName, validActionCard, validColor);
         player.addWeapon(validWeaponCard);
         assertTrue(player.getWeapons().contains(validWeaponCard));
     }
 
     @Test(expected = NullPointerException.class)
     public void removeWeapon_nullWeaponIdProvided_shouldThrowNullPointerException() throws CardNotFoundException {
-        Player player = new Player(validName, validActionCard, validCharacter);
+        Player player = new Player(validName, validActionCard, validColor);
         player.removeWeapon((String) null);
     }
 
     @Test(expected = NullPointerException.class)
     public void removeWeapon_nullWeaponCardProvided_shouldThrowNullPointerException() throws CardNotFoundException {
-        Player player = new Player(validName, validActionCard, validCharacter);
+        Player player = new Player(validName, validActionCard, validColor);
         player.removeWeapon((WeaponCard) null);
     }
 
     @Test
     public void removeWeapon_playerDoesNotHaveCard_weaponCardPassed_shouldThrowCardNotFoundException(){
-        Player player = new Player(validName, validActionCard, validCharacter);
+        Player player = new Player(validName, validActionCard, validColor);
         try {
             player.removeWeapon(validWeaponCard);
         } catch (CardNotFoundException e) {
@@ -229,7 +228,7 @@ public class PlayerTest {
 
     @Test
     public void removeWeapon_playerDoesNotHaveCard_weaponCardIdPassed_shouldThrowCardNotFoundException(){
-        Player player = new Player(validName, validActionCard, validCharacter);
+        Player player = new Player(validName, validActionCard, validColor);
         try {
             player.removeWeapon(validWeaponCard.getId());
         } catch (CardNotFoundException e) {
@@ -239,7 +238,7 @@ public class PlayerTest {
 
     @Test
     public void removeWeapon_playerHasCard_weaponCardPassed_shouldRemoveWeapon() throws FullCapacityException, CardNotFoundException {
-        Player player = new Player(validName, validActionCard, validCharacter);
+        Player player = new Player(validName, validActionCard, validColor);
         player.addWeapon(validWeaponCard);
         player.removeWeapon(validWeaponCard);
         assertFalse(player.getWeapons().contains(validWeaponCard));
@@ -247,7 +246,7 @@ public class PlayerTest {
 
     @Test
     public void removeWeapon_playerHasCard_weaponCardIdPassed_shouldRemoveWeapon() throws FullCapacityException, CardNotFoundException {
-        Player player = new Player(validName, validActionCard, validCharacter);
+        Player player = new Player(validName, validActionCard, validColor);
         player.addWeapon(validWeaponCard);
         player.removeWeapon(validWeaponCard.getId());
         assertFalse(player.getWeapons().contains(validWeaponCard));
@@ -255,13 +254,13 @@ public class PlayerTest {
 
     @Test(expected = NullPointerException.class)
     public void addPowerup_nullPowerupProvided_shouldThrowNullPointerException() throws FullCapacityException {
-        Player player = new Player(validName, validActionCard, validCharacter);
+        Player player = new Player(validName, validActionCard, validColor);
         player.addPowerup(null);
     }
 
     @Test(expected = IllegalStateException.class)
     public void addPowerup_playerAlreadyOwnsPowerup_shouldThrowIllegalStateException() throws FullCapacityException {
-        Player player = new Player(validName, validActionCard, validCharacter);
+        Player player = new Player(validName, validActionCard, validColor);
         PowerUpCard powerup = new PowerUpCard("id1", "name1", "desc1", AmmoCube.BLUE);
         player.addPowerup(powerup);
         player.addPowerup(powerup);
@@ -269,7 +268,7 @@ public class PlayerTest {
 
     @Test(expected = FullCapacityException.class)
     public void addPowerup_playerHasFullCapacity_shouldThrowFullCapacityException() throws FullCapacityException {
-        Player player = new Player(validName, validActionCard, validCharacter);
+        Player player = new Player(validName, validActionCard, validColor);
         for(int i = 0; i<Player.MAX_POWERUPS; i++){
             PowerUpCard powerUpCard = new PowerUpCard(String.format("id%d", i), "name", "desc", AmmoCube.BLUE);
             player.addPowerup(powerUpCard);
@@ -280,7 +279,7 @@ public class PlayerTest {
 
     @Test
     public void addPowerup_powerupCanBeAdded_playerShouldHavePowerup() throws FullCapacityException {
-        Player player = new Player(validName, validActionCard, validCharacter);
+        Player player = new Player(validName, validActionCard, validColor);
         PowerUpCard insertedPowerup = new PowerUpCard("id1", "name1", "desc1", AmmoCube.BLUE);
         player.addPowerup(insertedPowerup);
         assertTrue(player.getPowerups().contains(insertedPowerup));
@@ -288,20 +287,20 @@ public class PlayerTest {
 
     @Test(expected = NullPointerException.class)
     public void removePowerup_nullPowerupProvided_shouldThrowNullPointerException(){
-        Player player = new Player(validName, validActionCard, validCharacter);
+        Player player = new Player(validName, validActionCard, validColor);
         player.removePowerup(null);
     }
 
     @Test(expected = IllegalStateException.class)
     public void removePowerup_userDoesNotHavePowerup_shouldThrowIllegalStateException(){
-        Player player = new Player(validName, validActionCard, validCharacter);
+        Player player = new Player(validName, validActionCard, validColor);
         PowerUpCard powerup = new PowerUpCard("id", "name", "desc", AmmoCube.BLUE);
         player.removePowerup(powerup);
     }
 
     @Test
     public void removePowerup_userHasPowerup_shouldRemoveWeapon() throws FullCapacityException {
-        Player player = new Player(validName, validActionCard, validCharacter);
+        Player player = new Player(validName, validActionCard, validColor);
         PowerUpCard powerup = new PowerUpCard("id", "name", "desc", AmmoCube.BLUE);
         player.addPowerup(powerup);
         player.removePowerup(powerup);
@@ -310,13 +309,13 @@ public class PlayerTest {
 
     @Test(expected = NullPointerException.class)
     public void addAmmo_nullMapProvided_shouldThrowNullPointerException(){
-        Player player = new Player(validName, validActionCard, validCharacter);
+        Player player = new Player(validName, validActionCard, validColor);
         player.addAmmo(null);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void addAmmo_mapWithNegativeValuesProvided_shouldThrowIllegalArgumentException(){
-        Player player = new Player(validName, validActionCard, validCharacter);
+        Player player = new Player(validName, validActionCard, validColor);
         Map<AmmoCube, Integer> invalidAmmo = new EnumMap<>(AmmoCube.class);
         invalidAmmo.put(AmmoCube.RED, -1);
         player.addAmmo(invalidAmmo);
@@ -324,7 +323,7 @@ public class PlayerTest {
 
     @Test
     public void addAmmo_validAmmoProvided_playerShouldHaveAmmo(){
-        Player player = new Player(validName, validActionCard, validCharacter);
+        Player player = new Player(validName, validActionCard, validColor);
         Map<AmmoCube, Integer> initialAmmo = player.getAmmo();
         Map<AmmoCube, Integer> validAmmo = new EnumMap<>(AmmoCube.class);
         validAmmo.put(AmmoCube.YELLOW, 1);
@@ -339,19 +338,19 @@ public class PlayerTest {
 
     @Test(expected = NullPointerException.class)
     public void payAmmo_nullCubesMapProvided_shouldThrowNullPointerException() throws NotEnoughAmmoException {
-        Player player = new Player(validName, validActionCard, validCharacter);
+        Player player = new Player(validName, validActionCard, validColor);
         player.payAmmo((Map<AmmoCube, Integer>)null);
     }
 
     @Test(expected = NullPointerException.class)
     public void payAmmo_nullCubeCostListProvided_shouldThrowNullPointerException() throws NotEnoughAmmoException {
-        Player player = new Player(validName, validActionCard, validCharacter);
+        Player player = new Player(validName, validActionCard, validColor);
         player.payAmmo((List<AmmoCubeCost>)null);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void payAmmo_mapWithNegativeValuesProvided_shouldThrowIllegalArgumentException() throws NotEnoughAmmoException {
-        Player player = new Player(validName, validActionCard, validCharacter);
+        Player player = new Player(validName, validActionCard, validColor);
         Map<AmmoCube, Integer> invalidMap = new EnumMap<>(AmmoCube.class);
         invalidMap.put(AmmoCube.BLUE, -1);
         player.payAmmo(invalidMap);
@@ -359,7 +358,7 @@ public class PlayerTest {
 
     @Test
     public void payAmmo_passCubesMap_userHasNotEnoughAmmo_shouldThrowNotEnoughAmmoException(){
-        Player player = new Player(validName, validActionCard, validCharacter);
+        Player player = new Player(validName, validActionCard, validColor);
         // Here the user only has initial ammo
         Map<AmmoCube, Integer> costMap = new EnumMap<>(AmmoCube.class);
         costMap.replaceAll((color, amount) -> Player.INITIAL_AMMO + 1);
@@ -372,7 +371,7 @@ public class PlayerTest {
 
     @Test
     public void payAmmo_passCubesMap_userHasEnoughAmmo_shouldDecreaseAmmo(){
-        Player player = new Player(validName, validActionCard, validCharacter);
+        Player player = new Player(validName, validActionCard, validColor);
         // Here the user only has initial ammo
         Map<AmmoCube, Integer> costMap = new EnumMap<>(AmmoCube.class);
         Map<AmmoCube, Integer> zeroMap= new EnumMap<>(AmmoCube.class);
@@ -390,7 +389,7 @@ public class PlayerTest {
 
     @Test
     public void payAmmo_passCubeCostList_userHasNotEnoughAmmo_shouldThrowNotEnoughAmmoException(){
-        Player player = new Player(validName, validActionCard, validCharacter);
+        Player player = new Player(validName, validActionCard, validColor);
         // Here the user only has initial ammo
         List<AmmoCubeCost> costList = new ArrayList<>();
         costList.addAll(Collections.nCopies(Player.INITIAL_AMMO + 1, AmmoCubeCost.YELLOW));
@@ -405,7 +404,7 @@ public class PlayerTest {
 
     @Test
     public void payAmmo_passCubeCostList_userHasEnoughAmmo_shouldDecreaseAmmo(){
-        Player player = new Player(validName, validActionCard, validCharacter);
+        Player player = new Player(validName, validActionCard, validColor);
         // Here the user only has initial ammo
         List<AmmoCubeCost> costList = new ArrayList<>();
         costList.addAll(Collections.nCopies(Player.INITIAL_AMMO, AmmoCubeCost.YELLOW));
@@ -425,7 +424,7 @@ public class PlayerTest {
 
     @Test
     public void payAmmo_passCubeCostListWithGenericCube_userHasEnoughAmmo_shouldDecreaseAmmo(){
-        Player player = new Player(validName, validActionCard, validCharacter);
+        Player player = new Player(validName, validActionCard, validColor);
         // Here the user only has initial ammo
         List<AmmoCubeCost> costList = new ArrayList<>();
         costList.addAll(Collections.nCopies(Player.INITIAL_AMMO, AmmoCubeCost.YELLOW));
@@ -445,7 +444,7 @@ public class PlayerTest {
 
     @Test
     public void payAmmo_passCubeCostListWithGenericCube_userHasNotEnoughAmmo_shouldDecreaseAmmo(){
-        Player player = new Player(validName, validActionCard, validCharacter);
+        Player player = new Player(validName, validActionCard, validColor);
         // Here the user only has initial ammo
         List<AmmoCubeCost> costList = new ArrayList<>();
         costList.addAll(Collections.nCopies(Player.INITIAL_AMMO, AmmoCubeCost.YELLOW));
