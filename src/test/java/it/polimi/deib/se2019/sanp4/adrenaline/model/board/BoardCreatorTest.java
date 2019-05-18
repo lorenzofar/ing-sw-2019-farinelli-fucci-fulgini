@@ -120,7 +120,13 @@ public class BoardCreatorTest {
         assertEquals(board.getSquare(connectedSquare), board.getSquare(currAdjacent.getConnection(CardinalDirection.N).getSquare()));
         connectedSquare = new CoordPair(1,1);
         assertEquals(board.getSquare(connectedSquare), board.getSquare(currAdjacent.getConnection(CardinalDirection.W).getSquare()));
-
+        /* Verifying that the spawn points are in the correct position */
+        CoordPair spawn = new CoordPair(0,0);
+        assertEquals(spawn, board.getSpawnPoints().get(AmmoCube.RED).getLocation());
+        spawn = new CoordPair(2,0);
+        assertEquals(spawn, board.getSpawnPoints().get(AmmoCube.BLUE).getLocation());
+        spawn = new CoordPair(1,1);
+        assertEquals(spawn, board.getSpawnPoints().get(AmmoCube.YELLOW).getLocation());
     }
 
     @Test
