@@ -9,10 +9,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.MissingResourceException;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Static resource class which loads ammo cards from a JSON file and
@@ -92,13 +89,13 @@ public class AmmoCardCreator {
     }
 
     /**
-     * Returns a collection with all ammo cards in the deck,
+     * Returns an unmodifiable collection with all ammo cards in the deck,
      * the cards are immutable and shared in a flyweight fashion.
      * This is suitable to initialize a card stack.
-     * @return collection containing the ammo cards in the deck
+     * @return unmodifiable collection containing the ammo cards in the deck
      */
     public static Collection<AmmoCard> getAmmoCardDeck(){
-        return new ArrayList<>();
+        return Collections.unmodifiableCollection(ammoCards);
     }
 
     /**
