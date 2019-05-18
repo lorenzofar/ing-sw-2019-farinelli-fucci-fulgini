@@ -60,15 +60,15 @@ public class ControllerImpl implements Controller {
 
     @Override
     public void sendRequest(Player player, RequestContext req) {
-        if(player == null || req == null){
-            throw new NullPointerException("Found null parameters");
-        }
-        pendingRequests.put(player, req);
-        RemoteView playerView = views.get(player);
-        if(playerView != null){
-            playerView.performRequest(req.getRequest());
-        }
-        //TODO: Finish implementing this method
+        /* TODO: Reimplement this with RequestManager */
+//        if(player == null || req == null){
+//            throw new NullPointerException("Found null parameters");
+//        }
+//        pendingRequests.put(player, req);
+//        RemoteView playerView = views.get(player);
+//        if(playerView != null){
+//            playerView.performRequest(req.getRequest());
+//        }
     }
 
     @Override

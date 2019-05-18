@@ -1,14 +1,10 @@
-package it.polimi.deib.se2019.sanp4.adrenaline.common.network;
+package it.polimi.deib.se2019.sanp4.adrenaline.common.network.socket;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.LoginException;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.network.RemoteView;
 
-import java.io.IOException;
-import java.rmi.Remote;
-
-/** Describes a server based on RMI for communication */
-public interface RemoteServer extends Remote {
-    //TODO: Finish adding methods
-
+/** Describes the interface of the server for a view stub communicating with Socket */
+public interface SocketServer {
     /**
      * Request to log in a user.
      * The client tries to log in with the required username and also passes a stub of his view.
@@ -23,24 +19,15 @@ public interface RemoteServer extends Remote {
      * </ol>
      * @param username name of the player who wants to get logged in
      * @param view stub of the view exported on the RMI registry
-     * @throws IOException if the remote call fails
      * @throws LoginException if the username is associated to an already logged in player
      */
-    void playerLogin(String username, RemoteView view) throws IOException, LoginException;
+    void playerLogin(String username, RemoteView view) throws LoginException;
 
     /**
      * Request to log out a user.
      * If the user is logged in, it gets logged out and all operations to suspend him are taken care of.
      * If it is not logged in, nothing happens.
      * @param username name of the player to be logged out
-     * @throws IOException if the remote call fails
      */
-    void playerLogout(String username) throws IOException;
-
-
-    /**
-     * Checks connectivity to the server
-     * @throws IOException If there is no connectivity
-     */
-    void ping() throws IOException;
+    void playerLogout(String username);
 }

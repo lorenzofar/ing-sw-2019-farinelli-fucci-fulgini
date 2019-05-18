@@ -1,4 +1,4 @@
-package it.polimi.deib.se2019.sanp4.adrenaline.controller.weapon;
+package it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
