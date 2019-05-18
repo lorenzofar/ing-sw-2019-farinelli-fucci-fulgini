@@ -14,8 +14,8 @@ public interface Model {
     Match getMatch();
 
     /**
-     * Sets the match instance associated to this model.
-     * @param match math instance to be associated
+     * Returns the operational state of the match
+     * @return the operational state of the match
      */
-    void setMatch(Match match);
+    MatchOperationalState getOperationalState();
 }
