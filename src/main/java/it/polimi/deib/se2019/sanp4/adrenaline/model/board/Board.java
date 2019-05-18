@@ -4,7 +4,6 @@ import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCube;
 
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * This class represents the game board.
@@ -105,20 +104,21 @@ public class Board {
         for (int i = 1; i<maxMoves; i++){
             // First we get all the squares we can navigate from the currently considered squares
             // We just consider the newly added squares, by taking a subset starting at 'startIndex'
-            Stream<CoordPair> navigableSquaresToAdd = navigableSquares
+            List<CoordPair> navigableSquaresToAdd = navigableSquares
                     .stream()
                     .skip(startIndex)
                     .flatMap(location-> {
                         Collection<CoordPair> squareNeighbours = getSquare(location)
                                 .getAdjacentSquares()
                                 .getReachableSquares();
-                        squareNeighbours.remove(start);
                         return squareNeighbours.stream();
-                    });
+                    }).collect(Collectors.toList());
             // We update the startIndex to point at the last element of the list (before insertion)
             startIndex = navigableSquares.size();
+            //We remove the start square from the list of navigable ones
+            navigableSquaresToAdd.remove(start);
             // And eventually we put all the new squares inside the list
-            navigableSquaresToAdd.forEach(navigableSquares::add);
+            navigableSquares.addAll(navigableSquaresToAdd);
         }
         return navigableSquares;
     }
