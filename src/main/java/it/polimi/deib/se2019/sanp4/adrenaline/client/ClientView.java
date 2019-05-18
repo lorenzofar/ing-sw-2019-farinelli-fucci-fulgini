@@ -113,7 +113,6 @@ public class ClientView extends RemoteObservable<ViewEvent> implements RemoteVie
         this.renderer = renderer;
     }
 
-
     @Override
     public void performRequest(ChoiceRequest request) {
         /* TODO: Implement this method */
@@ -126,7 +125,14 @@ public class ClientView extends RemoteObservable<ViewEvent> implements RemoteVie
 
     @Override
     public void selectScene(ViewScene scene) {
-        //TODO: Implement this method
+        if (scene == ViewScene.LOBBY) {
+            renderer.showLobby();
+        } else if (scene == ViewScene.MATCH_STARTING) {
+            renderer.startWaitingMatch();
+        } else if (scene == ViewScene.MATCH_START_CANCELLED) {
+            renderer.cancelWaitingMatch();
+        }
+        //TODO: Implement more scenes
     }
 
     @Override

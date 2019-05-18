@@ -5,13 +5,13 @@
 <?import javafx.scene.layout.*?>
 
 <GridPane
-    xmlns="http://javafx.com/javafx"
-    xmlns:fx="http://javafx.com/fxml"
-    fx:controller="it.polimi.deib.se2019.sanp4.adrenaline.client.gui.LoginController"
-    stylesheets="@login.css"
-    hgap="10"
-    vgap="10"
-    prefHeight="400.0" prefWidth="300.0">
+        xmlns="http://javafx.com/javafx"
+        xmlns:fx="http://javafx.com/fxml"
+        fx:controller="it.polimi.deib.se2019.sanp4.adrenaline.client.gui.LoginController"
+        stylesheets="@style.css"
+        hgap="10"
+        vgap="10"
+        prefHeight="400.0" prefWidth="300.0">
 
     <padding>
         <Insets top="25" right="25" bottom="10" left="25"/>
@@ -22,48 +22,48 @@
     </fx:define>
 
     <Label
-        text="Adrenaline"
-        styleClass="title-text"
-        GridPane.rowIndex="0"/>
+            text="Adrenaline"
+            styleClass="title-text"
+            GridPane.rowIndex="0"/>
     <Label
-        text="Choose the network connection mode"
-        GridPane.rowIndex="1"/>
+            text="Choose the network connection mode"
+            GridPane.rowIndex="1"/>
 
     <RadioButton
-        GridPane.rowIndex="2"
-        fx:id="socketToggle"
-        text="Socket"
-        toggleGroup="$networkToggleGroup"
-        userData="socket"
-        selected="true"/>
+            GridPane.rowIndex="2"
+            fx:id="socketToggle"
+            text="Socket"
+            toggleGroup="$networkToggleGroup"
+            userData="socket"
+            selected="true"/>
     <RadioButton
-        GridPane.rowIndex="3"
-        fx:id="rmiToggle"
-        text="RMI"
-        toggleGroup="$networkToggleGroup"
-        userData="rmi"/>
+            GridPane.rowIndex="3"
+            fx:id="rmiToggle"
+            text="RMI"
+            toggleGroup="$networkToggleGroup"
+            userData="rmi"/>
 
     <Label
-        text="Enter the server hostname"
-        GridPane.rowIndex="4"/>
+            text="Enter the server hostname"
+            GridPane.rowIndex="4"/>
     <TextField
-        fx:id="hostnameTextField"
-        promptText="Server hostname"
-        GridPane.rowIndex="5"/>
+            fx:id="hostnameTextField"
+            promptText="Server hostname"
+            GridPane.rowIndex="5"/>
 
     <Label
-        text="Enter your username"
-        GridPane.rowIndex="6"/>
+            text="Enter your username"
+            GridPane.rowIndex="6"/>
     <TextField
-        fx:id="usernameTextField"
-        GridPane.rowIndex="7"
-        promptText="Enter username"/>
+            fx:id="usernameTextField"
+            GridPane.rowIndex="7"
+            promptText="Enter username"/>
 
     <Button
-        fx:id="connectBtn"
-        styleClass="submit-btn"
-        GridPane.rowIndex="8"
-        text="Connect"
-        onMouseClicked="#login"/>
+            fx:id="connectBtn"
+            styleClass="submit-btn"
+            GridPane.rowIndex="8"
+            text="Connect"
+            onAction="#login"/>
 
 </GridPane>

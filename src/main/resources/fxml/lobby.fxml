@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.ProgressIndicator?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.control.Button?>
+<VBox
+        fx:id="lobbyScene"
+        xmlns="http://javafx.com/javafx"
+        xmlns:fx="http://javafx.com/fxml"
+        fx:controller="it.polimi.deib.se2019.sanp4.adrenaline.client.gui.LobbyController"
+        stylesheets="@style.css"
+        spacing="10"
+        prefHeight="400.0" prefWidth="600.0">
+
+    <padding>
+        <Insets top="25" right="25" bottom="10" left="25"/>
+    </padding>
+
+    <ImageView
+            fx:id="adrenalineLogo"
+            pickOnBounds="true"
+            preserveRatio="true">
+        <Image url="@../adrenaline_title.png"/>
+    </ImageView>
+
+    <AnchorPane>
+        <VBox fx:id="connectedPlayersContainer" spacing="10">
+            <Label
+                    styleClass="title-text"
+                    text="Waiting for players"/>
+            <Label
+                    text="The game will start once enough players are connected"/>
+
+            <!-- TODO: Add list of connected players -->
+            <ListView
+                    fx:id="connectedPlayersListView"
+                    GridPane.rowIndex="1">
+            </ListView>
+        </VBox>
+
+        <VBox fx:id="matchStartIndicator" alignment="CENTER" spacing="10">
+            <Label
+                    styleClass="title-text"
+                    text="Almost ready"/>
+            <ProgressIndicator
+                    GridPane.rowIndex="2"/>
+            <Label
+                    text="The game is starting soon"/>
+        </VBox>
+    </AnchorPane>
+    <!-- TODO: Add indicators for reamining time  when the players count is sufficient -->
+
+</VBox>

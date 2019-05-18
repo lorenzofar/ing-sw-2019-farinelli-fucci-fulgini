@@ -1,18 +1,23 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.client.cli;
 
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 /**
  * An utility class to interact with the command-line.
  * It provides to read and write from the console
  */
 class CLIHelper {
-    // Private constructor to hide the public one
+
+    /** Private constructor to hide the public one */
     private CLIHelper() {
     }
 
+    /** Timer to print animations and schedule periodic printing */
+    private static Timer timer;
+    /** Scanner to read user input */
     private static final Scanner scanner = new Scanner(System.in);
+    /** Stack of characters used for the spinner animation */
+    private static final Queue<Character> spinnerStack = new LinkedList<>(Arrays.asList('⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'));
 
     /**
      * Prints the provided text, formatting it with the provided parameters
@@ -20,21 +25,32 @@ class CLIHelper {
      * @param args Optional arguments to insert inside the template
      */
     static void print(String template, Object... args) {
-        System.out.println(String.format(template, args));
+        System.out.print(String.format(template, args));
+    }
+
+    /**
+     * Prints the provided text, formatting it with the provided parameters
+     * and adding a new line after it
+     * @param template The template of the text to print
+     * @param args Optional arguments to insert inside the template
+     */
+    static void println(String template, Object... args) {
+        print(template, args);
+        print("\n");
     }
 
     /**
      * Print a section title highlighting its text
      * @param title The title to print
      */
-    public static void printTitle(String title){
+    static void printTitle(String title){
         StringBuilder topBottomBorder = new StringBuilder();
         for(int i=0; i<title.length() + 16; i++){
             topBottomBorder.append("━");
         }
-        print("%c%s%c", '┏', topBottomBorder.toString(), '┓');
-        print("┃%8c%s%8c┃", ' ', title.toUpperCase(), ' ');
-        print("%c%s%c", '┗', topBottomBorder.toString(), '┛');
+        println("%c%s%c", '┏', topBottomBorder.toString(), '┓');
+        println("┃%8c%s%8c┃", ' ', title.toUpperCase(), ' ');
+        println("%c%s%c", '┗', topBottomBorder.toString(), '┛');
 
     }
 
@@ -45,9 +61,9 @@ class CLIHelper {
      * @return The index of the selected choice in the list
      */
     static int askOptionFromList(String message, List<Object> options) {
-        print(message);
+        println(message);
         for (int i = 0; i < options.size(); i++) {
-            print("%d\t%s", i, options.get(i));
+            println("%d\t%s", i, options.get(i));
         }
         // Then wait for the input
         int selectedOption = parseInt();
@@ -69,13 +85,20 @@ class CLIHelper {
     }
 
     /**
+     * Clears the console screen by using ANSI escape codes
+     */
+    static void clearScreen(){
+        CLIHelper.print("\033[H\033[2J");
+    }
+
+    /**
      * Retrieves a string entered in the console
      * If the user enters an invalid input, it asks for it again until a valid one is provided
      * @param message An optional message to show to the user
      * @return The string entered by the user
      */
     static String parseString(String message){
-        print("> %s:", message);
+        println("> %s:", message);
         return scanner.next();
 
     }
@@ -90,7 +113,7 @@ class CLIHelper {
         try {
             return Integer.parseInt(input);
         } catch (Exception ex) {
-            print("Please insert a valid input");
+            println("Please insert a valid input");
             return parseInt();
         }
     }
@@ -102,7 +125,47 @@ class CLIHelper {
      * @return The integer entered by the user
      */
     private static int parseInt(String message){
-        print("> %s:", message);
+        println("> %s:", message);
         return parseInt();
     }
+
+    /* ===== SPINNERS AND LOADING ===== */
+
+    /**
+     * Prints the current frame of the spinner
+     * By using backspace character it updates the previous character to make it seem an animation
+     */
+    static void printSpinner(){
+        Character currentSpinnerSymbol = spinnerStack.remove();
+        print("\b");
+        print(currentSpinnerSymbol.toString());
+        spinnerStack.add(currentSpinnerSymbol);
+    }
+
+    /**
+     * Starts showing the spinner
+     * The animation is updated every 100ms
+     */
+    static void startSpinner(){
+        timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                CLIHelper.printSpinner();
+            }
+        }, 0, 100);
+    }
+
+    /**
+     * Stops showing the spinner and adds a new line below it
+     */
+    static void stopSpinner(){
+        if(timer != null) {
+            timer.cancel();
+            timer = null;
+            println("");
+        }
+    }
+
+    /* ================================ */
 }

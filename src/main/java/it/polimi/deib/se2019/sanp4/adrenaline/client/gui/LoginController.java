@@ -1,6 +1,7 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.client.gui;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.LoginException;
+import it.polimi.deib.se2019.sanp4.adrenaline.view.ViewScene;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
@@ -57,6 +58,7 @@ public class LoginController extends GUIController {
         try {
             clientView.getServerConnection().login(username.getValue());
             new Alert(Alert.AlertType.INFORMATION, "Succesfully connected", ButtonType.OK).showAndWait();
+            clientView.selectScene(ViewScene.LOBBY);
             //TODO: Handle successful login
         } catch (IOException e) {
             new Alert(Alert.AlertType.ERROR, "A network error occurred").showAndWait();

@@ -10,10 +10,14 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
-public class GUIRenderer extends Application implements UIRenderer{
+import java.io.IOException;
+
+public class GUIRenderer extends Application implements UIRenderer {
 
     private ClientView clientView;
-    /** The stage of the app to update scenes */
+    /**
+     * The stage of the app to update scenes
+     */
     private Stage stage;
 
     @Override
@@ -42,5 +46,60 @@ public class GUIRenderer extends Application implements UIRenderer{
 
         LoginController loginController = loader.getController();
         loginController.setClientView(clientView);
+    }
+
+    /**
+     * Retrieve the controller associated to the provided fxml resource
+     * @param fxmlResource The path of the resource
+     * @return The object representing the controller
+     */
+    private Object getController(String fxmlResource){
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource(fxmlResource));
+        return loader.getController();
+    }
+
+
+    @Override
+    public void showLobby() {
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("/fxml/lobby.fxml"));
+        try {
+            Scene lobbyScene = new Scene(loader.load());
+            this.stage.setScene(lobbyScene);
+
+            LobbyController lobbyController = loader.getController();
+            lobbyController.setClientView(clientView);
+        } catch (IOException e) {
+            // An error occurred loading the scene
+            //TODO: Handle error
+        }
+    }
+
+    /**
+     * Notify the user about the imminent start of the game
+     */
+    @Override
+    public void startWaitingMatch() {
+        LobbyController lobbyController = (LobbyController)getController("/fxml/lobby.fxml");
+        lobbyController.showMatchWaiting();
+    }
+
+    /**
+     * Cancel the waiting indicators when the game start is cancelled (e.g. due to lack of players)
+     */
+    @Override
+    public void cancelWaitingMatch() {
+        LobbyController lobbyController = (LobbyController)getController("/fxml/lobby.fxml");
+        lobbyController.hideMatchWaiting();
+    }
+
+    /**
+     * Prepare the client for the game
+     * Triggered when the match starts
+     */
+    @Override
+    public void showMatchScreen() {
+        //TODO: Implement this method
     }
 }
