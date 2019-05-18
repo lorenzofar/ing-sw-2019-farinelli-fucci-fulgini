@@ -5,11 +5,11 @@ import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.LoginException;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.network.RemoteServer;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.network.RemoteView;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.Observable;
-import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.Observer;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.ModelUpdate;
 
 import java.io.IOException;
 import java.rmi.Naming;
+import java.rmi.NoSuchObjectException;
 import java.rmi.NotBoundException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.logging.Level;
@@ -28,7 +28,6 @@ public class RMIServerConnection extends Observable<ModelUpdate> implements Serv
      */
     public RMIServerConnection(ClientView view){
         this.view = view;
-        //TODO: Complete constructor and finish implementation of methods
     }
 
     @Override
@@ -36,8 +35,11 @@ public class RMIServerConnection extends Observable<ModelUpdate> implements Serv
         if (server == null) return false;
         try {
             server.ping();
+            /* Connection is active */
             return true;
         } catch (IOException e) {
+            /* Cannot contact the server, so close the connection */
+            close();
             return false;
         }
     }
@@ -76,7 +78,18 @@ public class RMIServerConnection extends Observable<ModelUpdate> implements Serv
      */
     @Override
     public void close() {
-        /* TODO: Implement this method */
+        logger.log(Level.INFO, "Closing RMI connection");
+        /* Forget about the server */
+        server = null;
+
+        /* Un-export the stub */
+        if (viewStub == null) return;
+        try {
+            UnicastRemoteObject.unexportObject(viewStub, false);
+        } catch (NoSuchObjectException e) {
+            logger.log(Level.WARNING, "Could not un-export the view stub");
+        }
+        viewStub = null;
     }
 
     @Override
