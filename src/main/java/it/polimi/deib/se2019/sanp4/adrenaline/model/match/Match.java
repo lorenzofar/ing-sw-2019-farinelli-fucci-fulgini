@@ -76,15 +76,12 @@ public class Match {
 
     /**
      * Retrieves a player by using the specified name
-     * @param playerName The name of the player, not null and not empty
+     * @param playerName The name of the player
      * @return The object representing the player, null if the player does not exist
      */
     public Player getPlayerByName(String playerName){
         if(playerName == null){
-            throw new NullPointerException("Player name cannot be null");
-        }
-        if(playerName.isEmpty()){
-            throw new IllegalArgumentException("Player name cannot be empty");
+            return null;
         }
         Optional<Player> player = players.stream().filter(p -> p.getName().equals(playerName)).findFirst();
         return player.orElse(null);
@@ -131,7 +128,7 @@ public class Match {
     }
 
     /**
-     * Removes a player from the match
+     * Sets the player state to {@link PlayerState#LEFT}
      * @param player The username of the player, not null
      * @throws IllegalStateException If the player is not present
      */
@@ -144,7 +141,6 @@ public class Match {
             throw new IllegalStateException("Player does not exist in the match");
         }
         removedPlayer.setState(PlayerState.LEFT);
-        players.remove(removedPlayer);
     }
 
     /**
@@ -178,11 +174,11 @@ public class Match {
 
 
     /**
-     * Retrieves a list of the players participating in the match
-     * @return The list of objects representing the players
+     * Retrieves an unmodifiable list of the players participating in the match
+     * @return an unmodifiable list of players
      */
     public List<Player> getPlayers(){
-        return new ArrayList<>(players);
+        return Collections.unmodifiableList(players);
     }
 
     /**
@@ -204,6 +200,21 @@ public class Match {
         //TODO: Finish implementing this method
     }
 
+    /**
+     * Adds a killshot to the killshots track from the provided player
+     * @param player The object representing the player, not null
+     * @throws FullCapacityException If the killshots track is full
+     */
+    public void addKillshot(Player player) throws FullCapacityException{
+        if(player == null){
+            throw new NullPointerException(NULL_PLAYER_ERROR);
+        }
+        if(killshotsTrack.size() >= skulls){
+            throw new FullCapacityException(skulls);
+        }
+        killshotsTrack.add(player);
+    }
+
     /* ===== GETTERS ===== */
 
     /**
@@ -220,21 +231,6 @@ public class Match {
      */
     public List<Player> getKillshotsTrack(){
         return Collections.unmodifiableList(killshotsTrack);
-    }
-
-    /**
-     * Adds a killshot to the killshots track from the provided player
-     * @param player The object representing the player, not null
-     * @throws FullCapacityException If the killshots track is full
-     */
-    public void addKillshot(Player player) throws FullCapacityException{
-        if(player == null){
-            throw new NullPointerException(NULL_PLAYER_ERROR);
-        }
-        if(killshotsTrack.size() >= skulls){
-            throw new FullCapacityException(skulls);
-        }
-        killshotsTrack.add(player);
     }
 
     /**
