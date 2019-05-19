@@ -127,21 +127,7 @@ public class Match {
         suspendedPlayer.setState(PlayerState.SUSPENDED);
     }
 
-    /**
-     * Sets the player state to {@link PlayerState#LEFT}
-     * @param player The username of the player, not null
-     * @throws IllegalStateException If the player is not present
-     */
-    public void removePlayer(String player){
-        if(player == null){
-            throw new NullPointerException(NULL_PLAYER_ERROR);
-        }
-        Player removedPlayer = getPlayerByName(player);
-        if(removedPlayer == null){
-            throw new IllegalStateException("Player does not exist in the match");
-        }
-        removedPlayer.setState(PlayerState.LEFT);
-    }
+    /* ===== TURN METHODS ===== */
 
     /**
      * Retrieves the current turn

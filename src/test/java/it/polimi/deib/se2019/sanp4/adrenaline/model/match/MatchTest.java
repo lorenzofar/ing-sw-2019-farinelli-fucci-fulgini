@@ -37,6 +37,22 @@ public class MatchTest {
         mockMatch = MatchCreator.createMatch(validNames, validConfig);
     }
 
+    /* ======== TEST CREATION ========= */
+
+    @Test
+    public void create_positiveSkulls_shouldCreate() {
+        /* Try to create a new match */
+        Match match = new Match(5);
+
+        assertEquals(5, match.getSkulls());
+        assertTrue(match.getKillshotsTrack().isEmpty());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void create_negativeSkulls_shouldThrow() {
+        new Match(-5);
+    }
+
     /* ======== TEST FAILING SETTERS ========= */
 
     @Test(expected = NullPointerException.class)
@@ -121,28 +137,4 @@ public class MatchTest {
         /* Unsuspend the player in order not to have side-effects */
         player.setState(PlayerState.ONLINE);
     }
-
-    @Test(expected = NullPointerException.class)
-    public void removePlayer_null_shouldThrow() {
-        mockMatch.removePlayer(null);
-    }
-
-    @Test(expected = IllegalStateException.class)
-    public void removePlayer_inexistent_shouldThrow() {
-        mockMatch.removePlayer("inexistent");
-    }
-
-    @Test
-    public void removePlayer_existent_shouldSetToLeft() {
-        mockMatch.removePlayer("bzoto");
-
-        /* Check that the player has been suspended (and that it's still in the list of players) */
-        Player player = mockMatch.getPlayerByName("bzoto");
-        assertEquals(PlayerState.LEFT, player.getState());
-
-        /* Unsuspend the player in order not to have side-effects */
-        player.setState(PlayerState.ONLINE);
-    }
-
-
 }
