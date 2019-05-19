@@ -30,6 +30,7 @@ import java.util.*;
 public class Match {
 
     private static final String NULL_PLAYER_ERROR = "Player cannot be null";
+    private static final String NULL_CARD_STACK = "Cannot set card stack to null";
 
     public static final int MAX_PLAYERS = 5;
     private final int skulls;
@@ -62,41 +63,25 @@ public class Match {
      * Creates a new match for the provided players.
      * It initializes the card stacks using the provided ones.
      * It also sets the number of skulls according to the corresponding parameter.
-     * @param players The players playing the match, not null and not containing null values
-     * @param ammoStack The stack of ammo tiles, not null
-     * @param weaponStack The stack of weapon cards, not null
-     * @param powerupStack The stack of powerup cards, not null
      * @param skulls The number of skulls in the killshots track, must be positive
+     * @throws IllegalArgumentException if the skulls are negative
      */
-    Match(List<Player> players, CardStack<AmmoCard> ammoStack, CardStack<WeaponCard> weaponStack, CardStack<PowerUpCard> powerupStack, int skulls){
-        if(players == null || ammoStack == null || weaponStack == null || powerupStack == null){
-            throw new NullPointerException("Found null parameters");
-        }
-        if(players.contains(null)){
-            throw new NullPointerException("Players list cannot contain null values");
-        }
+    Match(int skulls){
         if(skulls < 0){
             throw new IllegalArgumentException("Skulls count cannot be negative");
         }
-        this.players = players;
-        this.ammoStack = ammoStack;
-        this.weaponStack = weaponStack;
-        this.powerupStack = powerupStack;
         this.killshotsTrack = new ArrayList<>();
         this.skulls = skulls;
     }
 
     /**
      * Retrieves a player by using the specified name
-     * @param playerName The name of the player, not null and not empty
+     * @param playerName The name of the player
      * @return The object representing the player, null if the player does not exist
      */
     public Player getPlayerByName(String playerName){
         if(playerName == null){
-            throw new NullPointerException("Player name cannot be null");
-        }
-        if(playerName.isEmpty()){
-            throw new IllegalArgumentException("Player name cannot be empty");
+            return null;
         }
         Optional<Player> player = players.stream().filter(p -> p.getName().equals(playerName)).findFirst();
         return player.orElse(null);
@@ -143,7 +128,7 @@ public class Match {
     }
 
     /**
-     * Removes a player from the match
+     * Sets the player state to {@link PlayerState#LEFT}
      * @param player The username of the player, not null
      * @throws IllegalStateException If the player is not present
      */
@@ -156,7 +141,6 @@ public class Match {
             throw new IllegalStateException("Player does not exist in the match");
         }
         removedPlayer.setState(PlayerState.LEFT);
-        players.remove(removedPlayer);
     }
 
     /**
@@ -190,11 +174,11 @@ public class Match {
 
 
     /**
-     * Retrieves a list of the players participating in the match
-     * @return The list of objects representing the players
+     * Retrieves an unmodifiable list of the players participating in the match
+     * @return an unmodifiable list of players
      */
     public List<Player> getPlayers(){
-        return new ArrayList<>(players);
+        return Collections.unmodifiableList(players);
     }
 
     /**
@@ -216,6 +200,21 @@ public class Match {
         //TODO: Finish implementing this method
     }
 
+    /**
+     * Adds a killshot to the killshots track from the provided player
+     * @param player The object representing the player, not null
+     * @throws FullCapacityException If the killshots track is full
+     */
+    public void addKillshot(Player player) throws FullCapacityException{
+        if(player == null){
+            throw new NullPointerException(NULL_PLAYER_ERROR);
+        }
+        if(killshotsTrack.size() >= skulls){
+            throw new FullCapacityException(skulls);
+        }
+        killshotsTrack.add(player);
+    }
+
     /* ===== GETTERS ===== */
 
     /**
@@ -235,21 +234,6 @@ public class Match {
     }
 
     /**
-     * Adds a killshot to the killshots track from the provided player
-     * @param player The object representing the player, not null
-     * @throws FullCapacityException If the killshots track is full
-     */
-    public void addKillshot(Player player) throws FullCapacityException{
-        if(player == null){
-            throw new NullPointerException(NULL_PLAYER_ERROR);
-        }
-        if(killshotsTrack.size() >= skulls){
-            throw new FullCapacityException(skulls);
-        }
-        killshotsTrack.add(player);
-    }
-
-    /**
      * Retrieves the game board
      * @return The object representing the game board
      */
@@ -262,7 +246,6 @@ public class Match {
      * @return The stack of objects representing the ammo cards
      */
     public CardStack<AmmoCard> getAmmoStack() {
-        //TODO: Implement this method
         return ammoStack;
     }
 
@@ -271,7 +254,6 @@ public class Match {
      * @return The stack of objects representing the weapon cards
      */
     public CardStack<WeaponCard> getWeaponStack() {
-        //TODO: Implement this method
         return weaponStack;
     }
 
@@ -280,7 +262,35 @@ public class Match {
      * @return The stack of objects representing the powerup cards
      */
     public CardStack<PowerUpCard> getPowerupStack() {
-        //TODO: Implement this method
         return powerupStack;
+    }
+
+    /* ===== SETTERS ===== */
+
+    /* The following setters must only be used by MatchCreator when creating the match */
+
+    void setBoard(Board board) {
+        if (board == null) throw new NullPointerException("Cannot set board to null");
+        this.board = board;
+    }
+
+    void setAmmoStack(CardStack<AmmoCard> ammoStack) {
+        if (ammoStack == null) throw new NullPointerException();
+        this.ammoStack = ammoStack;
+    }
+
+    void setWeaponStack(CardStack<WeaponCard> weaponStack) {
+        if (weaponStack == null) throw new NullPointerException(NULL_CARD_STACK);
+        this.weaponStack = weaponStack;
+    }
+
+    void setPowerupStack(CardStack<PowerUpCard> powerupStack) {
+        if (powerupStack == null) throw new NullPointerException(NULL_CARD_STACK);
+        this.powerupStack = powerupStack;
+    }
+
+    void setPlayers(List<Player> players) {
+        if (players == null) throw new NullPointerException(NULL_CARD_STACK);
+        this.players = players;
     }
 }

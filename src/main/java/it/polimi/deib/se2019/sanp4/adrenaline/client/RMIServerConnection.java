@@ -1,19 +1,21 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.client;
 
+import it.polimi.deib.se2019.sanp4.adrenaline.common.events.ViewEvent;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.LoginException;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.network.RemoteServer;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.network.RemoteView;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.Observable;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.ModelUpdate;
-import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.Observer;
 
 import java.io.IOException;
 import java.rmi.Naming;
+import java.rmi.NoSuchObjectException;
 import java.rmi.NotBoundException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class RMIServerConnection implements ServerConnection {
+public class RMIServerConnection extends Observable<ModelUpdate> implements ServerConnection {
     private RemoteServer server;
     private ClientView view;
     private RemoteView viewStub;
@@ -24,9 +26,8 @@ public class RMIServerConnection implements ServerConnection {
      * Creates an disconnected RMI connection
      * @param view The view using this connection
      */
-    RMIServerConnection(ClientView view){
+    public RMIServerConnection(ClientView view){
         this.view = view;
-        //TODO: Complete constructor and finish implementation of methods
     }
 
     @Override
@@ -34,8 +35,11 @@ public class RMIServerConnection implements ServerConnection {
         if (server == null) return false;
         try {
             server.ping();
+            /* Connection is active */
             return true;
         } catch (IOException e) {
+            /* Cannot contact the server, so close the connection */
+            close();
             return false;
         }
     }
@@ -66,6 +70,28 @@ public class RMIServerConnection implements ServerConnection {
         }
     }
 
+    /**
+     * Attempts to close the connection with the server.
+     * If the connection was active, it will be closed,
+     * if it was already inactive or closed, nothing will happen.
+     * Subsequent calls to {@link #isActive()} will return {@code false}
+     */
+    @Override
+    public void close() {
+        logger.log(Level.INFO, "Closing RMI connection");
+        /* Forget about the server */
+        server = null;
+
+        /* Un-export the stub */
+        if (viewStub == null) return;
+        try {
+            UnicastRemoteObject.unexportObject(viewStub, false);
+        } catch (NoSuchObjectException e) {
+            logger.log(Level.WARNING, "Could not un-export the view stub");
+        }
+        viewStub = null;
+    }
+
     @Override
     public void login(String username) throws IOException, LoginException {
         if (server == null) throw new IOException("Connection is not active");
@@ -83,17 +109,7 @@ public class RMIServerConnection implements ServerConnection {
     }
 
     @Override
-    public void addObserver(Observer<ModelUpdate> observer) {
-        /* TODO: Implement this method */
-    }
-
-    @Override
-    public void removeObserver(Observer<ModelUpdate> observer) {
-        /* TODO: Implement this method */
-    }
-
-    @Override
-    public void update(Object event) {
+    public void update(ViewEvent event) {
         /* TODO: Handle updates coming from ClientView, if we need to */
     }
 }

@@ -55,8 +55,14 @@ public class BoardCreatorTest {
 
     @Ignore
     @Test
-    public void loadBoardPack_standardPack_shouldSucceed() {
-        /* TODO: Test the standard pack once we have one */
+    public void loadBoardPack_standardPack_shouldSucceed() throws BoardNotFoundException {
+        BoardCreator.loadBoardPack("/assets/standard_boards.json");
+
+        /* Check that all the boards have been loaded and try to create them */
+        for (int i = 0; i < 4; i++) {
+            assertTrue(BoardCreator.isBoardAvailable(i));
+            assertNotNull(BoardCreator.createBoard(i));
+        }
     }
 
     public void checkTestBoard(Board board){

@@ -12,9 +12,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.MissingResourceException;
+import java.util.*;
 
 /**
  * Static resource class which loads weapons from configuration file and makes them available as a service.
@@ -96,6 +94,28 @@ public class WeaponCreator {
 
         InputStream input = JSONUtils.class.getResourceAsStream(weaponConfigMap.get(weaponId));
         return objectMapper.readValue(input, WeaponCard.class);
+    }
+
+    /**
+     * Returns a collection with new instances of the weapon cards loaded until now,
+     * suitable for initialising a card stack.
+     * @return the collection of loaded weapon cards
+     * @throws IOException if a card that was previously loaded cannot be read from file
+     * (should never happen in normal scenarios)
+     */
+    public static Collection<WeaponCard> createWeaponCardDeck() throws IOException {
+        Collection<WeaponCard> cards = new LinkedList<>();
+        InputStream input;
+        WeaponCard card;
+
+        /* Iterate on the weapon config files */
+        for (String path : weaponConfigMap.values()) {
+            input = JSONUtils.class.getResourceAsStream(path);
+            card = objectMapper.readValue(input, WeaponCard.class);
+            cards.add(card);
+        }
+
+        return cards;
     }
 
     /**

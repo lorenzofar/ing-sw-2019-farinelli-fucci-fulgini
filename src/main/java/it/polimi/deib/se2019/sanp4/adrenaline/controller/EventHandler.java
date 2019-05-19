@@ -2,6 +2,7 @@ package it.polimi.deib.se2019.sanp4.adrenaline.controller;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.common.events.ViewEvent;
 
+/* TODO: Get rid of this */
 /**
  * Describes an object that can handle an event and update the match accordingly
  */
