@@ -4,7 +4,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.common.events.ViewEvent;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.network.RemoteView;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.Model;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
-import it.polimi.deib.se2019.sanp4.adrenaline.server.ServerProperties;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.AdrenalineProperties;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,7 +15,7 @@ public class ControllerImpl implements Controller {
     public static final int MAX_MOVE_STEPS = 3; //TODO: Check this attribute
 
     /** The maximum time of a turn, loaded from properties with a default value of 3 minutes */
-    private static final int MAX_TURN_TICKS = (int) ServerProperties.getProperties().getOrDefault("adrenaline.turntime", 1800);
+    private static final int MAX_TURN_TICKS = (int) AdrenalineProperties.getProperties().getOrDefault("adrenaline.turntime", 1800);
 
     /** Associated model instance */
     private Model model;

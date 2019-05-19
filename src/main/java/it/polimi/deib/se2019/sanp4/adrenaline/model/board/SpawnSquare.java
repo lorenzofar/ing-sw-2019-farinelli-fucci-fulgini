@@ -3,7 +3,7 @@ package it.polimi.deib.se2019.sanp4.adrenaline.model.board;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.CardNotFoundException;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.FullCapacityException;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.WeaponCard;
-import it.polimi.deib.se2019.sanp4.adrenaline.server.ServerProperties;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.AdrenalineProperties;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -17,7 +17,7 @@ public class SpawnSquare extends Square {
      * Load the maximum number of weapons a spawn square can hold
      * Fall back to a default value of 3 weapons if none is set
      */
-    public static final int MAX_WEAPON_CARDS = (int) ServerProperties.getProperties()
+    public static final int MAX_WEAPON_CARDS = (int) AdrenalineProperties.getProperties()
             .getOrDefault("adrenaline.maxspawnweapons", 3);
 
     /** The list of weapon cards contained in the square */

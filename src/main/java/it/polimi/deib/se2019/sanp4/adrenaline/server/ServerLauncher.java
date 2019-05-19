@@ -1,5 +1,7 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.server;
 
+import it.polimi.deib.se2019.sanp4.adrenaline.common.AdrenalineProperties;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -11,7 +13,7 @@ public class ServerLauncher {
     public static void main(String[] args){
         ServerImpl server = new ServerImpl();
 
-        ServerProperties properties = ServerProperties.getProperties();
+        AdrenalineProperties properties = AdrenalineProperties.getProperties();
 
         // Load configuration for the logger
         // First we check whether the user provided a config file

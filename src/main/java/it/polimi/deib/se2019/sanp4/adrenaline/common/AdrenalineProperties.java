@@ -1,4 +1,4 @@
-package it.polimi.deib.se2019.sanp4.adrenaline.server;
+package it.polimi.deib.se2019.sanp4.adrenaline.common;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -9,7 +9,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /** A class extending the Properties class to load and retrieve properties used by the server. Uses the singleton pattern */
-public class ServerProperties extends Properties {
+public class AdrenalineProperties extends Properties {
 
     /** Default file name of the config file */
     private static final String CONFIG_FILENAME = "server.properties";
@@ -25,15 +25,15 @@ public class ServerProperties extends Properties {
             "adrenaline.skullscount"
     };
 
-    private static ServerProperties instance = new ServerProperties();
+    private static AdrenalineProperties instance = new AdrenalineProperties();
 
-    private static final Logger logger = Logger.getLogger(ServerProperties.class.getName());
+    private static final Logger logger = Logger.getLogger(AdrenalineProperties.class.getName());
 
     /**
      * Returns the instance of the class
      * @return The object representing the instance
      */
-    public static ServerProperties getProperties() {
+    public static AdrenalineProperties getProperties() {
         return instance;
     }
 

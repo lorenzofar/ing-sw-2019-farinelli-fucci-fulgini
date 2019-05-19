@@ -1,5 +1,6 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.server;
 
+import it.polimi.deib.se2019.sanp4.adrenaline.common.AdrenalineProperties;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.LoginException;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.network.RemoteServer;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.network.RemoteView;
@@ -34,7 +35,7 @@ public class ServerImpl implements SocketServer, RemoteServer, Runnable, Callbac
      * Load the time to wait before starting a new game
      * Fall back to a default value of 3 minutes if none is set
      */
-    private static final int WAITING_TIME = (int)ServerProperties.getProperties().getOrDefault("adrenaline.waitingtime", 1800);
+    private static final int WAITING_TIME = (int) AdrenalineProperties.getProperties().getOrDefault("adrenaline.waitingtime", 1800);
 
     private static final int MIN_GAME_PLAYERS = 3;
 
@@ -65,8 +66,8 @@ public class ServerImpl implements SocketServer, RemoteServer, Runnable, Callbac
      */
     @Override
     public void run() {
-        int rmiPort = (int)ServerProperties.getProperties().getOrDefault("adrenaline.rmiport", 1099);
-        int socketPort = (int)ServerProperties.getProperties().getOrDefault("adrenaline.socketport", 3000);
+        int rmiPort = (int) AdrenalineProperties.getProperties().getOrDefault("adrenaline.rmiport", 1099);
+        int socketPort = (int) AdrenalineProperties.getProperties().getOrDefault("adrenaline.socketport", 3000);
         startRMI(rmiPort);
         startSocket(socketPort);
     }
