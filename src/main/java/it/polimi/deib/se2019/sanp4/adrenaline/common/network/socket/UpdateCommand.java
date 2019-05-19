@@ -2,6 +2,7 @@ package it.polimi.deib.se2019.sanp4.adrenaline.common.network.socket;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import it.polimi.deib.se2019.sanp4.adrenaline.client.ClientView;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.ModelUpdate;
 
 /**
@@ -36,6 +37,9 @@ public class UpdateCommand implements SocketClientCommand {
      */
     @Override
     public void applyOn(SocketClientCommandTarget target) {
-        /* TODO: Apply this on the client */
+        ClientView view = target.getClientView();
+
+        /* Notify the view (observer) with given update */
+        view.update(update);
     }
 }

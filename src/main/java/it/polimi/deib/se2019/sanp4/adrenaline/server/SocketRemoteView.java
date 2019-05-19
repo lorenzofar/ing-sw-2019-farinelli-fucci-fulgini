@@ -7,8 +7,9 @@ import it.polimi.deib.se2019.sanp4.adrenaline.common.events.ViewEvent;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.network.RemoteView;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.network.socket.*;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.RemoteObservable;
-import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.ModelUpdate;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.ChoiceRequest;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.ModelUpdate;
+
 import it.polimi.deib.se2019.sanp4.adrenaline.utils.JSONUtils;
 import it.polimi.deib.se2019.sanp4.adrenaline.view.MessageType;
 import it.polimi.deib.se2019.sanp4.adrenaline.view.ViewScene;
@@ -75,8 +76,10 @@ public class SocketRemoteView extends RemoteObservable<ViewEvent>
                 commandLoop();
             }
         } catch (IOException e) {
-            /* TODO: Handle disconnection */
+            logger.log(Level.WARNING, "Connection problems on client \"{0}\"", username);
         }
+        /* When finished close the connection */
+        closeConnection();
     }
 
     /** See {@link #run()} */
@@ -143,7 +146,7 @@ public class SocketRemoteView extends RemoteObservable<ViewEvent>
 
     @Override
     public void selectScene(ViewScene scene) throws IOException {
-        //TODO: Implement this method
+        sendCommand(new SelectSceneCommand(scene));
     }
 
     /**
@@ -154,6 +157,26 @@ public class SocketRemoteView extends RemoteObservable<ViewEvent>
     @Override
     public void update(ModelUpdate update) throws IOException {
         sendCommand(new UpdateCommand(update));
+    }
+
+    /**
+     * Notifies subscribed observers with given event
+     *
+     * @param event the event to notify to observers
+     */
+    @Override
+    public void notifyEvent(ViewEvent event) {
+        notifyObservers(event);
+    }
+
+    /**
+     * Checks connectivity to the client
+     *
+     * @throws IOException If there is no connectivity
+     */
+    @Override
+    public void ping() throws IOException {
+        sendCommand(new PingCommand());
     }
 
     /**
@@ -189,22 +212,16 @@ public class SocketRemoteView extends RemoteObservable<ViewEvent>
     }
 
     /**
-     * Notifies subscribed observers with given event
-     *
-     * @param event the event to notify to observers
+     * Closes the socket connection
      */
-    @Override
-    public void notifyEvent(ViewEvent event) {
-        notifyObservers(event);
-    }
-
-    /**
-     * Checks connectivity to the client
-     *
-     * @throws IOException If there is no connectivity
-     */
-    @Override
-    public void ping() throws IOException {
-        /* TODO: Implement this method */
+    private void closeConnection() {
+        if (!socket.isClosed()) {
+            try {
+                logger.log(Level.INFO, "Closing connection for player \"{0}\"", username);
+                socket.close();
+            } catch (IOException e) {
+                logger.log(Level.INFO, "Could not close connection", e);
+            }
+        }
     }
 }

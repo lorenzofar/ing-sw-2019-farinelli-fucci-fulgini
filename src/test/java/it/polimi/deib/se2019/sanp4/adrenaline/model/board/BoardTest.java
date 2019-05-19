@@ -1,10 +1,27 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.model.board;
 
+import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.BoardNotFoundException;
+import it.polimi.deib.se2019.sanp4.adrenaline.utils.JSONUtils;
+import org.junit.After;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 
 public class BoardTest {
+    @BeforeClass
+    public static void setUp() {
+        /* Load schemas for validation */
+        JSONUtils.loadBoardPackSchema("/schemas/board_pack.schema.json");
+        JSONUtils.loadBoardSchema("/schemas/board.schema.json");
+    }
+
+    @After
+    public void tearDown() {
+        /* Bring it to its original state */
+        BoardCreator.reset();
+    }
+
 
     @Test(expected = IllegalArgumentException.class)
     public void createBoard_NegativeValueProvided_ShouldThrowIllegalArgumentException(){
@@ -72,6 +89,43 @@ public class BoardTest {
         board.getNavigableSquares(start, -1);
     }
 
+    @Test
+    public void isReachable_EnoughMaxMoves() throws BoardNotFoundException {
+        BoardCreator.loadBoard("/assets/std_boards/board_1.json");
+        Board board = BoardCreator.createBoard(1);
+        CoordPair start = new CoordPair(0,0);
+        CoordPair end = new CoordPair(3,2);
+        assertTrue(board.isReachable(start, end, 5));
+    }
+
+    @Test
+    public void isReachable_SameSquareProvided() throws BoardNotFoundException {
+        BoardCreator.loadBoard("/assets/std_boards/board_1.json");
+        Board board = BoardCreator.createBoard(1);
+        CoordPair start = new CoordPair(0,0);
+        CoordPair end = new CoordPair(3,2);
+        assertTrue(board.isReachable(start, start, 0));
+    }
+
+    @Test
+    public void getVisibleSquares() throws BoardNotFoundException {
+        BoardCreator.loadBoard("/assets/std_boards/board_1.json");
+        Board board = BoardCreator.createBoard(1);
+        CoordPair start = new CoordPair(0,0);
+        assertEquals(6, board.getVisibleSquares(board.getSquare(start)).size());
+    }
+
+    @Test
+    public void getScopedSquares() throws BoardNotFoundException {
+        BoardCreator.loadBoard("/assets/std_boards/board_1.json");
+        Board board = BoardCreator.createBoard(1);
+        CoordPair start = new CoordPair(0,0);
+        assertEquals(2, board.getScopedSquares(start, VisibilityEnum.VISIBLE, CardinalDirection.E,
+                                1,2).size());
+        start = new CoordPair(0,1);
+        assertEquals(3, board.getScopedSquares(start, VisibilityEnum.VISIBLE, CardinalDirection.E,
+                0,5).size());
+    }
 
 
 }

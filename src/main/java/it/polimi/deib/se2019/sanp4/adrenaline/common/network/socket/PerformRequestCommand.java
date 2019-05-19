@@ -2,6 +2,7 @@ package it.polimi.deib.se2019.sanp4.adrenaline.common.network.socket;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import it.polimi.deib.se2019.sanp4.adrenaline.client.ClientView;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.ChoiceRequest;
 
 /**
@@ -36,6 +37,9 @@ public class PerformRequestCommand implements SocketClientCommand {
      */
     @Override
     public void applyOn(SocketClientCommandTarget target) {
-        /* TODO: Apply the command on client */
+        ClientView view = target.getClientView();
+
+        /* Call the method on the view */
+        view.performRequest(request);
     }
 }

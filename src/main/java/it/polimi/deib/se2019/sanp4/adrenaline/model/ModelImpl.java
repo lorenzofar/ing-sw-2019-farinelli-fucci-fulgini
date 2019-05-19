@@ -9,20 +9,46 @@ public class ModelImpl extends RemoteRoutingObservable<ModelUpdate> implements M
     /** The match associated to the model */
     private Match match;
 
+    /** The operational state of the match */
+    private MatchOperationalState operationalState;
+
+    /**
+     * Creates an empty model.
+     * The initial operational state is {@link MatchOperationalState#WAITING_PLAYERS}
+     */
     ModelImpl(){
         //TODO: Finish the constructor
+        operationalState = MatchOperationalState.WAITING_PLAYERS;
     }
 
+    /**
+     * Returns match instance associated to this model.
+     *
+     * @return match instance
+     */
     @Override
     public Match getMatch() {
         return match;
     }
 
-    @Override
-    public void setMatch(Match match) {
+    /**
+     * Sets the current match to given match
+     * @param match match instance
+     */
+    void setMatch(Match match) {
         if(match == null){
             throw new NullPointerException("Match cannot be null");
         }
         this.match = match;
+    }
+
+    /**
+     * Returns the operational state of the match
+     *
+     * @return the operational state of the match
+     */
+    @Override
+    public MatchOperationalState getOperationalState() {
+        return operationalState;
     }
 }

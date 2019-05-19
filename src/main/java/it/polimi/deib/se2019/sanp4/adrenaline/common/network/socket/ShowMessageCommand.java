@@ -2,6 +2,7 @@ package it.polimi.deib.se2019.sanp4.adrenaline.common.network.socket;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import it.polimi.deib.se2019.sanp4.adrenaline.client.ClientView;
 import it.polimi.deib.se2019.sanp4.adrenaline.view.MessageType;
 
 /**
@@ -52,6 +53,9 @@ public class ShowMessageCommand implements SocketClientCommand {
      */
     @Override
     public void applyOn(SocketClientCommandTarget target) {
+        ClientView view = target.getClientView();
 
+        /* Call method on the view */
+        view.showMessage(text, messageType);
     }
 }

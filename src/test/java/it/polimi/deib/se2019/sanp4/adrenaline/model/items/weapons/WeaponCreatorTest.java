@@ -1,6 +1,7 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.CardNotFoundException;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCubeCost;
 import it.polimi.deib.se2019.sanp4.adrenaline.utils.JSONUtils;
 import org.everit.json.schema.ValidationException;
@@ -10,6 +11,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -55,12 +57,6 @@ public class WeaponCreatorTest {
     }
 
     @Test
-    public void loadWeaponPack_standardPack_shouldSucceed() {
-        WeaponCreator.loadWeaponPack("/assets/standard_weapons.json");
-        assertTrue(true);
-    }
-
-    @Test
     public void createWeaponCard_validWeapon_shouldCreate() throws CardNotFoundException, IOException {
         /* Load a test cyberblade */
         WeaponCreator.loadWeapon("/assets/test_weapons/validweapon.json");
@@ -101,5 +97,18 @@ public class WeaponCreatorTest {
     @Test(expected = CardNotFoundException.class)
     public void createWeaponCard_notLoaded_shouldThrow() throws CardNotFoundException, IOException {
         WeaponCreator.createWeaponCard("cyberblade");
+    }
+
+    @Test
+    public void createWeaponCardDeck_standardPack_shouldSucceed() throws IOException {
+        /* Load and validate the standard pack */
+        WeaponCreator.loadWeaponPack("/assets/standard_weapons.json");
+
+        /* Create a deck from the standard pack */
+        Collection<WeaponCard> cards = WeaponCreator.createWeaponCardDeck();
+
+        /* Check the number of cards */
+        assertEquals(21, cards.size());
+        /* TODO: Check the card ids */
     }
 }

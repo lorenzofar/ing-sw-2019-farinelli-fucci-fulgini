@@ -1,0 +1,9 @@
+{
+  "packName": "Valid board pack",
+  "boardFiles": [
+    "/assets/std_boards/board_0.json",
+    "/assets/std_boards/board_1.json",
+    "/assets/std_boards/board_2.json",
+    "/assets/std_boards/board_3.json"
+  ]
+}

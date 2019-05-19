@@ -55,8 +55,14 @@ public class BoardCreatorTest {
 
     @Ignore
     @Test
-    public void loadBoardPack_standardPack_shouldSucceed() {
-        /* TODO: Test the standard pack once we have one */
+    public void loadBoardPack_standardPack_shouldSucceed() throws BoardNotFoundException {
+        BoardCreator.loadBoardPack("/assets/standard_boards.json");
+
+        /* Check that all the boards have been loaded and try to create them */
+        for (int i = 0; i < 4; i++) {
+            assertTrue(BoardCreator.isBoardAvailable(i));
+            assertNotNull(BoardCreator.createBoard(i));
+        }
     }
 
     public void checkTestBoard(Board board){
@@ -120,7 +126,13 @@ public class BoardCreatorTest {
         assertEquals(board.getSquare(connectedSquare), board.getSquare(currAdjacent.getConnection(CardinalDirection.N).getSquare()));
         connectedSquare = new CoordPair(1,1);
         assertEquals(board.getSquare(connectedSquare), board.getSquare(currAdjacent.getConnection(CardinalDirection.W).getSquare()));
-
+        /* Verifying that the spawn points are in the correct position */
+        CoordPair spawn = new CoordPair(0,0);
+        assertEquals(spawn, board.getSpawnPoints().get(AmmoCube.RED).getLocation());
+        spawn = new CoordPair(2,0);
+        assertEquals(spawn, board.getSpawnPoints().get(AmmoCube.BLUE).getLocation());
+        spawn = new CoordPair(1,1);
+        assertEquals(spawn, board.getSpawnPoints().get(AmmoCube.YELLOW).getLocation());
     }
 
     @Test
