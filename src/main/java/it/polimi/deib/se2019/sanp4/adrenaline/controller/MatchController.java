@@ -131,35 +131,6 @@ public class MatchController {
     }
 
     /**
-     * Picks the next player and sets up his turn
-     */
-    public void selectNextTurn(){
-        // We first retrieve the owner of the current turn
-        Player currentPlayer = controller.getModel().getMatch().getCurrentTurn().getTurnOwner();
-        // Then we retrieve the list of all the players that can actually play
-        List<Player> players = controller.getModel().getMatch().getPlayers().stream().filter(player -> player.getState().canPlay()).collect(Collectors.toList());
-        // We determine the index of the current player
-        int index = players.indexOf(currentPlayer);
-        // Then we increase the index by 1 to rotate clockwise
-        index++;
-        // We check whether we arrived at the end of the list
-        // If yes, we start again
-        if(index >= players.size()) {
-            index = 0;
-            if(controller.getModel().getMatch().isFrenzy()){
-                // The match was in frenzy mode
-                // so here the last player has completed its turn
-                // and we're ready to end the game and perform final scoring
-                endMatch();
-            }
-        }
-        // We create a new turn for the next player
-        PlayerTurn newTurn = new PlayerTurn(players.get(index));
-        // We set the newly created turn as the current one
-        controller.getModel().getMatch().setCurrentTurn(newTurn);
-    }
-
-    /**
      * Prepares the game to transition to frenzy mode
      */
     public void setupFrenzyMode(){

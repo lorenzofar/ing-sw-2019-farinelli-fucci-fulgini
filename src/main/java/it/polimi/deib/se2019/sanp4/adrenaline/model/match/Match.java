@@ -59,6 +59,9 @@ public class Match {
     /** A flag indicating whether the match is in frenzy mode or not */
     private boolean frenzy;
 
+    /** A reference to the last player of the match */
+    private Player lastPlayer;
+
     /**
      * Creates a new match for the provided players.
      * It initializes the card stacks using the provided ones.
@@ -74,18 +77,7 @@ public class Match {
         this.skulls = skulls;
     }
 
-    /**
-     * Retrieves a player by using the specified name
-     * @param playerName The name of the player
-     * @return The object representing the player, null if the player does not exist
-     */
-    public Player getPlayerByName(String playerName){
-        if(playerName == null){
-            return null;
-        }
-        Optional<Player> player = players.stream().filter(p -> p.getName().equals(playerName)).findFirst();
-        return player.orElse(null);
-    }
+    /* ===== TURN METHODS ===== */
 
     /**
      * Determines whether the current turn belongs to the provided player.
@@ -127,30 +119,47 @@ public class Match {
         suspendedPlayer.setState(PlayerState.SUSPENDED);
     }
 
-    /* ===== TURN METHODS ===== */
-
     /**
-     * Retrieves the current turn
-     * @return The object representing the current turn
+     * Based on the current turn, picks the next player who is able to play
+     * and sets up its turn.
+     * If there are no online players, this will keep the current turn.
+     * This methods requires the list of players not to be empty
      */
-    public PlayerTurn getCurrentTurn(){
-        return currentTurn;
-    }
+    public void selectNextTurn(){
+        int currentPlayerIndex;
 
-    /**
-     * Sets the current turn
-     * @param currentTurn The object representing the current turn
-     */
-    public void setCurrentTurn(PlayerTurn currentTurn){
-        if(currentTurn == null){
-            throw new NullPointerException("Current turn cannot be null");
+        if (currentTurn == null){
+            /* This is the first turn, so pick the first player who is able to play */
+            currentPlayerIndex = -1;
+        } else {
+            /* Get the index of the player owning the current turn */
+            currentPlayerIndex = players.indexOf(currentTurn.getTurnOwner());
         }
-        this.currentTurn = currentTurn;
+
+
+        Player nextPlayer;
+        PlayerTurn nextTurn = null;
+        int nextPlayerIndex = currentPlayerIndex + 1; /* Go to the next player */
+        do {
+            /* If we reached the end of the list, we start again */
+            if (nextPlayerIndex >= players.size()) nextPlayerIndex = 0;
+
+            nextPlayer = players.get(nextPlayerIndex);
+
+            if (nextPlayer.getState().canPlay()) {
+                /* This player is the next player */
+                nextTurn = new PlayerTurn(nextPlayer);
+                setCurrentTurn(nextTurn); /* Set it as the new turn and notify the players */
+            } else {
+                nextPlayerIndex++;
+            }
+        } while (nextTurn == null /* Stop if there are no players who are able to play */
+                && nextPlayerIndex != currentPlayerIndex + 1);
     }
 
 
     /**
-     * Ends the current turn
+     * Ends the current turn, if the owner of the turn was the last one, also ends the match
      */
     public void endCurrentTurn(){
         // Update the state of the current turn
@@ -158,14 +167,7 @@ public class Match {
         //TODO: Finish implementing this method
     }
 
-
-    /**
-     * Retrieves an unmodifiable list of the players participating in the match
-     * @return an unmodifiable list of players
-     */
-    public List<Player> getPlayers(){
-        return Collections.unmodifiableList(players);
-    }
+    /* ===== FRENZY METHODS ===== */
 
     /**
      * Determines whether the match is in frenzy mode or not
@@ -202,6 +204,35 @@ public class Match {
     }
 
     /* ===== GETTERS ===== */
+
+    /**
+     * Retrieves an unmodifiable list of the players participating in the match
+     * @return an unmodifiable list of players
+     */
+    public List<Player> getPlayers(){
+        return Collections.unmodifiableList(players);
+    }
+
+    /**
+     * Retrieves a player by using the specified name
+     * @param playerName The name of the player
+     * @return The object representing the player, null if the player does not exist
+     */
+    public Player getPlayerByName(String playerName){
+        if(playerName == null){
+            return null;
+        }
+        Optional<Player> player = players.stream().filter(p -> p.getName().equals(playerName)).findFirst();
+        return player.orElse(null);
+    }
+
+    /**
+     * Retrieves the current turn
+     * @return The object representing the current turn
+     */
+    public PlayerTurn getCurrentTurn(){
+        return currentTurn;
+    }
 
     /**
      * Retrieves the number of skulls left on the killshots track
@@ -253,6 +284,17 @@ public class Match {
 
     /* ===== SETTERS ===== */
 
+    /**
+     * Sets the current turn.
+     * A null value will reset the turn sequence, i.e. the first player will be the
+     * next selected player when calling {@link #selectNextTurn()}, so a null value
+     * should be passed only for test purposes
+     * @param currentTurn The object representing the current turn
+     */
+    public void setCurrentTurn(PlayerTurn currentTurn){
+        this.currentTurn = currentTurn;
+    }
+
     /* The following setters must only be used by MatchCreator when creating the match */
 
     void setBoard(Board board) {
@@ -278,5 +320,9 @@ public class Match {
     void setPlayers(List<Player> players) {
         if (players == null) throw new NullPointerException(NULL_CARD_STACK);
         this.players = players;
+    }
+
+    void setLastPlayer(Player player) {
+        this.lastPlayer = player;
     }
 }
