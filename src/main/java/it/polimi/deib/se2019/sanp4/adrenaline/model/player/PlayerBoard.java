@@ -2,9 +2,7 @@ package it.polimi.deib.se2019.sanp4.adrenaline.model.player;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.AdrenalineProperties;
-import it.polimi.deib.se2019.sanp4.adrenaline.utils.jackson.PlayerStringSerializer;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -41,7 +39,6 @@ public class PlayerBoard{
     private List<Player> damages;
 
     /** Number of marks received by each player */
-    @JsonSerialize(keyUsing = PlayerStringSerializer.class)
     private Map<Player, Integer> marks;
 
     /** Number of times the player died, either by killshot or overkill */
