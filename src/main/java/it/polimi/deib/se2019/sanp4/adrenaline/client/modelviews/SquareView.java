@@ -1,6 +1,7 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.client.modelviews;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.CardinalDirection;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.board.CoordPair;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.RoomColor;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.SquareConnectionType;
 
@@ -13,6 +14,12 @@ import java.util.Set;
  * A lightweight representation of a square in the view
  */
 public class SquareView {
+
+    /**
+     * The location of the square in cartesian coordinates
+     */
+    private CoordPair location;
+
     /**
      * Set of players inside the square
      */
@@ -26,13 +33,23 @@ public class SquareView {
      */
     private Map<CardinalDirection, SquareConnectionType> adjacentMap;
 
-    public SquareView(RoomColor roomColor) {
-        //TODO: Check null color
+    public SquareView(CoordPair location, RoomColor roomColor) {
+        //TODO: Check null color and location
+        this.location = location;
         this.roomColor = roomColor;
         this.players = new HashSet<>();
         this.adjacentMap = new EnumMap<>(CardinalDirection.class);
         //TODO: Check creation of adjacent map
     }
+
+    /**
+     * Retrieve the location of the square in cartesian coordinates
+     * @return The object representing the location
+     */
+    private CoordPair getLocation(){
+        return location;
+    }
+
 
     /**
      * Retrieves the players inside the square
@@ -85,10 +102,11 @@ public class SquareView {
 
     /**
      * Sets the map of adjacency of the square
+     *
      * @param adjacentMap The object representing the map
      */
-    public void setAdjacentMap(Map<CardinalDirection, SquareConnectionType> adjacentMap){
-        if(adjacentMap != null){
+    public void setAdjacentMap(Map<CardinalDirection, SquareConnectionType> adjacentMap) {
+        if (adjacentMap != null) {
             this.adjacentMap = adjacentMap;
         }
     }

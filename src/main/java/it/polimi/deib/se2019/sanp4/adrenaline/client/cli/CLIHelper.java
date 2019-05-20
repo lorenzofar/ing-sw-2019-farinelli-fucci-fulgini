@@ -1,7 +1,9 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.client.cli;
 
+import it.polimi.deib.se2019.sanp4.adrenaline.client.modelviews.BoardView;
 import it.polimi.deib.se2019.sanp4.adrenaline.client.modelviews.SquareView;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.CardinalDirection;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.board.CoordPair;
 
 import java.util.*;
 
@@ -233,6 +235,7 @@ class CLIHelper {
 
     /**
      * Render the provided square to be printable in a command line
+     *
      * @param square The object representing the square
      * @return The list of all the rows the rendered square is composed of.
      * Each row is a list of string containing all the cells of the rendered square.
@@ -267,6 +270,35 @@ class CLIHelper {
         // Then eventually put the correct ANSI code for the square color
         squareRows.forEach(row -> row.add(0, square.getRoomColor().getANSICode()));
 
+        //TODO: Add additional information inside the square (e.g. players, items...)
+
         return squareRows;
+    }
+
+    public static void printBoard(BoardView board) {
+        int width = board.getColumnsCount();
+        int height = board.getRowsCount();
+        // We define an initial list of lists to hold the rendered board
+        List<List<String>> boardRows = new ArrayList<>();
+
+        // We then proceed by considering each row
+        for (int r = 0; r < height; r++) {
+            // Then for each row we have to take all the squares that are inside it and append their rendered value
+            // We add the first square of the row
+            List<List<String>> rowSquares = renderSquare(board.getSquare(new CoordPair(0, r)));
+            for (int c = 1; c < width; c++) {
+                // We concatenate all the squares in the row
+                // by adding all the lists to the previous ones
+                List<List<String>> renderedSquare = renderSquare(board.getSquare(new CoordPair(c, r)));
+                for(int i = 0; i<rowSquares.size(); i++){
+                    rowSquares.get(i).addAll(renderedSquare.get(i));
+                }
+            }
+            // We then concatenate the row with the previous one
+            boardRows.addAll(rowSquares);
+        }
+
+        // Eventually we print the result
+        boardRows.forEach(row -> println(String.join("", row)));
     }
 }
