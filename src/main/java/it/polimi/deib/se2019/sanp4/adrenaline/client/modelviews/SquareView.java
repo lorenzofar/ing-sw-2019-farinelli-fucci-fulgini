@@ -2,7 +2,7 @@ package it.polimi.deib.se2019.sanp4.adrenaline.client.modelviews;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.CardinalDirection;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.RoomColor;
-import it.polimi.deib.se2019.sanp4.adrenaline.model.board.SquareConnection;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.board.SquareConnectionType;
 
 import java.util.EnumMap;
 import java.util.HashSet;
@@ -24,7 +24,7 @@ public class SquareView {
     /**
      * Adjacency map of the connected squares
      */
-    private Map<CardinalDirection, SquareConnection> adjacentMap;
+    private Map<CardinalDirection, SquareConnectionType> adjacentMap;
 
     public SquareView(RoomColor roomColor) {
         //TODO: Check null color
@@ -79,7 +79,17 @@ public class SquareView {
      *
      * @return The object representing the map
      */
-    public Map<CardinalDirection, SquareConnection> getAdjacentMap() {
+    public Map<CardinalDirection, SquareConnectionType> getAdjacentMap() {
         return adjacentMap;
+    }
+
+    /**
+     * Sets the map of adjacency of the square
+     * @param adjacentMap The object representing the map
+     */
+    public void setAdjacentMap(Map<CardinalDirection, SquareConnectionType> adjacentMap){
+        if(adjacentMap != null){
+            this.adjacentMap = adjacentMap;
+        }
     }
 }

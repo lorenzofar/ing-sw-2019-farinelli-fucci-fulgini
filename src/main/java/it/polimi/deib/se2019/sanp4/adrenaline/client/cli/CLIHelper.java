@@ -1,5 +1,8 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.client.cli;
 
+import it.polimi.deib.se2019.sanp4.adrenaline.client.modelviews.SquareView;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.board.CardinalDirection;
+
 import java.util.*;
 
 /**
@@ -224,5 +227,46 @@ class CLIHelper {
         print(ANSI_RED);
         println(errorMessage);
         resetColor();
+    }
+
+    /* ===== SQUARES ===== */
+
+    /**
+     * Render the provided square to be printable in a command line
+     * @param square The object representing the square
+     * @return The list of all the rows the rendered square is composed of.
+     * Each row is a list of string containing all the cells of the rendered square.
+     */
+    static List<List<String>> renderSquare(SquareView square) {
+        // We first initialize the main list
+        List<List<String>> squareRows = new ArrayList<>();
+
+        // We initialize all the rows by putting blank cells
+        for (int i = 0; i < SQUARE_DIM / 2; i++) {
+            squareRows.add(new ArrayList<>(Collections.nCopies(SQUARE_DIM, " ")));
+        }
+
+        // We then build left and right edges, by setting the first and last character of each row according to the connection type
+        squareRows.forEach(row -> {
+            row.set(0, square.getAdjacentMap().get(CardinalDirection.W).getCharacterRepresentation());
+            row.set(row.size() - 1, square.getAdjacentMap().get(CardinalDirection.E).getCharacterRepresentation());
+        });
+
+        // Then we take top and bottom border and we update their characters according to the connection type
+        List<String> topBorder = squareRows.get(0);
+        List<String> bottomBorder = squareRows.get(squareRows.size() - 1);
+        topBorder.replaceAll(s -> square.getAdjacentMap().get(CardinalDirection.N).getCharacterRepresentation());
+        bottomBorder.replaceAll(s -> square.getAdjacentMap().get(CardinalDirection.S).getCharacterRepresentation());
+
+        // We add corners around the square
+        topBorder.set(0, "╔");
+        topBorder.set(topBorder.size() - 1, "╗");
+        bottomBorder.set(0, "╚");
+        bottomBorder.set(bottomBorder.size() - 1, "╝");
+
+        // Then eventually put the correct ANSI code for the square color
+        squareRows.forEach(row -> row.add(0, square.getRoomColor().getANSICode()));
+
+        return squareRows;
     }
 }
