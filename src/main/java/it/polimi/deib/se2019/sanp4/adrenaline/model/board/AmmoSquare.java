@@ -1,6 +1,8 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.model.board;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCard;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.match.CardStack;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.match.Match;
 
 /** A specialized class representing a square containing ammo cards */
 public class AmmoSquare extends Square {
@@ -18,7 +20,7 @@ public class AmmoSquare extends Square {
      * Creates a new ammo square at the specified location
      * @param location The cartesian coordinates of the location
      */
-    AmmoSquare(CoordPair location){
+    public AmmoSquare(CoordPair location){
         super(location);
         this.ammoCard = null;
     }
@@ -53,5 +55,30 @@ public class AmmoSquare extends Square {
             throw new NullPointerException("Ammo cannot be null");
         }
         this.ammoCard = ammo;
+    }
+
+    /**
+     * If there's is no ammo card in the square, draws an ammo card from the stack
+     * and fills in the square.
+     *
+     * @param match instance of the match this square belongs to
+     */
+    @Override
+    public void refill(Match match) {
+        if (ammoCard == null) {
+            /* Get the ammo card stack */
+            CardStack<AmmoCard> stack = match.getAmmoStack();
+            insertAmmo(stack.draw());
+        }
+    }
+
+    /**
+     * Checks whether there is an ammo card in this square or not
+     *
+     * @return {@code true} if there is an ammo card, {@code false} if not
+     */
+    @Override
+    public boolean isFull() {
+        return ammoCard != null;
     }
 }

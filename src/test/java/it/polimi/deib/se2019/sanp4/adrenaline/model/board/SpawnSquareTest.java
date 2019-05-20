@@ -5,11 +5,13 @@ import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.FullCapacityExce
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCubeCost;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.EffectDescription;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.WeaponCard;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.match.Match;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -131,5 +133,21 @@ public class SpawnSquareTest {
         WeaponCard grabbed =  square.grabWeaponCard(card1.getId());
         assertEquals(card1, grabbed); /* Check that it is the right card */
         assertFalse(square.getWeaponCards().contains(card1)); /* Check that it has been removed */
+    }
+
+    @Test
+    public void isFull_fullCapacity_shouldReturnTrue() throws FullCapacityException {
+        /* Fill the square */
+        for (int i = 0; i < SpawnSquare.MAX_WEAPON_CARDS; i++) {
+            square.insertWeaponCard(buildWeaponCard(i));
+        }
+
+        /* Check that it is full */
+        assertTrue(square.isFull());
+    }
+
+    @Test
+    public void isFull_newSquare_shouldReturnFalse() {
+        assertFalse(square.isFull());
     }
 }

@@ -4,6 +4,8 @@ import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.CardNotFoundExce
 import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.FullCapacityException;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.WeaponCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.AdrenalineProperties;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.match.CardStack;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.match.Match;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -82,9 +84,36 @@ public class SpawnSquare extends Square {
             throw new IllegalStateException("Weapon is already on the square");
         }
 
-        if(weaponCards.size() >= MAX_WEAPON_CARDS){
+        if(isFull()){
             throw new FullCapacityException(MAX_WEAPON_CARDS);
         }
         this.weaponCards.add(weapon);
+    }
+
+    /**
+     * Checks whether this square has the maximum number of weapon cards
+     * @return {@code true} if the maximum number of weapon cards is reached, {@code false} if there are empty spaces
+     */
+    public boolean isFull(){
+        return weaponCards.size() >= MAX_WEAPON_CARDS;
+    }
+
+    /**
+     * Refills the weapon cards in the square from the weapon card stack in the match.
+     * If the square is already full, nothing happens
+     *
+     * @param match instance of the match this square belongs to, not null
+     */
+    @Override
+    public void refill(Match match) {
+        /* Get the stack of weapon cards */
+        CardStack<WeaponCard> stack = match.getWeaponStack();
+
+        /* Draw the cards until the square is full */
+        while (!isFull()) {
+            // We bypass the check for duplicates:
+            // if the card is already on this square, it is certainly not in the stack
+            weaponCards.add(stack.draw());
+        }
     }
 }

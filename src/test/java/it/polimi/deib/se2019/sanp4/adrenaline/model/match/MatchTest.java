@@ -1,13 +1,21 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.model.match;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.model.ModelTestUtil;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.board.AmmoSquare;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.board.CoordPair;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.board.SpawnSquare;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.board.Square;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCard;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCardCreator;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.WeaponCard;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.WeaponCreator;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.PlayerState;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.io.IOException;
+import java.util.*;
 
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
@@ -196,5 +204,54 @@ public class MatchTest {
         /* Delete side-effects */
         suspended.setState(PlayerState.ONLINE);
         mockMatch.setCurrentTurn(null);
+    }
+
+    @Test
+    public void refillAmmoSquare_empty_ShouldBeRefilled() {
+        /* Create an empty match instance */
+        Match match = new Match(5);
+
+        /* Create an ammo card stack with a bunch of cards */
+        CardStack<AmmoCard> stack = new AutoShufflingStack<>(AmmoCardCreator.getAmmoCardDeck());
+        match.setAmmoStack(stack);
+
+        /* Create a new AmmoSquare (empty) and refill it from the stack */
+        AmmoSquare square = new AmmoSquare(new CoordPair(2, 3));
+        square.refill(match);
+
+        /* Check that it has been refilled */
+        assertTrue(square.isFull());
+
+        /* Now try to refill it again and check that the ammo card is not changed */
+        AmmoCard card = square.getAmmoCard();
+        square.refill(match);
+        assertEquals(card, square.getAmmoCard());
+    }
+
+    @Test
+    public void refillSpawnSquare_empty_shouldBeRefilled() throws IOException {
+        /* Create an empty match instance */
+        Match match = new Match(5);
+
+        /* Create a weapon card stack with a bunch of cards */
+        CardStack<WeaponCard> stack = new AutoShufflingStack<>(WeaponCreator.createWeaponCardDeck());
+        match.setWeaponStack(stack);
+
+        /* Now refill an empty SpawnSquare */
+        SpawnSquare square = new SpawnSquare(new CoordPair(2, 3));
+        square.refill(match);
+
+        /* Check that it is full */
+        assertTrue(square.isFull());
+    }
+
+    @Test
+    public void refillBoard_shouldRefillSquares() {
+        /* Use the mock match */
+        mockMatch.refillBoard();
+
+        /* Check that all the squares in the board are now full */
+        Collection<Square> squares = mockMatch.getBoard().getSquares();
+        squares.forEach(sq -> assertTrue(sq.isFull()));
     }
 }

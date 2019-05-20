@@ -2,6 +2,7 @@ package it.polimi.deib.se2019.sanp4.adrenaline.model.match;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.FullCapacityException;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.Board;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.board.Square;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.powerup.PowerupCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.WeaponCard;
@@ -199,6 +200,17 @@ public class Match {
             throw new FullCapacityException(skulls);
         }
         killshotsTrack.add(player);
+    }
+
+    /**
+     * Refills all the squares in the board with their items (e.g. weapons, powerups)
+     * drawn from the stacks. Calls {@link Square#refill(Match)} on each square of the board
+     */
+    void refillBoard() {
+        Collection<Square> squares = board.getSquares();
+        for (Square sq : squares) {
+            sq.refill(this);
+        }
     }
 
     /* ===== GETTERS ===== */

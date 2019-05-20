@@ -3,6 +3,7 @@ package it.polimi.deib.se2019.sanp4.adrenaline.model.board;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.PlayerNotFoundException;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.match.Match;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
 
 import java.util.*;
@@ -77,6 +78,21 @@ public abstract class Square {
         }
         this.players.remove(player);
     }
+
+    /**
+     * Refills the content of the square (e.g. weapons, powerups) from the stacks in the match.
+     * If the square is already full, nothing happens
+     * @param match instance of the match this square belongs to
+     */
+    public abstract void refill(Match match);
+
+    /**
+     * Checks whether this square has the maximum number of items (ammo, weapons) it can contain
+     * @return whether the square is full
+     */
+    public abstract boolean isFull();
+
+    /* ===== GETTERS AND SETTERS ===== */
 
     /**
      * Retrieves all the players that are currently inside the square
