@@ -308,7 +308,7 @@ public class Board {
      * @return A collection of objects representing the squares
      */
     public Collection<Square> getSquares() {
-        return Arrays.stream(squares).flatMap(Arrays::stream).collect(Collectors.toList());
+        return Arrays.stream(squares).flatMap(Arrays::stream).filter(Objects::nonNull).collect(Collectors.toList());
     }
 
     /**
