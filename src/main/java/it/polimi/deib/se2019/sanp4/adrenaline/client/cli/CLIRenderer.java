@@ -63,6 +63,7 @@ public class CLIRenderer implements UIRenderer {
                 clientView.getServerConnection().connect(serverHostname);
                 connected = true;
             } catch (IOException e) {
+                CLIHelper.printError("Error connecting to the server");
                 connected = false;
             }
         }
@@ -80,9 +81,9 @@ public class CLIRenderer implements UIRenderer {
                 clientView.getServerConnection().login(username);
                 loggedIn = true;
             } catch (IOException e) {
-                CLIHelper.println("An error occurred while logging in");
+                CLIHelper.printError("An error occurred while logging in");
             } catch (LoginException e) {
-                CLIHelper.println("The username is not available");
+                CLIHelper.printError("The username is not available");
                 loggedIn = false;
                 username = CLIHelper.parseString("Enter your username");
             }
