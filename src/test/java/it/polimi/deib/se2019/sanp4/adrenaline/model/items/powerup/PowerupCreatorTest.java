@@ -1,7 +1,5 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.model.items.powerup;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCube;
 import it.polimi.deib.se2019.sanp4.adrenaline.utils.JSONUtils;
 import org.json.JSONException;
@@ -9,13 +7,10 @@ import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Collection;
-import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.assertTrue;
 
 public class PowerupCreatorTest {
 
@@ -55,6 +50,12 @@ public class PowerupCreatorTest {
         /* Check that there are no additional cards */
         int expectedSize = AmmoCube.values().length * PowerupEnum.values().length * 2;
         assertEquals(expectedSize, cards.size());
+    }
+
+    @Test
+    public void createPowerupDeck_notLoaded_shouldReturnEmptyDeck() {
+        Collection<PowerupCard> cards = PowerupCreator.createPowerupDeck();
+        assertTrue(cards.isEmpty());
     }
 
     @Test(expected = JSONException.class)

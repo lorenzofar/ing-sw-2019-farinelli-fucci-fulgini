@@ -81,6 +81,6 @@ public class PowerupCreator {
      * The class is brought back to its original state
      */
     static void reset(){
-        if (powerupMap != null) powerupMap.clear();
+        if (powerupMap != null) powerupMap = null;
     }
 }
