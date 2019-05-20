@@ -6,7 +6,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.NotEnoughAmmoExc
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCube;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.Square;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCubeCost;
-import it.polimi.deib.se2019.sanp4.adrenaline.model.items.powerup.PowerUpCard;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.items.powerup.PowerupCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.WeaponCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.AdrenalineProperties;
@@ -64,7 +64,7 @@ public class Player{
     private List<WeaponCard> weapons;
 
     /** Powerup cards in player's hands */
-    private List<PowerUpCard> powerups;
+    private List<PowerupCard> powerups;
 
     /** Ammo cubes for each color */
     private Map<AmmoCube, Integer> ammo;
@@ -339,7 +339,7 @@ public class Player{
      * Retrieves the powerup cards owned by the player
      * @return The list of objects representing the powerup cards
      */
-    public List<PowerUpCard> getPowerups(){
+    public List<PowerupCard> getPowerups(){
         return new ArrayList<>(powerups);
     }
 
@@ -349,13 +349,9 @@ public class Player{
      * @param powerup powerup card to be added, not null
      * @throws FullCapacityException if the powerups limit has been reached
      */
-    public void addPowerup(PowerUpCard powerup) throws FullCapacityException{
+    public void addPowerup(PowerupCard powerup) throws FullCapacityException{
         if(powerup == null){
             throw new NullPointerException("Powerup card cannot be null");
-        }
-
-        if(powerups.contains(powerup)){
-            throw new IllegalStateException("Player already owns the powerup");
         }
 
         if(powerups.size() >= MAX_POWERUPS){
@@ -370,7 +366,7 @@ public class Player{
      * @return removed powerup card
      * @throws IllegalStateException if the powerup does not belong to the user
      */
-    public PowerUpCard removePowerup(PowerUpCard powerup) {
+    public PowerupCard removePowerup(PowerupCard powerup) {
         if(powerup == null){
             throw new NullPointerException("Powerup card cannot be null");
         }

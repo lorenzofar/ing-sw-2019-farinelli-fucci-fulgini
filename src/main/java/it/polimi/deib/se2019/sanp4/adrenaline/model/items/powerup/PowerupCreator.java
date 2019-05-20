@@ -1,12 +1,15 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.model.items.powerup;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCube;
 import it.polimi.deib.se2019.sanp4.adrenaline.utils.JSONUtils;
 import org.everit.json.schema.ValidationException;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
 
 /**
@@ -16,62 +19,19 @@ import java.util.*;
  */
 public class PowerupCreator {
 
-    /* Utility class to store info for each powerup on the deck */
-    private static class PowerupInfo {
-        private final String id;
-        private final String name;
-        private final String description;
-        /* Saves the number of powerups of this type on the deck for each color */
-        private final Map<AmmoCube, Integer> colorCount;
+    /** The first key is the type of the powerup, the second key is the color of that type, the value is the number
+     * of powerups in the deck for that particular color/type combination
+     */
+    private static Map<PowerupEnum, Map<AmmoCube, Integer>> powerupMap;
 
-        PowerupInfo(String id, String name, String description) {
-            if (id == null || name == null || description == null) throw new NullPointerException();
-            if (id.isEmpty() || name.isEmpty() || description.isEmpty()) {
-                throw new IllegalArgumentException("Found empty initialization field");
-            }
-            this.id = id;
-            this.name = name;
-            this.description = description;
-
-            /* Initialize the colorCount for each color to zero */
-            this.colorCount = new EnumMap<>(AmmoCube.class);
-            for (AmmoCube color : AmmoCube.values()){
-                colorCount.put(color, 0);
-            }
-        }
-
-        public String getId() {
-            return id;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public String getDescription() {
-            return description;
-        }
-
-        void addAmount(AmmoCube color, int increment){
-            if (increment < 0) throw new IllegalArgumentException("Increment cannot be negative!");
-            /* Get the old value */
-            int old = colorCount.get(color);
-            colorCount.put(color, old + increment);
-        }
-
-        public Map<AmmoCube, Integer> getColorCount() {
-            return colorCount;
-        }
-    }
-
-    /** For each powerup type(key) holds information about the powerup itself and how many of them will be on the deck */
-    private static final Map<String, PowerupInfo> powerupInfoMap = new HashMap<>();
+    private static ObjectMapper mapper = JSONUtils.getObjectMapper();
 
     /** The class is static, so it cannot be instantiated */
     private PowerupCreator(){}
 
     /**
-     * Loads and validates all powerups specified in a powerup pack file
+     * Loads and validates all powerups specified in a powerup pack file.
+     * Note that if another pack was previously loaded, the loaded content is overwritten
      * @param filePath resource path of the Powerup Pack JSON file
      * @throws MissingResourceException if the required file is not found
      * @throws JSONException if anything goes wrong while parsing JSON
@@ -84,39 +44,13 @@ public class PowerupCreator {
         /* Validate it */
         JSONUtils.validatePowerupPack(pack);
 
-        /* Now extract the different types and build an info class for each */
-        JSONArray pwTypes = pack.getJSONArray("types");
-
-        for (int i = 0; i < pwTypes.length(); i++) {
-            loadPowerupType(pwTypes.getJSONObject(i));
+        /* Use Jackson to do the job */
+        InputStream input = PowerupCreator.class.getResourceAsStream(filePath);
+        try {
+            powerupMap = mapper.readValue(input, new TypeReference<Map<PowerupEnum, Map<AmmoCube, Integer>>>() {});
+        } catch (IOException e) {
+            throw new JSONException(e);
         }
-
-        /* Now load and set the parameters for the deck (color and count) */
-        JSONArray deck = pack.getJSONArray("deck");
-
-        for (int i = 0; i < deck.length(); i++) {
-            loadDeckEntry(deck.getJSONObject(i));
-        }
-    }
-
-    /**
-     * Returns a new powerup card of required type with the selected ammo cube color
-     * @param type type identifier of the powerup
-     * @param color color of the ammo cube
-     * @return powerup card
-     * @throws IllegalArgumentException if the powerup type does no exist
-     */
-    public static PowerUpCard createPowerupCard(String type, AmmoCube color) {
-        PowerupInfo info = powerupInfoMap.get(type);
-
-        if (info == null) throw new IllegalArgumentException(String.format("Powerup type \"%s\" does not exist", type));
-
-        return new PowerUpCard(
-                info.id,
-                info.name,
-                info.description,
-                color
-        );
     }
 
     /**
@@ -125,65 +59,21 @@ public class PowerupCreator {
      * the powerup stack.
      * @return a collection with all the powerups in the deck
      */
-    public static Collection<PowerUpCard> createPowerupDeck() {
+    public static Collection<PowerupCard> createPowerupDeck() {
         /* Build the empty list */
-        Collection<PowerUpCard> list = new LinkedList<>();
+        Collection<PowerupCard> deck = new LinkedList<>();
 
-        /* Loop on each powerup type */
-        for(PowerupInfo info : powerupInfoMap.values()) {
-            /* Get the count for each color in a map */
-            Map<AmmoCube, Integer> colorCount = info.getColorCount();
-
-            for (Map.Entry<AmmoCube, Integer> entry: colorCount.entrySet()) {
-                /* Key is color, value is count */
-                /* Add the specified amount of cards of this color to the list */
-                for (int i = 0; i < entry.getValue(); i++) {
-                    list.add(new PowerUpCard(
-                            info.getId(),
-                            info.getName(),
-                            info.getDescription(),
-                            entry.getKey()
-                    ));
+        if (powerupMap != null) {
+            /* Loop on each powerup type and color */
+            powerupMap.forEach((type, colors) -> colors.forEach((color, count) -> {
+                for (int i = 0; i < count; i++) {
+                    /* Add the specified amount of powerups of given type and color */
+                    deck.add(new PowerupCard(type, color));
                 }
-            }
+            }));
         }
 
-        return list;
-    }
-
-    /**
-     * Utility function to load and build the PowerupInfo object for each type.
-     * @param pwType JSON object from the "types" array
-     */
-    private static void loadPowerupType(JSONObject pwType) {
-        /* Extract information from JSON attributes */
-        String id = pwType.getString("id");
-        PowerupInfo info = new PowerupInfo(
-                id, pwType.getString("name"), pwType.getString("description"));
-
-        /* Insert it into the map */
-        powerupInfoMap.put(id, info);
-    }
-
-    /**
-     * Utility function: loads each entry of the "deck" array into the PowerupInfo object.
-     * @param entry JSON entry in the "deck" array
-     */
-    private static void loadDeckEntry(JSONObject entry) {
-
-        /* Check that the required powerup type exists */
-        String id = entry.getString("type");
-        if (!powerupInfoMap.containsKey(id)){
-            throw new IllegalArgumentException(String.format("Powerup type \"%s\" has not been declared", id));
-        }
-
-        /* Extract remaining fields */
-        AmmoCube color = AmmoCube.valueOf(entry.getString("color"));
-        int count = entry.getInt("count");
-
-        /* Increment the count */
-        PowerupInfo info = powerupInfoMap.get(id);
-        info.addAmount(color, count);
+        return deck;
     }
 
     /**
@@ -191,6 +81,6 @@ public class PowerupCreator {
      * The class is brought back to its original state
      */
     static void reset(){
-        powerupInfoMap.clear();
+        if (powerupMap != null) powerupMap.clear();
     }
 }

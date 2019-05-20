@@ -1,7 +1,7 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.client.modelviews;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCube;
-import it.polimi.deib.se2019.sanp4.adrenaline.model.items.powerup.PowerUpCard;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.items.powerup.PowerupCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.WeaponCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.PlayerColor;
 
@@ -42,7 +42,7 @@ public class PlayerView {
     /**
      * The list of powerups belonging to the player
      */
-    private List<PowerUpCard> powerups;
+    private List<PowerupCard> powerups;
 
     public PlayerView(String name, PlayerColor color) {
         this.name = name;
@@ -168,7 +168,7 @@ public class PlayerView {
      *
      * @return The list of objects representing the powerup cards
      */
-    public List<PowerUpCard> getPowerups() {
+    public List<PowerupCard> getPowerups() {
         return powerups;
     }
 
@@ -177,7 +177,7 @@ public class PlayerView {
      *
      * @param powerUpCard The object representing the powerup card
      */
-    public void addPowerup(PowerUpCard powerUpCard) {
+    public void addPowerup(PowerupCard powerUpCard) {
         if (powerUpCard != null) {
             powerups.add(powerUpCard);
         }
@@ -188,7 +188,7 @@ public class PlayerView {
      *
      * @param powerUpCard The object representing the powerup card
      */
-    public void removePowerup(PowerUpCard powerUpCard) {
+    public void removePowerup(PowerupCard powerUpCard) {
         if (powerUpCard != null) {
             powerups.remove(powerUpCard);
         }

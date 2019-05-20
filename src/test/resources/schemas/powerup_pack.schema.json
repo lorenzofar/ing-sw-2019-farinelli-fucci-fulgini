@@ -4,58 +4,30 @@
   "title" : "Powerup Pack",
   "type" : "object",
   "definitions": {
-    "powerupType": {
+    "count" : {
+      "type": "integer",
+      "minimum": 0
+    },
+    "colorCount": {
       "type": "object",
       "properties": {
-        "id": {
-          "type": "string",
-          "minLength": 1
-        },
-        "name": {
-          "type": "string",
-          "minLength": 1
-        },
-        "description": {
-          "type": "string",
-          "minLength": 1
-        }
+        "RED": { "$ref": "#/definitions/count" },
+        "YELLOW": { "$ref": "#/definitions/count" },
+        "BLUE": { "$ref": "#/definitions/count" }
       },
-      "required": ["id", "name", "description"]
-    },
-    "cubeColor": {
-      "type": "string",
-      "enum": ["RED", "YELLOW", "BLUE"]
+      "required": ["RED", "YELLOW", "BLUE"]
     }
   },
   "properties": {
-    "types": {
-      "description": "Define the different types of powerups",
-      "type": "array",
-      "items": {
-        "$ref": "#/definitions/powerupType"
-      }
-    },
     "deck": {
-      "description": "Describes how the powerup deck is composed",
-      "type": "array",
-      "items": {
-        "type": "object",
-        "properties": {
-          "type": {
-            "description": "Id of the powerupType",
-            "type": "string",
-            "minLength": 1
-          },
-          "color": {
-            "$ref": "#/definitions/cubeColor"
-          },
-          "count": {
-            "description": "How many of these will there be in the deck?",
-            "type": "integer",
-            "minimum": 1
-          }
-        }
-      }
+      "type": "object",
+      "properties": {
+        "TARGETING_SCOPE": { "$ref": "#/definitions/colorCount" },
+        "NEWTON": { "$ref": "#/definitions/colorCount" },
+        "TAGBACK": { "$ref": "#/definitions/colorCount" },
+        "TELEPORTER": { "$ref": "#/definitions/colorCount" }
+      },
+      "required": ["TARGETING_SCOPE", "NEWTON", "TAGBACK", "TELEPORTER"]
     }
   }
 }

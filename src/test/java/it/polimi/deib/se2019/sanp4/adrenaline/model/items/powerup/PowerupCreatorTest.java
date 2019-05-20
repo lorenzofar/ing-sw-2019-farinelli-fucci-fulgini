@@ -1,5 +1,7 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.model.items.powerup;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCube;
 import it.polimi.deib.se2019.sanp4.adrenaline.utils.JSONUtils;
 import org.json.JSONException;
@@ -7,9 +9,13 @@ import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collection;
+import java.util.Map;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 public class PowerupCreatorTest {
 
@@ -30,53 +36,29 @@ public class PowerupCreatorTest {
         PowerupCreator.loadPowerupPack("/assets/powerup_pack_valid.json");
 
         /* Now check that loading has been performed correctly by requesting a full deck */
-        Collection<PowerUpCard> cards = PowerupCreator.createPowerupDeck();
+        Collection<PowerupCard> cards = PowerupCreator.createPowerupDeck();
 
-        /* Red cubes */
-        long count = cards.stream().filter(card -> card.getId().equals("pw1"))
-                .filter( card -> card.getCubeColor().equals(AmmoCube.RED)).count();
-        assertEquals(1, count);
+        int count;
+        /* Check that for each type there are two cards of the same color */
+        for (PowerupEnum type : PowerupEnum.values()) {
+            for (AmmoCube color : AmmoCube.values()) {
+                assertEquals(2, cards.stream()
+                        /* Filter type */
+                        .filter(p -> p.getType().equals(type))
+                        /* Filter color */
+                        .filter(p -> p.getCubeColor().equals(color))
+                        /* Count occurrences */
+                        .count());
+            }
+        }
 
-        /* Yellow cubes */
-        count = cards.stream().filter(card -> card.getId().equals("pw1"))
-                .filter( card -> card.getCubeColor().equals(AmmoCube.YELLOW)).count();
-        assertEquals(2, count);
-
-        /* Blue cubes */
-        count = cards.stream().filter(card -> card.getId().equals("pw1"))
-                .filter( card -> card.getCubeColor().equals(AmmoCube.BLUE)).count();
-        assertEquals(3, count);
-
-        /* Last check there are no additional cards */
-        cards.removeIf(card -> card.getId().equals("pw1"));
-        assertTrue(cards.isEmpty());
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void loadPowerupPack_undeclaredType_shouldThrow() {
-        PowerupCreator.loadPowerupPack("/assets/powerup_pack_invalid_undeclared.json");
+        /* Check that there are no additional cards */
+        int expectedSize = AmmoCube.values().length * PowerupEnum.values().length * 2;
+        assertEquals(expectedSize, cards.size());
     }
 
     @Test(expected = JSONException.class)
     public void loadPowerupPack_invalidSyntax_shouldThrow() {
         PowerupCreator.loadPowerupPack("/assets/powerup_pack_invalid_syntax.json");
-    }
-
-    @Test
-    public void createPowerupCard_typeExists_shouldReturn() {
-        /* Load powerups, should throw nothing */
-        PowerupCreator.loadPowerupPack("/assets/powerup_pack_valid.json");
-
-        /* Request a card */
-        PowerUpCard card = PowerupCreator.createPowerupCard("pw1", AmmoCube.RED);
-        assertEquals("pw1", card.getId());
-        assertEquals("Powerup 1", card.getName());
-        assertEquals("I am a description", card.getDescription());
-        assertEquals(AmmoCube.RED, card.getCubeColor());
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void createPowerupCard_typeNotExists_shouldThrow() {
-        PowerupCreator.createPowerupCard("pw8567", AmmoCube.RED);
     }
 }

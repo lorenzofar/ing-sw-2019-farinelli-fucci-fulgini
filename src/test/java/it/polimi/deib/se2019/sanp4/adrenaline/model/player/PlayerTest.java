@@ -10,7 +10,8 @@ import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionEnum;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.*;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCube;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCubeCost;
-import it.polimi.deib.se2019.sanp4.adrenaline.model.items.powerup.PowerUpCard;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.items.powerup.PowerupCard;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.items.powerup.PowerupEnum;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.EffectDescription;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.WeaponCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.utils.JSONUtils;
@@ -258,29 +259,21 @@ public class PlayerTest {
         player.addPowerup(null);
     }
 
-    @Test(expected = IllegalStateException.class)
-    public void addPowerup_playerAlreadyOwnsPowerup_shouldThrowIllegalStateException() throws FullCapacityException {
-        Player player = new Player(validName, validActionCard, validColor);
-        PowerUpCard powerup = new PowerUpCard("id1", "name1", "desc1", AmmoCube.BLUE);
-        player.addPowerup(powerup);
-        player.addPowerup(powerup);
-    }
-
     @Test(expected = FullCapacityException.class)
     public void addPowerup_playerHasFullCapacity_shouldThrowFullCapacityException() throws FullCapacityException {
         Player player = new Player(validName, validActionCard, validColor);
         for(int i = 0; i<Player.MAX_POWERUPS; i++){
-            PowerUpCard powerUpCard = new PowerUpCard(String.format("id%d", i), "name", "desc", AmmoCube.BLUE);
+            PowerupCard powerUpCard = new PowerupCard(PowerupEnum.TELEPORTER, AmmoCube.BLUE);
             player.addPowerup(powerUpCard);
         }
-        PowerUpCard anotherPowerUpCard = new PowerUpCard("exceed", "exceed", "desc", AmmoCube.BLUE);
+        PowerupCard anotherPowerUpCard = new PowerupCard(PowerupEnum.TELEPORTER, AmmoCube.BLUE);
         player.addPowerup(anotherPowerUpCard);
     }
 
     @Test
     public void addPowerup_powerupCanBeAdded_playerShouldHavePowerup() throws FullCapacityException {
         Player player = new Player(validName, validActionCard, validColor);
-        PowerUpCard insertedPowerup = new PowerUpCard("id1", "name1", "desc1", AmmoCube.BLUE);
+        PowerupCard insertedPowerup = new PowerupCard(PowerupEnum.TELEPORTER, AmmoCube.BLUE);
         player.addPowerup(insertedPowerup);
         assertTrue(player.getPowerups().contains(insertedPowerup));
     }
@@ -294,14 +287,14 @@ public class PlayerTest {
     @Test(expected = IllegalStateException.class)
     public void removePowerup_userDoesNotHavePowerup_shouldThrowIllegalStateException(){
         Player player = new Player(validName, validActionCard, validColor);
-        PowerUpCard powerup = new PowerUpCard("id", "name", "desc", AmmoCube.BLUE);
+        PowerupCard powerup = new PowerupCard(PowerupEnum.TELEPORTER, AmmoCube.BLUE);
         player.removePowerup(powerup);
     }
 
     @Test
-    public void removePowerup_userHasPowerup_shouldRemoveWeapon() throws FullCapacityException {
+    public void removePowerup_userHasPowerup_shouldRemovePowerup() throws FullCapacityException {
         Player player = new Player(validName, validActionCard, validColor);
-        PowerUpCard powerup = new PowerUpCard("id", "name", "desc", AmmoCube.BLUE);
+        PowerupCard powerup = new PowerupCard(PowerupEnum.TELEPORTER, AmmoCube.BLUE);
         player.addPowerup(powerup);
         player.removePowerup(powerup);
         assertFalse(player.getPowerups().contains(powerup));

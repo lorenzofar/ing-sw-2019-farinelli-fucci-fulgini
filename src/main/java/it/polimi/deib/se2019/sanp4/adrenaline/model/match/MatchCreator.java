@@ -9,7 +9,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.model.board.Board;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.BoardCreator;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCardCreator;
-import it.polimi.deib.se2019.sanp4.adrenaline.model.items.powerup.PowerUpCard;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.items.powerup.PowerupCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.powerup.PowerupCreator;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.WeaponCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.WeaponCreator;
@@ -91,7 +91,7 @@ public class MatchCreator {
                 new AutoShufflingStack<>(AmmoCardCreator.getAmmoCardDeck());
         CardStack<WeaponCard> weaponCardCardStack =
                 new AutoShufflingStack<>(createWeaponCardsDeck());
-        CardStack<PowerUpCard> powerUpCardCardStack =
+        CardStack<PowerupCard> powerUpCardCardStack =
                 new AutoShufflingStack<>(PowerupCreator.createPowerupDeck());
 
         /* Finally create the match */

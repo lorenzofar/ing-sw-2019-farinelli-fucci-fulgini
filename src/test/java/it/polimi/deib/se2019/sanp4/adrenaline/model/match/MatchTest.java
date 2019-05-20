@@ -94,6 +94,22 @@ public class MatchTest {
     /* ======== PLAYER-RELATED METHODS ========= */
 
     @Test
+    public void isPlayerTurn_nullTurn_shouldReturnFalse() {
+        assertFalse(mockMatch.isPlayerTurn(mockMatch.getPlayerByName("bzoto")));
+        assertFalse(mockMatch.isPlayerTurn("bzoto"));
+    }
+
+    @Test
+    public void isPlayerTurn_checkConsistency() {
+        mockMatch.selectNextTurn();
+        Player player = mockMatch.getCurrentTurn().getTurnOwner();
+
+        /* Check that the overloaded methods return the same value */
+        assertTrue(mockMatch.isPlayerTurn(player));
+        assertTrue(mockMatch.isPlayerTurn(player.getName()));
+    }
+
+    @Test
     public void getPlayerByName_nullName_shouldReturnNull() {
         Player player = mockMatch.getPlayerByName(null);
         assertNull(player);

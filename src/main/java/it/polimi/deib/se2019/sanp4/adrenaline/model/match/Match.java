@@ -3,7 +3,7 @@ package it.polimi.deib.se2019.sanp4.adrenaline.model.match;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.FullCapacityException;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.Board;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCard;
-import it.polimi.deib.se2019.sanp4.adrenaline.model.items.powerup.PowerUpCard;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.items.powerup.PowerupCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.WeaponCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.PlayerState;
@@ -48,7 +48,7 @@ public class Match {
     private CardStack<WeaponCard> weaponStack;
 
     /** Stack of all the powerup cards */
-    private CardStack<PowerUpCard> powerupStack;
+    private CardStack<PowerupCard> powerupStack;
 
     /** List of players participating in the match */
     private List<Player> players;
@@ -81,26 +81,24 @@ public class Match {
 
     /**
      * Determines whether the current turn belongs to the provided player.
-     * @param player The username of the player, not null
+     * If the player is null or there is no active turn, returns {@code false}.
+     * @param player The username of the player
      * @return {@code true} if the turn belongs to the player, {@code false} otherwise
      */
     public boolean isPlayerTurn(String player){
-        if(player == null){
-            throw new NullPointerException(NULL_PLAYER_ERROR);
-        }
-        return this.currentTurn.getTurnOwner().getName().equals(player);
+        if(currentTurn == null) return false;
+        return currentTurn.getTurnOwner().getName().equals(player);
     }
 
     /**
      * Determines whether the current turn belongs to the provided player.
-     * @param player The object representing the player, not null
+     * If the player is null or there is no active turn, returns {@code false}.
+     * @param player The object representing the player
      * @return {@code true} if the turn belongs to the player, {@code false} otherwise
      */
     public boolean isPlayerTurn(Player player){
-        if(player == null){
-            throw new NullPointerException(NULL_PLAYER_ERROR);
-        }
-        return this.currentTurn.getTurnOwner().equals(player);
+        if(currentTurn == null) return false;
+        return currentTurn.getTurnOwner().equals(player);
     }
 
     /**
@@ -278,7 +276,7 @@ public class Match {
      * Retrieves the stack of powerup cards
      * @return The stack of objects representing the powerup cards
      */
-    public CardStack<PowerUpCard> getPowerupStack() {
+    public CardStack<PowerupCard> getPowerupStack() {
         return powerupStack;
     }
 
@@ -312,7 +310,7 @@ public class Match {
         this.weaponStack = weaponStack;
     }
 
-    void setPowerupStack(CardStack<PowerUpCard> powerupStack) {
+    void setPowerupStack(CardStack<PowerupCard> powerupStack) {
         if (powerupStack == null) throw new NullPointerException(NULL_CARD_STACK);
         this.powerupStack = powerupStack;
     }
