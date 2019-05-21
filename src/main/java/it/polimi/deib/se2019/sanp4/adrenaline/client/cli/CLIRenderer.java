@@ -1,6 +1,7 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.client.cli;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.client.ClientView;
+import it.polimi.deib.se2019.sanp4.adrenaline.client.ClientViewImpl;
 import it.polimi.deib.se2019.sanp4.adrenaline.client.UIRenderer;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.LoginException;
 import it.polimi.deib.se2019.sanp4.adrenaline.view.ViewScene;
@@ -24,7 +25,7 @@ public class CLIRenderer implements UIRenderer {
     @Override
     public void initialize() {
         // Create a new client view
-        clientView = new ClientView();
+        clientView = new ClientViewImpl();
 
         // We set the renderer in the client view
         clientView.setRenderer(this);

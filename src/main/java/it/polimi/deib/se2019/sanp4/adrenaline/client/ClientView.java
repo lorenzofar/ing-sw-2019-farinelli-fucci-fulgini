@@ -2,7 +2,6 @@ package it.polimi.deib.se2019.sanp4.adrenaline.client;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.common.events.ViewEvent;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.network.RemoteView;
-import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.RemoteObservable;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.RemoteObserver;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.ChoiceRequest;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.ModelUpdate;
@@ -11,24 +10,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.view.ViewScene;
 
 import java.io.IOException;
 
-public class ClientView extends RemoteObservable<ViewEvent> implements RemoteView {
-    /**
-     * The username of the username owning the view
-     */
-    private String username;
-    /**
-     * The rendering engine used by the client
-     */
-    private UIRenderer renderer;
-    /**
-     * The connection method used to connect to the server
-     */
-    private ServerConnection serverConnection;
-
-    public ClientView() {
-        //TODO: Complete constructor and methods implementation
-    }
-
+public interface ClientView extends RemoteView {
     /* ===== NETWORK CONNECTION SETUP ====== */
 
     /**
@@ -36,33 +18,21 @@ public class ClientView extends RemoteObservable<ViewEvent> implements RemoteVie
      *
      * @throws IllegalStateException When the connection is already present
      */
-    public void setSocketConnection() {
-        if (this.serverConnection != null) {
-            throw new IllegalStateException("Server connection is already set");
-        }
-        this.serverConnection = new SocketServerConnection();
-    }
+    void setSocketConnection();
 
     /**
      * Creates a new RMI connection
      *
      * @throws IllegalStateException When the connection is already present
      */
-    public void setRMIConnection() {
-        if (this.serverConnection != null) {
-            throw new IllegalStateException("Server connection is already set");
-        }
-        this.serverConnection = new RMIServerConnection(this);
-    }
+    void setRMIConnection();
 
     /**
      * Retrieves the server connection used by the client
      *
      * @return The object representing the server connection
      */
-    public ServerConnection getServerConnection() {
-        return serverConnection;
-    }
+    ServerConnection getServerConnection();
 
     /* ====================================== */
 
@@ -74,21 +44,14 @@ public class ClientView extends RemoteObservable<ViewEvent> implements RemoteVie
      * @return username of the username, if it has been set, {@code null} otherwise
      */
     @Override
-    public String getUsername() {
-        return username;
-    }
+    String getUsername();
 
     /**
      * Sets the username of the player owning the view
      *
      * @param username The username of the player
      */
-    public void setUsername(String username) {
-        if (username == null) {
-            throw new NullPointerException("Username cannot be null");
-        }
-        this.username = username;
-    }
+    void setUsername(String username);
 
     /**
      * Checks connectivity to the client
@@ -96,52 +59,27 @@ public class ClientView extends RemoteObservable<ViewEvent> implements RemoteVie
      * @throws IOException If there is no connectivity
      */
     @Override
-    public void ping() throws IOException {
-         /* This method actually does nothing: it only exists because if an object with a remote reference to this
-        calls it, it would get a RemoteException if there is no connection. */
-    }
+    void ping() throws IOException;
 
     /**
      * Set the rendering engine used by the client     *
      *
      * @param renderer The object representing the rendering engine, not null
      */
-    public void setRenderer(UIRenderer renderer) {
-        if (renderer == null) {
-            throw new NullPointerException("Server connection cannot be null");
-        }
-        this.renderer = renderer;
-    }
+    void setRenderer(UIRenderer renderer);
 
     @Override
-    public void performRequest(ChoiceRequest request) {
-        /* TODO: Implement this method */
-    }
+    void performRequest(ChoiceRequest request);
 
     @Override
-    public void showMessage(String text, MessageType type) {
-        /* TODO: Implement this method */
-    }
+    void showMessage(String text, MessageType type);
 
     @Override
-    public void selectScene(ViewScene scene) {
-        if (scene == ViewScene.LOBBY) {
-            renderer.showLobby();
-        } else if (scene == ViewScene.MATCH_STARTING) {
-            renderer.startWaitingMatch();
-        } else if (scene == ViewScene.MATCH_START_CANCELLED) {
-            renderer.cancelWaitingMatch();
-        }
-        //TODO: Implement more scenes
-    }
+    void selectScene(ViewScene scene);
 
     @Override
-    public void removeObserver(RemoteObserver<ViewEvent> observer) {
-        /* TODO: Implement this method */
-    }
+    void removeObserver(RemoteObserver<ViewEvent> observer);
 
     @Override
-    public void update(ModelUpdate event) {
-        /* TODO: Implement this method */
-    }
+    void update(ModelUpdate event);
 }
