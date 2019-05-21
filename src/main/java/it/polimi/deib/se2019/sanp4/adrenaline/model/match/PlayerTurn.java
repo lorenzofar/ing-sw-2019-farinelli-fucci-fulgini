@@ -5,7 +5,9 @@ import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionEnum;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * A representation of the turn of a player
@@ -28,11 +30,14 @@ public class PlayerTurn{
     /** The player the turn belongs to */
     private Player turnOwner;
 
+    /** If the player has already performed the final action */
+    private boolean hasPerformedFinalAction;
+
     /** The state of the turn */
     private PlayerTurnState state;
 
     /** The list of players that received a damage in the turn */
-    private List<Player> hitPlayers;
+    private Set<Player> hitPlayers;
 
     /**
      * Creates a new turn for the specified player.
@@ -43,7 +48,7 @@ public class PlayerTurn{
             throw new NullPointerException("Player cannot be null");
         }
         currentAction = null;
-        hitPlayers = new ArrayList<>();
+        hitPlayers = new LinkedHashSet<>();
         turnOwner = player;
         state = PlayerTurnState.SELECTING;
         // Set the remaining actions according to the player's action card

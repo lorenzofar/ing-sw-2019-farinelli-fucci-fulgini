@@ -2,14 +2,14 @@ package it.polimi.deib.se2019.sanp4.adrenaline.model.match;
 
 /** Identifies the state of a turn */
 public enum PlayerTurnState {
-    /** The player is performing his main actions */
-    MAIN_ACTIONS("Performing main actions"),
-    /** The player is performing the final action */
-    FINAL_ACTION("Performing final action"),
+    /** The player has to spawn for the first time */
+    INITIAL_SPAWN("Spawning for the first time"),
+    /** The player is choosing an action from the ActionCard or a powerup */
+    SELECTING("Choosing an action or a powerup"),
+    /** The player is performing an action or using a powerup */
+    BUSY("Performing an action or using a powerup"),
     /** The turn is over */
-    OVER("Turn is over"),
-    /* The player is selecting an action */
-    SELECTING("Selecting action");
+    OVER("Turn is over");
 
     private final String message;
 

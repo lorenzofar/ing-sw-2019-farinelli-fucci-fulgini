@@ -1,6 +1,10 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.model.board;
 
+import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.PlayerNotFoundException;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.Observable;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.PlayerMoveUpdate;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCube;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -11,7 +15,7 @@ import java.util.stream.Collectors;
  * By convention the square with coordinate (0,0) is in the upper-left corner; square (1,0) is immediately at its right,
  * while square (0,1) is immediately beneath it.
  */
-public class Board {
+public class Board extends Observable {
 
     /** A matrix of objects representing the squares the board is composed of. The addressing is [x][y] */
     private Square[][] squares;
@@ -79,6 +83,20 @@ public class Board {
         /* Eventually we put it into the board matrix */
         squares[x][y] = square;
 
+    }
+
+    /**
+     * Moves a player from a square to another. The starting square can be null if the player is spawning
+     * @param player The player to be moved
+     * @param start The square where the player was
+     * @param end The square where the player is moved
+     */
+    public void movePlayer(Player player, Square start, Square end) throws PlayerNotFoundException {
+        if(start != null){
+            start.removePlayer(player);
+        }
+        end.addPlayer(player);
+        player.notifyObservers(new PlayerMoveUpdate(player.getName(), start.getLocation(), end.getLocation()));
     }
 
     /**

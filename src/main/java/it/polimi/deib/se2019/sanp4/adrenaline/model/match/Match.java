@@ -1,6 +1,7 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.model.match;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.FullCapacityException;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.Observable;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.Board;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.Square;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCard;
@@ -28,7 +29,7 @@ import java.util.*;
  *     <li>Whether the match is in frenzy mode or not</li>
  * </ul>
  */
-public class Match {
+public class Match extends Observable {
 
     private static final String NULL_PLAYER_ERROR = "Player cannot be null";
     private static final String NULL_CARD_STACK = "Cannot set card stack to null";
@@ -116,6 +117,13 @@ public class Match {
             throw new IllegalStateException("Player does not exist in the match");
         }
         suspendedPlayer.setState(PlayerState.SUSPENDED);
+    }
+
+    /**
+     * Prepares the board for the next turn, calling {@link #refillBoard()}
+     */
+    public void prepareTurn(){
+        this.refillBoard();
     }
 
     /**

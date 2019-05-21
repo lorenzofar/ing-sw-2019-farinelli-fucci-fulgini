@@ -3,6 +3,8 @@ package it.polimi.deib.se2019.sanp4.adrenaline.model.player;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.CardNotFoundException;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.FullCapacityException;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.NotEnoughAmmoException;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.Observable;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.ModelUpdate;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCube;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.Square;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCubeCost;
@@ -16,7 +18,7 @@ import java.util.*;
 /**
  * Represents a player of the match.
  */
-public class Player{
+public class Player extends Observable {
 
     /**
      * Load the inital cubes of each color a player has at the beginning of a match
@@ -487,5 +489,9 @@ public class Player{
      */
     public PlayerColor getColor() {
         return color;
+    }
+
+    public void notifyObservers(ModelUpdate update) {
+        super.notifyObservers(update);
     }
 }

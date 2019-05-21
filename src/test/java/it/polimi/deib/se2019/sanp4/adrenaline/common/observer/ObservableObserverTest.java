@@ -124,7 +124,7 @@ public class ObservableObserverTest {
         ObserverImpl observerS = new ObserverImpl();
         RoutingObservableImpl routingObservable = new RoutingObservableImpl();
         routingObservable.addObserver("Giammarco", observerG);
-        routingObservable.addObserver("Stefano", observerG);
+        routingObservable.addObserver("Stefano", observerS);
         observerG.shouldReceiveUpdate = true;
         observerS.shouldReceiveUpdate = true;
         routingObservable.notifyObservers(Arrays.asList("Stefano", "Giammarco", "German"), message);
