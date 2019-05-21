@@ -5,6 +5,8 @@ import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.PlayerView;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.SquareView;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.CardinalDirection;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.CoordPair;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCubeCost;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.WeaponCard;
 
 import java.util.*;
 
@@ -52,8 +54,24 @@ class CLIHelper {
     private static final String ANSI_CYAN_BACKGROUND = "\u001B[46m";
     private static final String ANSI_WHITE_BACKGROUND = "\u001B[47m";
 
+    /* ===== ANSI FORMATTERS ===== */
+    private static final String ANSI_BOLD = "\033[0;1m";
+
+    /* ===== BORDER AND CORNERS ===== */
+    private static final String TOP_SX_CORNER = "╔";
+    private static final String TOP_DX_CORNER = "╗";
+    private static final String BOTTOM_SX_CORNER = "╚";
+    private static final String BOTTOM_DX_CORNER = "╝";
+    private static final String VERTICAL_BORDER = "║";
+    private static final String HORIZONTAL_BORDER = "═";
+    private static final String LEFT_VERTICAL_SEPARATOR = "╠";
+    private static final String RIGHT_VERTICAL_SEPARATOR = "╣";
+
+    private static final String ANSI_DOT = "●";
+
     /* ===== DIMENSIONS ===== */
     private static final int SQUARE_DIM = 19;
+    private static final int CARD_WIDTH = 20;
 
     /**
      * Prints the provided text, formatting it with the provided parameters
@@ -88,9 +106,9 @@ class CLIHelper {
             topBottomBorder.append("━");
         }
         print(ANSI_GREEN);
-        println("%c%s%c", '┏', topBottomBorder.toString(), '┓');
-        println("┃%8c%s%8c┃", ' ', title.toUpperCase(), ' ');
-        println("%c%s%c", '┗', topBottomBorder.toString(), '┛');
+        println("%s%s%s", TOP_SX_CORNER, topBottomBorder.toString(), TOP_DX_CORNER);
+        println("%s%8c%s%8c%s", VERTICAL_BORDER, ' ', title.toUpperCase(), ' ', VERTICAL_BORDER);
+        println("%s%s%s", BOTTOM_SX_CORNER, topBottomBorder.toString(), BOTTOM_DX_CORNER);
         resetColor();
 
     }
@@ -232,10 +250,63 @@ class CLIHelper {
         resetColor();
     }
 
+    /* ===== STRINGS AND LISTS MANIPULATION ===== */
+
+    /**
+     * Expand the provided rendered list of strings with the provided new line
+     *
+     * @param renderedString The string rendering
+     * @param newLine        The new line to be copied into the rendering
+     */
+    private static void expandStringRendering(List<List<String>> renderedString, List<String> newLine) {
+        renderedString.add(new ArrayList<>());
+        renderedString.get(renderedString.size() - 1).addAll(newLine);
+    }
+
+    /**
+     * Split the provided string into chunks to be contained within the specified width
+     *
+     * @param text     The string to split
+     * @param maxWidth The maximum width
+     * @return The list of chunks the string has been split into
+     */
+    private static List<String> splitString(String text, int maxWidth) {
+        List<String> chunks = new ArrayList<>();
+        int startIndex = 0;
+        int endIndex;
+        while (startIndex < text.length()) {
+            endIndex = startIndex + maxWidth;
+            endIndex = endIndex > text.length() ? text.length() : endIndex;
+            chunks.add(text.substring(startIndex, endIndex));
+            startIndex = endIndex;
+        }
+        return chunks;
+    }
+
+    /**
+     * Split the provided list into chunks to be contained within the specified width
+     *
+     * @param list     The list to split
+     * @param maxWidth The maximum width
+     * @return The list of chunks the string has been split into
+     */
+    private static <T> List<List<T>> splitList(List<T> list, int maxWidth) {
+        List<List<T>> chunks = new ArrayList<>();
+        int startIndex = 0;
+        int endIndex;
+        while (startIndex < list.size()) {
+            endIndex = startIndex + maxWidth;
+            endIndex = endIndex > list.size() ? list.size() : endIndex;
+            chunks.add(list.subList(startIndex, endIndex));
+            startIndex = endIndex;
+        }
+        return chunks;
+    }
+
     /* ===== SQUARES ===== */
 
     /**
-     * Render the provided square to be printable in a command line
+     * Render the provided square to be printable in a CLI environment
      *
      * @param square The object representing the square
      * @return The list of all the rows the rendered square is composed of.
@@ -268,10 +339,10 @@ class CLIHelper {
         bottomBorder.replaceAll(s -> square.getAdjacentMap().get(CardinalDirection.S).getCharacterRepresentation());
 
         // We add corners around the square
-        topBorder.set(0, "╔");
-        topBorder.set(topBorder.size() - 1, "╗");
-        bottomBorder.set(0, "╚");
-        bottomBorder.set(bottomBorder.size() - 1, "╝");
+        topBorder.set(0, TOP_SX_CORNER);
+        topBorder.set(topBorder.size() - 1, TOP_DX_CORNER);
+        bottomBorder.set(0, BOTTOM_SX_CORNER);
+        bottomBorder.set(bottomBorder.size() - 1, BOTTOM_DX_CORNER);
 
         // We add the marker indicating the square type
         squareRows.get(1).set(1, square.getTypeMarker());
@@ -295,6 +366,11 @@ class CLIHelper {
         return squareRows;
     }
 
+    /**
+     * Print the provided board to the terminal
+     *
+     * @param board The object representing the board
+     */
     public static void printBoard(BoardView board) {
         int width = board.getColumnsCount();
         int height = board.getRowsCount();
@@ -320,5 +396,71 @@ class CLIHelper {
 
         // Eventually we print the result
         boardRows.forEach(row -> println(String.join("", row)));
+    }
+
+    /* ===== WEAPON CARDS ===== */
+
+    /**
+     * Render the provided weapon card to be printable in a CLI environment
+     *
+     * @param weaponCard The object representing the weapon card
+     * @return A list of all the lines composing the rendered card
+     */
+    public static List<List<String>> renderWeaponCard(WeaponCard weaponCard) {
+        if (weaponCard == null) {
+            //TODO: Check this scenario and what to return
+            return Collections.emptyList();
+        }
+
+        List<List<String>> renderedWeapon = new ArrayList<>();
+
+        // Generate top border, blank line and line separator
+        final List<String> separator = new ArrayList<>(Collections.nCopies(CARD_WIDTH, HORIZONTAL_BORDER));
+        List<String> blankLine = new ArrayList<>(Collections.nCopies(CARD_WIDTH, " "));
+        List<String> middleSeparator = new ArrayList<>(separator);
+        blankLine.set(0, VERTICAL_BORDER);
+        blankLine.set(blankLine.size() - 1, VERTICAL_BORDER);
+        middleSeparator.set(0, LEFT_VERTICAL_SEPARATOR);
+        middleSeparator.set(middleSeparator.size() - 1, RIGHT_VERTICAL_SEPARATOR);
+
+        // Set the top border
+        expandStringRendering(renderedWeapon, separator);
+        renderedWeapon.get(renderedWeapon.size() - 1).set(0, TOP_SX_CORNER);
+        renderedWeapon.get(renderedWeapon.size() - 1).set(renderedWeapon.get(renderedWeapon.size() - 1).size() - 1, TOP_DX_CORNER);
+
+        // Split the name of the weapon (considering padding)
+        List<String> weaponNameChunks = splitString(weaponCard.getName(), CARD_WIDTH - 4);
+        // And add it to the rendered card
+        weaponNameChunks.forEach(chunk -> {
+            expandStringRendering(renderedWeapon, blankLine);
+            for (int i = 0; i < chunk.length(); i++) {
+                renderedWeapon.get(renderedWeapon.size() - 1).set(i + 2, String.format("%s%s%s", ANSI_BOLD, chunk.substring(i, i + 1), ANSI_RESET));
+            }
+        });
+        expandStringRendering(renderedWeapon, middleSeparator);
+
+        // Add indicators for ammo cubes
+        // Each cube is represented by a colored dot, the first one is the one that comes pre-loaded with the weapon
+        // First split the list of ammo cubes into chunks fitting the width, by considering a gao between each pair
+        List<List<AmmoCubeCost>> ammoCubesChunks = splitList(weaponCard.getCost(), (CARD_WIDTH - 4) / 2);
+        // And add them to the rendered card
+        ammoCubesChunks.forEach(chunk -> {
+            expandStringRendering(renderedWeapon, blankLine);
+            int i = 0;
+            for (AmmoCubeCost cube : chunk) {
+                renderedWeapon.get(renderedWeapon.size() - 1).set(i + 2, String.format("%s%s%s", cube.getCorrespondingCube().getANSICode(), ANSI_DOT, ANSI_RESET));
+                i += 2;
+            }
+        });
+        expandStringRendering(renderedWeapon, middleSeparator);
+
+        // Add bottom border
+        expandStringRendering(renderedWeapon, separator);
+        renderedWeapon.get(renderedWeapon.size() - 1).set(0, BOTTOM_SX_CORNER);
+        renderedWeapon.get(renderedWeapon.size() - 1).set(renderedWeapon.get(renderedWeapon.size() - 1).size() - 1, BOTTOM_DX_CORNER);
+
+        //TODO: Add effects
+        
+        return renderedWeapon;
     }
 }
