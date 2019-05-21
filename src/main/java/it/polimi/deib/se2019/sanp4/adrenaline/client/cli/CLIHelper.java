@@ -1,7 +1,7 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.client.cli;
 
-import it.polimi.deib.se2019.sanp4.adrenaline.client.modelviews.BoardView;
-import it.polimi.deib.se2019.sanp4.adrenaline.client.modelviews.SquareView;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.BoardView;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.SquareView;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.CardinalDirection;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.CoordPair;
 

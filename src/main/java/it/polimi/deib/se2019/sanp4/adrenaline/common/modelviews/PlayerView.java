@@ -1,4 +1,4 @@
-package it.polimi.deib.se2019.sanp4.adrenaline.client.modelviews;
+package it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCube;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.powerup.PowerupCard;
