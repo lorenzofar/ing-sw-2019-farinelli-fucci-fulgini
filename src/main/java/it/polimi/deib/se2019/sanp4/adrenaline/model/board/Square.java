@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.PlayerNotFoundException;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.Observable;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.ModelUpdate;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.match.Match;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
 
@@ -20,7 +21,7 @@ import java.util.*;
         @JsonSubTypes.Type(value = SpawnSquare.class, name = "SPAWN_SQUARE"),
         @JsonSubTypes.Type(value = AmmoSquare.class, name = "AMMO_SQUARE"),
 })
-public abstract class Square extends Observable {
+public abstract class Square extends Observable<ModelUpdate> {
 
     /** The location of the square in cartesian coordinates */
     private CoordPair location;

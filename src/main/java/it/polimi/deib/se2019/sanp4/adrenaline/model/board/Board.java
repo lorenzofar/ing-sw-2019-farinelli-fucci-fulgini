@@ -2,6 +2,7 @@ package it.polimi.deib.se2019.sanp4.adrenaline.model.board;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.PlayerNotFoundException;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.Observable;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.ModelUpdate;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.PlayerMoveUpdate;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCube;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
@@ -15,7 +16,7 @@ import java.util.stream.Collectors;
  * By convention the square with coordinate (0,0) is in the upper-left corner; square (1,0) is immediately at its right,
  * while square (0,1) is immediately beneath it.
  */
-public class Board extends Observable {
+public class Board extends Observable<ModelUpdate> {
 
     /** A matrix of objects representing the squares the board is composed of. The addressing is [x][y] */
     private Square[][] squares;

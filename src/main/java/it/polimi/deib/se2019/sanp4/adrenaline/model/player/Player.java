@@ -18,7 +18,7 @@ import java.util.*;
 /**
  * Represents a player of the match.
  */
-public class Player extends Observable {
+public class Player extends Observable<ModelUpdate> {
 
     /**
      * Load the inital cubes of each color a player has at the beginning of a match
@@ -490,6 +490,7 @@ public class Player extends Observable {
     public PlayerColor getColor() {
         return color;
     }
+
 
     public void notifyObservers(ModelUpdate update) {
         super.notifyObservers(update);
