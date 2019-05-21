@@ -37,7 +37,7 @@ public class SocketServerConnectionTest {
 
     @Test
     public void isActive_suddenServerDisconnection_shouldCloseConnection() throws IOException {
-        ClientView view = new ClientView();
+        ClientView view = new ClientViewImpl();
         SocketServerConnection connection = new SocketServerConnection(view);
 
         /* Connect to the server */
