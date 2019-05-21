@@ -13,7 +13,7 @@ import java.util.Set;
 /**
  * A lightweight representation of a square in the view
  */
-public class SquareView {
+public abstract class SquareView {
 
     /**
      * The location of the square in cartesian coordinates
@@ -90,6 +90,13 @@ public class SquareView {
     public RoomColor getRoomColor() {
         return roomColor;
     }
+
+    /**
+     * Retrieves the marker indicating the type of the square
+     * Each subclass of SquareView will print a different marker
+     * @return The string representing the marker
+     */
+    public abstract String getTypeMarker();
 
     /**
      * Retrieves the map of adjacency of the square
