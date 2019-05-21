@@ -1,6 +1,7 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.client.cli;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.BoardView;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.PlayerView;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.SquareView;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.CardinalDirection;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.CoordPair;
@@ -249,6 +250,11 @@ class CLIHelper {
             squareRows.add(new ArrayList<>(Collections.nCopies(SQUARE_DIM, " ")));
         }
 
+        // If the provided square is null, we just return an empty list
+        if (square == null) {
+            return squareRows;
+        }
+
         // We then build left and right edges, by setting the first and last character of each row according to the connection type
         squareRows.forEach(row -> {
             row.set(0, square.getAdjacentMap().get(CardinalDirection.W).getCharacterRepresentation());
@@ -267,10 +273,24 @@ class CLIHelper {
         bottomBorder.set(0, "╚");
         bottomBorder.set(bottomBorder.size() - 1, "╝");
 
+        // We add the marker indicating the square type
+        squareRows.get(1).set(1, square.getTypeMarker());
+
+        /* ===== PLAYERS RENDERING ===== */
+        // We first calculate the center of the square
+        int centerX = SQUARE_DIM / 2;
+        int centerY = SQUARE_DIM / 4;
+        // We retrieve the number of players inside the square
+        int playersCount = square.getPlayers().size();
+        // We compute the starting point of the line
+        int playerX = centerX - playersCount / 2;
+        // We print the players in a single row
+        for (PlayerView player : square.getPlayers()) {
+            squareRows.get(centerY).set(playerX, String.format("%s%s%s", player.getColor().getANSICode(), "●", square.getRoomColor().getANSICode()));
+            playerX++;
+        }
         // Then eventually put the correct ANSI code for the square color
         squareRows.forEach(row -> row.add(0, square.getRoomColor().getANSICode()));
-
-        //TODO: Add additional information inside the square (e.g. players, items...)
 
         return squareRows;
     }
@@ -290,7 +310,7 @@ class CLIHelper {
                 // We concatenate all the squares in the row
                 // by adding all the lists to the previous ones
                 List<List<String>> renderedSquare = renderSquare(board.getSquare(new CoordPair(c, r)));
-                for(int i = 0; i<rowSquares.size(); i++){
+                for (int i = 0; i < rowSquares.size(); i++) {
                     rowSquares.get(i).addAll(renderedSquare.get(i));
                 }
             }

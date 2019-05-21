@@ -5,10 +5,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.model.board.CoordPair;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.RoomColor;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.SquareConnectionType;
 
-import java.util.EnumMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * A lightweight representation of a square in the view
@@ -23,7 +20,7 @@ public abstract class SquareView {
     /**
      * Set of players inside the square
      */
-    private Set<String> players;
+    private Set<PlayerView> players;
     /**
      * Color of the room the square is inside
      */
@@ -56,16 +53,17 @@ public abstract class SquareView {
      *
      * @return The set of players' username
      */
-    public Set<String> getPlayers() {
+    public Set<PlayerView> getPlayers() {
         return players;
     }
 
     /**
      * Add a player inside the square
+     * If the provided player is null, nothing happens
      *
-     * @param player The username of the player
+     * @param player The object representing the player
      */
-    public void addPlayer(String player) {
+    public void addPlayer(PlayerView player) {
         if (player != null) {
             players.add(player);
         }
@@ -73,10 +71,24 @@ public abstract class SquareView {
 
     /**
      * Remove a player from the square
+     * If the provided player is null or not present, nothing happens
      *
      * @param player The username of the player
      */
     public void removePlayer(String player) {
+        if (player != null) {
+            Optional<PlayerView> playerToRemove = players.stream().filter(playerView -> playerView.getName().equals(player)).findFirst();
+            playerToRemove.ifPresent(playerView -> players.remove(playerView));
+        }
+    }
+
+    /**
+     * Remove a player from the square
+     * If the provided player is null or not present, nothing happens
+     *
+     * @param player The object representing the player
+     */
+    public void removePlayer(PlayerView player) {
         if (player != null) {
             players.remove(player);
         }
@@ -109,6 +121,7 @@ public abstract class SquareView {
 
     /**
      * Sets the map of adjacency of the square
+     * If the provided map is null, nothing happens
      *
      * @param adjacentMap The object representing the map
      */
