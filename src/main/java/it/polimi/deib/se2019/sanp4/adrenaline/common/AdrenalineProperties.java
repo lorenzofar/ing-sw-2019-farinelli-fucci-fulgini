@@ -50,7 +50,7 @@ public class AdrenalineProperties extends Properties {
         if(configFileName != null){
             // Load properties from file
             try {
-                InputStream configFileInputStream = new FileInputStream(new File(configFileName));
+                InputStream configFileInputStream = new FileInputStream(configFileName);
                 this.load(configFileInputStream);
             } catch (IOException e) {
                 logger.log(Level.SEVERE,"Error accessing provided file", e);
@@ -59,7 +59,7 @@ public class AdrenalineProperties extends Properties {
         else {
             // Here we search for a fallback file from the current folder
             try {
-                FileInputStream defaultConfigStream = new FileInputStream(new File(CONFIG_FILENAME));
+                FileInputStream defaultConfigStream = new FileInputStream(CONFIG_FILENAME);
                 this.load(defaultConfigStream);
             } catch (IOException e) {
                 // The file does not exist
