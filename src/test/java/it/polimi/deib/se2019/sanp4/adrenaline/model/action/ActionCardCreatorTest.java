@@ -27,7 +27,7 @@ public class ActionCardCreatorTest {
     }
 
     @Test
-    public void loadActionCardPack_validPack_shouldSucceed() throws CardNotFoundException {
+    public void loadActionCardPack_validPack_shouldSucceed() {
         /* Load the pack, should not throw (loads REGULAR and FRENZY1 */
         ActionCardCreator.loadActionCardPack("/assets/action_card_pack_valid.json");
 
@@ -45,7 +45,7 @@ public class ActionCardCreatorTest {
     }
 
     @Test
-    public void createActionCard_existentCard_shouldBeCorrect() throws CardNotFoundException {
+    public void createActionCard_existentCard_shouldBeCorrect() {
         /* Load the pack with the card(s) */
         ActionCardCreator.loadActionCardPack("/assets/action_card_pack_valid.json");
 
@@ -62,8 +62,8 @@ public class ActionCardCreatorTest {
         assertTrue(card.getActions().containsAll(actions));
     }
 
-    @Test(expected = CardNotFoundException.class)
-    public void createActionCard_inexistentCard_shouldThrow() throws CardNotFoundException {
+    @Test(expected = IllegalStateException.class)
+    public void createActionCard_inexistentCard_shouldThrow() {
         /* Load the pack with the card(s) */
         ActionCardCreator.loadActionCardPack("/assets/action_card_pack_valid.json");
 
@@ -72,7 +72,7 @@ public class ActionCardCreatorTest {
     }
 
     @Test(expected = NullPointerException.class)
-    public void createActionCard_nullCard_shouldThrow() throws CardNotFoundException {
+    public void createActionCard_nullCard_shouldThrow() {
         /* Ask for card that has not been loaded */
         ActionCardCreator.createActionCard(null);
     }

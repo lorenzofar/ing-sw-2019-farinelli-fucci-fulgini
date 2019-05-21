@@ -68,16 +68,16 @@ public class ActionCardCreator {
      * Returns the action card associated to given type.
      * @param type type of the action card, not null
      * @return action card associated to type
-     * @throws CardNotFoundException if requested card type does not exist
+     * @throws IllegalStateException if the card is not found
      */
-    public static ActionCard createActionCard(ActionCardEnum type) throws CardNotFoundException {
+    public static ActionCard createActionCard(ActionCardEnum type) {
         if(type == null){
             throw new NullPointerException("Action card type cannot be null");
         }
         ActionCard card = cards.get(type);
 
         if (card == null){
-            throw new CardNotFoundException(String.format("Action card type %s does not exist", type.name()));
+            throw new IllegalStateException(String.format("Action card type %s does not exist", type.name()));
         }
 
         return card;
