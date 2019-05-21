@@ -70,18 +70,60 @@
 
     <build>
         <plugins>
-            <!-- Export the project as a runnable JAR, with the provided mainClass -->
+            <!-- Compile for Java 8 -->
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>8</source>
+                    <target>8</target>
+                </configuration>
+            </plugin>
+
+            <!-- Package different JARs for the client and the server -->
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
                 <version>3.1.1</version>
                 <configuration>
-                    <archive>
-                        <manifest>
-                            <mainClass>it.polimi.deib.se2019.sanp4.adrenaline.App</mainClass>
-                        </manifest>
-                    </archive>
+                    <appendAssemblyId>false</appendAssemblyId>
                 </configuration>
+                <executions>
+                    <execution>
+                        <id>make-client</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <descriptorRefs>
+                                <descriptorRef>jar-with-dependencies</descriptorRef>
+                            </descriptorRefs>
+                            <finalName>${project.artifactId}-client</finalName>
+                            <archive>
+                                <manifest>
+                                    <mainClass>it.polimi.deib.se2019.sanp4.adrenaline.client.ClientLauncher</mainClass>
+                                </manifest>
+                            </archive>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>make-server</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <descriptorRefs>
+                                <descriptorRef>jar-with-dependencies</descriptorRef>
+                            </descriptorRefs>
+                            <finalName>${project.artifactId}-server</finalName>
+                            <archive>
+                                <manifest>
+                                    <mainClass>it.polimi.deib.se2019.sanp4.adrenaline.server.ServerLauncher</mainClass>
+                                </manifest>
+                            </archive>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
 
             <!-- Jacoco is a code coverage library that allows basic report creation -->
