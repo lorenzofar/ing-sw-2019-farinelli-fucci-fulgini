@@ -17,7 +17,7 @@ public class SocketServerConnectionTest {
 
     /* TODO: This test is just a mock, make it better */
     /* The server to connect to */
-    private static ServerImpl server = new ServerImpl();
+    private static ServerImpl server = ServerImpl.getInstance();
 
     /* Executor to run the server */
     private static ExecutorService executor = Executors.newSingleThreadExecutor();

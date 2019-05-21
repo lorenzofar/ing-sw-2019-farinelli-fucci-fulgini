@@ -27,8 +27,17 @@ import java.util.logging.Logger;
 /**
  * A class representing the implementation of a server
  * it implements both the server and remote server interfaces
+ * This class uses the singleton pattern
  */
 public class ServerImpl implements SocketServer, RemoteServer, Runnable, CallbackInterface {
+    /** Single instance */
+    private static ServerImpl ourInstance = new ServerImpl();
+
+    /** Return the instance of the server */
+    public static ServerImpl getInstance() {
+        return ourInstance;
+    }
+
     private static final int DEFAULT_SOCKET_THREADS = 64;
 
     /**
@@ -54,7 +63,7 @@ public class ServerImpl implements SocketServer, RemoteServer, Runnable, Callbac
 
     private static final Logger logger = Logger.getLogger(ServerImpl.class.getName());
 
-    public ServerImpl(){
+    private ServerImpl(){
         playerViews = new ConcurrentHashMap<>();
         gameActive = false;
         //TODO: Complete constructor and methods implementation

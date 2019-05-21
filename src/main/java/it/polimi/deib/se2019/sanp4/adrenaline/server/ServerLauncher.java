@@ -11,7 +11,7 @@ import java.util.logging.LogManager;
 public class ServerLauncher {
 
     public static void main(String[] args){
-        ServerImpl server = new ServerImpl();
+        ServerImpl server = ServerImpl.getInstance();
 
         AdrenalineProperties properties = AdrenalineProperties.getProperties();
 
