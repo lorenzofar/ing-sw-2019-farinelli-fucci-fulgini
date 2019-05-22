@@ -38,8 +38,8 @@ public class CLIRenderer implements UIRenderer {
 
         // We ask the user to select a network connection mode
         CLIHelper.printTitle("network configuration");
-        int selectedNetworkMode = CLIHelper.askOptionFromList("Select the network connection to use", Arrays.asList("socket", "rmi"));
-        if(selectedNetworkMode == 0) {
+        String selectedNetworkMode = CLIHelper.askOptionFromList("Select the network connection to use", Arrays.asList("socket", "rmi"));
+        if(selectedNetworkMode.equals("socket")) {
             clientView.setSocketConnection();
         }
         else {

@@ -8,6 +8,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.model.board.CoordPair;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCubeCost;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.WeaponCard;
 
+import java.io.PrintWriter;
 import java.util.*;
 
 /**
@@ -30,6 +31,10 @@ class CLIHelper {
      * Scanner to read user input
      */
     private static final Scanner scanner = new Scanner(System.in);
+    /**
+     * PrintWriter to output text
+     */
+    private static final PrintWriter pw = new PrintWriter(System.out);
     /**
      * Stack of characters used for the spinner animation
      */
@@ -80,7 +85,7 @@ class CLIHelper {
      * @param args     Optional arguments to insert inside the template
      */
     static void print(String template, Object... args) {
-        System.out.print(String.format(template, args));
+        pw.printf(template, args);
     }
 
     /**
@@ -91,8 +96,8 @@ class CLIHelper {
      * @param args     Optional arguments to insert inside the template
      */
     static void println(String template, Object... args) {
-        print(template, args);
-        print("\n");
+        pw.printf(template, args);
+        pw.print("\n");
     }
 
     /**
@@ -116,25 +121,47 @@ class CLIHelper {
     /**
      * Asks the user to choose among a list of options
      *
-     * @param message A message to show to the user
-     * @param options The list of objects representing the options
-     * @return The index of the selected choice in the list
+     * @param message   A message to show to the user
+     * @param options   The list of objects representing the options
+     * @param allowNull Allows a null option to be chosen
+     * @return The object representing the selected option, could be {@code null} if allowNull is {@code true}
      */
-    static int askOptionFromList(String message, List<Object> options) {
+    static <T> T askOptionFromList(String message, List<T> options, boolean allowNull) {
+        Integer n = null;
+
         print(ANSI_CYAN);
         println("%s", message);
         resetColor();
-        for (int i = 0; i < options.size(); i++) {
-            println("%d\t%s", i, options.get(i));
+
+        options.forEach(option -> println("%d.\t%s", options.indexOf(option), option));
+        if (allowNull) {
+            print("%d. None", options.size());
         }
-        // Then wait for the input
-        int selectedOption = parseInt();
-        // Until we do not get a value within the bounds, we keep asking
-        while (selectedOption < 0 || selectedOption >= options.size()) {
-            selectedOption = parseInt();
-        }
-        return selectedOption;
+
+        int maxN = options.size() - (allowNull ? 0 : 1);
+
+        do {
+            if (n != null) print("This choice does not exist!");
+            print(">> ");
+            pw.flush();
+            n = scanner.nextInt();
+            scanner.nextLine(); /* Catch newline */
+        } while (n > maxN || n < 0);
+
+        return n == options.size() ? null : options.get(n);
     }
+
+    /**
+     * Asks the user to choose among a list of options
+     *
+     * @param message A message to show to the user
+     * @param options The list of objects representing the options
+     * @return The object representing the selected option
+     */
+    static <T> T askOptionFromList(String message, List<T> options) {
+        return askOptionFromList(message, options, false);
+    }
+
 
     /**
      * Waits for the user to press the enter key
@@ -150,7 +177,7 @@ class CLIHelper {
      * Clears the console screen by using ANSI escape codes
      */
     static void clearScreen() {
-        CLIHelper.print("\033[H\033[2J");
+        print("\033[H\033[2J");
         resetColor();
     }
 
@@ -460,7 +487,7 @@ class CLIHelper {
         renderedWeapon.get(renderedWeapon.size() - 1).set(renderedWeapon.get(renderedWeapon.size() - 1).size() - 1, BOTTOM_DX_CORNER);
 
         //TODO: Add effects
-        
+
         return renderedWeapon;
     }
 }
