@@ -4,6 +4,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.CardNotFoundExce
 import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.FullCapacityException;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.NotEnoughAmmoException;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.Observable;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.AddedWeaponUpdate;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.ModelUpdate;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCube;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.Square;
@@ -294,6 +295,7 @@ public class Player extends Observable<ModelUpdate> {
         }
         weapon.getState().reset(weapon); // Resets weapon state
         weapons.add(weapon);
+        notifyObservers(new AddedWeaponUpdate(this.getName(), weapon.getName()));
     }
 
     /**
