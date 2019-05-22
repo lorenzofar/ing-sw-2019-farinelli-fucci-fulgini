@@ -6,6 +6,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.NotEnoughAmmoExc
 import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.Observable;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.AddedWeaponUpdate;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.ModelUpdate;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.RemovedWeaponUpdate;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCube;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.Square;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCubeCost;
@@ -315,6 +316,7 @@ public class Player extends Observable<ModelUpdate> {
         }
 
         weapons.remove(weaponCard.get());
+        notifyObservers(new RemovedWeaponUpdate(this.getName(), weaponId));
         weaponCard.get().getState().reset(weaponCard.get()); // Resets the weapon card
         return weaponCard.get();
     }
