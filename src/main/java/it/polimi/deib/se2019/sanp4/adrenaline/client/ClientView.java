@@ -8,8 +8,6 @@ import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.ModelUpdate;
 import it.polimi.deib.se2019.sanp4.adrenaline.view.MessageType;
 import it.polimi.deib.se2019.sanp4.adrenaline.view.ViewScene;
 
-import java.io.IOException;
-
 public interface ClientView extends RemoteView {
     /* ===== NETWORK CONNECTION SETUP ====== */
 
@@ -55,11 +53,9 @@ public interface ClientView extends RemoteView {
 
     /**
      * Checks connectivity to the client
-     *
-     * @throws IOException If there is no connectivity
      */
     @Override
-    void ping() throws IOException;
+    void ping();
 
     /**
      * Set the rendering engine used by the client     *
@@ -76,6 +72,9 @@ public interface ClientView extends RemoteView {
 
     @Override
     void selectScene(ViewScene scene);
+
+    @Override
+    void addObserver(RemoteObserver<ViewEvent> observer);
 
     @Override
     void removeObserver(RemoteObserver<ViewEvent> observer);

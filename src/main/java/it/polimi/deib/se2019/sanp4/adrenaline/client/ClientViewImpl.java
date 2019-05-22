@@ -2,7 +2,6 @@ package it.polimi.deib.se2019.sanp4.adrenaline.client;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.common.events.ViewEvent;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.RemoteObservable;
-import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.RemoteObserver;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.ChoiceRequest;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.ModelUpdate;
 import it.polimi.deib.se2019.sanp4.adrenaline.view.MessageType;
@@ -95,11 +94,9 @@ public class ClientViewImpl extends RemoteObservable<ViewEvent> implements Clien
 
     /**
      * Checks connectivity to the client
-     *
-     * @throws IOException If there is no connectivity
      */
     @Override
-    public void ping() throws IOException {
+    public void ping() {
          /* This method actually does nothing: it only exists because if an object with a remote reference to this
         calls it, it would get a RemoteException if there is no connection. */
     }
@@ -137,11 +134,6 @@ public class ClientViewImpl extends RemoteObservable<ViewEvent> implements Clien
             renderer.cancelWaitingMatch();
         }
         //TODO: Implement more scenes
-    }
-
-    @Override
-    public void removeObserver(RemoteObserver<ViewEvent> observer) {
-        /* TODO: Implement this method */
     }
 
     @Override
