@@ -1,6 +1,5 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.controller;
 
-import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.FullCapacityException;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.match.Match;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.ScoresIterator;
@@ -17,14 +16,10 @@ import static java.util.Map.Entry.comparingByValue;
  * A specialized class describing an object that is responsible of assigning points to users
  * It represents the standard scoring mechanism of the game, as described in the game manual
  */
-public class StandardScoreManager extends ScoreManager {
+public class StandardScoreManager implements ScoreManager {
 
     private static final int[] POINTS = {8, 6, 4, 2, 1, 1};
-    private ScoresIterator scoresIterator;
-
-    StandardScoreManager(){
-        scoresIterator = new ScoresIterator(POINTS, 0);
-    }
+    private static final ScoresIterator scoresIterator = new ScoresIterator(POINTS, 0);
 
     /**
      * Assign scores to players according to the damage boards of the provided players
@@ -59,11 +54,7 @@ public class StandardScoreManager extends ScoreManager {
             // Update the count of killshots
             killshotsCount.merge(player.getPlayerBoard().getKillshot(), 1, Integer::sum);
             // Update the killshots track
-            try {
-                match.addKillshot(player.getPlayerBoard().getKillshot());
-            } catch (FullCapacityException e) {
-                // Here we do not update the killshots track
-            }
+            match.addKillshot(player.getPlayerBoard().getKillshot());
         });
 
         // Give extra points to players that performed more than one killshot

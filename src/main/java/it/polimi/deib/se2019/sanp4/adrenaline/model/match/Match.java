@@ -1,6 +1,5 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.model.match;
 
-import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.FullCapacityException;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.Observable;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.Board;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.Square;
@@ -197,17 +196,16 @@ public class Match extends Observable {
 
     /**
      * Adds a killshot to the killshots track from the provided player
+     * If the minimum number of skulls (0) is reached, this has no effect
      * @param player The object representing the player, not null
-     * @throws FullCapacityException If the killshots track is full
      */
-    public void addKillshot(Player player) throws FullCapacityException{
+    public void addKillshot(Player player) {
         if(player == null){
             throw new NullPointerException(NULL_PLAYER_ERROR);
         }
-        if(killshotsTrack.size() >= skulls){
-            throw new FullCapacityException(skulls);
+        if(killshotsTrack.size() < skulls){
+            killshotsTrack.add(player);
         }
-        killshotsTrack.add(player);
     }
 
     /**
