@@ -18,8 +18,8 @@ public interface SocketClientCommandTarget {
 
     /**
      * Sends a command to the remote server attached to this target
+     * Does not guarantee that the command is sent if there are network problems
      * @param command the command that has to be sent
-     * @throws IOException if the command cannot be sent due to network problems
      */
     void sendCommand(SocketServerCommand command) throws IOException;
 }

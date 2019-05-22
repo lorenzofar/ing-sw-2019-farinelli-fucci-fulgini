@@ -1,10 +1,11 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.client;
 
+import it.polimi.deib.se2019.sanp4.adrenaline.common.AdrenalineProperties;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.events.ViewEvent;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.LoginException;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.network.RemoteServer;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.network.RemoteView;
-import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.Observable;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.RemoteObservable;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.ModelUpdate;
 
 import java.io.IOException;
@@ -15,7 +16,13 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class RMIServerConnection extends Observable<ModelUpdate> implements ServerConnection {
+/**
+ * Represents a connection to the server implemented by using Java's Remote Method Invocation (RMI).
+ * When connecting, this connection retrieves the server at the specified RMI registry,
+ * then at login time it provides an exported version of the client view (RemoteView), which the server
+ * uses to call methods on the view (and receive events)
+ */
+public class RMIServerConnection extends RemoteObservable<ModelUpdate> implements ServerConnection {
     private RemoteServer server;
     private ClientView view;
     private RemoteView viewStub;
@@ -30,6 +37,10 @@ public class RMIServerConnection extends Observable<ModelUpdate> implements Serv
         this.view = view;
     }
 
+    /**
+     * Determines whether the connection is active or not by pinging the server
+     * @return {@code true} if the connection is active, {@code false} otherwise
+     */
     @Override
     public boolean isActive() {
         if (server == null) return false;
@@ -44,13 +55,23 @@ public class RMIServerConnection extends Observable<ModelUpdate> implements Serv
         }
     }
 
+    /**
+     * Connects to the server with provided hostname on the default port
+     * @param hostname The hostname to connect to
+     * @throws IOException if the connection fails
+     */
     @Override
     public void connect(String hostname) throws IOException {
-        /* TODO: Load a default port from configuration */
-        int defaultPort = 1099;
-        connect(hostname, defaultPort);
+        int port = (int) AdrenalineProperties.getProperties().getOrDefault("adrenaline.rmiport", 1099);
+        connect(hostname, port);
     }
 
+    /**
+     * Connects to the server with provided hostname on the provided port
+     * @param hostname The hostname to connect to
+     * @param port The port to connect to
+     * @throws IOException if the connection fails
+     */
     @Override
     public void connect(String hostname, int port) throws IOException {
         if (isActive()) return; /* No need to connect if the connection is active */
@@ -92,6 +113,12 @@ public class RMIServerConnection extends Observable<ModelUpdate> implements Serv
         viewStub = null;
     }
 
+    /**
+     * Send a login request to the server
+     * @param username The username of the user
+     * @throws IOException if the server cannot be reached
+     * @throws LoginException if the login fails
+     */
     @Override
     public void login(String username) throws IOException, LoginException {
         if (server == null) throw new IOException("Connection is not active");
@@ -100,6 +127,12 @@ public class RMIServerConnection extends Observable<ModelUpdate> implements Serv
         server.playerLogin(username, viewStub);
     }
 
+    /**
+     * Sends a logout request to the server
+     * If the user was not logged in, nothing happens
+     * @param username The username of the user
+     * @throws IOException if the server cannot be reached
+     */
     @Override
     public void logout(String username) throws IOException {
         if (server == null) throw new IOException("Connection is not active");
@@ -110,6 +143,6 @@ public class RMIServerConnection extends Observable<ModelUpdate> implements Serv
 
     @Override
     public void update(ViewEvent event) {
-        /* TODO: Handle updates coming from ClientView, if we need to */
+        /* We don't need to handle events coming from the view, because they go straight to the controller */
     }
 }

@@ -1,6 +1,7 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.server;
 
 import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.events.ViewEvent;
@@ -9,13 +10,16 @@ import it.polimi.deib.se2019.sanp4.adrenaline.common.network.socket.*;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.RemoteObservable;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.ChoiceRequest;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.ModelUpdate;
-
 import it.polimi.deib.se2019.sanp4.adrenaline.utils.JSONUtils;
 import it.polimi.deib.se2019.sanp4.adrenaline.view.MessageType;
 import it.polimi.deib.se2019.sanp4.adrenaline.view.ViewScene;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.NoSuchElementException;
+import java.util.Scanner;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -24,7 +28,6 @@ import java.util.logging.Logger;
  */
 public class SocketRemoteView extends RemoteObservable<ViewEvent>
         implements RemoteView, Runnable, SocketServerCommandTarget {
-
     /** The socket to communicate to the client */
     private Socket socket;
 
@@ -34,14 +37,17 @@ public class SocketRemoteView extends RemoteObservable<ViewEvent>
     /** Socket output stream */
     private OutputStream out;
 
-    /** Socket input stream */
-    private InputStream in;
+    /** Scanner for reading from input stream */
+    private Scanner scanner;
 
     /** Username of the player this view belongs to */
     private String username;
 
+    /** Executor for incoming commands */
+    private ExecutorService commandExecutor = Executors.newSingleThreadExecutor();
+
     /* Commodities */
-    private static final ObjectMapper objectMapper = JSONUtils.getObjectMapper();
+    private static final ObjectMapper objectMapper = JSONUtils.getNetworkObjectMapper();
     private static final Logger logger = Logger.getLogger(SocketRemoteView.class.getName());
 
     /**
@@ -55,7 +61,9 @@ public class SocketRemoteView extends RemoteObservable<ViewEvent>
         this.server = server;
         /* Bind the streams */
         out = new BufferedOutputStream(socket.getOutputStream());
-        in = new BufferedInputStream(socket.getInputStream());
+        InputStream in = new BufferedInputStream(socket.getInputStream());
+        /* Create scanner from the stream */
+        scanner = new Scanner(in);
     }
 
     /**
@@ -67,29 +75,36 @@ public class SocketRemoteView extends RemoteObservable<ViewEvent>
      * <li>wait for the next command</li>
      * </ol>
      * The loop interrupts when the connection closes
+     * Then there is a loop which runs on another thread to keep alive the connection
      */
     @Override
     public void run() {
         /* NOTE: The server has just accepted the connection */
         try {
+            /* Set TCP keepalive option, this way we don't have to send the ping command manually */
+            socket.setKeepAlive(true);
             while (!socket.isClosed()) {
-                commandLoop();
+                listenLoop();
             }
         } catch (IOException e) {
-            logger.log(Level.WARNING, "Connection problems on client \"{0}\"", username);
+            logger.log(Level.WARNING, String.format("Connection problems on client \"%s\"", username), e);
         }
         /* When finished close the connection */
         closeConnection();
+        logger.log(Level.INFO, "End of connection thread");
     }
 
     /** See {@link #run()} */
-    private void commandLoop() throws IOException {
+    private void listenLoop() throws IOException {
         try {
+            /* Wait for incoming command as string */
+            String s = scanner.nextLine();
+            logger.log(Level.FINER, () -> String.format("Received command: %s", s));
             /* Wait for the incoming command and deserialize it */
-            SocketServerCommand command = objectMapper.readValue(in, SocketServerCommand.class);
+            SocketServerCommand command = objectMapper.readValue(s, SocketServerCommand.class);
 
-            /* Now apply the command */
-            command.applyOn(this);
+            /* Execute the command in a separate thread */
+            executeAsync(command);
 
             /* Go on with another iteration of the cycle */
         } catch (JsonParseException e) {
@@ -98,7 +113,18 @@ public class SocketRemoteView extends RemoteObservable<ViewEvent>
             logger.log(Level.WARNING, "Could not unmarshall incoming command", e);
         } catch (NullPointerException e) {
             logger.log(Level.WARNING, "Cannot execute null command", e);
+        } catch (NoSuchElementException | IllegalStateException e) {
+            /* This is a problem when reading from the input stream */
+            closeConnection();
         }
+    }
+
+    /**
+     * Executes the given command in a new thread
+     * @param command the command to be executed
+     */
+    private synchronized void executeAsync(SocketServerCommand command) {
+        commandExecutor.submit(() -> command.applyOn(this));
     }
 
     /**
@@ -109,7 +135,7 @@ public class SocketRemoteView extends RemoteObservable<ViewEvent>
      * @return username of the player, if it has been set, {@code null} otherwise
      */
     @Override
-    public String getUsername() {
+    public synchronized String getUsername() {
         return username;
     }
 
@@ -119,7 +145,7 @@ public class SocketRemoteView extends RemoteObservable<ViewEvent>
      * @param username name of the user
      */
     @Override
-    public void setUsername(String username) {
+    public synchronized void setUsername(String username) {
         this.username = username;
     }
 
@@ -182,13 +208,25 @@ public class SocketRemoteView extends RemoteObservable<ViewEvent>
     /**
      * Sends a command to the client attached to this target,
      * usually as a response to the execution of this command
+     * If network problems are detected, this call will also close the underlying socket connection
      *
      * @param command the command that has to be sent
-     * @throws IOException if the command cannot be sent due to network problems
      */
     @Override
-    public void sendCommand(SocketClientCommand command) throws IOException {
-        objectMapper.writeValue(out, command);
+    public synchronized void sendCommand(SocketClientCommand command) throws IOException {
+        try {
+            /* Write the command as a line in the output stream */
+            String line = objectMapper.writeValueAsString(command) + "\n";
+            logger.log(Level.FINER, "Sending command: {0}", line);
+            out.write(line.getBytes());
+            out.flush();
+        } catch (JsonProcessingException e) {
+            logger.log(Level.WARNING, "Jackson could not serialize command", e);
+        } catch (IOException e) {
+            /* This is a problem with the connection */
+            closeConnection();
+            throw e; /* Rethrow exceptions so the caller of the command knows of the dead connection */
+        }
     }
 
     /**
@@ -214,7 +252,7 @@ public class SocketRemoteView extends RemoteObservable<ViewEvent>
     /**
      * Closes the socket connection
      */
-    private void closeConnection() {
+    private synchronized void closeConnection() {
         if (!socket.isClosed()) {
             try {
                 logger.log(Level.INFO, "Closing connection for player \"{0}\"", username);
