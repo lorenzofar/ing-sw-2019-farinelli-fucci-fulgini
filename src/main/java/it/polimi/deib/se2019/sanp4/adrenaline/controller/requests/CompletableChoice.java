@@ -52,13 +52,13 @@ public class CompletableChoice<T> {
      * Attempt to complete the choice with given object.
      * This method will check if the choice is valid based on the request
      * and if it is valid it will make the choice available via {@link #get()}
+     * If the choice has already been completed, this call has no effect
      * @param choice the choice object to be provided, even null if the request is optional
      * @throws InvalidChoiceException if the choice is invalid (not accepted by the request)
-     * @throws AlreadyCompletedException if the choice has already been completed
      */
-    public synchronized void complete(Object choice) throws AlreadyCompletedException, InvalidChoiceException {
+    public synchronized void complete(Object choice) throws InvalidChoiceException {
         /* If the future has been completed, it cannot be completed again */
-        if (completed) throw new AlreadyCompletedException();
+        if (completed) return;
 
         /* Check that the choice is valid */
         if (request.isChoiceValid(choice)) {

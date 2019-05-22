@@ -12,9 +12,6 @@ import static org.junit.Assert.*;
 
 /** Test subclass with String as the choice type */
 class StringRequest extends ChoiceRequest<String> {
-    StringRequest(String message, List<String> choices, boolean optional, String uuid) {
-        super(message, choices, optional, String.class, uuid);
-    }
     StringRequest(String message, List<String> choices, boolean optional) {
         super(message, choices, optional, String.class);
     }
@@ -50,7 +47,7 @@ public class CompletableChoiceTest {
 
     @Test
     public void complete_validChoice_shouldComplete()
-            throws AlreadyCompletedException, InvalidChoiceException, InterruptedException {
+            throws InvalidChoiceException, InterruptedException {
         CompletableChoice<String> completableChoice = new CompletableChoice<>(request);
 
         /* Complete with a valid choice */
@@ -66,7 +63,7 @@ public class CompletableChoiceTest {
 
     @Test
     public void complete_nullValidChoice_shouldComplete()
-            throws AlreadyCompletedException, InvalidChoiceException, InterruptedException {
+            throws InvalidChoiceException, InterruptedException {
         CompletableChoice<String> completableChoice = new CompletableChoice<>(request);
 
         /* Since the request is optional, the choice should complete also with a null value */
@@ -82,7 +79,7 @@ public class CompletableChoiceTest {
 
     @Test(expected = InvalidChoiceException.class)
     public void complete_invalidChoice_shouldThrow()
-            throws AlreadyCompletedException, InvalidChoiceException {
+            throws InvalidChoiceException {
         CompletableChoice<String> completableChoice = new CompletableChoice<>(request);
 
         completableChoice.complete("invalid");
@@ -92,14 +89,14 @@ public class CompletableChoiceTest {
         assertFalse(completableChoice.isCancelled());
     }
 
-    @Test(expected = AlreadyCompletedException.class)
-    public void complete_alreadyCompleted_shouldThrow()
-            throws AlreadyCompletedException, InvalidChoiceException {
+    @Test
+    public void complete_alreadyCompleted_shouldHaveNoEffect() throws InvalidChoiceException, InterruptedException {
         CompletableChoice<String> completableChoice = new CompletableChoice<>(request);
         completableChoice.complete("a");
 
         /* Try to complete it again */
         completableChoice.complete("b");
+        assertEquals("a", completableChoice.get());
     }
 
     @Test
@@ -113,7 +110,7 @@ public class CompletableChoiceTest {
     }
 
     @Test
-    public void cancel_alreadyCompleted_shouldReturnFalse() throws AlreadyCompletedException, InvalidChoiceException {
+    public void cancel_alreadyCompleted_shouldReturnFalse() throws InvalidChoiceException {
         CompletableChoice<String> completableChoice = new CompletableChoice<>(request);
         completableChoice.complete("a"); /* Complete the choice */
 
@@ -125,7 +122,7 @@ public class CompletableChoiceTest {
     }
 
     @Test
-    public void get_asyncCompletion_shouldReturn() throws AlreadyCompletedException, InvalidChoiceException, ExecutionException, InterruptedException {
+    public void get_asyncCompletion_shouldReturn() throws Exception {
         CompletableChoice<String> completableChoice = new CompletableChoice<>(request);
 
         /* Block on the completable choice and return the result as a future */
