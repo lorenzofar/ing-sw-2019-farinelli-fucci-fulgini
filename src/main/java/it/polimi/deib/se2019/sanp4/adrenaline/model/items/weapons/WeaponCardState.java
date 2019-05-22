@@ -3,6 +3,8 @@ package it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.Observable;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.ModelUpdate;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
 
 @JsonTypeInfo(
@@ -13,7 +15,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
         @JsonSubTypes.Type(value = LoadedState.class, name = "loaded"),
         @JsonSubTypes.Type(value = PickupState.class, name = "pickup"),
         @JsonSubTypes.Type(value = UnloadedState.class, name = "unloaded") })
-public abstract class WeaponCardState {
+public abstract class WeaponCardState extends Observable<ModelUpdate> {
     private String type;
 
     protected WeaponCardState(String type){

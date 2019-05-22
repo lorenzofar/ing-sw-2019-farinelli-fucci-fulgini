@@ -2,6 +2,7 @@ package it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.CardNotFoundException;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.NotEnoughAmmoException;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.ReloadUpdate;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
 
 public class UnloadedState extends WeaponCardState {
@@ -35,6 +36,7 @@ public class UnloadedState extends WeaponCardState {
             }
             player.payAmmo(weapon.getCost());
             weapon.setState(new LoadedState());
+            notifyObservers(new ReloadUpdate(player.getName(), weapon.getName()));
         }
         catch(NotEnoughAmmoException | CardNotFoundException ex){
             // Here the user does not have enough ammo to pay the reload cost
