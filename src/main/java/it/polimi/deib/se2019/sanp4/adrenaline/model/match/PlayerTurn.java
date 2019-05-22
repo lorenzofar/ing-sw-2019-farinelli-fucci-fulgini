@@ -30,7 +30,7 @@ public class PlayerTurn{
     /** The player the turn belongs to */
     private Player turnOwner;
 
-    /** If the player has already performed the final action */
+    /** If the player has already performed the final action in this turn */
     private boolean hasPerformedFinalAction;
 
     /** The state of the turn */

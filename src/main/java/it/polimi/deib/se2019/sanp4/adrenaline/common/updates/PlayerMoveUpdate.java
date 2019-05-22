@@ -14,7 +14,7 @@ public class PlayerMoveUpdate extends ModelUpdate {
     private CoordPair end;
 
     /**
-     * Creates an update that will be sent in broadcast
+     * Creates a move update that will be sent in broadcast.
      * @param player The name of the moved player.
      * @param start The position of the starting square, null if the player is spawning.
      * @param end The position of the square the player is moved onto.

@@ -3,6 +3,9 @@ package it.polimi.deib.se2019.sanp4.adrenaline.model.player;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.AdrenalineProperties;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.Observable;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.DamageUpdate;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.ModelUpdate;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -14,7 +17,7 @@ import static java.util.Map.Entry.comparingByValue;
  * It is also provides a method to calculate each player's scores when
  * the board needs to be scored (e.g. killshot), based on the state (regular or frenzy).
  */
-public class PlayerBoard{
+public class PlayerBoard extends Observable<ModelUpdate> {
     /**
      * Maximum marks each other player can have on this board
      * Fall back to a default value of 3 marks if none is set
@@ -122,6 +125,7 @@ public class PlayerBoard{
             throw new IllegalArgumentException("Number of damage tokens cannot be negative");
         }
         damages.addAll(Collections.nCopies(count, shooter));
+        notifyObservers(new DamageUpdate(shooter.getName(), player.getName(), count));
     }
 
     /**
