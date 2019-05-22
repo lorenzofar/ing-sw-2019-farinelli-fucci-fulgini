@@ -97,7 +97,11 @@ public class Board extends Observable<ModelUpdate> {
             start.removePlayer(player);
         }
         end.addPlayer(player);
-        player.notifyObservers(new PlayerMoveUpdate(player.getName(), start.getLocation(), end.getLocation()));
+        if(start != null) {
+            player.notifyObservers(new PlayerMoveUpdate(player.getName(), start.getLocation(), end.getLocation()));
+        } else {
+            player.notifyObservers(new PlayerMoveUpdate(player.getName(), null, end.getLocation()));
+        }
     }
 
     /**
