@@ -2,7 +2,6 @@ package it.polimi.deib.se2019.sanp4.adrenaline.model.player;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import it.polimi.deib.se2019.sanp4.adrenaline.common.AdrenalineProperties;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.Observable;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.DamageUpdate;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.ModelUpdate;
@@ -22,13 +21,13 @@ public class PlayerBoard extends Observable<ModelUpdate> {
      * Maximum marks each other player can have on this board
      * Fall back to a default value of 3 marks if none is set
      */
-    public static final int MAX_MARKS_PER_PLAYER = (int) AdrenalineProperties.getProperties().getOrDefault("adrenaline.maxplayermarks", 3);
+    public static final int MAX_MARKS_PER_PLAYER = 3;
 
     /**
      * Number of damage tokens to perform a killshot
      * Fall back to a default value of 11 tokens if none is set
      */
-    public static final int KILLSHOT_DAMAGE = (int) AdrenalineProperties.getProperties().getOrDefault("adrenaline.killshotdamage", 11);
+    public static final int KILLSHOT_DAMAGE = 11;
 
     /** Number of damage tokens to perform an overkill */
     public static final int OVERKILL_DAMAGE = KILLSHOT_DAMAGE + 1;
