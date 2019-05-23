@@ -8,8 +8,8 @@ import it.polimi.deib.se2019.sanp4.adrenaline.model.board.CoordPair;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCubeCost;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.WeaponCard;
 
-import java.io.PrintWriter;
 import java.util.*;
+import java.util.function.Function;
 
 /**
  * An utility class to interact with the command-line.
@@ -31,10 +31,6 @@ class CLIHelper {
      * Scanner to read user input
      */
     private static final Scanner scanner = new Scanner(System.in);
-    /**
-     * PrintWriter to output text
-     */
-    private static final PrintWriter pw = new PrintWriter(System.out);
     /**
      * Stack of characters used for the spinner animation
      */
@@ -61,6 +57,7 @@ class CLIHelper {
 
     /* ===== ANSI FORMATTERS ===== */
     private static final String ANSI_BOLD = "\033[0;1m";
+    private static final String ANSI_ITALIC = "\u001B[3m";
 
     /* ===== BORDER AND CORNERS ===== */
     private static final String TOP_SX_CORNER = "╔";
@@ -71,12 +68,19 @@ class CLIHelper {
     private static final String HORIZONTAL_BORDER = "═";
     private static final String LEFT_VERTICAL_SEPARATOR = "╠";
     private static final String RIGHT_VERTICAL_SEPARATOR = "╣";
+    private static final String LIGHT_LEFT_VERTICAL_SEPARATOR = "╟";
+    private static final String LIGHT_RIGHT_VERTICAL_SEPARATOR = "╢";
+    private static final String LIGHT_HORIZONTAL_BORDER = "─";
 
     private static final String ANSI_DOT = "●";
 
     /* ===== DIMENSIONS ===== */
     private static final int SQUARE_DIM = 19;
     private static final int CARD_WIDTH = 20;
+
+    /* ===== TEMPLATES ====== */
+    private static final String TRISTRING_TEMPLATE = "%s%s%s";
+    private static final String PROMPT_TEMPLATE =">> ";
 
     /**
      * Prints the provided text, formatting it with the provided parameters
@@ -85,7 +89,7 @@ class CLIHelper {
      * @param args     Optional arguments to insert inside the template
      */
     static void print(String template, Object... args) {
-        pw.printf(template, args);
+        System.out.printf(template, args);
     }
 
     /**
@@ -96,8 +100,8 @@ class CLIHelper {
      * @param args     Optional arguments to insert inside the template
      */
     static void println(String template, Object... args) {
-        pw.printf(template, args);
-        pw.print("\n");
+        print(template, args);
+        print("\n");
     }
 
     /**
@@ -111,11 +115,10 @@ class CLIHelper {
             topBottomBorder.append("━");
         }
         print(ANSI_GREEN);
-        println("%s%s%s", TOP_SX_CORNER, topBottomBorder.toString(), TOP_DX_CORNER);
+        println(TRISTRING_TEMPLATE, TOP_SX_CORNER, topBottomBorder.toString(), TOP_DX_CORNER);
         println("%s%8c%s%8c%s", VERTICAL_BORDER, ' ', title.toUpperCase(), ' ', VERTICAL_BORDER);
-        println("%s%s%s", BOTTOM_SX_CORNER, topBottomBorder.toString(), BOTTOM_DX_CORNER);
+        println(TRISTRING_TEMPLATE, BOTTOM_SX_CORNER, topBottomBorder.toString(), BOTTOM_DX_CORNER);
         resetColor();
-
     }
 
     /**
@@ -142,8 +145,7 @@ class CLIHelper {
 
         do {
             if (n != null) print("This choice does not exist!");
-            print(">> ");
-            pw.flush();
+            print(PROMPT_TEMPLATE, "");
             n = scanner.nextInt();
             scanner.nextLine(); /* Catch newline */
         } while (n > maxN || n < 0);
@@ -194,8 +196,9 @@ class CLIHelper {
      */
     static String parseString(String message) {
         print(ANSI_CYAN);
-        println("> %s:", message);
+        println(message);
         resetColor();
+        print(PROMPT_TEMPLATE);
         return scanner.next();
 
     }
@@ -207,6 +210,7 @@ class CLIHelper {
      * @return The integer entered by the user
      */
     private static int parseInt() {
+        print(PROMPT_TEMPLATE);
         String input = scanner.next();
         try {
             return Integer.parseInt(input);
@@ -225,7 +229,7 @@ class CLIHelper {
      */
     private static int parseInt(String message) {
         print(ANSI_CYAN);
-        println("> %s:", message);
+        println(message);
         resetColor();
         return parseInt();
     }
@@ -276,6 +280,7 @@ class CLIHelper {
         println(errorMessage);
         resetColor();
     }
+    /* ================== */
 
     /* ===== STRINGS AND LISTS MANIPULATION ===== */
 
@@ -288,6 +293,54 @@ class CLIHelper {
     private static void expandStringRendering(List<List<String>> renderedString, List<String> newLine) {
         renderedString.add(new ArrayList<>());
         renderedString.get(renderedString.size() - 1).addAll(newLine);
+    }
+
+    /**
+     * Insert the provided text in the provided line, by leaving an horizontal padding
+     *
+     * @param line      The line
+     * @param text      The text to insert
+     * @param hPadding  The padding amount
+     * @param formatter The ANSI formatter to use
+     */
+    private static void fillLineWithText(List<String> line, String text, int hPadding, String formatter) {
+        for (int i = 0; i < text.length(); i++) {
+            line.set(i + hPadding, String.format(TRISTRING_TEMPLATE, formatter, text.substring(i, i + 1), ANSI_RESET));
+        }
+    }
+
+    /**
+     * Insert the provided text in the provided line, by leaving an horizontal padding
+     *
+     * @param line     The line
+     * @param text     The text to insert
+     * @param hPadding The padding amount
+     */
+    private static void fillLineWithText(List<String> line, String text, int hPadding) {
+        fillLineWithText(line, text, hPadding, "");
+    }
+
+    /**
+     * Insert the provided objects in the provided line, by leaving an horizontal padding
+     * and transforming the objects according to the provided functions
+     *
+     * @param line            The line
+     * @param objects         The objects to put inside
+     * @param colorConverter  The function mapping an object to a color
+     * @param symbolConverter The function mapping an object to a string
+     * @param hPadding        The padding amount
+     * @param spacing         The spacing between two consecutive objects
+     * @param <T>             the tipo of objects to insert
+     */
+    private static <T> void fillLineWithObjects(List<String> line, List<T> objects, Function<T, String> colorConverter, Function<T, String> symbolConverter, int hPadding, Integer spacing) {
+        if (spacing == null) {
+            spacing = 1;
+        }
+        int i = 0;
+        for (T object : objects) {
+            line.set(i + hPadding, String.format(TRISTRING_TEMPLATE, colorConverter.apply(object), symbolConverter.apply(object), ANSI_RESET));
+            i += spacing;
+        }
     }
 
     /**
@@ -329,6 +382,7 @@ class CLIHelper {
         }
         return chunks;
     }
+    /* =================== */
 
     /* ===== SQUARES ===== */
 
@@ -384,7 +438,7 @@ class CLIHelper {
         int playerX = centerX - playersCount / 2;
         // We print the players in a single row
         for (PlayerView player : square.getPlayers()) {
-            squareRows.get(centerY).set(playerX, String.format("%s%s%s", player.getColor().getANSICode(), "●", square.getRoomColor().getANSICode()));
+            squareRows.get(centerY).set(playerX, String.format(TRISTRING_TEMPLATE, player.getColor().getANSICode(), ANSI_DOT, square.getRoomColor().getANSICode()));
             playerX++;
         }
         // Then eventually put the correct ANSI code for the square color
@@ -445,10 +499,14 @@ class CLIHelper {
         final List<String> separator = new ArrayList<>(Collections.nCopies(CARD_WIDTH, HORIZONTAL_BORDER));
         List<String> blankLine = new ArrayList<>(Collections.nCopies(CARD_WIDTH, " "));
         List<String> middleSeparator = new ArrayList<>(separator);
+        List<String> lightSeparator = new ArrayList<>(separator);
         blankLine.set(0, VERTICAL_BORDER);
         blankLine.set(blankLine.size() - 1, VERTICAL_BORDER);
         middleSeparator.set(0, LEFT_VERTICAL_SEPARATOR);
         middleSeparator.set(middleSeparator.size() - 1, RIGHT_VERTICAL_SEPARATOR);
+        lightSeparator.replaceAll(s -> LIGHT_HORIZONTAL_BORDER);
+        lightSeparator.set(0, LIGHT_LEFT_VERTICAL_SEPARATOR);
+        lightSeparator.set(lightSeparator.size() - 1, LIGHT_RIGHT_VERTICAL_SEPARATOR);
 
         // Set the top border
         expandStringRendering(renderedWeapon, separator);
@@ -460,9 +518,7 @@ class CLIHelper {
         // And add it to the rendered card
         weaponNameChunks.forEach(chunk -> {
             expandStringRendering(renderedWeapon, blankLine);
-            for (int i = 0; i < chunk.length(); i++) {
-                renderedWeapon.get(renderedWeapon.size() - 1).set(i + 2, String.format("%s%s%s", ANSI_BOLD, chunk.substring(i, i + 1), ANSI_RESET));
-            }
+            fillLineWithText(renderedWeapon.get(renderedWeapon.size() - 1), chunk, 2, ANSI_BOLD);
         });
         expandStringRendering(renderedWeapon, middleSeparator);
 
@@ -473,20 +529,54 @@ class CLIHelper {
         // And add them to the rendered card
         ammoCubesChunks.forEach(chunk -> {
             expandStringRendering(renderedWeapon, blankLine);
-            int i = 0;
-            for (AmmoCubeCost cube : chunk) {
-                renderedWeapon.get(renderedWeapon.size() - 1).set(i + 2, String.format("%s%s%s", cube.getCorrespondingCube().getANSICode(), ANSI_DOT, ANSI_RESET));
-                i += 2;
-            }
+            fillLineWithObjects(
+                    renderedWeapon.get(renderedWeapon.size() - 1),
+                    chunk,
+                    cube -> cube.getCorrespondingCube().getANSICode(),
+                    cube -> ANSI_DOT,
+                    2,
+                    2
+            );
         });
         expandStringRendering(renderedWeapon, middleSeparator);
+
+        // Add description of effects
+        weaponCard.getEffects().forEach(effect -> {
+            // We add the name of the effect
+            List<String> effectNameChunks = splitString(effect.getName(), CARD_WIDTH - 4);
+            List<String> effectDescriptionChunks = splitString(effect.getDescription(), CARD_WIDTH - 4);
+            List<List<AmmoCubeCost>> effectCostChunks = splitList(effect.getCost(), CARD_WIDTH - 4);
+
+            effectNameChunks.forEach(effectNameChunk -> {
+                expandStringRendering(renderedWeapon, blankLine);
+                fillLineWithText(renderedWeapon.get(renderedWeapon.size() - 1), effectNameChunk, 2);
+            });
+            expandStringRendering(renderedWeapon, lightSeparator);
+            effectDescriptionChunks.forEach(effectDescriptionChunk -> {
+                expandStringRendering(renderedWeapon, blankLine);
+                fillLineWithText(renderedWeapon.get(renderedWeapon.size() - 1), effectDescriptionChunk, 2, ANSI_ITALIC);
+            });
+            effectCostChunks.forEach(effectCostChunk -> {
+                expandStringRendering(renderedWeapon, blankLine);
+                fillLineWithObjects(
+                        renderedWeapon.get(renderedWeapon.size() - 1),
+                        effectCostChunk,
+                        cube -> cube.getCorrespondingCube().getANSICode(),
+                        cube -> ANSI_DOT,
+                        2,
+                        2
+                );
+            });
+            expandStringRendering(renderedWeapon, middleSeparator);
+        });
+
+        // Then remove the last inserted line, since is a middle separator
+        renderedWeapon.remove(renderedWeapon.size() - 1);
 
         // Add bottom border
         expandStringRendering(renderedWeapon, separator);
         renderedWeapon.get(renderedWeapon.size() - 1).set(0, BOTTOM_SX_CORNER);
         renderedWeapon.get(renderedWeapon.size() - 1).set(renderedWeapon.get(renderedWeapon.size() - 1).size() - 1, BOTTOM_DX_CORNER);
-
-        //TODO: Add effects
 
         return renderedWeapon;
     }
