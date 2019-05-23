@@ -61,10 +61,10 @@ class CLIHelper {
     private static final String ANSI_ITALIC = "\u001B[3m";
 
     /* ===== BORDER AND CORNERS ===== */
-    private static final String TOP_SX_CORNER = "╔";
-    private static final String TOP_DX_CORNER = "╗";
-    private static final String BOTTOM_SX_CORNER = "╚";
-    private static final String BOTTOM_DX_CORNER = "╝";
+    private static final String LEFT_TOP_CORNER = "╔";
+    private static final String RIGHT_TOP_CORNER = "╗";
+    private static final String LEFT_BOTTOM_CORNER = "╚";
+    private static final String RIGHT_BOTTOM_CORNER = "╝";
     private static final String VERTICAL_BORDER = "║";
     private static final String HORIZONTAL_BORDER = "═";
     private static final String LEFT_VERTICAL_SEPARATOR = "╠";
@@ -120,10 +120,22 @@ class CLIHelper {
             topBottomBorder.append("━");
         }
         print(ANSI_GREEN);
-        println(TRISTRING_TEMPLATE, TOP_SX_CORNER, topBottomBorder.toString(), TOP_DX_CORNER);
+        println(TRISTRING_TEMPLATE, LEFT_TOP_CORNER, topBottomBorder.toString(), RIGHT_TOP_CORNER);
         println("%s%8c%s%8c%s", VERTICAL_BORDER, ' ', title.toUpperCase(), ' ', VERTICAL_BORDER);
-        println(TRISTRING_TEMPLATE, BOTTOM_SX_CORNER, topBottomBorder.toString(), BOTTOM_DX_CORNER);
+        println(TRISTRING_TEMPLATE, LEFT_BOTTOM_CORNER, topBottomBorder.toString(), RIGHT_BOTTOM_CORNER);
         resetColor();
+    }
+
+    /**
+     * Prints the provided game element to the command line
+     * If a null object is provided, nothing is printed
+     *
+     * @param gameElement The textual representation of the element
+     */
+    private static void printRenderedGameElement(List<List<String>> gameElement) {
+        if (gameElement != null) {
+            gameElement.forEach(line -> println(String.join("", line)));
+        }
     }
 
     /**
@@ -305,6 +317,16 @@ class CLIHelper {
     }
 
     /**
+     * Generate a new line according to the provided template
+     *
+     * @param template The string the line is composed of
+     * @param length   The length of the line
+     */
+    private static List<String> generateLine(String template, int length) {
+        return generateLine(template, length, template, template);
+    }
+
+    /**
      * Expand the provided rendered list of strings with the provided new line
      *
      * @param renderedString The string rendering
@@ -453,10 +475,10 @@ class CLIHelper {
         bottomBorder.replaceAll(s -> square.getAdjacentMap().get(CardinalDirection.S).getCharacterRepresentation());
 
         // We add corners around the square
-        topBorder.set(0, TOP_SX_CORNER);
-        topBorder.set(topBorder.size() - 1, TOP_DX_CORNER);
-        bottomBorder.set(0, BOTTOM_SX_CORNER);
-        bottomBorder.set(bottomBorder.size() - 1, BOTTOM_DX_CORNER);
+        topBorder.set(0, LEFT_TOP_CORNER);
+        topBorder.set(topBorder.size() - 1, RIGHT_TOP_CORNER);
+        bottomBorder.set(0, LEFT_BOTTOM_CORNER);
+        bottomBorder.set(bottomBorder.size() - 1, RIGHT_BOTTOM_CORNER);
 
         // We add the marker indicating the square type
         squareRows.get(1).set(1, square.getTypeMarker());
@@ -485,7 +507,7 @@ class CLIHelper {
      *
      * @param board The object representing the board
      */
-    public static void printBoard(BoardView board) {
+    public static List<List<String>> renderBoard(BoardView board) {
         int width = board.getColumnsCount();
         int height = board.getRowsCount();
         // We define an initial list of lists to hold the rendered board
@@ -507,9 +529,7 @@ class CLIHelper {
             // We then concatenate the row with the previous one
             boardRows.addAll(rowSquares);
         }
-
-        // Eventually we print the result
-        boardRows.forEach(row -> println(String.join("", row)));
+        return boardRows;
     }
 
     /* ===== WEAPON CARDS ===== */
@@ -529,7 +549,7 @@ class CLIHelper {
         List<List<String>> renderedWeapon = new ArrayList<>();
 
         // Set the top border
-        expandStringRendering(renderedWeapon, generateLine(HORIZONTAL_BORDER, CARD_WIDTH, TOP_SX_CORNER, TOP_DX_CORNER));
+        expandStringRendering(renderedWeapon, generateLine(HORIZONTAL_BORDER, CARD_WIDTH, LEFT_TOP_CORNER, RIGHT_TOP_CORNER));
 
         // Split the name of the weapon (considering padding)
         List<String> weaponNameChunks = splitString(weaponCard.getName(), CARD_WIDTH - 4);
@@ -592,7 +612,7 @@ class CLIHelper {
         renderedWeapon.remove(renderedWeapon.size() - 1);
 
         // Add bottom border
-        expandStringRendering(renderedWeapon, generateLine(HORIZONTAL_BORDER, CARD_WIDTH, BOTTOM_SX_CORNER, BOTTOM_DX_CORNER));
+        expandStringRendering(renderedWeapon, generateLine(HORIZONTAL_BORDER, CARD_WIDTH, LEFT_BOTTOM_CORNER, RIGHT_BOTTOM_CORNER));
 
         return renderedWeapon;
     }
@@ -613,7 +633,7 @@ class CLIHelper {
         List<List<String>> renderedPowerup = new ArrayList<>();
         List<String> powerupNameChunks = splitString(powerupCard.getName(), CARD_WIDTH - 4);
         List<String> powerupDescriptionChunks = splitString(powerupCard.getDescription(), CARD_WIDTH - 4);
-        expandStringRendering(renderedPowerup, generateLine(HORIZONTAL_BORDER, CARD_WIDTH, TOP_SX_CORNER, TOP_DX_CORNER));
+        expandStringRendering(renderedPowerup, generateLine(HORIZONTAL_BORDER, CARD_WIDTH, LEFT_TOP_CORNER, RIGHT_TOP_CORNER));
         powerupNameChunks.forEach(chunk -> {
             expandStringRendering(renderedPowerup, generateLine(BLANK, CARD_WIDTH, VERTICAL_BORDER, VERTICAL_BORDER));
             fillLineWithText(renderedPowerup.get(renderedPowerup.size() - 1), chunk, 2, ANSI_BOLD, powerupCard.getCubeColor().getANSICode());
@@ -623,7 +643,7 @@ class CLIHelper {
             expandStringRendering(renderedPowerup, generateLine(BLANK, CARD_WIDTH, VERTICAL_BORDER, VERTICAL_BORDER));
             fillLineWithText(renderedPowerup.get(renderedPowerup.size() - 1), chunk, 2, ANSI_ITALIC);
         });
-        expandStringRendering(renderedPowerup, generateLine(HORIZONTAL_BORDER, CARD_WIDTH, BOTTOM_SX_CORNER, BOTTOM_DX_CORNER));
+        expandStringRendering(renderedPowerup, generateLine(HORIZONTAL_BORDER, CARD_WIDTH, LEFT_BOTTOM_CORNER, RIGHT_BOTTOM_CORNER));
         return renderedPowerup;
     }
 
@@ -644,7 +664,7 @@ class CLIHelper {
         for (int i = 0; i < totalSkulls; i++) {
             skulls.add(i);
         }
-        expandStringRendering(renderedTrack, generateLine(HORIZONTAL_BORDER, trackWidth, TOP_SX_CORNER, TOP_DX_CORNER));
+        expandStringRendering(renderedTrack, generateLine(HORIZONTAL_BORDER, trackWidth, LEFT_TOP_CORNER, RIGHT_TOP_CORNER));
         expandStringRendering(renderedTrack, generateLine(BLANK, trackWidth, VERTICAL_BORDER, VERTICAL_BORDER));
         fillLineWithText(renderedTrack.get(renderedTrack.size() - 1), "Killshots", 2, ANSI_BOLD);
         expandStringRendering(renderedTrack, generateLine(LIGHT_HORIZONTAL_BORDER, trackWidth, LIGHT_LEFT_VERTICAL_SEPARATOR, LIGHT_RIGHT_VERTICAL_SEPARATOR));
@@ -657,7 +677,59 @@ class CLIHelper {
                 2,
                 2
         );
-        expandStringRendering(renderedTrack, generateLine(HORIZONTAL_BORDER, trackWidth, BOTTOM_SX_CORNER, BOTTOM_DX_CORNER));
+        expandStringRendering(renderedTrack, generateLine(HORIZONTAL_BORDER, trackWidth, LEFT_BOTTOM_CORNER, RIGHT_BOTTOM_CORNER));
         return renderedTrack;
+    }
+
+    /* ===== RENDERINGS MANIPULATION ===== */
+
+    /**
+     * Generates a rendering of the provided elements so that they are placed one after the other
+     *
+     * @param elements The elements to concat
+     * @param spacing  The spacing between two consecutive elements
+     * @return A list of all the lines composing the concatenated elements
+     */
+    private static List<List<String>> concatRenderedElements(List<List<List<String>>> elements, int spacing) {
+        //First retrieve the tallest element
+        Optional<List<List<String>>> tallestElement = elements.stream().max(Comparator.comparingInt(List::size));
+        if (!(tallestElement.isPresent())) {
+            // This happens when the provided list is empty
+            return Collections.emptyList();
+        }
+        List<List<String>> baseReference = new ArrayList<>(tallestElement.get());
+        // Then add all the other elements
+        elements.stream().filter(element -> element != tallestElement.get()).forEach(element -> {
+            for (int i = 0; i < baseReference.size(); i++) {
+                if (i < element.size()) {
+                    if (spacing >= 0) {
+                        baseReference.get(i).addAll(generateLine(BLANK, spacing));
+                    }
+                    baseReference.get(i).addAll(element.get(i));
+                }
+            }
+        });
+        return baseReference;
+    }
+
+    /**
+     * Generates a rendering of the provided elements so that they are stacked one on top of the other
+     *
+     * @param elements The elements to stack
+     * @param spacing  The spacing between two consecutive elements
+     * @return A list of all the lines composing the rendered stacked elements
+     */
+    private static List<List<String>> stackRenderedElements(List<List<List<String>>> elements, int spacing) {
+        if (elements == null) {
+            return Collections.emptyList();
+        }
+        List<List<String>> baseReference = new ArrayList<>();
+        elements.forEach(element -> {
+            baseReference.addAll(element);
+            if (spacing >= 0) {
+                baseReference.addAll(Collections.singletonList(generateLine(BLANK, spacing)));
+            }
+        });
+        return baseReference;
     }
 }
