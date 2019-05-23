@@ -72,18 +72,15 @@ class CLIHelper {
     private static final String LIGHT_LEFT_VERTICAL_SEPARATOR = "╟";
     private static final String LIGHT_RIGHT_VERTICAL_SEPARATOR = "╢";
     private static final String LIGHT_HORIZONTAL_BORDER = "─";
+    private static final String BLANK = " ";
 
+    /* ===== SYMBOLS ===== */
     private static final String ANSI_DOT = "●";
+    private static final String ANSI_SKULL = "☠";
 
     /* ===== DIMENSIONS ===== */
     private static final int SQUARE_DIM = 19;
     private static final int CARD_WIDTH = 20;
-
-
-    /* ===== SEPARATORS ===== */
-    private static final List<String> CARD_SEPARATOR = new ArrayList<>(Collections.nCopies(CARD_WIDTH, HORIZONTAL_BORDER));
-    private static final List<String> CARD_BLANK_LINE = new ArrayList<>(Collections.nCopies(CARD_WIDTH, " "));
-    private static final List<String> CARD_LIGHT_SEPARATOR = new ArrayList<>(Collections.nCopies(CARD_WIDTH, LIGHT_HORIZONTAL_BORDER));
 
     /* ===== TEMPLATES ====== */
     private static final String TRISTRING_TEMPLATE = "%s%s%s";
@@ -293,14 +290,15 @@ class CLIHelper {
     /* ===== STRINGS AND LISTS MANIPULATION ===== */
 
     /**
-     * Generate a new line according to  the provided template, with the provided left and right borders
+     * Generate a new line according to the provided template, with the provided left and right borders
      *
-     * @param template    The list of strings representing the line template
+     * @param template    The string the line is composed of
+     * @param length      The length of the line
      * @param leftBorder  The string representing the left border
      * @param rightBorder The string representing the right border
      */
-    private static List<String> generateLine(List<String> template, String leftBorder, String rightBorder) {
-        List<String> line = new ArrayList<>(template);
+    private static List<String> generateLine(String template, int length, String leftBorder, String rightBorder) {
+        List<String> line = new ArrayList<>(Collections.nCopies(length, template));
         line.set(0, leftBorder);
         line.set(line.size() - 1, rightBorder);
         return line;
@@ -531,16 +529,16 @@ class CLIHelper {
         List<List<String>> renderedWeapon = new ArrayList<>();
 
         // Set the top border
-        expandStringRendering(renderedWeapon, generateLine(CARD_SEPARATOR, TOP_SX_CORNER, TOP_DX_CORNER));
+        expandStringRendering(renderedWeapon, generateLine(HORIZONTAL_BORDER, CARD_WIDTH, TOP_SX_CORNER, TOP_DX_CORNER));
 
         // Split the name of the weapon (considering padding)
         List<String> weaponNameChunks = splitString(weaponCard.getName(), CARD_WIDTH - 4);
         // And add it to the rendered card
         weaponNameChunks.forEach(chunk -> {
-            expandStringRendering(renderedWeapon, generateLine(CARD_BLANK_LINE, VERTICAL_BORDER, VERTICAL_BORDER));
+            expandStringRendering(renderedWeapon, generateLine(BLANK, CARD_WIDTH, VERTICAL_BORDER, VERTICAL_BORDER));
             fillLineWithText(renderedWeapon.get(renderedWeapon.size() - 1), chunk, 2, ANSI_BOLD);
         });
-        expandStringRendering(renderedWeapon, generateLine(CARD_SEPARATOR, LEFT_VERTICAL_SEPARATOR, RIGHT_VERTICAL_SEPARATOR));
+        expandStringRendering(renderedWeapon, generateLine(HORIZONTAL_BORDER, CARD_WIDTH, LEFT_VERTICAL_SEPARATOR, RIGHT_VERTICAL_SEPARATOR));
 
         // Add indicators for ammo cubes
         // Each cube is represented by a colored dot, the first one is the one that comes pre-loaded with the weapon
@@ -548,7 +546,7 @@ class CLIHelper {
         List<List<AmmoCubeCost>> ammoCubesChunks = splitList(weaponCard.getCost(), (CARD_WIDTH - 4) / 2);
         // And add them to the rendered card
         ammoCubesChunks.forEach(chunk -> {
-            expandStringRendering(renderedWeapon, generateLine(CARD_BLANK_LINE, VERTICAL_BORDER, VERTICAL_BORDER));
+            expandStringRendering(renderedWeapon, generateLine(BLANK, CARD_WIDTH, VERTICAL_BORDER, VERTICAL_BORDER));
             fillLineWithObjects(
                     renderedWeapon.get(renderedWeapon.size() - 1),
                     chunk,
@@ -558,7 +556,7 @@ class CLIHelper {
                     2
             );
         });
-        expandStringRendering(renderedWeapon, generateLine(CARD_SEPARATOR, LEFT_VERTICAL_SEPARATOR, RIGHT_VERTICAL_SEPARATOR));
+        expandStringRendering(renderedWeapon, generateLine(HORIZONTAL_BORDER, CARD_WIDTH, LEFT_VERTICAL_SEPARATOR, RIGHT_VERTICAL_SEPARATOR));
 
         // Add description of effects
         weaponCard.getEffects().forEach(effect -> {
@@ -568,16 +566,16 @@ class CLIHelper {
             List<List<AmmoCubeCost>> effectCostChunks = splitList(effect.getCost(), CARD_WIDTH - 4);
 
             effectNameChunks.forEach(effectNameChunk -> {
-                expandStringRendering(renderedWeapon, generateLine(CARD_BLANK_LINE, VERTICAL_BORDER, VERTICAL_BORDER));
+                expandStringRendering(renderedWeapon, generateLine(BLANK, CARD_WIDTH, VERTICAL_BORDER, VERTICAL_BORDER));
                 fillLineWithText(renderedWeapon.get(renderedWeapon.size() - 1), effectNameChunk, 2);
             });
-            expandStringRendering(renderedWeapon, generateLine(CARD_LIGHT_SEPARATOR, LIGHT_LEFT_VERTICAL_SEPARATOR, LIGHT_RIGHT_VERTICAL_SEPARATOR));
+            expandStringRendering(renderedWeapon, generateLine(LIGHT_HORIZONTAL_BORDER, CARD_WIDTH, LIGHT_LEFT_VERTICAL_SEPARATOR, LIGHT_RIGHT_VERTICAL_SEPARATOR));
             effectDescriptionChunks.forEach(effectDescriptionChunk -> {
-                expandStringRendering(renderedWeapon, generateLine(CARD_BLANK_LINE, VERTICAL_BORDER, VERTICAL_BORDER));
+                expandStringRendering(renderedWeapon, generateLine(BLANK, CARD_WIDTH, VERTICAL_BORDER, VERTICAL_BORDER));
                 fillLineWithText(renderedWeapon.get(renderedWeapon.size() - 1), effectDescriptionChunk, 2, ANSI_ITALIC);
             });
             effectCostChunks.forEach(effectCostChunk -> {
-                expandStringRendering(renderedWeapon, generateLine(CARD_BLANK_LINE, VERTICAL_BORDER, VERTICAL_BORDER));
+                expandStringRendering(renderedWeapon, generateLine(BLANK, CARD_WIDTH, VERTICAL_BORDER, VERTICAL_BORDER));
                 fillLineWithObjects(
                         renderedWeapon.get(renderedWeapon.size() - 1),
                         effectCostChunk,
@@ -587,14 +585,14 @@ class CLIHelper {
                         2
                 );
             });
-            expandStringRendering(renderedWeapon, generateLine(CARD_SEPARATOR, LEFT_VERTICAL_SEPARATOR, RIGHT_VERTICAL_SEPARATOR));
+            expandStringRendering(renderedWeapon, generateLine(HORIZONTAL_BORDER, CARD_WIDTH, LEFT_VERTICAL_SEPARATOR, RIGHT_VERTICAL_SEPARATOR));
         });
 
         // Then remove the last inserted line, since is a middle separator
         renderedWeapon.remove(renderedWeapon.size() - 1);
 
         // Add bottom border
-        expandStringRendering(renderedWeapon, generateLine(CARD_SEPARATOR, BOTTOM_SX_CORNER, BOTTOM_DX_CORNER));
+        expandStringRendering(renderedWeapon, generateLine(HORIZONTAL_BORDER, CARD_WIDTH, BOTTOM_SX_CORNER, BOTTOM_DX_CORNER));
 
         return renderedWeapon;
     }
@@ -613,19 +611,53 @@ class CLIHelper {
             return Collections.emptyList();
         }
         List<List<String>> renderedPowerup = new ArrayList<>();
-        List<String> powerupNameChunks = splitString(powerupCard.getName(), CARD_WIDTH-4);
+        List<String> powerupNameChunks = splitString(powerupCard.getName(), CARD_WIDTH - 4);
         List<String> powerupDescriptionChunks = splitString(powerupCard.getDescription(), CARD_WIDTH - 4);
-        expandStringRendering(renderedPowerup, generateLine(CARD_SEPARATOR, TOP_SX_CORNER, TOP_DX_CORNER));
+        expandStringRendering(renderedPowerup, generateLine(HORIZONTAL_BORDER, CARD_WIDTH, TOP_SX_CORNER, TOP_DX_CORNER));
         powerupNameChunks.forEach(chunk -> {
-            expandStringRendering(renderedPowerup, generateLine(CARD_BLANK_LINE, VERTICAL_BORDER, VERTICAL_BORDER));
+            expandStringRendering(renderedPowerup, generateLine(BLANK, CARD_WIDTH, VERTICAL_BORDER, VERTICAL_BORDER));
             fillLineWithText(renderedPowerup.get(renderedPowerup.size() - 1), chunk, 2, ANSI_BOLD, powerupCard.getCubeColor().getANSICode());
         });
-        expandStringRendering(renderedPowerup, generateLine(CARD_SEPARATOR, LEFT_VERTICAL_SEPARATOR, RIGHT_VERTICAL_SEPARATOR));
+        expandStringRendering(renderedPowerup, generateLine(HORIZONTAL_BORDER, CARD_WIDTH, LEFT_VERTICAL_SEPARATOR, RIGHT_VERTICAL_SEPARATOR));
         powerupDescriptionChunks.forEach(chunk -> {
-            expandStringRendering(renderedPowerup, generateLine(CARD_BLANK_LINE, VERTICAL_BORDER, VERTICAL_BORDER));
+            expandStringRendering(renderedPowerup, generateLine(BLANK, CARD_WIDTH, VERTICAL_BORDER, VERTICAL_BORDER));
             fillLineWithText(renderedPowerup.get(renderedPowerup.size() - 1), chunk, 2, ANSI_ITALIC);
         });
-        expandStringRendering(renderedPowerup, generateLine(CARD_SEPARATOR, BOTTOM_SX_CORNER, BOTTOM_DX_CORNER));
+        expandStringRendering(renderedPowerup, generateLine(HORIZONTAL_BORDER, CARD_WIDTH, BOTTOM_SX_CORNER, BOTTOM_DX_CORNER));
         return renderedPowerup;
+    }
+
+    /* ===== KILLSHOTS TRACK ===== */
+
+    /**
+     * Render a killshots track according to the provided number of total and available skulls
+     *
+     * @param takenSkulls The number of taken skulls
+     * @param totalSkulls THe number of total skulls
+     * @return A list of all the lines composing the rendered track
+     */
+    public static List<List<String>> renderKillshotsTrack(int takenSkulls, int totalSkulls) {
+        List<List<String>> renderedTrack = new ArrayList<>();
+        int trackWidth = totalSkulls * 2 + 4; // add gap between two consecutive skulls and external padding
+        // Generate a list of integers to represent skulls and determine their color later
+        List<Integer> skulls = new ArrayList<>();
+        for (int i = 0; i < totalSkulls; i++) {
+            skulls.add(i);
+        }
+        expandStringRendering(renderedTrack, generateLine(HORIZONTAL_BORDER, trackWidth, TOP_SX_CORNER, TOP_DX_CORNER));
+        expandStringRendering(renderedTrack, generateLine(BLANK, trackWidth, VERTICAL_BORDER, VERTICAL_BORDER));
+        fillLineWithText(renderedTrack.get(renderedTrack.size() - 1), "Killshots", 2, ANSI_BOLD);
+        expandStringRendering(renderedTrack, generateLine(LIGHT_HORIZONTAL_BORDER, trackWidth, LIGHT_LEFT_VERTICAL_SEPARATOR, LIGHT_RIGHT_VERTICAL_SEPARATOR));
+        expandStringRendering(renderedTrack, generateLine(BLANK, trackWidth, VERTICAL_BORDER, VERTICAL_BORDER));
+        fillLineWithObjects(
+                renderedTrack.get(renderedTrack.size() - 1),
+                skulls,
+                skullIndex -> skullIndex < takenSkulls ? ANSI_RED : ANSI_RESET,
+                skullIndex -> ANSI_SKULL,
+                2,
+                2
+        );
+        expandStringRendering(renderedTrack, generateLine(HORIZONTAL_BORDER, trackWidth, BOTTOM_SX_CORNER, BOTTOM_DX_CORNER));
+        return renderedTrack;
     }
 }
