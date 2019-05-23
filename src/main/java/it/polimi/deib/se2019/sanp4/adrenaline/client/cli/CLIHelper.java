@@ -6,6 +6,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.SquareView;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.CardinalDirection;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.CoordPair;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCubeCost;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.items.powerup.PowerupCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.WeaponCard;
 
 import java.util.*;
@@ -78,9 +79,16 @@ class CLIHelper {
     private static final int SQUARE_DIM = 19;
     private static final int CARD_WIDTH = 20;
 
+
+    /* ===== SEPARATORS ===== */
+    private static final List<String> CARD_SEPARATOR = new ArrayList<>(Collections.nCopies(CARD_WIDTH, HORIZONTAL_BORDER));
+    private static final List<String> CARD_BLANK_LINE = new ArrayList<>(Collections.nCopies(CARD_WIDTH, " "));
+    private static final List<String> CARD_LIGHT_SEPARATOR = new ArrayList<>(Collections.nCopies(CARD_WIDTH, LIGHT_HORIZONTAL_BORDER));
+
     /* ===== TEMPLATES ====== */
     private static final String TRISTRING_TEMPLATE = "%s%s%s";
-    private static final String PROMPT_TEMPLATE =">> ";
+    private static final String QUADSTRING_TEMPLATE = "%s%s%s%s";
+    private static final String PROMPT_TEMPLATE = ">> ";
 
     /**
      * Prints the provided text, formatting it with the provided parameters
@@ -285,6 +293,20 @@ class CLIHelper {
     /* ===== STRINGS AND LISTS MANIPULATION ===== */
 
     /**
+     * Generate a new line according to  the provided template, with the provided left and right borders
+     *
+     * @param template    The list of strings representing the line template
+     * @param leftBorder  The string representing the left border
+     * @param rightBorder The string representing the right border
+     */
+    private static List<String> generateLine(List<String> template, String leftBorder, String rightBorder) {
+        List<String> line = new ArrayList<>(template);
+        line.set(0, leftBorder);
+        line.set(line.size() - 1, rightBorder);
+        return line;
+    }
+
+    /**
      * Expand the provided rendered list of strings with the provided new line
      *
      * @param renderedString The string rendering
@@ -302,11 +324,24 @@ class CLIHelper {
      * @param text      The text to insert
      * @param hPadding  The padding amount
      * @param formatter The ANSI formatter to use
+     * @param color     The ANSI color code to use
+     */
+    private static void fillLineWithText(List<String> line, String text, int hPadding, String formatter, String color) {
+        for (int i = 0; i < text.length(); i++) {
+            line.set(i + hPadding, String.format(QUADSTRING_TEMPLATE, formatter, color, text.substring(i, i + 1), ANSI_RESET));
+        }
+    }
+
+    /**
+     * Insert the provided text in the provided line, by leaving an horizontal padding
+     *
+     * @param line      The line
+     * @param text      The text to insert
+     * @param hPadding  The padding amount
+     * @param formatter The ANSI formatter to use
      */
     private static void fillLineWithText(List<String> line, String text, int hPadding, String formatter) {
-        for (int i = 0; i < text.length(); i++) {
-            line.set(i + hPadding, String.format(TRISTRING_TEMPLATE, formatter, text.substring(i, i + 1), ANSI_RESET));
-        }
+        fillLineWithText(line, text, hPadding, formatter, "");
     }
 
     /**
@@ -495,32 +530,17 @@ class CLIHelper {
 
         List<List<String>> renderedWeapon = new ArrayList<>();
 
-        // Generate top border, blank line and line separator
-        final List<String> separator = new ArrayList<>(Collections.nCopies(CARD_WIDTH, HORIZONTAL_BORDER));
-        List<String> blankLine = new ArrayList<>(Collections.nCopies(CARD_WIDTH, " "));
-        List<String> middleSeparator = new ArrayList<>(separator);
-        List<String> lightSeparator = new ArrayList<>(separator);
-        blankLine.set(0, VERTICAL_BORDER);
-        blankLine.set(blankLine.size() - 1, VERTICAL_BORDER);
-        middleSeparator.set(0, LEFT_VERTICAL_SEPARATOR);
-        middleSeparator.set(middleSeparator.size() - 1, RIGHT_VERTICAL_SEPARATOR);
-        lightSeparator.replaceAll(s -> LIGHT_HORIZONTAL_BORDER);
-        lightSeparator.set(0, LIGHT_LEFT_VERTICAL_SEPARATOR);
-        lightSeparator.set(lightSeparator.size() - 1, LIGHT_RIGHT_VERTICAL_SEPARATOR);
-
         // Set the top border
-        expandStringRendering(renderedWeapon, separator);
-        renderedWeapon.get(renderedWeapon.size() - 1).set(0, TOP_SX_CORNER);
-        renderedWeapon.get(renderedWeapon.size() - 1).set(renderedWeapon.get(renderedWeapon.size() - 1).size() - 1, TOP_DX_CORNER);
+        expandStringRendering(renderedWeapon, generateLine(CARD_SEPARATOR, TOP_SX_CORNER, TOP_DX_CORNER));
 
         // Split the name of the weapon (considering padding)
         List<String> weaponNameChunks = splitString(weaponCard.getName(), CARD_WIDTH - 4);
         // And add it to the rendered card
         weaponNameChunks.forEach(chunk -> {
-            expandStringRendering(renderedWeapon, blankLine);
+            expandStringRendering(renderedWeapon, generateLine(CARD_BLANK_LINE, VERTICAL_BORDER, VERTICAL_BORDER));
             fillLineWithText(renderedWeapon.get(renderedWeapon.size() - 1), chunk, 2, ANSI_BOLD);
         });
-        expandStringRendering(renderedWeapon, middleSeparator);
+        expandStringRendering(renderedWeapon, generateLine(CARD_SEPARATOR, LEFT_VERTICAL_SEPARATOR, RIGHT_VERTICAL_SEPARATOR));
 
         // Add indicators for ammo cubes
         // Each cube is represented by a colored dot, the first one is the one that comes pre-loaded with the weapon
@@ -528,7 +548,7 @@ class CLIHelper {
         List<List<AmmoCubeCost>> ammoCubesChunks = splitList(weaponCard.getCost(), (CARD_WIDTH - 4) / 2);
         // And add them to the rendered card
         ammoCubesChunks.forEach(chunk -> {
-            expandStringRendering(renderedWeapon, blankLine);
+            expandStringRendering(renderedWeapon, generateLine(CARD_BLANK_LINE, VERTICAL_BORDER, VERTICAL_BORDER));
             fillLineWithObjects(
                     renderedWeapon.get(renderedWeapon.size() - 1),
                     chunk,
@@ -538,7 +558,7 @@ class CLIHelper {
                     2
             );
         });
-        expandStringRendering(renderedWeapon, middleSeparator);
+        expandStringRendering(renderedWeapon, generateLine(CARD_SEPARATOR, LEFT_VERTICAL_SEPARATOR, RIGHT_VERTICAL_SEPARATOR));
 
         // Add description of effects
         weaponCard.getEffects().forEach(effect -> {
@@ -548,16 +568,16 @@ class CLIHelper {
             List<List<AmmoCubeCost>> effectCostChunks = splitList(effect.getCost(), CARD_WIDTH - 4);
 
             effectNameChunks.forEach(effectNameChunk -> {
-                expandStringRendering(renderedWeapon, blankLine);
+                expandStringRendering(renderedWeapon, generateLine(CARD_BLANK_LINE, VERTICAL_BORDER, VERTICAL_BORDER));
                 fillLineWithText(renderedWeapon.get(renderedWeapon.size() - 1), effectNameChunk, 2);
             });
-            expandStringRendering(renderedWeapon, lightSeparator);
+            expandStringRendering(renderedWeapon, generateLine(CARD_LIGHT_SEPARATOR, LIGHT_LEFT_VERTICAL_SEPARATOR, LIGHT_RIGHT_VERTICAL_SEPARATOR));
             effectDescriptionChunks.forEach(effectDescriptionChunk -> {
-                expandStringRendering(renderedWeapon, blankLine);
+                expandStringRendering(renderedWeapon, generateLine(CARD_BLANK_LINE, VERTICAL_BORDER, VERTICAL_BORDER));
                 fillLineWithText(renderedWeapon.get(renderedWeapon.size() - 1), effectDescriptionChunk, 2, ANSI_ITALIC);
             });
             effectCostChunks.forEach(effectCostChunk -> {
-                expandStringRendering(renderedWeapon, blankLine);
+                expandStringRendering(renderedWeapon, generateLine(CARD_BLANK_LINE, VERTICAL_BORDER, VERTICAL_BORDER));
                 fillLineWithObjects(
                         renderedWeapon.get(renderedWeapon.size() - 1),
                         effectCostChunk,
@@ -567,17 +587,45 @@ class CLIHelper {
                         2
                 );
             });
-            expandStringRendering(renderedWeapon, middleSeparator);
+            expandStringRendering(renderedWeapon, generateLine(CARD_SEPARATOR, LEFT_VERTICAL_SEPARATOR, RIGHT_VERTICAL_SEPARATOR));
         });
 
         // Then remove the last inserted line, since is a middle separator
         renderedWeapon.remove(renderedWeapon.size() - 1);
 
         // Add bottom border
-        expandStringRendering(renderedWeapon, separator);
-        renderedWeapon.get(renderedWeapon.size() - 1).set(0, BOTTOM_SX_CORNER);
-        renderedWeapon.get(renderedWeapon.size() - 1).set(renderedWeapon.get(renderedWeapon.size() - 1).size() - 1, BOTTOM_DX_CORNER);
+        expandStringRendering(renderedWeapon, generateLine(CARD_SEPARATOR, BOTTOM_SX_CORNER, BOTTOM_DX_CORNER));
 
         return renderedWeapon;
+    }
+
+    /* ===== POWERUP CARDS ===== */
+
+    /**
+     * Render the provided powerup card to be printable in a CLI environment
+     *
+     * @param powerupCard The object representing the powerup card
+     * @return A list of all the lines composing the rendered card
+     */
+    public static List<List<String>> renderPowerupCard(PowerupCard powerupCard) {
+        if (powerupCard == null) {
+            // TODO: Check this scenario
+            return Collections.emptyList();
+        }
+        List<List<String>> renderedPowerup = new ArrayList<>();
+        List<String> powerupNameChunks = splitString(powerupCard.getName(), CARD_WIDTH-4);
+        List<String> powerupDescriptionChunks = splitString(powerupCard.getDescription(), CARD_WIDTH - 4);
+        expandStringRendering(renderedPowerup, generateLine(CARD_SEPARATOR, TOP_SX_CORNER, TOP_DX_CORNER));
+        powerupNameChunks.forEach(chunk -> {
+            expandStringRendering(renderedPowerup, generateLine(CARD_BLANK_LINE, VERTICAL_BORDER, VERTICAL_BORDER));
+            fillLineWithText(renderedPowerup.get(renderedPowerup.size() - 1), chunk, 2, ANSI_BOLD, powerupCard.getCubeColor().getANSICode());
+        });
+        expandStringRendering(renderedPowerup, generateLine(CARD_SEPARATOR, LEFT_VERTICAL_SEPARATOR, RIGHT_VERTICAL_SEPARATOR));
+        powerupDescriptionChunks.forEach(chunk -> {
+            expandStringRendering(renderedPowerup, generateLine(CARD_BLANK_LINE, VERTICAL_BORDER, VERTICAL_BORDER));
+            fillLineWithText(renderedPowerup.get(renderedPowerup.size() - 1), chunk, 2, ANSI_ITALIC);
+        });
+        expandStringRendering(renderedPowerup, generateLine(CARD_SEPARATOR, BOTTOM_SX_CORNER, BOTTOM_DX_CORNER));
+        return renderedPowerup;
     }
 }
