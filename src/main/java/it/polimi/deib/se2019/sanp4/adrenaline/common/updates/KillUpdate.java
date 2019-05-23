@@ -3,7 +3,10 @@ package it.polimi.deib.se2019.sanp4.adrenaline.common.updates;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class KillUpdate {
+/**
+ * An update sent when a player is player by another player
+ */
+public class KillUpdate extends ModelUpdate {
 
     private String killer;
     private String killed;

@@ -3,15 +3,18 @@ package it.polimi.deib.se2019.sanp4.adrenaline.common.updates;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+/**
+ * An update sent when a weapon is removed from a player
+ */
 public class RemovedWeaponUpdate extends ModelUpdate {
 
     private String player;
     private String weapon;
 
     /**
-     * Creates an added weapon update that will be sent in broadcast.
+     * Creates a removed weapon update that will be sent in broadcast.
      * @param player the player that gets the weapon.
-     * @param weapon the weapon removed to the player.
+     * @param weaponId the id of the weapon removed from the player.
      */
     @JsonCreator
     public RemovedWeaponUpdate (

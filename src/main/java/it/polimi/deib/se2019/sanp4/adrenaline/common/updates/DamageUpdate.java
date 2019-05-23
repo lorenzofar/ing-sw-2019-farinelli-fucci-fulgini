@@ -3,6 +3,9 @@ package it.polimi.deib.se2019.sanp4.adrenaline.common.updates;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+/**
+ * An update sent when a player receives an amount of damage from another player
+ */
 public class DamageUpdate extends ModelUpdate {
 
     private String shooter;

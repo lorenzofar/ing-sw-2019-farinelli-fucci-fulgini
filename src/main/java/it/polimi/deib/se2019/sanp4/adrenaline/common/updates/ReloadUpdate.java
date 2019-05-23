@@ -3,6 +3,9 @@ package it.polimi.deib.se2019.sanp4.adrenaline.common.updates;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+/**
+ * An update sent when a player reloads a weapon
+ */
 public class ReloadUpdate extends ModelUpdate {
 
     private String player;
