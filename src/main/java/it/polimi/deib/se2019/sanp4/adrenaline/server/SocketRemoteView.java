@@ -257,10 +257,10 @@ public class SocketRemoteView extends RemoteObservable<ViewEvent>
     private synchronized void closeConnection() {
         if (!socket.isClosed()) {
             try {
-                logger.log(Level.INFO, "Closing connection for player \"{0}\"", username);
+                logger.log(Level.FINE, "Closing connection for player \"{0}\"", username);
                 socket.close();
             } catch (IOException e) {
-                logger.log(Level.INFO, "Could not close connection", e);
+                logger.log(Level.FINE, "Could not close connection", e);
             }
         }
     }

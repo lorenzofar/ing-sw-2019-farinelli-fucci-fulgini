@@ -2,10 +2,12 @@ package it.polimi.deib.se2019.sanp4.adrenaline.server;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.common.AdrenalineProperties;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.network.RemoteView;
-import it.polimi.deib.se2019.sanp4.adrenaline.view.MessageType;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.LobbyUpdate;
+import it.polimi.deib.se2019.sanp4.adrenaline.view.ViewScene;
 
 import java.io.IOException;
 import java.util.AbstractMap;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.*;
@@ -67,11 +69,13 @@ public class Lobby implements Runnable {
         RemoteView view = incomingPlayer.getValue();
 
         logger.log(Level.INFO, "Got new waiting player: {0}", username);
-
         waitingPlayers.put(username, view);
 
+        /* Show the lobby scene to the player */
+        selectLobbyScene(view);
+
         /* Notify the players that a new player has connected */
-        notifyConnectionEvent(username, true);
+        notifyWaitingList();
 
         /* Disconnect inactive players */
         disconnectInactive();
@@ -128,25 +132,35 @@ public class Lobby implements Runnable {
      * @param username the player who has to be disconnected
      */
     void disconnectPlayer(String username) {
+        logger.log(Level.INFO, "Player \"{0}\" does not respond, deleting...", username);
         /* Remove it from local */
         waitingPlayers.remove(username);
-        /* Notify the players that it has been disconnected */
-        notifyConnectionEvent(username, false);
+        /* Notify the players that a player has disconnected */
+        notifyWaitingList();
         ServerImpl.getInstance().unreserveUsername(username);
     }
 
     /* ========= COMMUNICATE WITH PLAYERS ========== */
 
     /**
-     * Notifies the player when a connection/disconnection of a player occurs
-     * @param username username of the player who connected/disconnected
-     * @param hasConnected {@code true} if the player has connected, {@code false if it disconnected}
+     * Selects the LOBBY scene on given player
+     * @param view the view of the player
      */
-    void notifyConnectionEvent(String username, boolean hasConnected) {
-        for (Map.Entry<String, RemoteView> player : waitingPlayers.entrySet()) {
+    void selectLobbyScene(RemoteView view) {
+        try {
+            view.selectScene(ViewScene.LOBBY);
+        } catch (IOException ignore) {
+            /* Do nothing */
+        }
+    }
+
+    /**
+     * Sends the current list of waiting players to the waiting players
+     */
+    void notifyWaitingList() {
+        for (RemoteView view : waitingPlayers.values()) {
             try {
-                String message = (hasConnected ? "New player connected: " : "Player disconnected: ") + username;
-                player.getValue().showMessage(String.format(message, username), MessageType.INFO);
+                view.update(new LobbyUpdate(new ArrayList<>(waitingPlayers.keySet())));
             } catch (IOException ignore) {
                 /* Ignore the exception */
             }

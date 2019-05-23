@@ -5,9 +5,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.LoginException;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.network.RemoteServer;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.network.RemoteView;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.network.socket.SocketServer;
-import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.SquareRequest;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.Controller;
-import it.polimi.deib.se2019.sanp4.adrenaline.model.board.CoordPair;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -18,7 +16,6 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -161,12 +158,6 @@ public class ServerImpl implements SocketServer, RemoteServer, Runnable {
 
         /* If the username is valid then reserve it */
         reserveUsername(username);
-
-        try {
-            view.performRequest(new SquareRequest("bzoto", Collections.singletonList(new CoordPair(0,0)), false));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
         /* Send the player to the Lobby */
         lobby.insertPlayer(username, view);
