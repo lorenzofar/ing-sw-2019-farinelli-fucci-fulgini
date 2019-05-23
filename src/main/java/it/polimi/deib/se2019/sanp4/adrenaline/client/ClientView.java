@@ -8,6 +8,8 @@ import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.ModelUpdate;
 import it.polimi.deib.se2019.sanp4.adrenaline.view.MessageType;
 import it.polimi.deib.se2019.sanp4.adrenaline.view.ViewScene;
 
+import java.io.Serializable;
+
 public class ClientView extends RemoteObservable<ViewEvent> implements RemoteView {
     /**
      * The username of the username owning the view
@@ -108,9 +110,14 @@ public class ClientView extends RemoteObservable<ViewEvent> implements RemoteVie
         this.renderer = renderer;
     }
 
+    /**
+     * Performs the provided request on the view
+     *
+     * @param request The object representing the request, not null
+     */
     @Override
-    public void performRequest(ChoiceRequest request) {
-        /* TODO: Implement this method */
+    public <T extends Serializable> void performRequest(ChoiceRequest<T> request) {
+
     }
 
     @Override

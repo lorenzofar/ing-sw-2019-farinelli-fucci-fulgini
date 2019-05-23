@@ -5,6 +5,8 @@ package it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions;
  */
 public class NotEnoughAmmoException extends Exception {
 
+    private static final long serialVersionUID = 636782177199265738L;
+
     /**
      * Constructs the exception and sets a suitable message.
      */

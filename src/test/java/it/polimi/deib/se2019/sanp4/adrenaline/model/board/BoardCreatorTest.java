@@ -53,7 +53,6 @@ public class BoardCreatorTest {
         BoardCreator.loadBoardPack("/assets/board_pack_invalid.json");
     }
 
-    @Ignore
     @Test
     public void loadBoardPack_standardPack_shouldSucceed() throws BoardNotFoundException {
         BoardCreator.loadBoardPack("/assets/standard_boards.json");

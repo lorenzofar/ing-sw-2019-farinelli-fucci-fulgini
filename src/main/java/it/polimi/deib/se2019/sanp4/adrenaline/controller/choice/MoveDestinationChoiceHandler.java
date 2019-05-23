@@ -2,7 +2,6 @@ package it.polimi.deib.se2019.sanp4.adrenaline.controller.choice;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.ChoiceHandler;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.Controller;
-import it.polimi.deib.se2019.sanp4.adrenaline.controller.ControllerImpl;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.CoordPair;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
 
@@ -12,6 +11,8 @@ import java.util.logging.Logger;
 /* TODO: Refactor this into GrabActionController */
 /** A specialized choice handler to handle the choice of a destination square when a player wants to move */
 public class MoveDestinationChoiceHandler implements ChoiceHandler<CoordPair> {
+
+    private static final int MAX_MOVE_STEPS = 3;
 
     private static final Logger logger = Logger.getLogger(GrabWeaponChoiceHandler.class.getName());
 
@@ -33,7 +34,7 @@ public class MoveDestinationChoiceHandler implements ChoiceHandler<CoordPair> {
         boolean isDestinationReachable = controller.getModel().getMatch().getBoard().isReachable(
                 player.getCurrentSquare().getLocation(),
                 destination,
-                ControllerImpl.MAX_MOVE_STEPS
+                MAX_MOVE_STEPS
         );
         if(isDestinationReachable){
             // We add the player to the selected square

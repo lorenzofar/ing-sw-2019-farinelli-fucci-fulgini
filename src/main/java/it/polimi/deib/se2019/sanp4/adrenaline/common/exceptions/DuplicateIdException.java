@@ -6,6 +6,8 @@ package it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions;
  */
 public class DuplicateIdException extends Exception {
 
+    private static final long serialVersionUID = -2998515275825951602L;
+
     public DuplicateIdException() {
         super();
     }

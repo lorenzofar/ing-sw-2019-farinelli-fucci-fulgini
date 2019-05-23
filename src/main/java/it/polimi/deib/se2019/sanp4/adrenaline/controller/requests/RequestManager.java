@@ -4,10 +4,10 @@ import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.DuplicateIdExcep
 import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.UnknownIdException;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.ChoiceRequest;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CancellationException;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -46,7 +46,8 @@ public class RequestManager {
      * @return an object which can be used to retrieve the choice
      * @throws DuplicateIdException if a request with the same uuid is pending
      */
-    public <T> CompletableChoice<T> insertRequest(ChoiceRequest<T> request) throws DuplicateIdException {
+    public <T extends Serializable> CompletableChoice<T> insertRequest(ChoiceRequest<T> request)
+            throws DuplicateIdException {
         String uuid = request.getUuid();
         if (pendingChoices.containsKey(uuid)) {
             throw new DuplicateIdException(String.format("Cannot insert request %s: already inserted", uuid));

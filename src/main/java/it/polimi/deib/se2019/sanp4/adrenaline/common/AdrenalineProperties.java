@@ -20,6 +20,7 @@ public class AdrenalineProperties extends Properties {
             "adrenaline.turntime", "adrenaline.waitingtime",
             "adrenaline.hostname"
     };
+    private static final long serialVersionUID = -2776486894760552339L;
 
     private static AdrenalineProperties instance = new AdrenalineProperties();
 

@@ -8,6 +8,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class OverkillUpdate extends ModelUpdate{
 
+    private static final long serialVersionUID = -4938280578294737513L;
+
     private String killer;
     private String killed;
 

@@ -8,6 +8,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class RemovedWeaponUpdate extends ModelUpdate {
 
+    private static final long serialVersionUID = -1996514254245416308L;
+
     private String player;
     private String weapon;
 

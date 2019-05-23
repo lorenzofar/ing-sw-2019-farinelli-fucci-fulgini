@@ -2,6 +2,7 @@ package it.polimi.deib.se2019.sanp4.adrenaline.controller.requests;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.ChoiceRequest;
 
+import java.io.Serializable;
 import java.util.concurrent.CancellationException;
 
 /**
@@ -23,7 +24,7 @@ import java.util.concurrent.CancellationException;
  * </p>
  * @param <T> the type of the choice
  */
-public class CompletableChoice<T> {
+public class CompletableChoice<T extends Serializable> {
 
     /** The request whose response will provide the choice */
     private ChoiceRequest<T> request;

@@ -3,6 +3,8 @@ package it.polimi.deib.se2019.sanp4.adrenaline.model.match;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.io.Serializable;
+
 /**
  * Represent the configuration needed to create a new match.
  * This includes:
@@ -12,7 +14,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * </ul>
  * Mind that the characters are randomly assigned to the players
  */
-public class MatchConfiguration {
+public class MatchConfiguration implements Serializable {
+
+    private static final long serialVersionUID = -781125362884341805L;
 
     private int boardId;
 

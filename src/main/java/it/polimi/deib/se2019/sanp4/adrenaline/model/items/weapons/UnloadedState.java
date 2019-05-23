@@ -7,6 +7,8 @@ import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
 
 public class UnloadedState extends WeaponCardState {
 
+    private static final long serialVersionUID = 135834435035814091L;
+
     UnloadedState(){
         super("unloaded");
     }

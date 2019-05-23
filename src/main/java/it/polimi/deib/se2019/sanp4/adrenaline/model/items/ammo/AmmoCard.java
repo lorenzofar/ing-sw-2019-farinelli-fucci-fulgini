@@ -1,5 +1,6 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo;
 
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.Map;
 
@@ -7,7 +8,9 @@ import java.util.Map;
  * An immutable class representing an ammo card.
  * It contains ammo cubes and an optional powerup card
  */
-public class AmmoCard {
+public class AmmoCard implements Serializable {
+
+    private static final long serialVersionUID = 1108347440287333458L;
 
     /** Unique identifier of the card */
     private int id;

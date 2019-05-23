@@ -8,6 +8,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class KillUpdate extends ModelUpdate {
 
+    private static final long serialVersionUID = 6862006778640996838L;
+
     private String killer;
     private String killed;
 

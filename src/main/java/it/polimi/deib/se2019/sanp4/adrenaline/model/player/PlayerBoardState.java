@@ -14,5 +14,5 @@ public interface PlayerBoardState {
      * @param board player board to read useful data
      * @return never-ending iterator with scores
      */
-    public Iterator<Integer> getDamageScores(PlayerBoard board);
+    Iterator<Integer> getDamageScores(PlayerBoard board);
 }

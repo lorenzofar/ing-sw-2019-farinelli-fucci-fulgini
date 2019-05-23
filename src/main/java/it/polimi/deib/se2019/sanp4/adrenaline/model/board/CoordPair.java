@@ -1,9 +1,13 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.model.board;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 /** A class representing a location in cartesian coordinates */
-public class CoordPair {
+public class CoordPair implements Serializable {
+
+    private static final long serialVersionUID = -7762098309241222455L;
+
     /** The X coordinate */
     private int x;
     /** The Y coordinate */

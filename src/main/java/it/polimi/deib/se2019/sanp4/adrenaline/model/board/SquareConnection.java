@@ -1,5 +1,7 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.model.board;
 
+import java.io.Serializable;
+
 /**
  * A class representing a connection to a square.
  * It holds information about:
@@ -8,7 +10,9 @@ package it.polimi.deib.se2019.sanp4.adrenaline.model.board;
  *     <li>The type of connection</li>
  * </ul>
  * */
-public class SquareConnection {
+public class SquareConnection implements Serializable {
+
+    private static final long serialVersionUID = -1653927830423341222L;
 
     /** The coordinates of the connected square */
     private CoordPair square;

@@ -1,12 +1,13 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.common.requests;
 
-import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.ChoiceRequest;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.CoordPair;
 
 import java.util.List;
 
 /** A specialized request to ask for a coordinates pair (namely a square) */
 public class SquareRequest extends ChoiceRequest<CoordPair> {
+
+    private static final long serialVersionUID = 6735045518417681095L;
 
     /**
      * Creates a new square request

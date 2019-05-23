@@ -1,5 +1,6 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.common.requests;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -11,7 +12,9 @@ import java.util.UUID;
  * The request also has an unique identifier, which will be used by its response to identify it.
  * @param <T> The type of objects representing the choices the player can make
  */
-public abstract class ChoiceRequest<T>{
+public abstract class ChoiceRequest<T extends Serializable> implements Serializable {
+
+    private static final long serialVersionUID = 237085265707486604L;
 
     /** An unique identifier of the request */
     private String uuid;

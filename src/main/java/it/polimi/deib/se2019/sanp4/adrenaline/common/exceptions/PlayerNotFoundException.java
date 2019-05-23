@@ -6,6 +6,8 @@ package it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions;
  */
 public class PlayerNotFoundException extends Exception {
 
+    private static final long serialVersionUID = 6751640880343681499L;
+
     public PlayerNotFoundException(){ super(); }
 
     public PlayerNotFoundException(String message){ super(message); }

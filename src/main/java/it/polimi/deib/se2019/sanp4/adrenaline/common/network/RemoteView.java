@@ -8,6 +8,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.view.MessageType;
 import it.polimi.deib.se2019.sanp4.adrenaline.view.ViewScene;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.rmi.Remote;
 
 /** An interface describing the structure of a view */
@@ -27,7 +28,7 @@ public interface RemoteView extends RemoteObserver<ModelUpdate>, Remote {
      * @param request The object representing the request, not null
      * @throws IOException if the remote call fails
      */
-    void performRequest(ChoiceRequest request) throws IOException;
+    <T extends Serializable> void performRequest(ChoiceRequest<T> request) throws IOException;
 
     /**
      * Displays the provided message

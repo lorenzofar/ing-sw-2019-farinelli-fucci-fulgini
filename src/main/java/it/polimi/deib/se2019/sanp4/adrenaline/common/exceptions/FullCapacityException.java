@@ -6,6 +6,7 @@ package it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions;
  * items (capacity).
  */
 public class FullCapacityException extends Exception {
+    private static final long serialVersionUID = 3060596949371896899L;
     private final int capacity;
 
     /**

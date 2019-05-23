@@ -7,6 +7,8 @@ import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.Observable;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.ModelUpdate;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
 
+import java.io.Serializable;
+
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
         include = JsonTypeInfo.As.PROPERTY,
@@ -15,7 +17,10 @@ import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
         @JsonSubTypes.Type(value = LoadedState.class, name = "loaded"),
         @JsonSubTypes.Type(value = PickupState.class, name = "pickup"),
         @JsonSubTypes.Type(value = UnloadedState.class, name = "unloaded") })
-public abstract class WeaponCardState extends Observable<ModelUpdate> {
+public abstract class WeaponCardState extends Observable<ModelUpdate> implements Serializable {
+
+    private static final long serialVersionUID = -3648739297317158981L;
+
     private String type;
 
     protected WeaponCardState(String type){

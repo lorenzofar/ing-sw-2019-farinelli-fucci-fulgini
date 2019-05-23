@@ -8,6 +8,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class ReloadUpdate extends ModelUpdate {
 
+    private static final long serialVersionUID = 4947375127591202178L;
+
     private String player;
     private String weapon;
 

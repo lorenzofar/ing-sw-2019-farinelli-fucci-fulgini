@@ -150,13 +150,14 @@ public class SocketRemoteView extends RemoteObservable<ViewEvent>
     }
 
     /**
-     * Performs the provided request on the client
+     * Performs the provided request on the view
      *
      * @param request The object representing the request, not null
+     * @throws IOException if the remote call fails
      */
     @Override
-    public void performRequest(ChoiceRequest request) throws IOException {
-        sendCommand(new PerformRequestCommand(request));
+    public <T extends Serializable> void performRequest(ChoiceRequest<T> request) throws IOException {
+
     }
 
     /**
@@ -164,6 +165,7 @@ public class SocketRemoteView extends RemoteObservable<ViewEvent>
      *
      * @param text The text of the message, not null
      * @param type The type of the message, not null
+     * @throws IOException if the remote call fails
      */
     @Override
     public void showMessage(String text, MessageType type) throws IOException {

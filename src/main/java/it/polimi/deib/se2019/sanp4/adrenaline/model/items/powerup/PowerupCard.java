@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCube;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.CubeInterface;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 
@@ -12,7 +13,9 @@ import java.util.Objects;
  * An immutable class representing a powerup card
  * It has an id,a name, a description and a color
  */
-public class PowerupCard implements CubeInterface {
+public class PowerupCard implements CubeInterface, Serializable {
+
+    private static final long serialVersionUID = 6130416192426740957L;
 
     private final PowerupEnum type;
     private final AmmoCube cubeColor;

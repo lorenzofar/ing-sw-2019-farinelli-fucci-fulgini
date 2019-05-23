@@ -7,6 +7,8 @@ import java.util.List;
 /** A specialized request to ask for a weapon card */
 public class WeaponCardRequest extends ChoiceRequest<WeaponCard> {
 
+    private static final long serialVersionUID = 7286352744493657016L;
+
     /**
      * Creates a new weapon card request
      *

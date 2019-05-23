@@ -6,6 +6,8 @@ package it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions;
  */
 public class UnknownIdException extends Exception {
 
+    private static final long serialVersionUID = 9065206789660670809L;
+
     public UnknownIdException() {
         super();
     }

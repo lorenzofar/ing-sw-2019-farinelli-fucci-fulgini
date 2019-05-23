@@ -8,6 +8,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class DamageUpdate extends ModelUpdate {
 
+    private static final long serialVersionUID = -6006199997700359777L;
+
     private String shooter;
     private String shot;
     private int damage;

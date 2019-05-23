@@ -2,12 +2,15 @@ package it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCubeCost;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 /** A class describing a light representation of an effect provided by a weapon*/
-public class EffectDescription {
+public class EffectDescription implements Serializable {
+
+    private static final long serialVersionUID = -4617447984038595221L;
 
     /** A unique identifier of the effect */
     private String id;

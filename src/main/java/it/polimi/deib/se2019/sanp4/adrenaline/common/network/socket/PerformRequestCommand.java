@@ -38,7 +38,6 @@ public class PerformRequestCommand implements SocketClientCommand {
     @Override
     public void applyOn(SocketClientCommandTarget target) {
         ClientView view = target.getClientView();
-
         /* Call the method on the view */
         view.performRequest(request);
     }

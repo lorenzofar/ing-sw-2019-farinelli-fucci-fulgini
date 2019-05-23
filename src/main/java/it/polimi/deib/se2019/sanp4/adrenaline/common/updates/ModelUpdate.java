@@ -2,6 +2,7 @@ package it.polimi.deib.se2019.sanp4.adrenaline.common.updates;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
+import java.io.Serializable;
 import java.util.Set;
 
 /**
@@ -13,7 +14,9 @@ import java.util.Set;
         use = JsonTypeInfo.Id.CLASS,
         property = "class"
 )
-public abstract class ModelUpdate {
+public abstract class ModelUpdate implements Serializable {
+
+    private static final long serialVersionUID = -1304721011350608639L;
 
     private Set<String> recipients;
 

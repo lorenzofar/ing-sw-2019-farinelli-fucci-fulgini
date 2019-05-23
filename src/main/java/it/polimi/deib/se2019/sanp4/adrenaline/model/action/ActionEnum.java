@@ -47,7 +47,7 @@ public enum ActionEnum {
 
     private final String message;
 
-    private ActionEnum(String message) {
+    ActionEnum(String message) {
         this.message = message;
     }
 

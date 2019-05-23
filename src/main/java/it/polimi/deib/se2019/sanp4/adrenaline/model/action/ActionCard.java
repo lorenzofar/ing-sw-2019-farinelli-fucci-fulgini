@@ -1,5 +1,6 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.model.action;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -12,7 +13,9 @@ import java.util.Collections;
  *     passing the turn to the next player </li>
  * </ul>
  */
-public class ActionCard {
+public class ActionCard implements Serializable {
+
+    private static final long serialVersionUID = 7168463443952478997L;
 
     private int maxActions;
 

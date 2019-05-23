@@ -3,6 +3,7 @@ package it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.Observable;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCubeCost;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -11,7 +12,9 @@ import java.util.List;
  * A class describing a light representation of a weapon
  * Used to represent the weapon card drawn by a player
  */
-public class WeaponCard extends Observable {
+public class WeaponCard extends Observable implements Serializable {
+
+    private static final long serialVersionUID = 2151651272278660643L;
 
     /* A unique identifier of the weapon */
     private String id;

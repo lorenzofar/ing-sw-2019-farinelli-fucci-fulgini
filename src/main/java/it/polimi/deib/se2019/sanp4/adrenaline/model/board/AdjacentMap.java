@@ -1,5 +1,6 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.model.board;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.EnumMap;
 import java.util.Objects;
@@ -12,7 +13,9 @@ import java.util.stream.Collectors;
  * and provides methods to retrieve adjacent squares.
  * If there is no adjacent square in a given direction, the value is set to null in this map.
  */
-public class AdjacentMap extends EnumMap<CardinalDirection, SquareConnection> {
+public class AdjacentMap extends EnumMap<CardinalDirection, SquareConnection> implements Serializable {
+
+    private static final long serialVersionUID = -3090416453975696683L;
 
     /**
      * Creates a map where the square is isolated: all connections are set to null.

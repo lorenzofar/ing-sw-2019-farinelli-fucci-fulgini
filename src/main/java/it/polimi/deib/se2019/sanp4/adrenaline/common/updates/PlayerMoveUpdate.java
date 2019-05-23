@@ -9,6 +9,8 @@ import it.polimi.deib.se2019.sanp4.adrenaline.model.board.CoordPair;
  */
 public class PlayerMoveUpdate extends ModelUpdate {
 
+    private static final long serialVersionUID = 6266242118522203047L;
+
     private String player;
     private CoordPair start;
     private CoordPair end;
