@@ -12,17 +12,13 @@ import java.util.logging.Logger;
 public class AdrenalineProperties extends Properties {
 
     /** Default file name of the config file */
-    private static final String CONFIG_FILENAME = "server.properties";
+    private static final String CONFIG_FILENAME = "adrenaline.properties";
 
     /** Arguments that can be provided by the user */
     private static final String[] ARGUMENTS = {
-            "adrenaline.skulls",
-            "adrenaline.rmiport", "adrenaline.socketpoort",
+            "adrenaline.rmiport", "adrenaline.socketport",
             "adrenaline.turntime", "adrenaline.waitingtime",
-            "adrenaline.maxspawnweapons",
-            "adrenaline.initialplayerammo", "adrenaline.maxplayerammocubes", "adrenaline.maxplayerweapons", "adrenaline.maxplayerpowerups",
-            "adrenaline.maxplayermarks", "adrenaline.killshotdamage",
-            "adrenaline.skullscount"
+            "adrenaline.hostname"
     };
 
     private static AdrenalineProperties instance = new AdrenalineProperties();

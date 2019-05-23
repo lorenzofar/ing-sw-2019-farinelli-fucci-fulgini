@@ -5,8 +5,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.LoginException;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.network.RemoteServer;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.network.RemoteView;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.network.socket.SocketServer;
-import it.polimi.deib.se2019.sanp4.adrenaline.controller.CallbackInterface;
-import it.polimi.deib.se2019.sanp4.adrenaline.controller.GameTimer;
+import it.polimi.deib.se2019.sanp4.adrenaline.controller.Controller;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -17,6 +16,9 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ExecutorService;
@@ -29,7 +31,7 @@ import java.util.logging.Logger;
  * it implements both the server and remote server interfaces
  * This class uses the singleton pattern
  */
-public class ServerImpl implements SocketServer, RemoteServer, Runnable, CallbackInterface {
+public class ServerImpl implements SocketServer, RemoteServer, Runnable {
     /** Single instance */
     private static ServerImpl ourInstance = new ServerImpl();
 
@@ -38,36 +40,37 @@ public class ServerImpl implements SocketServer, RemoteServer, Runnable, Callbac
         return ourInstance;
     }
 
-    private static final int DEFAULT_SOCKET_THREADS = 64;
-
-    /**
-     * Load the time to wait before starting a new game
-     * Fall back to a default value of 3 minutes if none is set
-     */
-    private static final int WAITING_TIME = (int) AdrenalineProperties.getProperties().getOrDefault("adrenaline.waitingtime", 1800);
-
-    private static final int MIN_GAME_PLAYERS = 3;
+    private static final int SOCKET_EXECUTOR_THREAD_SIZE = 64;
 
     /** Used to accept Socket connections */
     private ServerSocket serverSocket;
 
     /** Used to manage Socket connections in separate threads */
-    private ExecutorService executor = Executors.newFixedThreadPool(DEFAULT_SOCKET_THREADS);
+    private ExecutorService socketExecutor = Executors.newFixedThreadPool(SOCKET_EXECUTOR_THREAD_SIZE);
 
-    private boolean gameActive; //TODO: Check whether to keep using this
+    /** Executor for the lobby */
+    private ExecutorService lobbyExecutor = Executors.newSingleThreadExecutor();
 
-    private GameTimer waitingGameTimer = new GameTimer(this, WAITING_TIME);
+    /** The lobby used to handle waiting players */
+    private Lobby lobby = new Lobby();
 
-    /** Map with view for each player */
-    private ConcurrentMap<String, RemoteView> playerViews;
+    /**
+     * Map with all connected usernames:
+     * <ul>
+     *     <li>If the player belongs to a started match, the value is the controller of that match</li>
+     *     <li>If the player belongs to the lobby the value is {@code null}</li>
+     * </ul>
+     */
+    private ConcurrentMap<String, Controller> playerMatches = new ConcurrentHashMap<>();
+
+    /**
+     * The set of usernames in use by players. These cannot be taken
+     */
+    private Set<String> reservedUsernames = new HashSet<>();
 
     private static final Logger logger = Logger.getLogger(ServerImpl.class.getName());
 
-    private ServerImpl(){
-        playerViews = new ConcurrentHashMap<>();
-        gameActive = false;
-        //TODO: Complete constructor and methods implementation
-    }
+    private ServerImpl(){}
 
     /**
      * Runs the server, after it has been created and properly set up.
@@ -75,11 +78,16 @@ public class ServerImpl implements SocketServer, RemoteServer, Runnable, Callbac
      */
     @Override
     public void run() {
-        int rmiPort = (int) AdrenalineProperties.getProperties().getOrDefault("adrenaline.rmiport", 1099);
-        int socketPort = (int) AdrenalineProperties.getProperties().getOrDefault("adrenaline.socketport", 3000);
+        /* First start the Lobby */
+        lobbyExecutor.submit(lobby);
+        /* Then start listening for connections */
+        int rmiPort = Integer.parseInt((String) AdrenalineProperties.getProperties().getOrDefault("adrenaline.rmiport", "1099"));
+        int socketPort = Integer.parseInt((String) AdrenalineProperties.getProperties().getOrDefault("adrenaline.socketport", "3000"));
         startRMI(rmiPort);
         startSocket(socketPort);
     }
+
+    /* ============= CONNECTIONS ============ */
 
     /**
      * Creates an RMI registry on this host and binds the server on {@code adrenaline/server} so it can
@@ -90,7 +98,8 @@ public class ServerImpl implements SocketServer, RemoteServer, Runnable, Callbac
         try {
             /* Get the IP address of the server */
             /* TODO: Find a better way */
-            String hostname = InetAddress.getLocalHost().getHostAddress();
+            String hostname = (String) AdrenalineProperties.getProperties()
+                    .getOrDefault("adrenaline.hostname", InetAddress.getLocalHost().getHostAddress());
             System.setProperty("java.rmi.server.hostname", hostname);
 
             /* Create RMI registry */
@@ -131,33 +140,73 @@ public class ServerImpl implements SocketServer, RemoteServer, Runnable, Callbac
             logger.log(Level.FINE, "Accepting connection from {0}", client.getInetAddress().getHostAddress());
             /* Create the view and execute it in a separate thread */
             SocketRemoteView view = new SocketRemoteView(client, this);
-            executor.submit(view);
+            socketExecutor.submit(view);
         } catch (IOException e) {
             logger.log(Level.WARNING, "Failed to connect client", e);
         }
     }
 
-    @Override
-    public void playerLogin(String username, RemoteView view) throws LoginException {
-        /* TODO: Implement this method */
-        if(!gameActive && !(waitingGameTimer.isRunning()) && playerViews.entrySet().size() >= MIN_GAME_PLAYERS){
-            // There is a sufficient number of players for the game to start
-            logger.log(Level.FINE, "Reached sufficient players number ({0}), starting timer...", playerViews.entrySet().size());
-            // We start the timer
-            waitingGameTimer.start();
-        }
-    }
+    /* ========== LOGIN AND LOGOUT =========== */
 
     @Override
-    public void playerLogout(String username) {
-        /* TODO: Implement this method */
-        // We first check whethere there are still sufficient players for a game
-        // Filtering these events when the game has started
-        if(!gameActive && waitingGameTimer.isRunning() && playerViews.entrySet().size() < MIN_GAME_PLAYERS){
-            logger.log(Level.FINE, "Players count below sufficient threshold ({0}), stopping timer...", playerViews.entrySet().size());
-            // We reset the timer
-            waitingGameTimer.reset();
+    public void playerLogin(String username, RemoteView view) throws LoginException {
+        if (username == null || username.isEmpty() || view == null) {
+            throw new LoginException("Please provide an username");
         }
+
+        if (isUsernameReserved(username)) throw new LoginException("This name is already taken");
+
+        /* If the username is valid then reserve it */
+        reserveUsername(username);
+
+        /* Send the player to the Lobby */
+        lobby.insertPlayer(username, view);
+    }
+
+
+    /**
+     * Request to log out a user.
+     * If the user is logged in, it gets logged out and all operations to suspend him are taken care of.
+     * If it is not logged in, nothing happens.
+     *
+     * @param username name of the player to be logged out
+     */
+    @Override
+    public void playerLogout(String username) {
+        /* Check whether the player is logged in */
+        /* TODO: Tell the controller to disconnect him */
+    }
+
+    /**
+     * Puts an username in the set of reserved usernames
+     * @param username the username which has to be reserved
+     */
+    synchronized void reserveUsername(String username) {
+        reservedUsernames.add(username);
+    }
+
+    /**
+     * Unreserves a reserved username.
+     * If that username had an associated controller, also deletes that
+     * @param username the username to be unreserved
+     */
+    public synchronized void unreserveUsername(String username) {
+        playerMatches.remove(username);
+        reservedUsernames.remove(username);
+    }
+
+    /**
+     * Given the username of a player, it returns if that is reserved.
+     * An username is reserved if one of the following applies:
+     * <ul>
+     *     <li>The player has logged in and is in the lobby</li>
+     *     <li>The player is in a running match, even if eh is not connected</li>
+     * </ul>
+     * @param username username of the player
+     * @return whether this player is logged in (playing in a running match or in the lobby)
+     */
+    public boolean isUsernameReserved(String username) {
+        return reservedUsernames.contains(username);
     }
 
     @Override
@@ -166,16 +215,30 @@ public class ServerImpl implements SocketServer, RemoteServer, Runnable, Callbac
         calls it, it would get a RemoteException if there is no connection. */
     }
 
-    @Override
-    public void callback() {
-        // Here we check whether in the meantime someone disconnected
-        // And whether the conditions are right for the game to start
-        if(!gameActive && playerViews.entrySet().size() < MIN_GAME_PLAYERS){
-            return;
-        }
-        logger.log(Level.FINE, "Timer expired, starting the game");
-        // We then start the game
-        //TODO: Finish implementing this method
-        gameActive = true;
+    /* ========== MATCH HANDLING =======*/
+
+    /**
+     * Starts a new match with given players
+     * @param players a map with username as the key and the RemoteView of the player as the value
+     */
+    public void startNewMatch(Map<String, RemoteView> players) {
+        logger.log(Level.INFO, () -> String.format("Starting new match from players: %s", players.keySet()));
+        /* TODO: Create a controller for this match, from given players */
+
+        /* Set the controller for each player in the map */
+    }
+
+    /* ========== GETTERS ============= */
+
+    public ServerSocket getServerSocket() {
+        return serverSocket;
+    }
+
+    public Lobby getLobby() {
+        return lobby;
+    }
+
+    public ConcurrentMap<String, Controller> getPlayerMatches() {
+        return playerMatches;
     }
 }

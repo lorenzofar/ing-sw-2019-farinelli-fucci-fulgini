@@ -113,7 +113,8 @@ public class SocketServerConnection extends RemoteObservable<ModelUpdate>
      */
     @Override
     public void connect(String hostname) throws IOException {
-        int port = (int) AdrenalineProperties.getProperties().getOrDefault("adrenaline.socketport", 3000);
+        int port = Integer.parseInt((String)AdrenalineProperties.getProperties()
+                .getOrDefault("adrenaline.socketport", "3000"));
         connect(hostname, port);
     }
 
