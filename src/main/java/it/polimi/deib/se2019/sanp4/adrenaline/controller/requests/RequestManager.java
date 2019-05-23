@@ -78,21 +78,11 @@ public class RequestManager {
             throw new UnknownIdException(String.format("Cannot complete request %s: it does not exist", uuid));
         }
 
-        try {
-            /* Try to complete it with the given choice object */
-            completableChoice.complete(choice);
+        /* Try to complete it with the given choice object */
+        completableChoice.complete(choice);
 
-            /* If the completion goes fine, remove the choice from the map */
-            pendingChoices.remove(uuid);
-        } catch (AlreadyCompletedException e) {
-            /* Already completed choices should not be in the map */
-            /* If one is found, it has to be removed and the method behaves as if it has already been removed */
-            pendingChoices.remove(uuid);
-
-            /* Log the problem */
-            logger.log(Level.WARNING, "Already completed CompletableChoice found in pendingChoices");
-            throw new UnknownIdException(String.format("Cannot complete request %s: it does not exist", uuid));
-        }
+        /* If the completion goes fine, remove the choice from the map */
+        pendingChoices.remove(uuid);
     }
 
     /**
@@ -155,7 +145,6 @@ public class RequestManager {
      *     {@link #completeRequest(String, Object)} and {@link #cancelRequest(String)}.
      * </p>
      * @param uuid the unique identifier of the request that originated the choice
-     * @param <T> the type of the choice
      * @return the pending choice if it is found, {@code null} if no request is found with given UUID
      * @apiNote This method is package-private because external classes are not encouraged to manipulate
      * the choices directly, because it prevents them from being automatically taken out of the pending map

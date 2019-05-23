@@ -1,7 +1,6 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.client.gui;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.client.ClientView;
-import it.polimi.deib.se2019.sanp4.adrenaline.client.ClientViewImpl;
 import it.polimi.deib.se2019.sanp4.adrenaline.client.UIRenderer;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -42,7 +41,7 @@ public class GUIRenderer extends Application implements UIRenderer {
         primaryStage.show();
 
         this.stage = primaryStage;
-        this.clientView = new ClientViewImpl();
+        this.clientView = new ClientView();
         clientView.setRenderer(this);
 
         LoginController loginController = loader.getController();

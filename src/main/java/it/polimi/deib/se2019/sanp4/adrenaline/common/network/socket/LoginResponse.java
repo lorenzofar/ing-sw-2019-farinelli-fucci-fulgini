@@ -34,6 +34,6 @@ public class LoginResponse implements SocketClientCommand {
      */
     @Override
     public void applyOn(SocketClientCommandTarget target) {
-        /* TODO: Check what to do with the response */
+        /* Just be accepted */
     }
 }

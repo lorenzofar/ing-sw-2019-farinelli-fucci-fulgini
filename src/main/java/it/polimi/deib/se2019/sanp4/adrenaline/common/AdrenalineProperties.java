@@ -1,28 +1,24 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.common;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import it.polimi.deib.se2019.sanp4.adrenaline.server.ServerLauncher;
+
+import java.io.*;
 import java.util.Properties;
 import java.util.logging.Level;
+import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 /** A class extending the Properties class to load and retrieve properties used by the server. Uses the singleton pattern */
 public class AdrenalineProperties extends Properties {
 
     /** Default file name of the config file */
-    private static final String CONFIG_FILENAME = "server.properties";
+    private static final String CONFIG_FILENAME = "adrenaline.properties";
 
     /** Arguments that can be provided by the user */
     private static final String[] ARGUMENTS = {
-            "adrenaline.skulls",
-            "adrenaline.rmiport", "adrenaline.socketpoort",
+            "adrenaline.rmiport", "adrenaline.socketport",
             "adrenaline.turntime", "adrenaline.waitingtime",
-            "adrenaline.maxspawnweapons",
-            "adrenaline.initialplayerammo", "adrenaline.maxplayerammocubes", "adrenaline.maxplayerweapons", "adrenaline.maxplayerpowerups",
-            "adrenaline.maxplayermarks", "adrenaline.killshotdamage",
-            "adrenaline.skullscount"
+            "adrenaline.hostname"
     };
 
     private static AdrenalineProperties instance = new AdrenalineProperties();
@@ -50,7 +46,7 @@ public class AdrenalineProperties extends Properties {
         if(configFileName != null){
             // Load properties from file
             try {
-                InputStream configFileInputStream = new FileInputStream(new File(configFileName));
+                InputStream configFileInputStream = new FileInputStream(configFileName);
                 this.load(configFileInputStream);
             } catch (IOException e) {
                 logger.log(Level.SEVERE,"Error accessing provided file", e);
@@ -59,7 +55,7 @@ public class AdrenalineProperties extends Properties {
         else {
             // Here we search for a fallback file from the current folder
             try {
-                FileInputStream defaultConfigStream = new FileInputStream(new File(CONFIG_FILENAME));
+                FileInputStream defaultConfigStream = new FileInputStream(CONFIG_FILENAME);
                 this.load(defaultConfigStream);
             } catch (IOException e) {
                 // The file does not exist
@@ -72,6 +68,44 @@ public class AdrenalineProperties extends Properties {
             String argumentValue = System.getProperty(argument);
             if(argumentValue == null) continue;
             this.setProperty(argument, argumentValue);
+        }
+    }
+
+    /**
+     * Loads the logging configuration:
+     * <ol>
+     *     <li>From the file specified in property adrenaline.loggerconfig</li>
+     *     <li>If the property is not specified, it uses the resource provided as {@code fallbackConfig}</li>
+     * </ol>
+     * @param fallbackConfig the path of the resource on which to fallback
+     */
+    public static void loadLoggerConfig(String fallbackConfig) {
+        InputStream loggerConfigStream = null;
+
+        /* First check if the user provided a path for the logging file */
+        String loggerConfigFilePath = System.getProperty("adrenaline.loggerconfig");
+        if (loggerConfigFilePath != null) {
+            /* Try to load the configuration from that file */
+            try {
+                loggerConfigStream = new FileInputStream(loggerConfigFilePath);
+            } catch (FileNotFoundException e) {
+                logger.log(Level.WARNING,
+                        "Cannot load provided logging configuration file from {0}", loggerConfigFilePath);
+            }
+        }
+
+        /* If there is no custom configuration file, we use the internal configuration file */
+        if (loggerConfigStream == null) {
+            loggerConfigStream = ServerLauncher.class.getResourceAsStream(fallbackConfig);
+        }
+
+        /* Try to read the file */
+        if (loggerConfigStream != null) {
+            try {
+                LogManager.getLogManager().readConfiguration(loggerConfigStream);
+            } catch (IOException e) {
+                logger.log(Level.SEVERE, "Could not load default logging configuration");
+            }
         }
     }
 }
