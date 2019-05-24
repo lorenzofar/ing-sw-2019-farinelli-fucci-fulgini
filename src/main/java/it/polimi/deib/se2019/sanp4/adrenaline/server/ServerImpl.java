@@ -40,13 +40,11 @@ public class ServerImpl implements SocketServer, RemoteServer, Runnable {
         return ourInstance;
     }
 
-    private static final int SOCKET_EXECUTOR_THREAD_SIZE = 64;
-
     /** Used to accept Socket connections */
     private ServerSocket serverSocket;
 
     /** Used to manage Socket connections in separate threads */
-    private ExecutorService socketExecutor = Executors.newFixedThreadPool(SOCKET_EXECUTOR_THREAD_SIZE);
+    private ExecutorService socketExecutor = Executors.newCachedThreadPool();
 
     /** Executor for the lobby */
     private ExecutorService lobbyExecutor = Executors.newSingleThreadExecutor();
