@@ -45,8 +45,6 @@ public class PlayerUpdateTest {
         actions.add(ActionEnum.ADRENALINE_GRAB);
         actionCard = new ActionCard(1, ActionCardEnum.ADRENALINE1,
                                     actions, ActionEnum.RELOAD);
-        ActionCardView actionCardView = new ActionCardView(ActionCardEnum.ADRENALINE1,
-                                            actions, ActionEnum.RELOAD);
         Map<AmmoCube, Integer> ammo = new HashMap<>();
         ammo.put(AmmoCube.RED, 1);
 

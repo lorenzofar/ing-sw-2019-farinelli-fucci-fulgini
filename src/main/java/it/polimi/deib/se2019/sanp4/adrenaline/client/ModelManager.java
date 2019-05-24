@@ -105,4 +105,11 @@ public class ModelManager implements ModelUpdateVisitor {
     public void handle(PlayerUpdate update) {
         //TODO: Implement this method
     }
+
+    @Override
+    public void handle(ActionCardUpdate update) {
+        //TODO: Implement this method
+    }
+
+
 }

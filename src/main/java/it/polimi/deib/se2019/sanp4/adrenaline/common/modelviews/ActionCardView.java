@@ -1,5 +1,6 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionCardEnum;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionEnum;
 
@@ -15,6 +16,12 @@ public class ActionCardView implements Serializable {
     private ActionCardEnum type;
     private Collection<ActionEnum> actions;
     private ActionEnum finalAction;
+
+    /**
+     * Private constructor to be used only by Jackson.
+     */
+    @JsonCreator
+    private ActionCardView() {}
 
     public ActionCardView(ActionCardEnum type, Collection<ActionEnum> actions, ActionEnum finalAction) {
         //TODO: Check how to handle improper parameters

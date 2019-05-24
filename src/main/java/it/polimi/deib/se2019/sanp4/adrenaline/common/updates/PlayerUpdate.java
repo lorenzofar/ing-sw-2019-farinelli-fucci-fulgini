@@ -31,7 +31,6 @@ public class PlayerUpdate extends ModelUpdate {
         this.player = player;
     }
 
-
     @Override
     public void accept(ModelUpdateVisitor visitor) {
         visitor.handle(this);
