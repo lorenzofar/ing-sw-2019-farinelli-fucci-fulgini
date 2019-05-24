@@ -1,7 +1,6 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.client.cli;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.BoardView;
-import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.PlayerView;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.SquareView;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.CardinalDirection;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.CoordPair;
@@ -98,6 +97,17 @@ class CLIHelper {
     }
 
     /**
+     * Prints the provided text with the provided color, formatting it with the provided parameters
+     *
+     * @param template The template of the text to print
+     * @param color    The ANSI code of the color
+     * @param args     Optional arguments to insert inside the template
+     */
+    static void printColored(String template, String color, Object... args) {
+        print(color + template + ANSI_RESET, args);
+    }
+
+    /**
      * Prints the provided text, formatting it with the provided parameters
      * and adding a new line after it
      *
@@ -110,6 +120,19 @@ class CLIHelper {
     }
 
     /**
+     * Prints the provided text with the provided color, formatting it with the provided parameters
+     * and adding a new line after it
+     *
+     * @param template The template of the text to print
+     * @param color    The ANSI code of the color
+     * @param args     Optional arguments to insert inside the template
+     */
+    static void printlnColored(String template, String color, Object... args) {
+        print(color +template+ANSI_RESET, args);
+        print("\n");
+    }
+
+    /**
      * Print a section title highlighting its text
      *
      * @param title The title to print
@@ -117,7 +140,7 @@ class CLIHelper {
     static void printTitle(String title) {
         StringBuilder topBottomBorder = new StringBuilder();
         for (int i = 0; i < title.length() + 16; i++) {
-            topBottomBorder.append("━");
+            topBottomBorder.append(HORIZONTAL_BORDER);
         }
         print(ANSI_GREEN);
         println(TRISTRING_TEMPLATE, LEFT_TOP_CORNER, topBottomBorder.toString(), RIGHT_TOP_CORNER);

@@ -2,6 +2,7 @@ package it.polimi.deib.se2019.sanp4.adrenaline.client.gui;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.client.ClientView;
 import it.polimi.deib.se2019.sanp4.adrenaline.client.UIRenderer;
+import it.polimi.deib.se2019.sanp4.adrenaline.view.MessageType;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -100,6 +101,17 @@ public class GUIRenderer extends Application implements UIRenderer {
      */
     @Override
     public void showMatchScreen() {
+        //TODO: Implement this method
+    }
+
+    /**
+     * Shows a message to the user
+     *
+     * @param text The text of the message
+     * @param type The type of the message
+     */
+    @Override
+    public void showMessage(String text, MessageType type) {
         //TODO: Implement this method
     }
 }

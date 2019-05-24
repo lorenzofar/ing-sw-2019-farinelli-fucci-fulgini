@@ -1,5 +1,7 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.client;
 
+import it.polimi.deib.se2019.sanp4.adrenaline.view.MessageType;
+
 public interface UIRenderer {
 
     /**
@@ -28,6 +30,13 @@ public interface UIRenderer {
      * Triggered when the match starts
      */
     void showMatchScreen();
+
+    /**
+     * Shows a message to the user
+     * @param text The text of the message
+     * @param type The type of the message
+     */
+    void showMessage(String text, MessageType type);
 
     //TODO: Add more methods
 }

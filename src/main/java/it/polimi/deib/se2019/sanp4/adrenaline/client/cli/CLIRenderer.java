@@ -3,6 +3,7 @@ package it.polimi.deib.se2019.sanp4.adrenaline.client.cli;
 import it.polimi.deib.se2019.sanp4.adrenaline.client.ClientView;
 import it.polimi.deib.se2019.sanp4.adrenaline.client.UIRenderer;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.LoginException;
+import it.polimi.deib.se2019.sanp4.adrenaline.view.MessageType;
 import it.polimi.deib.se2019.sanp4.adrenaline.view.ViewScene;
 
 import java.io.IOException;
@@ -126,5 +127,16 @@ public class CLIRenderer implements UIRenderer {
         CLIHelper.stopSpinner();
         CLIHelper.clearScreen();
         //TODO: Implement this method
+    }
+
+    /**
+     * Shows a message to the user
+     *
+     * @param text The text of the message
+     * @param type The type of the message
+     */
+    @Override
+    public void showMessage(String text, MessageType type) {
+        CLIHelper.printlnColored(text, type.getAnsiCode());
     }
 }

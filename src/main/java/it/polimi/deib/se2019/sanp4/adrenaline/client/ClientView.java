@@ -169,7 +169,7 @@ public class ClientView extends RemoteObservable<ViewEvent> implements RemoteVie
 
     @Override
     public void showMessage(String text, MessageType type) {
-        /* TODO: Implement this method */
+        renderer.showMessage(text, type);
     }
 
     @Override

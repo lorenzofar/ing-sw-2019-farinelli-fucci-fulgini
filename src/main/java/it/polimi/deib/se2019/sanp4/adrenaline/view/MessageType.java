@@ -3,20 +3,26 @@ package it.polimi.deib.se2019.sanp4.adrenaline.view;
 /** Describes the importance level of a message */
 public enum MessageType {
     /** Informational message to show information about the ongoing game */
-    INFO("Info"),
+    INFO("Info", "\u001B[34m"),
     /** Warning message to warn players about potential issues */
-    WARNING("Warning"),
+    WARNING("Warning", "\u001B[33m"),
     /** Error message to warn about errors or illegal choices */
-    ERROR("Error");
+    ERROR("Error", "\u001B[31m");
 
     private String message;
+    private String ansiCode;
 
-    MessageType(String message){
+    MessageType(String message, String ansiCode) {
         this.message = message;
+        this.ansiCode = ansiCode;
     }
 
     @Override
     public String toString(){
         return this.message;
+    }
+
+    public String getAnsiCode() {
+        return ansiCode;
     }
 }
