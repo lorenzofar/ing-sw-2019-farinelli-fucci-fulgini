@@ -12,4 +12,5 @@ public interface ModelUpdateVisitor {
     void handle(PlayerMoveUpdate update);
     void handle(ReloadUpdate update);
     void handle(RemovedWeaponUpdate update);
+    void handle(PlayerUpdate update);
 }

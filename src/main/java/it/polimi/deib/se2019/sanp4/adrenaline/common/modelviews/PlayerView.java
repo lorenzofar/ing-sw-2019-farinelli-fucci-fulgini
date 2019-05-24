@@ -1,5 +1,6 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCube;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.powerup.PowerupCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.WeaponCard;
@@ -37,6 +38,12 @@ public class PlayerView implements Serializable {
      * The list of powerups belonging to the player
      */
     private List<PowerupCard> powerups;
+
+    /**
+     * Private constructor to be used only by Jackson
+     */
+    @JsonCreator
+    private PlayerView() {}
 
     public PlayerView(String name, PlayerColor color) {
         this.name = name;

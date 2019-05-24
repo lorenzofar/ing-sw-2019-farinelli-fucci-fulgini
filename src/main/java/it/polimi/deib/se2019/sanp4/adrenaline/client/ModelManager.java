@@ -100,4 +100,9 @@ public class ModelManager implements ModelUpdateVisitor {
     public void handle(RemovedWeaponUpdate update) {
         //TODO: Implement this method
     }
+
+    @Override
+    public void handle(PlayerUpdate update) {
+        //TODO: Implement this method
+    }
 }
