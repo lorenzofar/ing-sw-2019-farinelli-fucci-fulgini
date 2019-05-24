@@ -42,4 +42,10 @@ public abstract class ModelUpdate implements Serializable {
     public void setRecipients(Set<String> recipients) {
         this.recipients = recipients;
     }
+
+    /**
+     * Makes the provided visitor handle the update
+     * @param visitor The object representing the visitor
+     */
+    public abstract void accept(ModelUpdateVisitor visitor);
 }

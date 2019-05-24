@@ -42,4 +42,14 @@ public class KillUpdate extends ModelUpdate {
     public void setKilled(String killed) {
         this.killed = killed;
     }
+
+    /**
+     * Makes the provided visitor handle the update
+     *
+     * @param visitor The object representing the visitor
+     */
+    @Override
+    public void accept(ModelUpdateVisitor visitor) {
+        visitor.handle(this);
+    }
 }
