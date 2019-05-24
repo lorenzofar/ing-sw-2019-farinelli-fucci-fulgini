@@ -491,11 +491,7 @@ class CLIHelper {
         int playersCount = square.getPlayers().size();
         // We compute the starting point of the line
         int playerX = centerX - playersCount / 2;
-        // We print the players in a single row
-        for (PlayerView player : square.getPlayers()) {
-            squareRows.get(centerY).set(playerX, String.format(TRISTRING_TEMPLATE, player.getColor().getANSICode(), ANSI_DOT, square.getRoomColor().getANSICode()));
-            playerX++;
-        }
+        //TODO: Add players
         // Then eventually put the correct ANSI code for the square color
         squareRows.forEach(row -> row.add(0, square.getRoomColor().getANSICode()));
 

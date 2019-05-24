@@ -1,12 +1,14 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * A lightweight representation of a player board in the view
  */
-public class PlayerBoardView {
+public class PlayerBoardView implements Serializable {
+    private static final long serialVersionUID = 4751123925171736434L;
     /**
      * Damages received by other players
      */
@@ -45,6 +47,18 @@ public class PlayerBoardView {
     }
 
     /**
+     * Sets the number of deaths of the player
+     * If a negative value is provided, nothing happens
+     *
+     * @param deaths The number of deaths
+     */
+    public void setDeaths(int deaths) {
+        if (deaths >= 0) {
+            this.deaths = deaths;
+        }
+    }
+
+    /**
      * Increase the number of deaths by 1
      */
     public void addDeath() {
@@ -63,21 +77,35 @@ public class PlayerBoardView {
     /**
      * Sets the number of marks received
      * To be used when resetting the count or to synchronize it with the game status
+     *
      * @param marks The number of marks
      */
-    public void setMarks(int marks){
-        if(marks >= 0){
+    public void setMarks(int marks) {
+        if (marks >= 0) {
             this.marks = marks;
         }
     }
 
     /**
      * Increase the number of marks of the provided quantity
+     *
      * @param marks The number of marks to add
      */
-    public void addMarks(int marks){
-        if(marks > 0) {
+    public void addMarks(int marks) {
+        if (marks > 0) {
             this.marks += marks;
+        }
+    }
+
+    /**
+     * Sets the list of damages received by the player
+     * If a null object is provided, nothing happens
+     *
+     * @param damages The list of
+     */
+    public void setDamages(List<String> damages) {
+        if (damages != null && !damages.contains(null)) {
+            this.damages = damages;
         }
     }
 }

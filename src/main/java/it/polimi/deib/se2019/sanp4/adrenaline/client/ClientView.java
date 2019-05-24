@@ -1,6 +1,7 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.client;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.common.events.ViewEvent;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.*;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.network.RemoteView;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.RemoteObservable;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.ChoiceRequest;
@@ -9,6 +10,8 @@ import it.polimi.deib.se2019.sanp4.adrenaline.view.MessageType;
 import it.polimi.deib.se2019.sanp4.adrenaline.view.ViewScene;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ClientView extends RemoteObservable<ViewEvent> implements RemoteView {
     /**
@@ -24,8 +27,52 @@ public class ClientView extends RemoteObservable<ViewEvent> implements RemoteVie
      */
     private ServerConnection serverConnection;
 
+    private Map<String, PlayerView> players;
+    private Map<String, PlayerBoardView> playerBoards;
+    private Map<String, ActionCardView> actionCards;
+    private MatchView match;
+    private BoardView board;
+    private PlayerTurnView currentTurn;
+
     public ClientView() {
         //TODO: Complete constructor and methods implementation
+        players = new HashMap<>();
+        playerBoards = new HashMap<>();
+        actionCards = new HashMap<>();
+    }
+
+    public Map<String, PlayerView> getPlayers() {
+        return players;
+    }
+
+    public void setPlayers(Map<String, PlayerView> players) {
+        if (players != null && !players.entrySet().contains(null)) {
+            this.players = players;
+        }
+    }
+
+    public MatchView getMatch() {
+        return match;
+    }
+
+    public void setMatch(MatchView match) {
+        this.match = match;
+    }
+
+    public BoardView getBoard() {
+        return board;
+    }
+
+    public void setBoard(BoardView board) {
+        this.board = board;
+    }
+
+    public PlayerTurnView getCurrentTurn() {
+        return currentTurn;
+    }
+
+    public void setCurrentTurn(PlayerTurnView currentTurn) {
+        this.currentTurn = currentTurn;
     }
 
     /* ===== NETWORK CONNECTION SETUP ====== */

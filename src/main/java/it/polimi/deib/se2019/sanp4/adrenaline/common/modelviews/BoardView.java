@@ -2,19 +2,21 @@ package it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.CoordPair;
 
+import java.io.Serializable;
+
 /**
  * A lightweight representation of the game board in the view
  */
-public class BoardView {
+public class BoardView implements Serializable {
 
+    private static final long serialVersionUID = -444568262120667535L;
     /**
      * A matrix representing the disposal of squares in the board
      */
     private SquareView[][] squares;
 
-    public BoardView() {
-        this.squares = new SquareView[0][0];
-        //TODO: Check how squares are added to the matrix
+    public BoardView(int xSize, int ySize) {
+        this.squares = new SquareView[xSize][ySize];
     }
 
     /**
@@ -33,6 +35,15 @@ public class BoardView {
      */
     public int getColumnsCount() {
         return squares.length;
+    }
+
+    /**
+     * Retrieves the squares composing the board
+     *
+     * @return The matrix representing the squares
+     */
+    public SquareView[][] getSquares() {
+        return squares;
     }
 
     /**
@@ -61,6 +72,5 @@ public class BoardView {
         } catch (IndexOutOfBoundsException e) {
             return null;
         }
-
     }
 }

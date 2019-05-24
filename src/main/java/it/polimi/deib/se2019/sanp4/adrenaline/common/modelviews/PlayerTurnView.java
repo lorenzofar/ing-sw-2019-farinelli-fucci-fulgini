@@ -2,11 +2,14 @@ package it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.model.match.PlayerTurnState;
 
+import java.io.Serializable;
+
 /**
  * A lightweight representation of a turn in the view
  */
-public class PlayerTurnView {
+public class PlayerTurnView implements Serializable {
 
+    private static final long serialVersionUID = 807916643928825880L;
     /**
      * The count of remaining available actions
      */
@@ -58,6 +61,17 @@ public class PlayerTurnView {
      */
     public String getPlayer() {
         return player;
+    }
+
+    /**
+     * Sets the player owning the turn
+     *
+     * @param player The username of the player
+     */
+    public void setPlayer(String player) {
+        if (player != null) {
+            this.player = player;
+        }
     }
 
     /**

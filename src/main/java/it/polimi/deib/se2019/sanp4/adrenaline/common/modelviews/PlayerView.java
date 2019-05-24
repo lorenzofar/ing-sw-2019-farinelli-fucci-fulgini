@@ -5,6 +5,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.model.items.powerup.PowerupCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.WeaponCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.PlayerColor;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
@@ -13,8 +14,9 @@ import java.util.Map;
 /**
  * A lightweight representation of a player in the view
  */
-public class PlayerView {
+public class PlayerView implements Serializable {
 
+    private static final long serialVersionUID = 4565784735927811143L;
     /**
      * The name of the player
      */
@@ -23,14 +25,6 @@ public class PlayerView {
      * The color of the player
      */
     private PlayerColor color;
-    /**
-     * The action card belonging to the player
-     */
-    private ActionCardView actionCard;
-    /**
-     * The player board belonging to the player
-     */
-    private PlayerBoardView playerBoard;
     /**
      * The ammo belonging to the player
      */
@@ -50,7 +44,6 @@ public class PlayerView {
         this.ammo = new EnumMap<>(AmmoCube.class);
         this.weapons = new ArrayList<>();
         this.powerups = new ArrayList<>();
-        // TODO: set action card and player board
     }
 
     /**
@@ -69,46 +62,6 @@ public class PlayerView {
      */
     public PlayerColor getColor() {
         return color;
-    }
-
-    /**
-     * Retrieves the action card of the player
-     *
-     * @return The object representing the action card
-     */
-    public ActionCardView getActionCard() {
-        return actionCard;
-    }
-
-    /**
-     * Sets the action card belonging to the player
-     *
-     * @param actionCard The object representing the action card
-     */
-    public void setActionCard(ActionCardView actionCard) {
-        if (actionCard != null) {
-            this.actionCard = actionCard;
-        }
-    }
-
-    /**
-     * Retrieves the player board
-     *
-     * @return The object representing the player board
-     */
-    public PlayerBoardView getPlayerBoard() {
-        return playerBoard;
-    }
-
-    /**
-     * Sets the player board belonging to the player
-     *
-     * @param playerBoard The object representing the player board
-     */
-    public void setPlayerBoard(PlayerBoardView playerBoard) {
-        if (playerBoard != null) {
-            this.playerBoard = playerBoard;
-        }
     }
 
     /**
@@ -133,7 +86,7 @@ public class PlayerView {
     }
 
     /**
-     * Retrieves the weapon cards owned to the player
+     * Retrieves the weapon cards owned by the player
      *
      * @return The list of objects representing the weapon cards
      */
@@ -142,24 +95,14 @@ public class PlayerView {
     }
 
     /**
-     * Add a weapon to the ones owned by the player
+     * Sets the weapon cards owned by the player
+     * If a null object is provided, nothing happens
      *
-     * @param weaponCard The object representing the weapon card
+     * @param weapons The list of objects representing the weapon cards
      */
-    public void addWeapon(WeaponCard weaponCard) {
-        if (weaponCard != null) {
-            weapons.add(weaponCard);
-        }
-    }
-
-    /**
-     * Add a weapon to the ones owned by the player
-     *
-     * @param weaponCard The object representing the weapon card
-     */
-    public void removeWeapon(WeaponCard weaponCard) {
-        if (weaponCard != null) {
-            weapons.remove(weaponCard);
+    public void setWeapons(List<WeaponCard> weapons) {
+        if (weapons != null && !weapons.contains(null)) {
+            this.weapons = weapons;
         }
     }
 
@@ -173,24 +116,14 @@ public class PlayerView {
     }
 
     /**
-     * Add a powerup card to the ones owned by the player
+     * Sets the powerup cards owned by the players
+     * If a null object is provided, nothing happens
      *
-     * @param powerUpCard The object representing the powerup card
+     * @param powerups The list of objects representing the powerup cards
      */
-    public void addPowerup(PowerupCard powerUpCard) {
-        if (powerUpCard != null) {
-            powerups.add(powerUpCard);
-        }
-    }
-
-    /**
-     * Add a powerup card to the ones owned by the player
-     *
-     * @param powerUpCard The object representing the powerup card
-     */
-    public void removePowerup(PowerupCard powerUpCard) {
-        if (powerUpCard != null) {
-            powerups.remove(powerUpCard);
+    public void setPowerups(List<PowerupCard> powerups) {
+        if (powerups != null && !powerups.contains(null)) {
+            this.powerups = powerups;
         }
     }
 }

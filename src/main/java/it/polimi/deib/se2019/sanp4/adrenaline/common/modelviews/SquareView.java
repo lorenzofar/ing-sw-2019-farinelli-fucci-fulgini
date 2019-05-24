@@ -5,13 +5,15 @@ import it.polimi.deib.se2019.sanp4.adrenaline.model.board.CoordPair;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.RoomColor;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.SquareConnectionType;
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
  * A lightweight representation of a square in the view
  */
-public abstract class SquareView {
+public abstract class SquareView implements Serializable {
 
+    private static final long serialVersionUID = 1076256883407049643L;
     /**
      * The location of the square in cartesian coordinates
      */
@@ -20,7 +22,7 @@ public abstract class SquareView {
     /**
      * Set of players inside the square
      */
-    private Set<PlayerView> players;
+    private Set<String> players;
     /**
      * Color of the room the square is inside
      */
@@ -31,19 +33,18 @@ public abstract class SquareView {
     private Map<CardinalDirection, SquareConnectionType> adjacentMap;
 
     public SquareView(CoordPair location, RoomColor roomColor) {
-        //TODO: Check null color and location
         this.location = location;
         this.roomColor = roomColor;
         this.players = new HashSet<>();
         this.adjacentMap = new EnumMap<>(CardinalDirection.class);
-        //TODO: Check creation of adjacent map
     }
 
     /**
      * Retrieve the location of the square in cartesian coordinates
+     *
      * @return The object representing the location
      */
-    private CoordPair getLocation(){
+    private CoordPair getLocation() {
         return location;
     }
 
@@ -53,8 +54,18 @@ public abstract class SquareView {
      *
      * @return The set of players' username
      */
-    public Set<PlayerView> getPlayers() {
+    public Set<String> getPlayers() {
         return players;
+    }
+
+    /**
+     * Sets the players inside the square
+     * If a null object is provided, nothing happens
+     *
+     * @param players The list of names of the players
+     */
+    public void setPlayers(Set<String> players) {
+        this.players = players;
     }
 
     /**
@@ -63,7 +74,7 @@ public abstract class SquareView {
      *
      * @param player The object representing the player
      */
-    public void addPlayer(PlayerView player) {
+    public void addPlayer(String player) {
         if (player != null) {
             players.add(player);
         }
@@ -77,20 +88,8 @@ public abstract class SquareView {
      */
     public void removePlayer(String player) {
         if (player != null) {
-            Optional<PlayerView> playerToRemove = players.stream().filter(playerView -> playerView.getName().equals(player)).findFirst();
+            Optional<String> playerToRemove = players.stream().filter(p -> p.equals(player)).findFirst();
             playerToRemove.ifPresent(playerView -> players.remove(playerView));
-        }
-    }
-
-    /**
-     * Remove a player from the square
-     * If the provided player is null or not present, nothing happens
-     *
-     * @param player The object representing the player
-     */
-    public void removePlayer(PlayerView player) {
-        if (player != null) {
-            players.remove(player);
         }
     }
 
@@ -106,6 +105,7 @@ public abstract class SquareView {
     /**
      * Retrieves the marker indicating the type of the square
      * Each subclass of SquareView will print a different marker
+     *
      * @return The string representing the marker
      */
     public abstract String getTypeMarker();

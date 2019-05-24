@@ -5,6 +5,8 @@ import it.polimi.deib.se2019.sanp4.adrenaline.model.board.RoomColor;
 
 public class SpawnSquareView extends SquareView {
 
+    private static final long serialVersionUID = 157597379039936760L;
+
     public SpawnSquareView(CoordPair location, RoomColor roomColor) {
         super(location, roomColor);
     }
