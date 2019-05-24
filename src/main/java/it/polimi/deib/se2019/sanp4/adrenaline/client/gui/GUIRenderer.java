@@ -8,6 +8,8 @@ import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
@@ -112,6 +114,6 @@ public class GUIRenderer extends Application implements UIRenderer {
      */
     @Override
     public void showMessage(String text, MessageType type) {
-        //TODO: Implement this method
+        new Alert(type.getAlertType(), text, ButtonType.OK).showAndWait();
     }
 }
