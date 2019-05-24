@@ -138,6 +138,14 @@ public class RequestManager {
     }
 
     /**
+     * Returns whether there are pending requests or not
+     * @return {@code true} if there are pending requests, {@code false} otherwise
+     */
+    public boolean hasPendingRequests() {
+        return !pendingChoices.isEmpty();
+    }
+
+    /**
      * Returns the pending choice associated to given request UUID.
      * <p>
      *     Please note that this method does not remove the choice from the internal map, if it gets completed

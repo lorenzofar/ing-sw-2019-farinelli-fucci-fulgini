@@ -56,6 +56,7 @@ public class RequestManagerTest {
         /* Check that the request has been inserted correctly */
         assertTrue(requestManager.isRequestPending(uuid));
         assertEquals(choice, requestManager.getPendingChoice(uuid));
+        assertTrue(requestManager.hasPendingRequests());
     }
 
     @Test(expected = DuplicateIdException.class)
@@ -155,6 +156,8 @@ public class RequestManagerTest {
                 .collect(Collectors.toList());
         /* Cancel all the requests */
         requestManager.cancelPendingRequests();
+
+        assertFalse(requestManager.hasPendingRequests());
 
         /* Check cancellation for each choice */
         choices.forEach(c -> {
