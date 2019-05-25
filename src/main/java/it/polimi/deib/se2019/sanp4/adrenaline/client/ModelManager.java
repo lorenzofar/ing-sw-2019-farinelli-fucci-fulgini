@@ -74,7 +74,7 @@ public class ModelManager implements ModelUpdateVisitor {
     @Override
     public void handle(KillUpdate update) {
         PlayerBoardView playerBoardView = playerBoards.get(update.getKilled());
-        if(playerBoardView == null){
+        if (playerBoardView == null) {
             return;
         }
         playerBoardView.setDeaths(update.getDeaths());
@@ -93,7 +93,19 @@ public class ModelManager implements ModelUpdateVisitor {
 
     @Override
     public void handle(PlayerMoveUpdate update) {
-        //TODO: Implement this method
+        if (update.getStart() != null) {
+            SquareView start = board.getSquare(update.getStart());
+            if (start == null) {
+                return;
+            }
+            start.removePlayer(update.getPlayer());
+        }
+        SquareView end = board.getSquare(update.getEnd());
+        if (end == null) {
+            return;
+        }
+        end.addPlayer(update.getPlayer());
+        //TODO: Check whether to refresh something
     }
 
     @Override
@@ -110,7 +122,7 @@ public class ModelManager implements ModelUpdateVisitor {
     public void handle(PlayerUpdate update) {
         // Retrieve the player view associated to the player
         PlayerView playerView = players.get(update.getPlayer());
-        if(playerView == null){
+        if (playerView == null) {
             return;
         }
         // Set properties according to the received update
@@ -123,7 +135,7 @@ public class ModelManager implements ModelUpdateVisitor {
     @Override
     public void handle(ActionCardUpdate update) {
         ActionCardView actionCardView = actionCards.get(update.getPlayer());
-        if(actionCardView == null){
+        if (actionCardView == null) {
             return;
         }
         actionCardView.setActions(update.getActionCard().getActions());
@@ -134,21 +146,38 @@ public class ModelManager implements ModelUpdateVisitor {
 
     @Override
     public void handle(SquareUpdate update) {
-        //TODO: Implement this method
+        SquareView square = board.getSquare(update.getSquare().getLocation());
+        if (square == null) {
+            return;
+        }
+        square.setAdjacentMap(update.getSquare().getAdjacentMap());
+        square.setPlayers(update.getSquare().getPlayers());
+        //TODO: Refresh the board
     }
 
     @Override
     public void handle(BoardUpdate update) {
-        //TODO: Implement this method
+        board.setSquares(update.getBoard().getSquares());
+        //TODO: Refresh the displayed board
     }
 
     @Override
     public void handle(MatchUpdate update) {
-        //TODO: Implement this method
+        match.setFrenzy(update.getMatch().isFrenzy());
+        match.setKillshotsCount(update.getMatch().getKillshotsCount());
+        match.setTotalSkulls(update.getMatch().getTotalSkulls());
+        //TODO Refresh the match screen
     }
 
     @Override
     public void handle(PlayerBoardUpdate update) {
-        //TODO: Implement this method
+        PlayerBoardView playerBoardView = playerBoards.get(update.getPlayer());
+        if (playerBoardView == null) {
+            return;
+        }
+        playerBoardView.setDeaths(update.getPlayerBoard().getDeaths());
+        playerBoardView.setDamages(update.getPlayerBoard().getDamages());
+        playerBoardView.setMarks(update.getPlayerBoard().getMarks());
+        //TODO: Refresh the player board
     }
 }
