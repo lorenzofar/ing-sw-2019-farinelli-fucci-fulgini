@@ -16,4 +16,5 @@ public interface ModelUpdateVisitor {
     void handle(ActionCardUpdate update);
     void handle(SquareUpdate update);
     void handle(BoardUpdate update);
+    void handle(MatchUpdate update);
 }
