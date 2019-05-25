@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.PlayerView;
 
 /**
- * An update sent when a player changes its status
+ * An update sent when a player changes its status.
  */
 public class PlayerUpdate extends ModelUpdate {
 

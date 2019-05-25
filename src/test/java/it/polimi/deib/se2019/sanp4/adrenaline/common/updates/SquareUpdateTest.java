@@ -2,7 +2,10 @@ package it.polimi.deib.se2019.sanp4.adrenaline.common.updates;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.AmmoSquareView;
-import it.polimi.deib.se2019.sanp4.adrenaline.model.board.*;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.board.CardinalDirection;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.board.CoordPair;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.board.RoomColor;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.board.SquareConnectionType;
 import it.polimi.deib.se2019.sanp4.adrenaline.utils.JSONUtils;
 import org.junit.Test;
 
@@ -14,7 +17,7 @@ import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 
-public class AmmoSquareUpdateTest {
+public class SquareUpdateTest {
 
     private ObjectMapper objectMapper = JSONUtils.getObjectMapper();
 
@@ -25,7 +28,7 @@ public class AmmoSquareUpdateTest {
     private Map adjacentMap = new HashMap<>();
 
     @Test
-    public void serialize_ShouldSucceed() throws IOException {
+    public void ammoSquareView_Serialize_ShouldSucceed() throws IOException {
         ammoSquareView = new AmmoSquareView(location, roomColor);
 
         /* Test setters */
@@ -39,31 +42,31 @@ public class AmmoSquareUpdateTest {
         ammoSquareView.setAdjacentMap(adjacentMap);
 
         /* Create update and serialize */
-        AmmoSquareUpdate update = new AmmoSquareUpdate(ammoSquareView);
+        SquareUpdate update = new SquareUpdate(ammoSquareView);
         String s = objectMapper.writeValueAsString(update);
 
-        AmmoSquareUpdate ammoSquareUpdate = objectMapper.readValue(s, AmmoSquareUpdate.class);
+        SquareUpdate ammoSquareUpdate = objectMapper.readValue(s, SquareUpdate.class);
 
-        assertEquals(players, ammoSquareUpdate.getAmmoSquare().getPlayers());
-        assertEquals(roomColor, ammoSquareUpdate.getAmmoSquare().getRoomColor());
-        assertEquals(adjacentMap, ammoSquareUpdate.getAmmoSquare().getAdjacentMap());
+        assertEquals(players, ammoSquareUpdate.getSquare().getPlayers());
+        assertEquals(roomColor, ammoSquareUpdate.getSquare().getRoomColor());
+        assertEquals(adjacentMap, ammoSquareUpdate.getSquare().getAdjacentMap());
 
         /* Test addPlayer and removePlayer */
         players.add("Tiziano");
         ammoSquareView.addPlayer("Tiziano");
-        update = new AmmoSquareUpdate(ammoSquareView);
+        update = new SquareUpdate(ammoSquareView);
         s = objectMapper.writeValueAsString(update);
-        ammoSquareUpdate = objectMapper.readValue(s, AmmoSquareUpdate.class);
+        ammoSquareUpdate = objectMapper.readValue(s, SquareUpdate.class);
 
-        assertEquals(players, ammoSquareUpdate.getAmmoSquare().getPlayers());
+        assertEquals(players, ammoSquareUpdate.getSquare().getPlayers());
 
         players.remove("Tiziano");
         ammoSquareView.removePlayer("Tiziano");
-        update = new AmmoSquareUpdate(ammoSquareView);
+        update = new SquareUpdate(ammoSquareView);
         s = objectMapper.writeValueAsString(update);
-        ammoSquareUpdate = objectMapper.readValue(s, AmmoSquareUpdate.class);
+        ammoSquareUpdate = objectMapper.readValue(s, SquareUpdate.class);
 
-        assertEquals(players, ammoSquareUpdate.getAmmoSquare().getPlayers());
+        assertEquals(players, ammoSquareUpdate.getSquare().getPlayers());
 
     }
 }

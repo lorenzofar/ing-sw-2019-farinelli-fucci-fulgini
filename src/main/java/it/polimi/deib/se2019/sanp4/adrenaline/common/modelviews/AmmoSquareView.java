@@ -5,9 +5,10 @@ import it.polimi.deib.se2019.sanp4.adrenaline.model.board.CoordPair;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.RoomColor;
 
 /**
- * A lightweight representation of an ammo square in the view
+ * A lightweight representation of an ammo square in the view.
  */
 public class AmmoSquareView extends SquareView {
+
     private static final long serialVersionUID = -5130799856399259160L;
 
     /**

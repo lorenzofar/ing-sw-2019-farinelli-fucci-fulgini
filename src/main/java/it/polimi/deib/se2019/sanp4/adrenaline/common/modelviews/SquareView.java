@@ -1,10 +1,9 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import it.polimi.deib.se2019.sanp4.adrenaline.model.board.CardinalDirection;
-import it.polimi.deib.se2019.sanp4.adrenaline.model.board.CoordPair;
-import it.polimi.deib.se2019.sanp4.adrenaline.model.board.RoomColor;
-import it.polimi.deib.se2019.sanp4.adrenaline.model.board.SquareConnectionType;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.board.*;
 
 import java.io.Serializable;
 import java.util.*;
@@ -12,9 +11,18 @@ import java.util.*;
 /**
  * A lightweight representation of a square in the view
  */
+@JsonTypeInfo(
+        use = JsonTypeInfo.Id.NAME,
+        include = JsonTypeInfo.As.PROPERTY,
+        property = "type")
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = SpawnSquareView.class, name = "SPAWN_SQUARE_VIEW"),
+        @JsonSubTypes.Type(value = AmmoSquareView.class, name = "AMMO_SQUARE_VIEW"),
+})
 public abstract class SquareView implements Serializable {
 
     private static final long serialVersionUID = 1076256883407049643L;
+
     /**
      * The location of the square in cartesian coordinates
      */
