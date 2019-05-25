@@ -1,5 +1,8 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.common.events;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.io.Serializable;
 
 /**
@@ -21,4 +24,19 @@ public abstract class ViewEvent implements Serializable {
         return sender;
     }
 
+    /**
+     * Creates a new view event with provided sender
+     * @param sender the name of the user who sent this, not null
+     */
+    @JsonCreator
+    public ViewEvent(@JsonProperty("sender") String sender) {
+        if (sender == null) throw new NullPointerException("Sender name cannot be null");
+        this.sender = sender;
+    }
+
+    /**
+     * Accepts to be visited (handled) by given visitor
+     * @param visitor the visitor
+     */
+    public abstract void accept(ViewEventVisitor visitor);
 }
