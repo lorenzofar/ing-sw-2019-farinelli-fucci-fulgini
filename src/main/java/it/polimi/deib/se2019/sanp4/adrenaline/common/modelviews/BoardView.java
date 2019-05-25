@@ -15,6 +15,11 @@ public class BoardView implements Serializable {
      */
     private SquareView[][] squares;
 
+    /**
+     * Private constructor to be used only by Jackson.
+     */
+    private BoardView() {}
+
     public BoardView(int xSize, int ySize) {
         this.squares = new SquareView[xSize][ySize];
     }
@@ -24,7 +29,7 @@ public class BoardView implements Serializable {
      *
      * @return The number of columns
      */
-    public int getRowsCount() {
+    public int printRowsCount() {
         return squares[0].length;
     }
 
@@ -33,7 +38,7 @@ public class BoardView implements Serializable {
      *
      * @return The number of rows
      */
-    public int getColumnsCount() {
+    public int printColumnsCount() {
         return squares.length;
     }
 
