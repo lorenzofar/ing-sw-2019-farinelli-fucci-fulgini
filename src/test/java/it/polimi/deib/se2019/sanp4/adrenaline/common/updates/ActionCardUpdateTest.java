@@ -19,8 +19,6 @@ public class ActionCardUpdateTest {
     private Collection<ActionEnum> actions = new HashSet<>();
     private ObjectMapper objectMapper = JSONUtils.getObjectMapper();
 
-
-
     @Test
     public void serialize_ShouldSucceed() throws IOException {
         actions.add(ActionEnum.FRENZY2_RUN);
@@ -35,14 +33,16 @@ public class ActionCardUpdateTest {
         actionCardView.setType(type);
         ActionEnum finalAction = ActionEnum.ADRENALINE_SHOOT;
         actionCardView.setFinalAction(finalAction);
+        String actionCardOwner = "player1";
 
         /* Serialize */
-        ActionCardUpdate update = new ActionCardUpdate(actionCardView);
+        ActionCardUpdate update = new ActionCardUpdate(actionCardView, actionCardOwner);
         String s = objectMapper.writeValueAsString(update);
 
         /* Read */
         ActionCardUpdate actionCardUpdate = objectMapper.readValue(s, ActionCardUpdate.class);
 
+        assertEquals(actionCardOwner, actionCardUpdate.getPlayer());
         assertEquals(actionCardView.getActions(), actionCardUpdate.getActionCard().getActions());
         assertEquals(actionCardView.getFinalAction(), actionCardUpdate.getActionCard().getFinalAction());
         assertEquals(actionCardView.getType(), actionCardUpdate.getActionCard().getType());

@@ -103,12 +103,28 @@ public class ModelManager implements ModelUpdateVisitor {
 
     @Override
     public void handle(PlayerUpdate update) {
-        //TODO: Implement this method
+        // Retrieve the player view associated to the player
+        PlayerView playerView = players.get(update.getPlayer());
+        if(playerView == null){
+            return;
+        }
+        // Set properties according to the received update
+        playerView.setAmmo(update.getPlayer().getAmmo());
+        playerView.setPowerups(update.getPlayer().getPowerups());
+        playerView.setWeapons(update.getPlayer().getWeapons());
+        //TODO: Check whether to refresh something
     }
 
     @Override
     public void handle(ActionCardUpdate update) {
-        //TODO: Implement this method
+        ActionCardView actionCardView = actionCards.get(update.getPlayer());
+        if(actionCardView == null){
+            return;
+        }
+        actionCardView.setActions(update.getActionCard().getActions());
+        actionCardView.setFinalAction(update.getActionCard().getFinalAction());
+        actionCardView.setType(update.getActionCard().getType());
+        //TODO: Check whether to refresh something
     }
 
     @Override
