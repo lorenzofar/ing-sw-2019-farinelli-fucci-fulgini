@@ -21,13 +21,13 @@ public class Lobby implements Runnable {
     private boolean stayActive = true;
 
     /** Minimum number of players to start a match */
-    public static final int MIN_PLAYERS = 3;
+    private static final int MIN_PLAYERS = 3;
 
     /** Maxmimum number of players in a match */
-    public static final int MAX_PLAYERS = 5;
+    private static final int MAX_PLAYERS = 5;
 
     /** Waiting time of the timer, in seconds (default 30 sec.) */
-    public static final int WAITING_TIME = Integer.parseInt((String)AdrenalineProperties.getProperties()
+    private static final int WAITING_TIME = Integer.parseInt((String)AdrenalineProperties.getProperties()
             .getOrDefault("adrenaline.waitingtime", "20"));
 
     /** This will contain the players coming from the server */

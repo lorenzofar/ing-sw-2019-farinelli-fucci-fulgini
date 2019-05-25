@@ -7,7 +7,6 @@ import java.rmi.Remote;
 
 /** Describes a server based on RMI for communication */
 public interface RemoteServer extends Remote {
-    //TODO: Finish adding methods
 
     /**
      * Request to log in a user.

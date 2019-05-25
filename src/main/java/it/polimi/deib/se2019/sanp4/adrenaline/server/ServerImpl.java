@@ -95,10 +95,8 @@ public class ServerImpl implements SocketServer, RemoteServer, Runnable {
     private void startRMI(int port) {
         try {
             /* Get the IP address of the server */
-            /* TODO: Find a better way */
             String hostname = (String) AdrenalineProperties.getProperties()
                     .getOrDefault("adrenaline.hostname", InetAddress.getLocalHost().getHostAddress());
-            System.setProperty("java.rmi.server.hostname", hostname);
 
             /* Create RMI registry */
             logger.log(Level.INFO, () -> String.format("Creating RMI registry on %s:%d", hostname, port));
