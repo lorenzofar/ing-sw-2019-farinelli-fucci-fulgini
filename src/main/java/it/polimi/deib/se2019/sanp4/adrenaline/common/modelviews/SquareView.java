@@ -59,7 +59,7 @@ public abstract class SquareView implements Serializable {
      *
      * @return The object representing the location
      */
-    private CoordPair getLocation() {
+    public CoordPair getLocation() {
         return location;
     }
 

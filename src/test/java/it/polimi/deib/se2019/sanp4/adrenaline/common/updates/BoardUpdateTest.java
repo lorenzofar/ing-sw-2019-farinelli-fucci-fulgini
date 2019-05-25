@@ -11,12 +11,8 @@ import it.polimi.deib.se2019.sanp4.adrenaline.utils.JSONUtils;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class BoardUpdateTest {
 
@@ -46,10 +42,12 @@ public class BoardUpdateTest {
 
         assertEquals(rows, boardUpdate.getBoard().printRowsCount());
         assertEquals(columns, boardUpdate.getBoard().printColumnsCount());
-        assertEquals(squares, boardUpdate.getBoard().getSquares());
-        assertEquals(ammoSquareView, boardUpdate.getBoard().getSquare(new CoordPair(0,0)));
-        assertEquals(spawnSquareView, boardUpdate.getBoard().getSquare(new CoordPair(0,1)));
-
-
+        for(int i = 0; i<squares.length; i++){
+            for(int j = 0; j<squares[i].length; j++){
+                assertEquals(squares[i][j].getLocation(), boardUpdate.getBoard().getSquares()[i][j].getLocation());
+            }
+        }
+        assertEquals(ammoSquareView.getLocation(), boardUpdate.getBoard().getSquare(new CoordPair(0,0)).getLocation());
+        assertEquals(spawnSquareView.getLocation(), boardUpdate.getBoard().getSquare(new CoordPair(0,1)).getLocation());
     }
 }
