@@ -70,6 +70,8 @@ public class PersistentViewImpl extends RemoteObservable<ViewEvent> implements P
 
     private Callable<?> networkFaultCallback;
 
+    private RemoteViewObserver eventSpy;
+
     /* ========== CONSTRUCTOR ========== */
 
     /**
@@ -85,7 +87,7 @@ public class PersistentViewImpl extends RemoteObservable<ViewEvent> implements P
 
         /* Now create an internal remote observer to get events from the view */
         /* It needs to be exported to be RMI-compatible */
-        RemoteViewObserver eventSpy = new RemoteViewObserver(this);
+        eventSpy = new RemoteViewObserver(this);
         try {
             RemoteObserver<ViewEvent> stub =
                     (RemoteObserver<ViewEvent>) UnicastRemoteObject.exportObject(eventSpy, 0);
@@ -160,6 +162,24 @@ public class PersistentViewImpl extends RemoteObservable<ViewEvent> implements P
     }
 
     /* ========= NETWORK ========== */
+
+    /**
+     * Forces the disconnection of the internal remote view, if it is connected.
+     * The disconnection is then treated as a network fault
+     */
+    @Override
+    public void disconnectRemoteView() {
+        /* Check if the remote is still connected */
+        if (remote != null) {
+            /* Try to remove observer */
+            try {
+                remote.removeObserver(eventSpy);
+            } catch (IOException ignore) {
+                /* Ignore: we cannot reach the remote */
+            }
+            foundNetworkFault(); /* Treat disconnection as a network fault */
+        }
+    }
 
     /**
      * Substitutes the remote view of the player with the provided one.
@@ -243,6 +263,8 @@ public class PersistentViewImpl extends RemoteObservable<ViewEvent> implements P
     private void foundNetworkFault() {
         /* No connectivity => we invalidate the current remote */
         remote = null;
+        cancelPendingRequests();
+        stopTimer();
         if (networkFaultCallback != null) {
             /* Notify the subscriber in another thread */
             callbackExecutor.submit(networkFaultCallback);
@@ -274,18 +296,22 @@ public class PersistentViewImpl extends RemoteObservable<ViewEvent> implements P
      */
     @Override
     public <T extends Serializable> CompletableChoice<T> sendChoiceRequest(ChoiceRequest<T> request) {
-        try {
-            /* Insert it in the request manager */
-            CompletableChoice<T> choice = requestManager.insertRequest(request);
-            /* Send it to the player */
-            remote.performRequest(request); /* Throws NPE if already disconnected */
-            return choice;
-        } catch (IOException e) {
-            foundNetworkFault(); /* Call the callback */
-        } catch (DuplicateIdException | NullPointerException e) {
-            /* Proceed with next block */
+        if (isTimerRunning()) {
+            /* Try to send the request */
+            try {
+                /* Insert it in the request manager */
+                CompletableChoice<T> choice = requestManager.insertRequest(request);
+                /* Send it to the player */
+                remote.performRequest(request); /* Throws NPE if already disconnected */
+                return choice;
+            } catch (IOException e) {
+                foundNetworkFault(); /* Call the callback */
+            } catch (DuplicateIdException | NullPointerException e) {
+                /* Proceed with next block */
+            }
         }
-        /* The request could not be sent, so return a pre-cancelled choice */
+        /* The request could not be sent, or the timer is not running so return a pre-cancelled choice */
+        /* in order to end the current interaction with the user */
         CompletableChoice<T> choice = new CompletableChoice<>(request);
         choice.cancel();
         return choice;
@@ -384,20 +410,31 @@ public class PersistentViewImpl extends RemoteObservable<ViewEvent> implements P
     }
 
     /**
-     * Send an update/event from a {@link RemoteObservable} object.
+     * Send an update from a {@link RemoteObservable} object.
+     * The update is sent asynchronously
      *
-     * @param event event/update to be sent
+     * @param update update to be sent
      */
     @Override
-    public void update(ModelUpdate event) {
+    public void update(ModelUpdate update) {
         if (remote == null) return;
-        updateExecutor.submit(() -> {
+        updateExecutor.submit(() -> updateSync(update));
+    }
+
+    /**
+     * Sends an update to the remote view, synchronously
+     *
+     * @param update the update to be sent
+     */
+    @Override
+    public void updateSync(ModelUpdate update) {
+        if (remote != null) {
             try {
-                remote.update(event);
+                remote.update(update);
             } catch (IOException e) {
                 foundNetworkFault();
             }
-        });
+        }
     }
 
     /**

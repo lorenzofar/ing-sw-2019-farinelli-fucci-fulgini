@@ -71,6 +71,7 @@ public class PersistentViewImplTest {
         doThrow(new IOException()).when(faultyRemote).showMessage(anyString(), any(MessageType.class));
         doThrow(new IOException()).when(faultyRemote).selectScene(any(ViewScene.class));
         doThrow(new IOException()).when(faultyRemote).addObserver(observerCaptor.capture());
+        doThrow(new IOException()).when(faultyRemote).removeObserver(observerCaptor.capture());
         doThrow(new IOException()).when(faultyRemote).update(any(ModelUpdate.class));
         doThrow(new IOException()).when(faultyRemote).ping();
     }
@@ -160,6 +161,32 @@ public class PersistentViewImplTest {
         assertEquals(callback, view.getReconnectionCallback());
     }
 
+    @Test
+    public void disconnectRemoteView_notDisconnected_shouldStopTimer() {
+        PersistentViewImpl view = new PersistentViewImpl(username, remoteView);
+
+        view.startTimer(() -> null, 10, TimeUnit.SECONDS);
+        view.setNetworkFaultCallback(callback);
+
+        view.disconnectRemoteView();
+
+        assertTrue(view.hasNetworkFault());
+        assertFalse(view.isTimerRunning());
+    }
+
+    @Test
+    public void disconnectRemoteView_alreadyDisconnected_shouldNotTriggerCallback() throws Exception {
+        setupFaulty();
+        PersistentViewImpl view = new PersistentViewImpl(username, faultyRemote);
+
+        view.disconnectRemoteView(); /* Disconnect it first */
+        view.setNetworkFaultCallback(callback);
+
+        /* Try to disconnect it again */
+        view.disconnectRemoteView();
+        verify(callback, never()).call();
+    }
+
     @Test(expected = NullPointerException.class)
     public void reconnectRemoteView_nullRemote_shouldThrow() {
         PersistentViewImpl view = new PersistentViewImpl(username, remoteView);
@@ -180,21 +207,14 @@ public class PersistentViewImplTest {
     }
 
     @Test
-    public void reconnectRemoteView_networkProblemAlreadyDetected_shouldReconnect() throws IOException {
-        setupFaulty();
-        /* We provide a remote that throws on any method call */
-        PersistentViewImpl view = new PersistentViewImpl(username, faultyRemote);
+    public void reconnectRemoteView_networkProblemAlreadyDetected_shouldReconnect() {
+        PersistentViewImpl view = new PersistentViewImpl(username, remoteView);
 
         /* We also provide a callback */
         view.setReconnectionCallback(callback);
 
-        /* Then we call a method to trigger the problem */
-        try {
-            view.ping();
-            fail();
-        } catch (IOException e) {
-            /* Ignore */
-        }
+        /* Disconnect the remote */
+        view.disconnectRemoteView();
 
         /* The persistent view should have detected the problem, so reconnection should happen */
         boolean reconnected = view.reconnectRemoteView(remoteView);
@@ -236,11 +256,14 @@ public class PersistentViewImplTest {
     /* ========== REQUESTS ============ */
 
     @Test
-    public void sendChoiceRequest_remoteConnected_shouldReturnChoice() throws IOException {
+    public void sendChoiceRequest_remoteConnected_timerRunning_shouldReturnChoice() throws IOException {
         PersistentViewImpl view = new PersistentViewImpl(username, remoteView);
+
+        view.startTimer(() -> null, 10, TimeUnit.SECONDS); /* Start timer to prevent cancelled choice */
 
         /* Send request */
         CompletableChoice<String> choice = view.sendChoiceRequest(sampleRequest);
+        view.stopTimer();
 
         assertFalse(choice.isCompleted());
         assertTrue(view.getRequestManager().hasPendingRequests());
@@ -251,12 +274,16 @@ public class PersistentViewImplTest {
     public void sendChoiceRequest_duplicate_shouldReturnCancelledChoice() {
         PersistentViewImpl view = new PersistentViewImpl(username, remoteView);
 
+        view.startTimer(() -> null, 10, TimeUnit.SECONDS); /* Start timer to prevent cancelled choice */
+
         /* Send first request */
         StringRequest req = new StringRequest(Arrays.asList("1", "2", "3"));
         view.sendChoiceRequest(req);
 
         /* Try to send it again */
         CompletableChoice<String> choice = view.sendChoiceRequest(req);
+
+        view.stopTimer();
 
         assertTrue(choice.isCancelled());
     }
@@ -266,9 +293,13 @@ public class PersistentViewImplTest {
         setupFaulty();
         PersistentViewImpl view = new PersistentViewImpl(username, faultyRemote);
 
+        view.startTimer(() -> null, 10, TimeUnit.SECONDS); /* Start timer to prevent cancelled choice */
+
         /* Send request */
         StringRequest req = new StringRequest(Arrays.asList("1", "2", "3"));
         view.sendChoiceRequest(req);
+
+        view.stopTimer();
 
         assertTrue(view.hasNetworkFault());
     }
@@ -277,8 +308,12 @@ public class PersistentViewImplTest {
     public void cancelPendingRequests_shouldCancel() {
         PersistentViewImpl view = new PersistentViewImpl(username, remoteView);
 
+        view.startTimer(() -> null, 10, TimeUnit.SECONDS); /* Start timer to prevent cancelled choice */
+
         /* Send request */
         CompletableChoice<String> choice = view.sendChoiceRequest(sampleRequest);
+
+        view.stopTimer();
 
         /* Cancel all requests */
         view.cancelPendingRequests();
@@ -394,8 +429,12 @@ public class PersistentViewImplTest {
     public void visit_validChoiceProvided_shouldBeCompleted() {
         PersistentViewImpl view = new PersistentViewImpl(username, remoteView);
 
+        view.startTimer(() -> null, 10, TimeUnit.SECONDS); /* Start timer to prevent cancelled choice */
+
         /* Send request */
         CompletableChoice<String> choice = view.sendChoiceRequest(sampleRequest);
+
+        view.stopTimer();
 
         /* Send a valid response for that */
         ChoiceResponse<String> res = new ChoiceResponse<>("sender", sampleRequest.getUuid(), "a");
@@ -419,8 +458,12 @@ public class PersistentViewImplTest {
     public void visit_invalidChoice_shouldIgnore() {
         PersistentViewImpl view = new PersistentViewImpl(username, remoteView);
 
+        view.startTimer(() -> null, 10, TimeUnit.SECONDS); /* Start timer to prevent cancelled choice */
+
         /* Send request */
         CompletableChoice<String> choice = view.sendChoiceRequest(sampleRequest);
+
+        view.stopTimer();
 
         ChoiceResponse<String> res = new ChoiceResponse<>("sender", sampleRequest.getUuid(), "invalid");
         view.visit(res);

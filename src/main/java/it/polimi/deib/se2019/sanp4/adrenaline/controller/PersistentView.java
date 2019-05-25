@@ -5,6 +5,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.common.events.ViewEventVisitor;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.network.RemoteView;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.RemoteObserver;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.ChoiceRequest;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.ModelUpdate;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.requests.CompletableChoice;
 import it.polimi.deib.se2019.sanp4.adrenaline.view.MessageType;
 import it.polimi.deib.se2019.sanp4.adrenaline.view.ViewScene;
@@ -21,7 +22,9 @@ import java.util.concurrent.TimeUnit;
  * <p>
  *     This enable the controller classes to make {@link ChoiceRequest}s to the user
  *     and receive a {@link CompletableChoice} in response.
- *     When the user makes the choice, that {@link CompletableChoice} will be completed
+ *     When the user makes the choice, that {@link CompletableChoice} will be completed.
+ *     When the timer is not running, all requests made with {@link #sendChoiceRequest(ChoiceRequest)}
+ *     will return a pre-cancelled {@link CompletableChoice}
  * </p>
  * <b>Timer</b>
  * <p>
@@ -40,6 +43,7 @@ import java.util.concurrent.TimeUnit;
  *     when calling a method on the remote view, the following will happen:
  *     <ol>
  *         <li>All the pending {@link CompletableChoice}s are cancelled.</li>
+ *         <li>If the timer is running, it gets stopped</li>
  *         <li>If a callback has been provided with {@link #setNetworkFaultCallback(Callable)} (Callable)},
  *         it gets called</li>
  *     </ol>
@@ -48,6 +52,11 @@ import java.util.concurrent.TimeUnit;
  * <p>
  *     This view is associated to the player from the beginning till the end of the match, even if he disconnects.
  *     Then it can also handle the reconnection of the player.
+ * </p>
+ * <b>Updates</b>
+ * <p>
+ *     Updates are sent asynchronously if calling {@link #update(Object)}, in order not to block the model
+ *     However, if an update has to be sent synchronously, the method {@link #updateSync(ModelUpdate)} is provided
  * </p>
  */
 public interface PersistentView extends RemoteView, ViewEventVisitor {
@@ -76,6 +85,12 @@ public interface PersistentView extends RemoteView, ViewEventVisitor {
     boolean isTimerRunning();
 
     /* ========= NETWORK ========== */
+
+    /**
+     * Forces the disconnection of the internal remote view, if it is connected.
+     * The disconnection is then treated as a network fault
+     */
+    void disconnectRemoteView();
 
     /**
      * Substitutes the remote view of the player with the provided one.
@@ -129,6 +144,14 @@ public interface PersistentView extends RemoteView, ViewEventVisitor {
      * Forces all the pending {@link ChoiceRequest}s for this view to be canceled
      */
     void cancelPendingRequests();
+
+    /* ========== SYNCHRONOUS UPDATE ===== */
+
+    /**
+     * Sends an update to the remote view, synchronously
+     * @param update the update to be sent
+     */
+    void updateSync(ModelUpdate update);
 
     /* =========== DELEGATED ============= */
 
