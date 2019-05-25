@@ -2,6 +2,8 @@ package it.polimi.deib.se2019.sanp4.adrenaline.client.gui;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.LoginException;
 import it.polimi.deib.se2019.sanp4.adrenaline.view.ViewScene;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
@@ -18,20 +20,42 @@ public class LoginController extends GUIController {
     @FXML
     public ToggleGroup networkToggleGroup;
     @FXML
+    public RadioButton socketToggle;
+    @FXML
+    public RadioButton rmiToggle;
+    @FXML
     private Button connectBtn;
 
-    /** Property to store the inserted hostname */
+
+    /**
+     * Property to check whether the client connected succesfully
+     */
+    private BooleanProperty serverConnected;
+    /**
+     * Property to check whether the connection has already been set in the view
+     */
+    private BooleanProperty connectionSet;
+    /**
+     * Property to store the inserted hostname
+     */
     private StringProperty serverHostname;
-    /** Property to store the inserted username */
+    /**
+     * Property to store the inserted username
+     */
     private StringProperty username;
 
     @FXML
-    public void initialize(){
+    public void initialize() {
         serverHostname = new SimpleStringProperty("");
         username = new SimpleStringProperty("");
+        serverConnected = new SimpleBooleanProperty(false);
+        connectionSet = new SimpleBooleanProperty(false);
         hostnameTextField.textProperty().bindBidirectional(serverHostname);
         usernameTextField.textProperty().bindBidirectional(username);
-        connectBtn.disableProperty().bind(username.isEmpty().or(serverHostname.isEmpty()));
+        hostnameTextField.disableProperty().bind(serverConnected);
+        socketToggle.disableProperty().bind(connectionSet);
+        rmiToggle.disableProperty().bind(connectionSet);
+        connectBtn.disableProperty().bind(username.isEmpty().or(serverConnected.not().and(serverHostname.isEmpty())));
     }
 
     /**
@@ -39,19 +63,28 @@ public class LoginController extends GUIController {
      * and try to log in using the provided username.
      * When error occur, an alert is shown to the user and he can then try again
      */
-    public void login(){
+    public void login() {
         // Retrieve the selected network connection and set it up in the client view accordingly
-        if(networkToggleGroup.getSelectedToggle().getUserData().toString().equals("socket")){
-            clientView.setSocketConnection();
-        }
-        else{
-            clientView.setRMIConnection();
-        }
-
-        try {
-            clientView.getServerConnection().connect(serverHostname.get());
-        } catch (IOException e) {
-            new Alert(Alert.AlertType.ERROR, "Error establishing connection to server").showAndWait();
+        if (serverConnected.not().get()) {
+            try {
+                if (networkToggleGroup.getSelectedToggle().getUserData().toString().equals("socket")) {
+                    clientView.setSocketConnection();
+                } else {
+                    clientView.setRMIConnection();
+                }
+                connectionSet.set(true);
+            }
+            catch (Exception ignore){
+                // The connection has already been set in the view
+                connectionSet.set(true);
+            }
+            try {
+                clientView.getServerConnection().connect(serverHostname.get());
+                serverConnected.set(true);
+            } catch (IOException e) {
+                new Alert(Alert.AlertType.ERROR, "Error establishing connection to server").showAndWait();
+                return;
+            }
         }
 
         // Try to log in with the provided username
@@ -65,8 +98,7 @@ public class LoginController extends GUIController {
             // A network error occurred
         } catch (LoginException e) {
             new Alert(Alert.AlertType.WARNING, "The username is already taken, choose another one").showAndWait();
-        }
-        finally {
+        } finally {
             serverHostname.set("");
             username.set("");
         }

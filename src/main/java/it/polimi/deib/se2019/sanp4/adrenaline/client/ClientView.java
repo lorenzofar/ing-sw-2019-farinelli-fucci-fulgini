@@ -112,6 +112,15 @@ public class ClientView extends RemoteObservable<ViewEvent> implements RemoteVie
     }
 
     /**
+     * Retrieves the rendering engine used by the client
+     *
+     * @return The object representing the rendering engine
+     */
+    public UIRenderer getRenderer() {
+        return renderer;
+    }
+
+    /**
      * Set the rendering engine used by the client     *
      *
      * @param renderer The object representing the rendering engine, not null

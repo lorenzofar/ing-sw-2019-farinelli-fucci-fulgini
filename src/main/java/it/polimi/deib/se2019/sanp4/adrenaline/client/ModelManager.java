@@ -20,7 +20,7 @@ public class ModelManager implements ModelUpdateVisitor {
     private BoardView board;
     private PlayerTurnView currentTurn;
 
-    public ModelManager(ClientView clientView){
+    public ModelManager(ClientView clientView) {
         this.clientView = clientView;
         players = new HashMap<>();
         playerBoards = new HashMap<>();
@@ -78,7 +78,7 @@ public class ModelManager implements ModelUpdateVisitor {
 
     @Override
     public void handle(LobbyUpdate update) {
-        //TODO: Implement this method
+        clientView.getRenderer().updateLobby(update.getWaitingPlayers());
     }
 
     @Override

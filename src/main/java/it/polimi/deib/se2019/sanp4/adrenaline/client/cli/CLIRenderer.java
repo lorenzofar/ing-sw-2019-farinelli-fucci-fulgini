@@ -4,10 +4,11 @@ import it.polimi.deib.se2019.sanp4.adrenaline.client.ClientView;
 import it.polimi.deib.se2019.sanp4.adrenaline.client.UIRenderer;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.LoginException;
 import it.polimi.deib.se2019.sanp4.adrenaline.view.MessageType;
-import it.polimi.deib.se2019.sanp4.adrenaline.view.ViewScene;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 
 public class CLIRenderer implements UIRenderer {
 
@@ -16,10 +17,10 @@ public class CLIRenderer implements UIRenderer {
     /* ASCII-art version of the game title */
     private static final String ADRENALINE_TITLE =
             "    ___    ____  ____  _______   _____    __    _____   ________\n" +
-            "   /   |  / __ \\/ __ \\/ ____/ | / /   |  / /   /  _/ | / / ____/\n" +
-            "  / /| | / / / / /_/ / __/ /  |/ / /| | / /    / //  |/ / __/\n" +
-            " / ___ |/ /_/ / _, _/ /___/ /|  / ___ |/ /____/ // /|  / /_\n" +
-            "/_/  |_/_____/_/ |_/_____/_/ |_/_/  |_/_____/___/_/ |_/_____/ \n";
+                    "   /   |  / __ \\/ __ \\/ ____/ | / /   |  / /   /  _/ | / / ____/\n" +
+                    "  / /| | / / / / /_/ / __/ /  |/ / /| | / /    / //  |/ / __/\n" +
+                    " / ___ |/ /_/ / _, _/ /___/ /|  / ___ |/ /____/ // /|  / /_\n" +
+                    "/_/  |_/_____/_/ |_/_____/_/ |_/_/  |_/_____/___/_/ |_/_____/ \n";
 
 
     @Override
@@ -39,10 +40,9 @@ public class CLIRenderer implements UIRenderer {
         // We ask the user to select a network connection mode
         CLIHelper.printTitle("network configuration");
         String selectedNetworkMode = CLIHelper.askOptionFromList("Select the network connection to use", Arrays.asList("socket", "rmi"));
-        if(selectedNetworkMode.equals("socket")) {
+        if (selectedNetworkMode.equals("socket")) {
             clientView.setSocketConnection();
-        }
-        else {
+        } else {
             clientView.setRMIConnection();
         }
 
@@ -56,9 +56,9 @@ public class CLIRenderer implements UIRenderer {
      * Prompts the user to enter the hostname of the server
      * and tries to connect to it using the selected network connection
      */
-    private void setUpNetworkConnection(){
+    private void setUpNetworkConnection() {
         boolean connected = false;
-        while(!connected){
+        while (!connected) {
             try {
                 String serverHostname = CLIHelper.parseString("Enter the hostname of the server");
                 clientView.getServerConnection().connect(serverHostname);
@@ -73,11 +73,11 @@ public class CLIRenderer implements UIRenderer {
     /**
      * Prompts the user to enter his username and tries to log in to the server
      */
-    private void performLogin(){
+    private void performLogin() {
         CLIHelper.printTitle("login");
         String username = CLIHelper.parseString("Enter your username");
         boolean loggedIn = false;
-        while(!loggedIn) {
+        while (!loggedIn) {
             try {
                 clientView.getServerConnection().login(username);
                 loggedIn = true;
@@ -89,17 +89,29 @@ public class CLIRenderer implements UIRenderer {
                 username = CLIHelper.parseString("Enter your username");
             }
         }
-        // The user has finally logged in, we update the scene
-        //TODO: Check who is responsible of updating the scene
-        clientView.selectScene(ViewScene.LOBBY);
+    }
+
+    /**
+     * Prints the lobby screen, listing the provided connected players
+     * @param connectedPlayers The list of connected players
+     */
+    private void printLobbyScreen(Collection<String> connectedPlayers) {
+        CLIHelper.clearScreen();
+        CLIHelper.printTitle("waiting room");
+        CLIHelper.println("The game is about to start, wait for other players to join");
+        CLIHelper.printlnColored("Connected players:", CLIHelper.ANSI_YELLOW);
+        connectedPlayers.forEach(player -> CLIHelper.println("* %s", player));
+        CLIHelper.startSpinner();
     }
 
     @Override
     public void showLobby() {
-        CLIHelper.clearScreen();
-        CLIHelper.printTitle("waiting room");
-        CLIHelper.println("The game is about to start, wait for other players to join");
-        CLIHelper.startSpinner();
+        printLobbyScreen(Collections.emptyList());
+    }
+
+    @Override
+    public void updateLobby(Collection<String> connectedPlayers) {
+        printLobbyScreen(connectedPlayers);
     }
 
     /**
