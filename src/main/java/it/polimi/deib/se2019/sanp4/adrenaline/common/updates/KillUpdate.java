@@ -12,19 +12,26 @@ public class KillUpdate extends ModelUpdate {
 
     private String killer;
     private String killed;
+    /**
+     * The total count of deaths of the killed player
+     */
+    private int deaths;
 
     /**
      * Creates a kill update that will be sent in broadcast.
+     *
      * @param killer the player who performed the kill.
      * @param killed the killed player.
      */
     @JsonCreator
     public KillUpdate(
             @JsonProperty("killer") String killer,
-            @JsonProperty("killed") String killed) {
+            @JsonProperty("killed") String killed,
+            @JsonProperty("deaths") int deaths) {
         super();
         this.killed = killed;
         this.killer = killer;
+        this.deaths = deaths;
     }
 
     public String getKiller() {
@@ -41,6 +48,14 @@ public class KillUpdate extends ModelUpdate {
 
     public void setKilled(String killed) {
         this.killed = killed;
+    }
+
+    public int getDeaths() {
+        return deaths;
+    }
+
+    public void setDeaths(int deaths) {
+        this.deaths = deaths;
     }
 
     /**

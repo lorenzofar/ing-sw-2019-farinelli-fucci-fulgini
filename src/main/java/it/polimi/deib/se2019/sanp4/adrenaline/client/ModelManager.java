@@ -73,7 +73,12 @@ public class ModelManager implements ModelUpdateVisitor {
 
     @Override
     public void handle(KillUpdate update) {
-        //TODO: Implement this method
+        PlayerBoardView playerBoardView = playerBoards.get(update.getKilled());
+        if(playerBoardView == null){
+            return;
+        }
+        playerBoardView.setDeaths(update.getDeaths());
+        //TODO: Notify players about killing
     }
 
     @Override
