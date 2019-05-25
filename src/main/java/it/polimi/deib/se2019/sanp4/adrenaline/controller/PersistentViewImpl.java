@@ -1,0 +1,419 @@
+package it.polimi.deib.se2019.sanp4.adrenaline.controller;
+
+import it.polimi.deib.se2019.sanp4.adrenaline.common.events.ChoiceResponse;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.events.ViewEvent;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.DuplicateIdException;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.UnknownIdException;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.network.RemoteView;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.RemoteObservable;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.RemoteObserver;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.ChoiceRequest;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.ModelUpdate;
+import it.polimi.deib.se2019.sanp4.adrenaline.controller.requests.CompletableChoice;
+import it.polimi.deib.se2019.sanp4.adrenaline.controller.requests.InvalidChoiceException;
+import it.polimi.deib.se2019.sanp4.adrenaline.controller.requests.RequestManager;
+import it.polimi.deib.se2019.sanp4.adrenaline.view.MessageType;
+import it.polimi.deib.se2019.sanp4.adrenaline.view.ViewScene;
+
+import java.io.IOException;
+import java.io.Serializable;
+import java.rmi.server.UnicastRemoteObject;
+import java.util.concurrent.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+/**
+ * Implementation of {@link PersistentView} by decorating {@link RemoteView}
+ * Uses a {@link RequestManager} to handle requests to the user
+ * and a {@link ScheduledExecutorService} for the timer.
+ * By convention, if the remote view has connection faults, it gets set to null
+ */
+public class PersistentViewImpl extends RemoteObservable<ViewEvent> implements PersistentView {
+
+    private static Logger logger = Logger.getLogger(PersistentView.class.getName());
+
+    /* This class observes the underlying remote view and sends updates to its parent */
+    private class RemoteViewObserver implements RemoteObserver<ViewEvent> {
+
+        private PersistentView parent;
+
+        RemoteViewObserver(PersistentView parent) {
+            this.parent = parent;
+        }
+
+        /* Receives an update from the remote view */
+        @Override
+        public void update(ViewEvent event) {
+            if (event != null) {
+                event.accept(parent); /* Make the persistent view visit the update */
+            }
+        }
+    }
+
+    private String username;
+
+    private RemoteView remote;
+
+    private final RequestManager requestManager = new RequestManager();
+
+    private final ScheduledExecutorService timerScheduler = Executors.newSingleThreadScheduledExecutor();
+
+    private final ExecutorService callbackExecutor = Executors.newSingleThreadExecutor();
+
+    private final ExecutorService updateExecutor = Executors.newCachedThreadPool();
+
+    private Future<?> timer;
+
+    private final Object timerLock = new Object();
+
+    private Callable<?> reconnectionCallback;
+
+    private Callable<?> networkFaultCallback;
+
+    /* ========== CONSTRUCTOR ========== */
+
+    /**
+     * Creates a new PersistentView by decorating a remote RemoteView
+     * @param username the username associated to this view, not null
+     * @param remote the actual remote view, not null
+     */
+    public PersistentViewImpl(String username, RemoteView remote) {
+        if (username == null) throw new NullPointerException("Username cannot be null");
+        if (remote == null) throw new NullPointerException("View cannot be null");
+        this.username = username;
+        this.remote = remote;
+
+        /* Now create an internal remote observer to get events from the view */
+        /* It needs to be exported to be RMI-compatible */
+        RemoteViewObserver eventSpy = new RemoteViewObserver(this);
+        try {
+            RemoteObserver<ViewEvent> stub =
+                    (RemoteObserver<ViewEvent>) UnicastRemoteObject.exportObject(eventSpy, 0);
+            remote.addObserver(stub);
+        } catch (IOException ignore) {
+            logger.log(Level.SEVERE, "Could not subscribe to remote view of \"{0}\"", username);
+        }
+    }
+
+    /* ========== TIMER ========== */
+
+    /**
+     * Starts a timer for this particular player.
+     * If a timer is running, this will stop it and start the new one
+     *
+     * @param callback the function that will be called when the timer expires, not null
+     * @param delay    the duration of the timer
+     * @param unit     the time unit for delay
+     * @throws RejectedExecutionException – if the task cannot be scheduled for execution
+     * @throws NullPointerException – if callback is null
+     */
+    @Override
+    public void startTimer(Callable<?> callback, long delay, TimeUnit unit) {
+        if (callback == null) throw new NullPointerException("Callback cannot be null");
+        synchronized (timerLock) {
+            if(isTimerRunning()) {
+                stopTimer();
+            }
+            timer = timerScheduler.schedule(() -> {
+                cancelPendingRequests();
+                try {
+                    callback.call();
+                } catch (Exception e) {
+                    /* Ignore the exception */
+                }
+            }, delay, unit);
+        }
+    }
+
+    /**
+     * Stops the running timer.
+     * If there is no running timer, it does nothing
+     */
+    @Override
+    public void stopTimer() {
+        synchronized (timerLock) {
+            if (timer != null) {
+                timer.cancel(true);
+            }
+        }
+    }
+
+    /**
+     * Checks if the timer is running
+     *
+     * @return {@code true} if the timer is running, {@code false} if not
+     */
+    @Override
+    public boolean isTimerRunning() {
+        synchronized (timerLock) {
+            if (timer == null) return false;
+            return !timer.isDone();
+        }
+    }
+
+    /**
+     * Returns the future associated to the timer callback
+     * @return future associated to the timer callback
+     */
+    Future getTimer() {
+        return timer;
+    }
+
+    /* ========= NETWORK ========== */
+
+    /**
+     * Substitutes the remote view of the player with the provided one.
+     * In detail:
+     * <ul>
+     * <li>If network faults have already been detected, the substitution is guaranteed</li>
+     * <li>
+     * If network faults have not been detected, a ping is sent to the client to detect
+     * network problems.
+     * If the ping doesn't succeed, the reconnection happens; if it does succeed, then
+     * the reconnection doesn't happen
+     * </li>
+     * </ul>
+     *
+     * @param view the view of the player who wants to reconnect
+     * @return {@code true} if reconnection goes fine, {@code false} otherwise
+     */
+    @Override
+    public synchronized boolean reconnectRemoteView(RemoteView view) {
+        if (view == null) throw new NullPointerException("View cannot be null");
+        /* Check connectivity */
+        try {
+            remote.ping();
+        } catch (IOException e) {
+            /* No connectivity => we invalidate the current remote */
+            remote = null;
+        } catch (NullPointerException ignore) {
+            /* This means that remote was already null */
+        }
+
+        /* If there were network problems, accept reconnection */
+        if (remote == null) {
+            /* Substitute the remote */
+            remote = view;
+            /* Call the reconnection callback asynchronously */
+            if (reconnectionCallback != null) {
+                callbackExecutor.submit(reconnectionCallback);
+            }
+            return true;
+        } else {
+            /* If the user is still connected, do not allow reconnection */
+            return false;
+        }
+    }
+
+    /**
+     * Sets the function to be called when a reconnection happens
+     *
+     * @param callback the function to be called when a reconnection happens
+     */
+    @Override
+    public void setReconnectionCallback(Callable<?> callback) {
+        reconnectionCallback = callback;
+    }
+
+    Callable getReconnectionCallback() {
+        return reconnectionCallback;
+    }
+
+    /**
+     * Sets the function to be called when a network fault is detected
+     *
+     * @param callback the function to be called when a network fault is detected
+     */
+    @Override
+    public void setNetworkFaultCallback(Callable<?> callback) {
+        networkFaultCallback = callback;
+    }
+
+    Callable getNetworkFaultCallback() {
+        return networkFaultCallback;
+    }
+
+    public RemoteView getRemote() {
+        return remote;
+    }
+
+    /**
+     * Called when a network fault is detected
+     */
+    private void foundNetworkFault() {
+        /* No connectivity => we invalidate the current remote */
+        remote = null;
+        if (networkFaultCallback != null) {
+            /* Notify the subscriber in another thread */
+            callbackExecutor.submit(networkFaultCallback);
+        }
+    }
+
+    /**
+     * Returns if a network fault has been detected with the remote.
+     * Note that this does not try to contact the remote to check connectivity,
+     * but reports if a network fault has been detected in previous method calls
+     *
+     * @return if a network fault has been detected
+     */
+    @Override
+    public boolean hasNetworkFault() {
+        return remote == null;
+    }
+
+    /* ========== REQUESTS ============ */
+
+    /**
+     * Sends a request to the player and returns an object that can be used to retrieve the response
+     * to that request.
+     * If the request is not accepted by the {@link RequestManager}, or if the user is disconnected
+     * this returns a pre-cancelled {@link CompletableChoice}
+     *
+     * @param request the request to be sent, not null
+     * @return a completable choice which can be used to retrieve the user's choice
+     */
+    @Override
+    public <T extends Serializable> CompletableChoice<T> sendChoiceRequest(ChoiceRequest<T> request) {
+        try {
+            /* Insert it in the request manager */
+            CompletableChoice<T> choice = requestManager.insertRequest(request);
+            /* Send it to the player */
+            remote.performRequest(request); /* Throws NPE if already disconnected */
+            return choice;
+        } catch (IOException e) {
+            foundNetworkFault(); /* Call the callback */
+        } catch (DuplicateIdException | NullPointerException e) {
+            /* Proceed with next block */
+        }
+        /* The request could not be sent, so return a pre-cancelled choice */
+        CompletableChoice<T> choice = new CompletableChoice<>(request);
+        choice.cancel();
+        return choice;
+    }
+
+    /**
+     * Forces all the pending {@link ChoiceRequest}s for this view to be canceled
+     */
+    @Override
+    public void cancelPendingRequests() {
+        requestManager.cancelPendingRequests();
+    }
+
+
+    RequestManager getRequestManager() {
+        return requestManager;
+    }
+
+    /* ======== DELEGATE METHODS ========= */
+
+    /**
+     * Returns the username of the player associated with this view.
+     * It returns {@code null} if the username has not already been set
+     * (prior to login)
+     *
+     * @return username of the player, if it has been set, {@code null} otherwise
+     */
+    @Override
+    public String getUsername() {
+        return username;
+    }
+
+    /**
+     * Performs the provided request on the view
+     *
+     * @param request The object representing the request, not null
+     * @throws IOException if the remote call fails
+     */
+    @Override
+    public <T extends Serializable> void performRequest(ChoiceRequest<T> request) throws IOException {
+        if (remote == null) throw new IOException("Not connected");
+        try {
+            remote.performRequest(request);
+        } catch (IOException e) {
+            foundNetworkFault();
+            throw e;
+        }
+    }
+
+    /**
+     * Displays the provided message
+     *
+     * @param text The text of the message, not null
+     * @param type The type of the message, not null
+     */
+    @Override
+    public void showMessage(String text, MessageType type) {
+        try {
+            remote.showMessage(text, type);
+        } catch (IOException e) {
+            foundNetworkFault();
+        } catch (NullPointerException ignore) {
+            /* Ignore */
+        }
+    }
+
+    /**
+     * Displays the selected scene
+     *
+     * @param scene The object representing the scene
+     */
+    @Override
+    public void selectScene(ViewScene scene) {
+        try {
+            remote.selectScene(scene);
+        } catch (IOException e) {
+            foundNetworkFault();
+        } catch (NullPointerException ignore) {
+            /* Ignore */
+        }
+    }
+
+    /**
+     * Checks connectivity to the client
+     *
+     * @throws IOException If there is no connectivity
+     */
+    @Override
+    public void ping() throws IOException {
+        try {
+            remote.ping();
+        } catch (IOException | NullPointerException e) {
+            foundNetworkFault();
+            throw new IOException(e);
+        }
+    }
+
+    /**
+     * Send an update/event from a {@link RemoteObservable} object.
+     *
+     * @param event event/update to be sent
+     */
+    @Override
+    public void update(ModelUpdate event) {
+        if (remote == null) return;
+        updateExecutor.submit(() -> {
+            try {
+                remote.update(event);
+            } catch (IOException e) {
+                foundNetworkFault();
+            }
+        });
+    }
+
+    /**
+     * Handles given choice response by trying to complete the corresponding request
+     *
+     * @param choiceResponse the choice response event
+     */
+    @Override
+    public <T extends Serializable> void visit(ChoiceResponse<T> choiceResponse) {
+        /* Get the uuid and try to complete the choice */
+        String uuid = choiceResponse.getUuid();
+        T choice = choiceResponse.getChoice();
+        try {
+            requestManager.completeRequest(uuid, choice);
+        } catch (UnknownIdException | InvalidChoiceException e) {
+            /* If we get these the response might have been generated by someone else, so we ignore it */
+        }
+    }
+}
