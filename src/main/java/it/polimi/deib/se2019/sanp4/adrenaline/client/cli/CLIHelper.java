@@ -64,6 +64,10 @@ class CLIHelper {
     private static final String RIGHT_TOP_CORNER = "╗";
     private static final String LEFT_BOTTOM_CORNER = "╚";
     private static final String RIGHT_BOTTOM_CORNER = "╝";
+    private static final String LIGHT_LEFT_TOP_CORNER = "┏";
+    private static final String LIGHT_RIGHT_TOP_CORNER = "┓";
+    private static final String LIGHT_LEFT_BOTTOM_CORNER = "┗";
+    private static final String LIGHT_RIGHT_BOTTOM_CORNER = "┛";
     private static final String VERTICAL_BORDER = "║";
     private static final String HORIZONTAL_BORDER = "═";
     private static final String LEFT_VERTICAL_SEPARATOR = "╠";
@@ -78,7 +82,7 @@ class CLIHelper {
     private static final String ANSI_SKULL = "☠";
 
     /* ===== DIMENSIONS ===== */
-    private static final int SQUARE_DIM = 19;
+    private static final int SQUARE_DIM = 15;
     private static final int CARD_WIDTH = 20;
 
     /* ===== TEMPLATES ====== */
@@ -488,21 +492,21 @@ class CLIHelper {
 
         // We then build left and right edges, by setting the first and last character of each row according to the connection type
         squareRows.forEach(row -> {
-            row.set(0, square.getAdjacentMap().get(CardinalDirection.W).getCharacterRepresentation());
-            row.set(row.size() - 1, square.getAdjacentMap().get(CardinalDirection.E).getCharacterRepresentation());
+            row.set(0, square.getAdjacentMap().get(CardinalDirection.W).getVerticalCharacterRepresentation());
+            row.set(row.size() - 1, square.getAdjacentMap().get(CardinalDirection.E).getVerticalCharacterRepresentation());
         });
 
         // Then we take top and bottom border and we update their characters according to the connection type
         List<String> topBorder = squareRows.get(0);
         List<String> bottomBorder = squareRows.get(squareRows.size() - 1);
-        topBorder.replaceAll(s -> square.getAdjacentMap().get(CardinalDirection.N).getCharacterRepresentation());
-        bottomBorder.replaceAll(s -> square.getAdjacentMap().get(CardinalDirection.S).getCharacterRepresentation());
+        topBorder.replaceAll(s -> square.getAdjacentMap().get(CardinalDirection.N).getHorizontalCharacterRepresentation());
+        bottomBorder.replaceAll(s -> square.getAdjacentMap().get(CardinalDirection.S).getHorizontalCharacterRepresentation());
 
         // We add corners around the square
-        topBorder.set(0, LEFT_TOP_CORNER);
-        topBorder.set(topBorder.size() - 1, RIGHT_TOP_CORNER);
-        bottomBorder.set(0, LEFT_BOTTOM_CORNER);
-        bottomBorder.set(bottomBorder.size() - 1, RIGHT_BOTTOM_CORNER);
+        topBorder.set(0, LIGHT_LEFT_TOP_CORNER);
+        topBorder.set(topBorder.size() - 1, LIGHT_RIGHT_TOP_CORNER);
+        bottomBorder.set(0, LIGHT_LEFT_BOTTOM_CORNER);
+        bottomBorder.set(bottomBorder.size() - 1, LIGHT_RIGHT_BOTTOM_CORNER);
 
         // We add the marker indicating the square type
         squareRows.get(1).set(1, square.getTypeMarker());
