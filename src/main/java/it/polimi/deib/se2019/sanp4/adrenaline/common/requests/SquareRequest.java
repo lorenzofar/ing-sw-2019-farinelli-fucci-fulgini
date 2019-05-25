@@ -1,5 +1,7 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.common.requests;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.CoordPair;
 
 import java.util.List;
@@ -17,7 +19,11 @@ public class SquareRequest extends ChoiceRequest<CoordPair> {
      * @param optional {@code true} if the request is optional, {@code false} otherwise
      * @param uuid     unique identifier of the request, if not provided it will be auto-generated
      */
-    public SquareRequest(String message, List<CoordPair> choices, boolean optional, String uuid) {
+    @JsonCreator
+    public SquareRequest(@JsonProperty("message") String message,
+                         @JsonProperty("choices") List<CoordPair> choices,
+                         @JsonProperty("optional") boolean optional,
+                         @JsonProperty("uuid") String uuid) {
         super(message, choices, optional, CoordPair.class, uuid);
     }
 

@@ -1,5 +1,9 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.common.requests;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +16,10 @@ import java.util.UUID;
  * The request also has an unique identifier, which will be used by its response to identify it.
  * @param <T> The type of objects representing the choices the player can make
  */
+@JsonTypeInfo(
+        use = JsonTypeInfo.Id.CLASS,
+        property = "class"
+)
 public abstract class ChoiceRequest<T extends Serializable> implements Serializable {
 
     private static final long serialVersionUID = 237085265707486604L;
@@ -39,7 +47,13 @@ public abstract class ChoiceRequest<T extends Serializable> implements Serializa
      * @param type the type of the choices
      * @param uuid unique identifier of the request, if not provided it will be auto-generated
      */
-    public ChoiceRequest(String message, List<T> choices, boolean optional, Class<T> type, String uuid){
+    @JsonCreator
+    public ChoiceRequest(
+            @JsonProperty("message") String message,
+            @JsonProperty("choices") List<T> choices,
+            @JsonProperty("optional") boolean optional,
+            @JsonProperty("type") Class<T> type,
+            @JsonProperty("uuid") String uuid){
         if(message == null || choices == null){
             throw new NullPointerException("Found null parameters");
         }
