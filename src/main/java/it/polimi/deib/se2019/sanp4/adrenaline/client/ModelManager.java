@@ -111,5 +111,9 @@ public class ModelManager implements ModelUpdateVisitor {
         //TODO: Implement this method
     }
 
+    @Override
+    public void handle(AmmoSquareUpdate update) {
+        //TODO: Implement this method
+    }
 
 }

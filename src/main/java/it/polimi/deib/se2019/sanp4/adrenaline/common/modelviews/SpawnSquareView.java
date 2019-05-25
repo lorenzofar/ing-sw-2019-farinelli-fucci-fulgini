@@ -18,7 +18,7 @@ public class SpawnSquareView extends SquareView {
      * @return The string representing the marker
      */
     @Override
-    public String getTypeMarker() {
+    public String printTypeMarker() {
         return "S";
     }
 }

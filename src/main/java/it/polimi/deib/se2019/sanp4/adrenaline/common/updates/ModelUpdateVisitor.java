@@ -14,4 +14,5 @@ public interface ModelUpdateVisitor {
     void handle(RemovedWeaponUpdate update);
     void handle(PlayerUpdate update);
     void handle(ActionCardUpdate update);
+    void handle(AmmoSquareUpdate update);
 }

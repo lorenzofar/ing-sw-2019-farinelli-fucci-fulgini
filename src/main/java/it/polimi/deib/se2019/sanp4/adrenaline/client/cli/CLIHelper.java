@@ -509,7 +509,7 @@ class CLIHelper {
         bottomBorder.set(bottomBorder.size() - 1, LIGHT_RIGHT_BOTTOM_CORNER);
 
         // We add the marker indicating the square type
-        squareRows.get(1).set(1, square.getTypeMarker());
+        squareRows.get(1).set(1, square.printTypeMarker());
 
         /* ===== PLAYERS RENDERING ===== */
         // We first calculate the center of the square

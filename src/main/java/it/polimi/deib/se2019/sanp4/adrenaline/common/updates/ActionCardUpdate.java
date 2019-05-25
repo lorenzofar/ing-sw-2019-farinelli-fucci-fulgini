@@ -3,9 +3,6 @@ package it.polimi.deib.se2019.sanp4.adrenaline.common.updates;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.ActionCardView;
-import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionCard;
-
-import java.io.Serializable;
 
 /**
  * An update sent to a player when its action card changes.

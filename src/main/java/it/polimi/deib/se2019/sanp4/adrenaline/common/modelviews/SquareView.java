@@ -1,5 +1,6 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.CardinalDirection;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.CoordPair;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.RoomColor;
@@ -31,6 +32,12 @@ public abstract class SquareView implements Serializable {
      * Adjacency map of the connected squares
      */
     private Map<CardinalDirection, SquareConnectionType> adjacentMap;
+
+    /**
+     * Private constructor to be used only by Jackson.
+     */
+    @JsonCreator
+    SquareView() {}
 
     public SquareView(CoordPair location, RoomColor roomColor) {
         this.location = location;
@@ -108,7 +115,7 @@ public abstract class SquareView implements Serializable {
      *
      * @return The string representing the marker
      */
-    public abstract String getTypeMarker();
+    public abstract String printTypeMarker();
 
     /**
      * Retrieves the map of adjacency of the square
