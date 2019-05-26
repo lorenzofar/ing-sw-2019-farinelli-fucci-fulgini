@@ -1,5 +1,6 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.client.cli;
 
+import it.polimi.deib.se2019.sanp4.adrenaline.common.ColoredObject;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.BoardView;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.SquareView;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.CardinalDirection;
@@ -476,7 +477,7 @@ class CLIHelper {
      * @return The list of all the rows the rendered square is composed of.
      * Each row is a list of string containing all the cells of the rendered square.
      */
-    static List<List<String>> renderSquare(SquareView square) {
+    static List<List<String>> renderSquare(SquareView square, Map<String, ColoredObject> playersColors) {
         // We first initialize the main list
         List<List<String>> squareRows = new ArrayList<>();
 
@@ -519,7 +520,10 @@ class CLIHelper {
         int playersCount = square.getPlayers().size();
         // We compute the starting point of the line
         int playerX = centerX - playersCount / 2;
-        //TODO: Add players
+        for (String player : square.getPlayers()) {
+            squareRows.get(centerY).set(playerX, String.format(TRISTRING_TEMPLATE, playersColors.get(player).getAnsiCode(), ANSI_DOT, square.getRoomColor().getAnsiCode()));
+            playerX++;
+        }
         // Then eventually put the correct ANSI code for the square color
         squareRows.forEach(row -> row.add(0, square.getRoomColor().getAnsiCode()));
 
@@ -531,7 +535,7 @@ class CLIHelper {
      *
      * @param board The object representing the board
      */
-    public static List<List<String>> renderBoard(BoardView board) {
+    public static List<List<String>> renderBoard(BoardView board, Map<String, ColoredObject> playersColors) {
         int width = board.getColumnsCount();
         int height = board.getRowsCount();
         // We define an initial list of lists to hold the rendered board
@@ -541,11 +545,11 @@ class CLIHelper {
         for (int r = 0; r < height; r++) {
             // Then for each row we have to take all the squares that are inside it and append their rendered value
             // We add the first square of the row
-            List<List<String>> rowSquares = renderSquare(board.getSquare(new CoordPair(0, r)));
+            List<List<String>> rowSquares = renderSquare(board.getSquare(new CoordPair(0, r)), playersColors);
             for (int c = 1; c < width; c++) {
                 // We concatenate all the squares in the row
                 // by adding all the lists to the previous ones
-                List<List<String>> renderedSquare = renderSquare(board.getSquare(new CoordPair(c, r)));
+                List<List<String>> renderedSquare = renderSquare(board.getSquare(new CoordPair(c, r)), playersColors);
                 for (int i = 0; i < rowSquares.size(); i++) {
                     rowSquares.get(i).addAll(renderedSquare.get(i));
                 }

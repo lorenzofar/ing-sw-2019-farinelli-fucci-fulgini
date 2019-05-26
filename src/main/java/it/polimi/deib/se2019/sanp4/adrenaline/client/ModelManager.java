@@ -1,10 +1,12 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.client;
 
+import it.polimi.deib.se2019.sanp4.adrenaline.common.ColoredObject;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.*;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.*;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * A class responsible of managing the local model and of handling model updates
@@ -29,6 +31,10 @@ public class ModelManager implements ModelUpdateVisitor {
 
     public Map<String, PlayerView> getPlayers() {
         return players;
+    }
+
+    public Map<String, ColoredObject> getPlayersColors() {
+        return players.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().getColor()));
     }
 
     public void setPlayers(Map<String, PlayerView> players) {
@@ -121,7 +127,7 @@ public class ModelManager implements ModelUpdateVisitor {
     @Override
     public void handle(PlayerUpdate update) {
         // Retrieve the player view associated to the player
-        PlayerView playerView = players.get(update.getPlayer());
+        PlayerView playerView = players.get(update.getPlayer().getName());
         if (playerView == null) {
             return;
         }
