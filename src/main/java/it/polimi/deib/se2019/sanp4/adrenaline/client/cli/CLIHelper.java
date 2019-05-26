@@ -132,7 +132,7 @@ class CLIHelper {
      * @param args     Optional arguments to insert inside the template
      */
     static void printlnColored(String template, String color, Object... args) {
-        print(color +template+ANSI_RESET, args);
+        print(color + template + ANSI_RESET, args);
         print("\n");
     }
 
@@ -521,7 +521,7 @@ class CLIHelper {
         int playerX = centerX - playersCount / 2;
         //TODO: Add players
         // Then eventually put the correct ANSI code for the square color
-        squareRows.forEach(row -> row.add(0, square.getRoomColor().getANSICode()));
+        squareRows.forEach(row -> row.add(0, square.getRoomColor().getAnsiCode()));
 
         return squareRows;
     }
@@ -594,7 +594,7 @@ class CLIHelper {
             fillLineWithObjects(
                     renderedWeapon.get(renderedWeapon.size() - 1),
                     chunk,
-                    cube -> cube.getCorrespondingCube().getANSICode(),
+                    AmmoCubeCost::getAnsiCode,
                     cube -> ANSI_DOT,
                     2,
                     2
@@ -623,7 +623,7 @@ class CLIHelper {
                 fillLineWithObjects(
                         renderedWeapon.get(renderedWeapon.size() - 1),
                         effectCostChunk,
-                        cube -> cube.getCorrespondingCube().getANSICode(),
+                        AmmoCubeCost::getAnsiCode,
                         cube -> ANSI_DOT,
                         2,
                         2
@@ -660,7 +660,7 @@ class CLIHelper {
         expandStringRendering(renderedPowerup, generateLine(HORIZONTAL_BORDER, CARD_WIDTH, LEFT_TOP_CORNER, RIGHT_TOP_CORNER));
         powerupNameChunks.forEach(chunk -> {
             expandStringRendering(renderedPowerup, generateLine(BLANK, CARD_WIDTH, VERTICAL_BORDER, VERTICAL_BORDER));
-            fillLineWithText(renderedPowerup.get(renderedPowerup.size() - 1), chunk, 2, ANSI_BOLD, powerupCard.getCubeColor().getANSICode());
+            fillLineWithText(renderedPowerup.get(renderedPowerup.size() - 1), chunk, 2, ANSI_BOLD, powerupCard.getCubeColor().getAnsiCode());
         });
         expandStringRendering(renderedPowerup, generateLine(HORIZONTAL_BORDER, CARD_WIDTH, LEFT_VERTICAL_SEPARATOR, RIGHT_VERTICAL_SEPARATOR));
         powerupDescriptionChunks.forEach(chunk -> {

@@ -1,7 +1,9 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo;
 
+import it.polimi.deib.se2019.sanp4.adrenaline.common.ColoredObject;
+
 /** Describes the possible costs in terms of ammo cube colors*/
-public enum AmmoCubeCost{
+public enum AmmoCubeCost implements ColoredObject {
 
     /** Red cube */
     RED("Red"),
@@ -59,5 +61,17 @@ public enum AmmoCubeCost{
             default:
                 return null;
         }
+    }
+
+    @Override
+    public String getAnsiCode() {
+        AmmoCube correspondingCube = this.getCorrespondingCube();
+        return correspondingCube != null ? correspondingCube.getAnsiCode() : "";
+    }
+
+    @Override
+    public String getHexCode() {
+        AmmoCube correspondingCube = this.getCorrespondingCube();
+        return correspondingCube != null ? correspondingCube.getHexCode() : "";
     }
 }

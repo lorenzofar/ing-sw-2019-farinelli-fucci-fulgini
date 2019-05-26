@@ -1,9 +1,11 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.model.board;
 
+import it.polimi.deib.se2019.sanp4.adrenaline.common.ColoredObject;
+
 /**
  * Represents the possible colors a room can have
  */
-public enum RoomColor {
+public enum RoomColor implements ColoredObject {
     /**
      * Blue color
      */
@@ -44,10 +46,12 @@ public enum RoomColor {
         return message;
     }
 
-    public String getANSICode() {
+    @Override
+    public String getAnsiCode() {
         return ansiCode;
     }
 
+    @Override
     public String getHexCode() {
         return hexCode;
     }
