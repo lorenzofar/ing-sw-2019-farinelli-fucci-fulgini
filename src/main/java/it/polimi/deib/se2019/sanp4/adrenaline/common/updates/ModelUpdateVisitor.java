@@ -20,4 +20,6 @@ public interface ModelUpdateVisitor {
     void handle(BoardUpdate update);
     void handle(MatchUpdate update);
     void handle(PlayerBoardUpdate update);
+    void handle(DrawnPowerupUpdate update);
+    void handle(DrawnWeaponUpdate update);
 }

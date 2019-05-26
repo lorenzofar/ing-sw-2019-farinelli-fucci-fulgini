@@ -180,4 +180,14 @@ public class ModelManager implements ModelUpdateVisitor {
         playerBoardView.setMarks(update.getPlayerBoard().getMarks());
         //TODO: Refresh the player board
     }
+
+    @Override
+    public void handle(DrawnWeaponUpdate update) {
+        //TODO: Implement this method
+    }
+
+    @Override
+    public void handle(DrawnPowerupUpdate update) {
+        //TODO: Implement this method
+    }
 }
