@@ -16,7 +16,7 @@ public class WeaponCard extends Observable implements Serializable {
 
     private static final long serialVersionUID = 2151651272278660643L;
 
-    /* A unique identifier of the weapon */
+    /** A unique identifier of the weapon */
     private String id;
 
     /** A human-readable identifier of the weapon */

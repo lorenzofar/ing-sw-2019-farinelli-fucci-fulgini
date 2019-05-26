@@ -14,6 +14,7 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
 import java.io.IOException;
+import java.util.Collection;
 
 public class GUIRenderer extends Application implements UIRenderer {
 
@@ -53,10 +54,11 @@ public class GUIRenderer extends Application implements UIRenderer {
 
     /**
      * Retrieve the controller associated to the provided fxml resource
+     *
      * @param fxmlResource The path of the resource
      * @return The object representing the controller
      */
-    private Object getController(String fxmlResource){
+    private Object getController(String fxmlResource) {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource(fxmlResource));
         return loader.getController();
@@ -79,12 +81,18 @@ public class GUIRenderer extends Application implements UIRenderer {
         }
     }
 
+    @Override
+    public void updateLobby(Collection<String> connectedPlayers) {
+        LobbyController lobbyController = (LobbyController) getController("/fxml/lobby.fxml");
+        lobbyController.setConnectedPlayers(connectedPlayers);
+    }
+
     /**
      * Notify the user about the imminent start of the game
      */
     @Override
     public void startWaitingMatch() {
-        LobbyController lobbyController = (LobbyController)getController("/fxml/lobby.fxml");
+        LobbyController lobbyController = (LobbyController) getController("/fxml/lobby.fxml");
         lobbyController.showMatchWaiting();
     }
 
@@ -93,7 +101,7 @@ public class GUIRenderer extends Application implements UIRenderer {
      */
     @Override
     public void cancelWaitingMatch() {
-        LobbyController lobbyController = (LobbyController)getController("/fxml/lobby.fxml");
+        LobbyController lobbyController = (LobbyController) getController("/fxml/lobby.fxml");
         lobbyController.hideMatchWaiting();
     }
 

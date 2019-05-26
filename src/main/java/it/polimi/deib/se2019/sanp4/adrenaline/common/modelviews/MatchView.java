@@ -12,7 +12,10 @@ public class MatchView implements Serializable {
      * The count of killshots in the killshots track
      */
     private int killshotsCount;
-
+    /**
+     * The total count of skulls in the killshots track
+     */
+    private int totalSkulls;
     /**
      * A flag indicating whether the game is in frenzy mode or not
      */
@@ -41,6 +44,27 @@ public class MatchView implements Serializable {
     public void setKillshotsCount(int killshotsCount) {
         if (killshotsCount >= 0) {
             this.killshotsCount = killshotsCount;
+        }
+    }
+
+    /**
+     * Retrieves the total number of skulls in the killshots track
+     *
+     * @return The number of skulls
+     */
+    public int getTotalSkulls() {
+        return totalSkulls;
+    }
+
+    /**
+     * Sets the total number of skulls in the killshots track
+     * If a negative number is provided, nothing happens
+     *
+     * @param totalSkulls The number of skulls
+     */
+    public void setTotalSkulls(int totalSkulls) {
+        if (totalSkulls >= 0) {
+            this.totalSkulls = totalSkulls;
         }
     }
 

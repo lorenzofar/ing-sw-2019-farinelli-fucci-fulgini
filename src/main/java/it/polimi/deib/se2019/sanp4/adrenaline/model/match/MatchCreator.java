@@ -116,7 +116,7 @@ public class MatchCreator {
 
     private static List<Player> createPlayers(Set<String> usernames) {
         /* Since the same action card is shared among all players, get it in advance */
-        ActionCard actionCard = ActionCardCreator.createActionCard(ActionCardEnum.REGULAR);
+        ActionCard actionCard = ActionCard.initial();
 
         /* Create an iterator with the player colors */
         Iterator<PlayerColor> colors = Arrays.stream(PlayerColor.values()).iterator();

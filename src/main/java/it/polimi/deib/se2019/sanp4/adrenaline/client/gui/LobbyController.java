@@ -10,6 +10,8 @@ import javafx.scene.control.ListView;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 
+import java.util.Collection;
+
 
 public class LobbyController extends GUIController {
 
@@ -38,33 +40,19 @@ public class LobbyController extends GUIController {
     }
 
     /**
-     * Add the provided player to the list of connected ones
-     * @param username The username of the player, not null
+     * Sets the players connected to the lobby
+     * @param connectedPlayers The list of players
      */
-    public void addConnectedPlayer(String username){
-        if(username == null){
-            throw new NullPointerException("Username cannot be null");
-        }
-        connectedPlayers.get().add(username);
-    }
-
-    /**
-     * Remove the provdided player from the list of connected ones
-     * @param username The username of the player, not null
-     */
-    public void removeConnectedPlayer(String username){
-        if(username == null){
-            throw new NullPointerException("Username cannot be null");
-        }
-        connectedPlayers.get().remove(username);
+    public void setConnectedPlayers(Collection<String> connectedPlayers) {
+        this.connectedPlayers.clear();
+        this.connectedPlayers.setAll(connectedPlayers);
     }
 
     /**
      * Inform user about the imminent start of the game
      * Show a progress ring and a loading message
-     *
      */
-    public void showMatchWaiting(){
+    public void showMatchWaiting() {
         matchStarting.set(true);
 
     }
@@ -72,7 +60,7 @@ public class LobbyController extends GUIController {
     /**
      * Remove the progress ring for match waiting when the game start is cancelled
      */
-    public void hideMatchWaiting(){
+    public void hideMatchWaiting() {
         matchStarting.set(false);
     }
 

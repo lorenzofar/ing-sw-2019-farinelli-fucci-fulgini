@@ -1,20 +1,30 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.model.board;
 
-/** Identifies how a square is connected to another square*/
+/**
+ * Identifies how a square is connected to another square
+ */
 public enum SquareConnectionType {
-    /** The squares are separated by a door and belong to different rooms*/
-    DOOR("Door", "░"),
-    /** The squares are not connected and there is a wall between them */
-    WALL("Wall", "█"),
-    /** The squares are connected and belong to the same room */
-    FLOOR("Floor", " ");
+    /**
+     * The squares are separated by a door and belong to different rooms
+     */
+    DOOR("Door", "╺", "╏"),
+    /**
+     * The squares are not connected and there is a wall between them
+     */
+    WALL("Wall", "━", "┃"),
+    /**
+     * The squares are connected and belong to the same room
+     */
+    FLOOR("Floor", " ", "");
 
     private String message;
-    private String characterRepresentation;
+    private String hCharacterRepresentation;
+    private String vCharacterRepresentation;
 
-    SquareConnectionType(String message, String characterRepresentation){
+    SquareConnectionType(String message, String hCharacterRepresentation, String vCharacterRepresentation) {
         this.message = message;
-        this.characterRepresentation = characterRepresentation;
+        this.hCharacterRepresentation = hCharacterRepresentation;
+        this.vCharacterRepresentation = vCharacterRepresentation;
     }
 
     @Override
@@ -22,8 +32,12 @@ public enum SquareConnectionType {
         return this.message;
     }
 
-    public String getCharacterRepresentation(){
-        return characterRepresentation;
+    public String getHorizontalCharacterRepresentation() {
+        return hCharacterRepresentation;
+    }
+
+    public String getVerticalCharacterRepresentation() {
+        return vCharacterRepresentation;
     }
 }
     

@@ -2,6 +2,8 @@ package it.polimi.deib.se2019.sanp4.adrenaline.client;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.view.MessageType;
 
+import java.util.Collection;
+
 public interface UIRenderer {
 
     /**
@@ -14,6 +16,11 @@ public interface UIRenderer {
      * Show the waiting screen when the match has yet to be started
      */
     void showLobby();
+
+    /**
+     * Updates the lobby with current information about connected players
+     */
+    void updateLobby(Collection<String> waitingPlayers);
 
     /**
      * Notify the user about the imminent start of the game

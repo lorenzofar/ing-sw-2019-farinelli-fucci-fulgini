@@ -11,10 +11,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
-import static junit.framework.TestCase.fail;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.*;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.CoreMatchers.*;
 
 public class ActionCardTest {
 
@@ -27,6 +26,10 @@ public class ActionCardTest {
 
     @BeforeClass
     public static void setup(){
+        /* Set up the resources */
+        JSONUtils.loadActionCardPackSchema("/schemas/action_card_pack.schema.json");
+        ActionCardCreator.loadActionCardPack("/assets/standard_actioncards.json");
+
         validActions = new ArrayList<>();
         validActions.add(ActionEnum.ADRENALINE_GRAB);
         validActions.add(ActionEnum.ADRENALINE_SHOOT);
@@ -175,5 +178,47 @@ public class ActionCardTest {
         } catch (JsonProcessingException e) {
             Assert.fail();
         }
+    }
+
+    /* ======= THE FOLLOWING USE ACTION CARD CREATOR ======== */
+
+    @Test
+    public void initial_shouldReturnRegular() {
+        assertThat(ActionCard.initial().getType(), is(ActionCardEnum.REGULAR));
+    }
+
+    @Test
+    public void next_regularMode_noDamage_shouldReturnRegular() {
+        ActionCard current = ActionCardCreator.createActionCard(ActionCardEnum.ADRENALINE1);
+        ActionCard next = current.next(0);
+        assertThat(next.getType(), is(ActionCardEnum.REGULAR));
+    }
+
+    @Test
+    public void next_regularMode_enoughDamage_shouldReturnAdrenaline1() {
+        ActionCard current = ActionCardCreator.createActionCard(ActionCardEnum.REGULAR);
+        ActionCard next = current.next(3);
+        assertThat(next.getType(), is(ActionCardEnum.ADRENALINE1));
+    }
+
+    @Test
+    public void next_regularMode_enoughDamage_shouldReturnAdrenaline2() {
+        ActionCard current = ActionCardCreator.createActionCard(ActionCardEnum.REGULAR);
+        ActionCard next = current.next(8);
+        assertThat(next.getType(), is(ActionCardEnum.ADRENALINE2));
+    }
+
+    @Test
+    public void next_frenzy1_shouldKeepSameCard() {
+        ActionCard current = ActionCardCreator.createActionCard(ActionCardEnum.FRENZY1);
+        ActionCard next = current.next(3);
+        assertThat(next.getType(), is(ActionCardEnum.FRENZY1));
+    }
+
+    @Test
+    public void next_frenzy2_shouldKeepSameCard() {
+        ActionCard current = ActionCardCreator.createActionCard(ActionCardEnum.FRENZY2);
+        ActionCard next = current.next(3);
+        assertThat(next.getType(), is(ActionCardEnum.FRENZY2));
     }
 }

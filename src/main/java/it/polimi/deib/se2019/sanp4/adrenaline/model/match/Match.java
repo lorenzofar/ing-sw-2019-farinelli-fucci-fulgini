@@ -119,6 +119,22 @@ public class Match extends Observable {
     }
 
     /**
+     * Sets a player state to online, whether this was suspended or not doesn't count
+     * @param player The username of the player, not null
+     * @throws IllegalStateException If the player is not present
+     */
+    public void unsuspendPlayer(String player) {
+        if(player == null){
+            throw new NullPointerException(NULL_PLAYER_ERROR);
+        }
+        Player suspendedPlayer = getPlayerByName(player);
+        if(suspendedPlayer == null){
+            throw new IllegalStateException("Player does not exist in the match");
+        }
+        suspendedPlayer.setState(PlayerState.ONLINE);
+    }
+
+    /**
      * Prepares the board for the next turn, calling {@link #refillBoard()}
      */
     public void prepareTurn(){
@@ -177,21 +193,17 @@ public class Match extends Observable {
 
     /**
      * Determines whether the match is in frenzy mode or not
-     * @return True if the nmatch is in frenzy mode, false if not
+     * @return True if the match is in frenzy mode, false if not
      */
     public boolean isFrenzy(){
         return this.frenzy;
     }
 
     /**
-     * Sets the match to be in frenzy mode
+     * Sets the match to be in frenzy mode, has no effect if it is already in frenzy mode
      */
     public void goFrenzy(){
-        if(frenzy){
-            throw new IllegalStateException("Match is already in frenzy mode");
-        }
         frenzy = true;
-        //TODO: Finish implementing this method
     }
 
     /**

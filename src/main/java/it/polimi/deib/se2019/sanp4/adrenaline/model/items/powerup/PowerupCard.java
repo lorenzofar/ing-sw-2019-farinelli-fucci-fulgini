@@ -1,6 +1,7 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.model.items.powerup;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCube;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.CubeInterface;
@@ -23,28 +24,30 @@ public class PowerupCard implements CubeInterface, Serializable {
     /**
      * Creates a new powerup card
      * @param type the type of the powerup effect
-     * @param ammoCube the color of the powerup (for spawn and ammo)
+     * @param cubeColor the color of the powerup (for spawn and ammo)
      */
     @JsonCreator
     public PowerupCard(
             @JsonProperty("type") PowerupEnum type,
-            @JsonProperty("ammoCube") AmmoCube ammoCube
+            @JsonProperty("cubeColor") AmmoCube cubeColor
     ) {
-        if (type == null || ammoCube == null) {
+        if (type == null || cubeColor == null) {
             throw new NullPointerException("Found null parameters");
         }
         this.type = type;
-        this.cubeColor = ammoCube;
+        this.cubeColor = cubeColor;
     }
 
     public PowerupEnum getType() {
         return type;
     }
 
+    @JsonIgnore
     public String getName() {
         return type.getName();
     }
 
+    @JsonIgnore
     public String getDescription() {
         return type.getDescription();
     }

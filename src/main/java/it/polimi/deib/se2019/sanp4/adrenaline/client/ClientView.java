@@ -1,7 +1,6 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.client;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.common.events.ViewEvent;
-import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.*;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.network.RemoteView;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.RemoteObservable;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.ChoiceRequest;
@@ -10,8 +9,6 @@ import it.polimi.deib.se2019.sanp4.adrenaline.view.MessageType;
 import it.polimi.deib.se2019.sanp4.adrenaline.view.ViewScene;
 
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
 
 public class ClientView extends RemoteObservable<ViewEvent> implements RemoteView {
     /**
@@ -26,53 +23,22 @@ public class ClientView extends RemoteObservable<ViewEvent> implements RemoteVie
      * The connection method used to connect to the server
      */
     private ServerConnection serverConnection;
-
-    private Map<String, PlayerView> players;
-    private Map<String, PlayerBoardView> playerBoards;
-    private Map<String, ActionCardView> actionCards;
-    private MatchView match;
-    private BoardView board;
-    private PlayerTurnView currentTurn;
+    /**
+     * The manager of the local model
+     */
+    private ModelManager modelManager;
 
     public ClientView() {
-        //TODO: Complete constructor and methods implementation
-        players = new HashMap<>();
-        playerBoards = new HashMap<>();
-        actionCards = new HashMap<>();
+        this.modelManager = new ModelManager(this);
     }
 
-    public Map<String, PlayerView> getPlayers() {
-        return players;
-    }
-
-    public void setPlayers(Map<String, PlayerView> players) {
-        if (players != null && !players.entrySet().contains(null)) {
-            this.players = players;
-        }
-    }
-
-    public MatchView getMatch() {
-        return match;
-    }
-
-    public void setMatch(MatchView match) {
-        this.match = match;
-    }
-
-    public BoardView getBoard() {
-        return board;
-    }
-
-    public void setBoard(BoardView board) {
-        this.board = board;
-    }
-
-    public PlayerTurnView getCurrentTurn() {
-        return currentTurn;
-    }
-
-    public void setCurrentTurn(PlayerTurnView currentTurn) {
-        this.currentTurn = currentTurn;
+    /**
+     * Retrieves the manager of the local model
+     *
+     * @return The object representing the manager
+     */
+    public ModelManager getModelManager() {
+        return modelManager;
     }
 
     /* ===== NETWORK CONNECTION SETUP ====== */
@@ -146,6 +112,15 @@ public class ClientView extends RemoteObservable<ViewEvent> implements RemoteVie
     }
 
     /**
+     * Retrieves the rendering engine used by the client
+     *
+     * @return The object representing the rendering engine
+     */
+    public UIRenderer getRenderer() {
+        return renderer;
+    }
+
+    /**
      * Set the rendering engine used by the client     *
      *
      * @param renderer The object representing the rendering engine, not null
@@ -164,7 +139,7 @@ public class ClientView extends RemoteObservable<ViewEvent> implements RemoteVie
      */
     @Override
     public <T extends Serializable> void performRequest(ChoiceRequest<T> request) {
-
+        //TODO: Implement this method
     }
 
     @Override

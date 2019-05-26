@@ -1,9 +1,9 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews;
 
-import it.polimi.deib.se2019.sanp4.adrenaline.model.board.CardinalDirection;
-import it.polimi.deib.se2019.sanp4.adrenaline.model.board.CoordPair;
-import it.polimi.deib.se2019.sanp4.adrenaline.model.board.RoomColor;
-import it.polimi.deib.se2019.sanp4.adrenaline.model.board.SquareConnectionType;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.board.*;
 
 import java.io.Serializable;
 import java.util.*;
@@ -11,9 +11,18 @@ import java.util.*;
 /**
  * A lightweight representation of a square in the view
  */
+@JsonTypeInfo(
+        use = JsonTypeInfo.Id.NAME,
+        include = JsonTypeInfo.As.PROPERTY,
+        property = "type")
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = SpawnSquareView.class, name = "SPAWN_SQUARE_VIEW"),
+        @JsonSubTypes.Type(value = AmmoSquareView.class, name = "AMMO_SQUARE_VIEW"),
+})
 public abstract class SquareView implements Serializable {
 
     private static final long serialVersionUID = 1076256883407049643L;
+
     /**
      * The location of the square in cartesian coordinates
      */
@@ -32,6 +41,12 @@ public abstract class SquareView implements Serializable {
      */
     private Map<CardinalDirection, SquareConnectionType> adjacentMap;
 
+    /**
+     * Private constructor to be used only by Jackson.
+     */
+    @JsonCreator
+    SquareView() {}
+
     public SquareView(CoordPair location, RoomColor roomColor) {
         this.location = location;
         this.roomColor = roomColor;
@@ -44,7 +59,7 @@ public abstract class SquareView implements Serializable {
      *
      * @return The object representing the location
      */
-    private CoordPair getLocation() {
+    public CoordPair getLocation() {
         return location;
     }
 
@@ -108,7 +123,7 @@ public abstract class SquareView implements Serializable {
      *
      * @return The string representing the marker
      */
-    public abstract String getTypeMarker();
+    public abstract String printTypeMarker();
 
     /**
      * Retrieves the map of adjacency of the square

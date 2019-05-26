@@ -3,6 +3,7 @@ package it.polimi.deib.se2019.sanp4.adrenaline.model.action;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Objects;
 
 /**
  * Holds a representation of the actions the player can perform.
@@ -12,6 +13,7 @@ import java.util.Collections;
  *     <li>A final action (which is optional) that can be performed when the normal actions are over, before
  *     passing the turn to the next player </li>
  * </ul>
+ * @see ActionCardCreator
  */
 public class ActionCard implements Serializable {
 
@@ -103,15 +105,58 @@ public class ActionCard implements Serializable {
         return finalAction != null;
     }
 
+    /**
+     * Returns the action card used at the beginning of the match.
+     * Uses {@link ActionCardCreator}, so make sure it has been properly set up before calling this
+     * @return the action card used at the beginning of the match
+     */
+    public static ActionCard initial() {
+        return ActionCardCreator.createActionCard(ActionCardEnum.REGULAR);
+    }
+
+    /**
+     * Returns the action card which has to be substituted to this given the damage
+     * of its owner.
+     * This works to set/reset adrenaline actions, but it doesn't provide a way to
+     * switch between the action cards for the regular mode and the ones for the frenzy mode
+     * Uses {@link ActionCardCreator}, so make sure it has been properly set up before calling this
+     *
+     * @param currentDamage The current damage of the player, to determine adrenaline actions
+     * @return The action card that has to be substituted to this. If it needs no substitution,
+     * the same action card is returned
+     */
+    public ActionCard next(int currentDamage) {
+        /* Don't change by default */
+        ActionCardEnum nextType = type;
+        switch (type) {
+            case REGULAR:
+            case ADRENALINE1:
+            case ADRENALINE2:
+                /* Here we handle the regular action cards */
+                if (currentDamage < 3) { nextType = ActionCardEnum.REGULAR; break; }
+                if (currentDamage < 6) { nextType = ActionCardEnum.ADRENALINE1; break; }
+                nextType = ActionCardEnum.ADRENALINE2; break;
+            case FRENZY2:
+            case FRENZY1:
+                /* In frenzy mode there are no adrenaline actions */
+                break;
+        }
+        if (nextType != type) {
+            return ActionCardCreator.createActionCard(nextType); /* Need to change the action card */
+        } else {
+            return this; /* Don't need to change the action card */
+        }
+    }
+
     @Override
     public boolean equals(Object obj){
         if(obj == this) return true;
         if(!(obj instanceof ActionCard)) return false;
-        return ((ActionCard)obj).getType().toString().equals(this.type.toString());
+        return ((ActionCard)obj).getType().equals(this.type);
     }
 
     @Override
-    public int hashCode(){
-        return 17 + 31*type.hashCode();
+    public int hashCode() {
+        return Objects.hash(type);
     }
 }

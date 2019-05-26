@@ -37,23 +37,23 @@ class CLIHelper {
     private static final Queue<Character> spinnerStack = new LinkedList<>(Arrays.asList('⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'));
 
     /* ===== ANSI COLORS ===== */
-    private static final String ANSI_RESET = "\u001B[0m";
-    private static final String ANSI_BLACK = "\u001B[30m";
-    private static final String ANSI_RED = "\u001B[31m";
-    private static final String ANSI_GREEN = "\u001B[32m";
-    private static final String ANSI_YELLOW = "\u001B[33m";
-    private static final String ANSI_BLUE = "\u001B[34m";
-    private static final String ANSI_PURPLE = "\u001B[35m";
-    private static final String ANSI_CYAN = "\u001B[36m";
-    private static final String ANSI_WHITE = "\u001B[37m";
-    private static final String ANSI_BLACK_BACKGROUND = "\u001B[40m";
-    private static final String ANSI_RED_BACKGROUND = "\u001B[41m";
-    private static final String ANSI_GREEN_BACKGROUND = "\u001B[42m";
-    private static final String ANSI_YELLOW_BACKGROUND = "\u001B[43m";
-    private static final String ANSI_BLUE_BACKGROUND = "\u001B[44m";
-    private static final String ANSI_PURPLE_BACKGROUND = "\u001B[45m";
-    private static final String ANSI_CYAN_BACKGROUND = "\u001B[46m";
-    private static final String ANSI_WHITE_BACKGROUND = "\u001B[47m";
+    public static final String ANSI_RESET = "\u001B[0m";
+    public static final String ANSI_BLACK = "\u001B[30m";
+    public static final String ANSI_RED = "\u001B[31m";
+    public static final String ANSI_GREEN = "\u001B[32m";
+    public static final String ANSI_YELLOW = "\u001B[33m";
+    public static final String ANSI_BLUE = "\u001B[34m";
+    public static final String ANSI_PURPLE = "\u001B[35m";
+    public static final String ANSI_CYAN = "\u001B[36m";
+    public static final String ANSI_WHITE = "\u001B[37m";
+    public static final String ANSI_BLACK_BACKGROUND = "\u001B[40m";
+    public static final String ANSI_RED_BACKGROUND = "\u001B[41m";
+    public static final String ANSI_GREEN_BACKGROUND = "\u001B[42m";
+    public static final String ANSI_YELLOW_BACKGROUND = "\u001B[43m";
+    public static final String ANSI_BLUE_BACKGROUND = "\u001B[44m";
+    public static final String ANSI_PURPLE_BACKGROUND = "\u001B[45m";
+    public static final String ANSI_CYAN_BACKGROUND = "\u001B[46m";
+    public static final String ANSI_WHITE_BACKGROUND = "\u001B[47m";
 
     /* ===== ANSI FORMATTERS ===== */
     private static final String ANSI_BOLD = "\033[0;1m";
@@ -64,6 +64,10 @@ class CLIHelper {
     private static final String RIGHT_TOP_CORNER = "╗";
     private static final String LEFT_BOTTOM_CORNER = "╚";
     private static final String RIGHT_BOTTOM_CORNER = "╝";
+    private static final String LIGHT_LEFT_TOP_CORNER = "┏";
+    private static final String LIGHT_RIGHT_TOP_CORNER = "┓";
+    private static final String LIGHT_LEFT_BOTTOM_CORNER = "┗";
+    private static final String LIGHT_RIGHT_BOTTOM_CORNER = "┛";
     private static final String VERTICAL_BORDER = "║";
     private static final String HORIZONTAL_BORDER = "═";
     private static final String LEFT_VERTICAL_SEPARATOR = "╠";
@@ -78,7 +82,7 @@ class CLIHelper {
     private static final String ANSI_SKULL = "☠";
 
     /* ===== DIMENSIONS ===== */
-    private static final int SQUARE_DIM = 19;
+    private static final int SQUARE_DIM = 15;
     private static final int CARD_WIDTH = 20;
 
     /* ===== TEMPLATES ====== */
@@ -219,6 +223,7 @@ class CLIHelper {
      * Clears the console screen by using ANSI escape codes
      */
     static void clearScreen() {
+        stopSpinner();
         print("\033[H\033[2J");
         resetColor();
     }
@@ -487,24 +492,24 @@ class CLIHelper {
 
         // We then build left and right edges, by setting the first and last character of each row according to the connection type
         squareRows.forEach(row -> {
-            row.set(0, square.getAdjacentMap().get(CardinalDirection.W).getCharacterRepresentation());
-            row.set(row.size() - 1, square.getAdjacentMap().get(CardinalDirection.E).getCharacterRepresentation());
+            row.set(0, square.getAdjacentMap().get(CardinalDirection.W).getVerticalCharacterRepresentation());
+            row.set(row.size() - 1, square.getAdjacentMap().get(CardinalDirection.E).getVerticalCharacterRepresentation());
         });
 
         // Then we take top and bottom border and we update their characters according to the connection type
         List<String> topBorder = squareRows.get(0);
         List<String> bottomBorder = squareRows.get(squareRows.size() - 1);
-        topBorder.replaceAll(s -> square.getAdjacentMap().get(CardinalDirection.N).getCharacterRepresentation());
-        bottomBorder.replaceAll(s -> square.getAdjacentMap().get(CardinalDirection.S).getCharacterRepresentation());
+        topBorder.replaceAll(s -> square.getAdjacentMap().get(CardinalDirection.N).getHorizontalCharacterRepresentation());
+        bottomBorder.replaceAll(s -> square.getAdjacentMap().get(CardinalDirection.S).getHorizontalCharacterRepresentation());
 
         // We add corners around the square
-        topBorder.set(0, LEFT_TOP_CORNER);
-        topBorder.set(topBorder.size() - 1, RIGHT_TOP_CORNER);
-        bottomBorder.set(0, LEFT_BOTTOM_CORNER);
-        bottomBorder.set(bottomBorder.size() - 1, RIGHT_BOTTOM_CORNER);
+        topBorder.set(0, LIGHT_LEFT_TOP_CORNER);
+        topBorder.set(topBorder.size() - 1, LIGHT_RIGHT_TOP_CORNER);
+        bottomBorder.set(0, LIGHT_LEFT_BOTTOM_CORNER);
+        bottomBorder.set(bottomBorder.size() - 1, LIGHT_RIGHT_BOTTOM_CORNER);
 
         // We add the marker indicating the square type
-        squareRows.get(1).set(1, square.getTypeMarker());
+        squareRows.get(1).set(1, square.printTypeMarker());
 
         /* ===== PLAYERS RENDERING ===== */
         // We first calculate the center of the square

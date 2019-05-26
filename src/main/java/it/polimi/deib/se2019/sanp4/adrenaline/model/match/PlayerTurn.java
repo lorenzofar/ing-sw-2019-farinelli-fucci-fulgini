@@ -19,7 +19,7 @@ import java.util.Set;
  *     <li>The list of all the players damaged during the turn</li>
  * </ul>
  */
-public class PlayerTurn{
+public class PlayerTurn {
 
     /** The current action performed by the player */
     private ActionEnum currentAction;
@@ -50,9 +50,15 @@ public class PlayerTurn{
         currentAction = null;
         hitPlayers = new LinkedHashSet<>();
         turnOwner = player;
-        state = PlayerTurnState.SELECTING;
         // Set the remaining actions according to the player's action card
         remainingActions = player.getActionCard().getMaxActions();
+
+        /* Determine if the player still has to spawn */
+        if (player.getCurrentSquare() == null) {
+            state = PlayerTurnState.INITIAL_SPAWN;
+        } else {
+            state = PlayerTurnState.SELECTING;
+        }
     }
 
     /**
@@ -141,5 +147,16 @@ public class PlayerTurn{
      */
     public int getRemainingActions() {
         return remainingActions;
+    }
+
+    /**
+     * Sets the number of actions the user can still perform
+     * @param remainingActions The number of actions the player can perform
+     */
+    public void setRemainingActions(int remainingActions) {
+        if (remainingActions < 0) {
+            throw new IllegalArgumentException("The number of remaining actions cannot be negative");
+        }
+        this.remainingActions = remainingActions;
     }
 }
