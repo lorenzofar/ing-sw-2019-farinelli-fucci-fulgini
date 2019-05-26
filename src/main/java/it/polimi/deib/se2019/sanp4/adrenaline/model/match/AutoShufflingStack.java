@@ -42,15 +42,12 @@ public class AutoShufflingStack<T> implements CardStack<T> {
 
     /**
      * Discard a card, putting it in the discarded stack
-     * @param card The card that has to be discarded, must not be in the available stack
+     * @param card The card that has to be discarded
      */
     @Override
     public void discard(T card) {
         if(card == null){
             throw new NullPointerException("Card cannot be null");
-        }
-        if(available.contains(card)){
-            throw new IllegalArgumentException("Card to discard should not be in the available stack");
         }
         discarded.push(card);
     }

@@ -57,7 +57,7 @@ public class AutoShufflingStackTest {
         List<Object> list = new ArrayList<>();
         Object card = new Object();
         list.add(card);
-        AutoShufflingStack autoShufflingStack = new AutoShufflingStack<>(list);
+        AutoShufflingStack<Object> autoShufflingStack = new AutoShufflingStack<>(list);
         autoShufflingStack.discard(null);
     }
 
@@ -76,7 +76,7 @@ public class AutoShufflingStackTest {
         List<Object> list = new ArrayList<>();
         Object card = new Object();
         list.add(card);
-        AutoShufflingStack autoShufflingStack = new AutoShufflingStack<>(list);
+        AutoShufflingStack<Object> autoShufflingStack = new AutoShufflingStack<>(list);
         Object drawnCard = autoShufflingStack.draw();
         autoShufflingStack.discard(drawnCard);
         assertNotNull(autoShufflingStack.draw());
@@ -87,23 +87,10 @@ public class AutoShufflingStackTest {
         List<Object> list = new ArrayList<>();
         Object card = new Object();
         list.add(card);
-        AutoShufflingStack autoShufflingStack = new AutoShufflingStack<>(list);
+        AutoShufflingStack<Object> autoShufflingStack = new AutoShufflingStack<>(list);
         Object drawnCard = autoShufflingStack.draw();
         assertSame(drawnCard, card);
         autoShufflingStack.discard(drawnCard);
         assertSame(card, autoShufflingStack.draw());
-    }
-
-    @Test (expected = IllegalArgumentException.class)
-    public void discard_availableCardProvided_SholdThrowIllegalArgumentException(){
-        List<Object> list = new ArrayList<>();
-        Object card1 = new Object();
-        Object card2 = new Object();
-        list.add(card1);
-        list.add(card2);
-        AutoShufflingStack autoShufflingStack = new AutoShufflingStack<>(list);
-        Object drawnCard = autoShufflingStack.draw();
-        list.remove(drawnCard);
-        autoShufflingStack.discard(list.get(0));
     }
 }
