@@ -40,8 +40,8 @@ public class BoardUpdateTest {
 
         BoardUpdate boardUpdate = objectMapper.readValue(s, BoardUpdate.class);
 
-        assertEquals(rows, boardUpdate.getBoard().printRowsCount());
-        assertEquals(columns, boardUpdate.getBoard().printColumnsCount());
+        assertEquals(rows, boardUpdate.getBoard().getRowsCount());
+        assertEquals(columns, boardUpdate.getBoard().getColumnsCount());
         for(int i = 0; i<squares.length; i++){
             for(int j = 0; j<squares[i].length; j++){
                 assertEquals(squares[i][j].getLocation(), boardUpdate.getBoard().getSquares()[i][j].getLocation());

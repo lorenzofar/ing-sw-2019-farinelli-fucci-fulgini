@@ -532,8 +532,8 @@ class CLIHelper {
      * @param board The object representing the board
      */
     public static List<List<String>> renderBoard(BoardView board) {
-        int width = board.printColumnsCount();
-        int height = board.printRowsCount();
+        int width = board.getColumnsCount();
+        int height = board.getRowsCount();
         // We define an initial list of lists to hold the rendered board
         List<List<String>> boardRows = new ArrayList<>();
 

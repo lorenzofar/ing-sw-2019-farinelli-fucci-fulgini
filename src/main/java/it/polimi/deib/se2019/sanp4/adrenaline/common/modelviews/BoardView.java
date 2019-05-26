@@ -1,5 +1,6 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.CoordPair;
 
 import java.io.Serializable;
@@ -29,7 +30,8 @@ public class BoardView implements Serializable {
      *
      * @return The number of columns
      */
-    public int printRowsCount() {
+    @JsonIgnore
+    public int getRowsCount() {
         return squares[0].length;
     }
 
@@ -38,7 +40,8 @@ public class BoardView implements Serializable {
      *
      * @return The number of rows
      */
-    public int printColumnsCount() {
+    @JsonIgnore
+    public int getColumnsCount() {
         return squares.length;
     }
 
