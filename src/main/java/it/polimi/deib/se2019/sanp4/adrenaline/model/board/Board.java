@@ -1,6 +1,5 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.model.board;
 
-import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.PlayerNotFoundException;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.Observable;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.ModelUpdate;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.PlayerMoveUpdate;
@@ -87,16 +86,17 @@ public class Board extends Observable<ModelUpdate> {
     }
 
     /**
-     * Moves a player from a square to another. The starting square can be null if the player is spawning
+     * Moves a player from its current square to the provided one.
      * @param player The player to be moved
-     * @param start The square where the player was
      * @param end The square where the player is moved
      */
-    public void movePlayer(Player player, Square start, Square end) throws PlayerNotFoundException {
-        if(start != null){
+    public void movePlayer(Player player, Square end) {
+        Square start = player.getCurrentSquare();
+        if (start != null) {
             start.removePlayer(player);
         }
         end.addPlayer(player);
+        player.setCurrentSquare(end);
         if(start != null) {
             player.notifyObservers(new PlayerMoveUpdate(player.getName(), start.getLocation(), end.getLocation()));
         } else {
