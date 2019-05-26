@@ -5,6 +5,11 @@ import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.RemoteRoutingObser
 import it.polimi.deib.se2019.sanp4.adrenaline.model.match.Match;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.ModelUpdate;
 
+import java.util.Set;
+
+/**
+ * Concrete implementation of {@link Model}.
+ */
 public class ModelImpl extends RemoteRoutingObservable<ModelUpdate> implements Model {
 
     /** The match associated to the model */
@@ -55,6 +60,19 @@ public class ModelImpl extends RemoteRoutingObservable<ModelUpdate> implements M
     }
 
     /**
+     * Unsuspends a player if it has been suspended
+     * If the player does not exist or if it wasn't suspended, nothing happens
+     *
+     * @param username the username of the player to be suspended
+     */
+    @Override
+    public void unsuspendPlayer(String username) {
+        if (match != null && username != null) {
+            match.unsuspendPlayer(username);
+        }
+    }
+
+    /**
      * Returns the operational state of the match
      *
      * @return the operational state of the match
@@ -75,13 +93,29 @@ public class ModelImpl extends RemoteRoutingObservable<ModelUpdate> implements M
     }
 
     /**
-     * Send an update/event from an {@link Observable} object.
+     * Sends the model update with all the match status (aka initial update)
+     * to the specified player
      *
-     * @param event event/update to be sent
+     * @param username username of the player
      */
     @Override
-    public void update(ModelUpdate event) {
-        /* Receive updates from the other classes of the model */
+    public void sendInitialUpdate(String username) {
         /* TODO: Implement this method */
+    }
+
+    /**
+     * Send an event from an {@link Observable} object.
+     *
+     * @param update update to be sent
+     */
+    @Override
+    public void update(ModelUpdate update) {
+        /* Receive updates from the other classes of the model */
+        Set<String> recipients = update.getRecipients();
+        if (recipients == null) {
+            notifyObservers(update); /* Send in broadcast */
+        } else {
+            notifyObservers(update.getRecipients(), update);
+        }
     }
 }

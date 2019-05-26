@@ -4,7 +4,6 @@ import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.Observer;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.RemoteObserver;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.ModelUpdate;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.match.Match;
-import it.polimi.deib.se2019.sanp4.adrenaline.model.match.MatchConfiguration;
 
 import java.util.Collection;
 
@@ -38,6 +37,13 @@ public interface Model extends Observer<ModelUpdate> {
     void suspendPlayer(String username);
 
     /**
+     * Unsuspends a player if it has been suspended
+     * If the player does not exist or if it wasn't suspended, nothing happens
+     * @param username the username of the player to be suspended
+     */
+    void unsuspendPlayer(String username);
+
+    /**
      * Returns the operational state of the match
      * @return the operational state of the match
      */
@@ -48,6 +54,13 @@ public interface Model extends Observer<ModelUpdate> {
      * @param state the operational state
      */
     void setOperationalState(MatchOperationalState state);
+
+    /**
+     * Sends the model update with all the match status (aka initial update)
+     * to the specified player
+     * @param username username of the player
+     */
+    void sendInitialUpdate(String username);
 
     /* ======== OBSERVABLE ======== */
 
