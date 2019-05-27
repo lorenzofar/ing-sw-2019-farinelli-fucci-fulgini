@@ -5,6 +5,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.CardNotFoundExce
 import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.FullCapacityException;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.NotEnoughAmmoException;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionCard;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionCardCreator;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionCardEnum;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionEnum;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.*;
@@ -36,6 +37,10 @@ public class PlayerTest {
 
     @BeforeClass
     public static void setup(){
+        /* Set up the resources */
+        JSONUtils.loadActionCardPackSchema("/schemas/action_card_pack.schema.json");
+        ActionCardCreator.loadActionCardPack("/assets/standard_actioncards.json");
+
         int validMaxActions = 2;
         Collection<ActionEnum> validActions = new ArrayList<>();
         validActions.add(ActionEnum.ADRENALINE_GRAB);
@@ -143,6 +148,25 @@ public class PlayerTest {
         ActionCard anotherActionCard = new ActionCard(validMaxActions, validType, validActions, validFinalAction);
         player.setActionCard(anotherActionCard);
         assertEquals(anotherActionCard, player.getActionCard());
+    }
+
+    @Test
+    public void updateActionCard_fromRegularToAdrenaline1_shouldSucceed() {
+        /* Set up regular action card */
+        ActionCard actionCard = ActionCard.initial();
+        Player player = new Player(validName, ActionCard.initial(), validColor);
+
+        /* Create another player who will target this */
+        Player another = new Player(validName, validActionCard, PlayerColor.GREEN);
+
+        /* Add 5 damages */
+        PlayerBoard playerBoard = player.getPlayerBoard();
+        playerBoard.addDamage(another, 5);
+
+        /* Update the action card */
+        player.updateActionCard();
+
+        assertEquals(ActionCardEnum.ADRENALINE1, player.getActionCard().getType());
     }
 
     @Test(expected = NullPointerException.class)

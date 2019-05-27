@@ -8,6 +8,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.AddedWeaponUpdate;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.ModelUpdate;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.RemovedWeaponUpdate;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionCard;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionCardCreator;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.Square;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCube;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCubeCost;
@@ -247,6 +248,16 @@ public class Player extends Observable<ModelUpdate> {
             throw new NullPointerException("ActionCard cannot be null for player");
         }
         this.actionCard = card;
+    }
+
+    /**
+     * Updates the action card of the player based on his current damage.
+     * Does not handle changing from regular to frenzy
+     * Note: needs {@link ActionCardCreator} to be properly set up
+     */
+    void updateActionCard() {
+        int damage = playerBoard.getDamageCount();
+        setActionCard(actionCard.next(damage));
     }
 
     /**
