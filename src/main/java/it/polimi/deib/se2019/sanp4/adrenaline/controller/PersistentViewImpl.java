@@ -312,9 +312,7 @@ public class PersistentViewImpl extends RemoteObservable<ViewEvent> implements P
         }
         /* The request could not be sent, or the timer is not running so return a pre-cancelled choice */
         /* in order to end the current interaction with the user */
-        CompletableChoice<T> choice = new CompletableChoice<>(request);
-        choice.cancel();
-        return choice;
+        return new CompletableChoice<>(request).cancel();
     }
 
     /**

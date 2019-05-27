@@ -12,6 +12,8 @@ import static org.junit.Assert.*;
 
 /** Test subclass with String as the choice type */
 class StringRequest extends ChoiceRequest<String> {
+    private static final long serialVersionUID = -6129788659971658989L;
+
     StringRequest(String message, List<String> choices, boolean optional) {
         super(message, choices, optional, String.class);
     }
@@ -100,9 +102,10 @@ public class CompletableChoiceTest {
     }
 
     @Test
-    public void cancel_uncompleted_shouldReturnTrue() {
+    public void cancel_uncompleted_shouldCancel() {
         CompletableChoice<String> completableChoice = new CompletableChoice<>(request);
-        assertTrue(completableChoice.cancel());
+
+        completableChoice.cancel();
 
         /* Check the status */
         assertTrue(completableChoice.isCompleted());
@@ -115,7 +118,7 @@ public class CompletableChoiceTest {
         completableChoice.complete("a"); /* Complete the choice */
 
         /* Now try to cancel it */
-        assertFalse(completableChoice.cancel());
+        completableChoice.cancel();
         /* Check that it has not been cancelled */
         assertTrue(completableChoice.isCompleted());
         assertFalse(completableChoice.isCancelled());

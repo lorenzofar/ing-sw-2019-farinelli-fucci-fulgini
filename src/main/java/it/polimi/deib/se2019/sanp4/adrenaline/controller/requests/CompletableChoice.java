@@ -55,11 +55,12 @@ public class CompletableChoice<T extends Serializable> {
      * and if it is valid it will make the choice available via {@link #get()}
      * If the choice has already been completed, this call has no effect
      * @param choice the choice object to be provided, even null if the request is optional
+     * @return this completable choice
      * @throws InvalidChoiceException if the choice is invalid (not accepted by the request)
      */
-    public synchronized void complete(Object choice) throws InvalidChoiceException {
+    public synchronized CompletableChoice<T> complete(Object choice) throws InvalidChoiceException {
         /* If the future has been completed, it cannot be completed again */
-        if (completed) return;
+        if (completed) return this;
 
         /* Check that the choice is valid */
         if (request.isChoiceValid(choice)) {
@@ -74,6 +75,7 @@ public class CompletableChoice<T extends Serializable> {
             /* The choice is not valid */
             throw new InvalidChoiceException(choice);
         }
+        return this;
     }
 
     /**
@@ -84,19 +86,17 @@ public class CompletableChoice<T extends Serializable> {
      * always return {@code true}.  Subsequent calls to {@link #isCancelled}
      * will always return {@code true} if this method returned {@code true}.
      *
-     * @return {@code false} if the choice could not be cancelled,
-     * typically because it has already completed normally;
-     * {@code true} otherwise
+     * @return this completable choice
      */
-    public synchronized boolean cancel() {
+    public synchronized CompletableChoice<T> cancel() {
         /* If already completed or canceled, canceling fails */
-        if (completed) return false;
+        if (completed) return this;
 
         /* Else set canceled to true, mark as completed and notify */
         cancelled = true;
         completed = true;
         notifyAll();
-        return true;
+        return this;
     }
 
     /**

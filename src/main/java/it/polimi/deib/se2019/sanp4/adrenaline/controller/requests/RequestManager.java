@@ -95,8 +95,7 @@ public class RequestManager {
      * If you try to cancel a request that does not exist (already completed or never inserted) the method will
      * simply return {@code false}.
      * @param uuid identifier of the request you want to cancel
-     * @return {@code true} if the request was correctly cancelled, {@code false} if the request could not be cancelled,
-     * either because it ha been already completed or because it has never been submitted
+     * @return {@code true} if the request was correctly cancelled, {@code false} if the request could not be cancelled
      */
     public boolean cancelRequest(String uuid) {
         /* Get the pending choice, if it exists */
@@ -108,7 +107,8 @@ public class RequestManager {
         pendingChoices.remove(uuid);
 
         /* Cancel it and remove it and return if cancellation was successful or not */
-        return completableChoice.cancel();
+        completableChoice.cancel();
+        return true;
     }
 
 

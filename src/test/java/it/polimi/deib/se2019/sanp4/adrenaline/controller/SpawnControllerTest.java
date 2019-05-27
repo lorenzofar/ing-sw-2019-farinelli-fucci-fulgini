@@ -67,8 +67,7 @@ public class SpawnControllerTest {
             CompletableChoice<PowerupCard> c = new CompletableChoice<>(req);
             /* Choose the first option */
             selectedSpawnPointColor[0] = req.getChoices().get(0).getCubeColor();
-            c.complete(req.getChoices().get(0));
-            return c;
+            return c.complete(req.getChoices().get(0));
         }).when(mockView).sendChoiceRequest(captor.capture());
 
         /* Test the first spawn */
@@ -94,9 +93,7 @@ public class SpawnControllerTest {
         doAnswer(invocationOnMock -> {
             /* Intercept the request */
             PowerupCardRequest req = (PowerupCardRequest) invocationOnMock.getArguments()[0];
-            CompletableChoice<PowerupCard> c = new CompletableChoice<>(req);
-            c.cancel();
-            return c;
+            return new CompletableChoice<>(req).cancel();
         }).when(mockView).sendChoiceRequest(captor.capture());
 
         try {
@@ -124,8 +121,7 @@ public class SpawnControllerTest {
             CompletableChoice<PowerupCard> c = new CompletableChoice<>(req);
             /* Choose the first option */
             selectedSpawnPointColor[0] = req.getChoices().get(0).getCubeColor();
-            c.complete(req.getChoices().get(0));
-            return c;
+            return c.complete(req.getChoices().get(0));
         }).when(mockView).sendChoiceRequest(captor.capture());
 
         /* Add a powerup to the player */
@@ -161,8 +157,7 @@ public class SpawnControllerTest {
             /* Choose the last option */
             otherPowerups[0] = req.getChoices().get(0);
             otherPowerups[1] = req.getChoices().get(1);
-            c.complete(req.getChoices().get(2));
-            return c;
+            return c.complete(req.getChoices().get(2));
         }).when(mockView).sendChoiceRequest(captor.capture());
 
         /* Add a couple to the player */
@@ -215,9 +210,7 @@ public class SpawnControllerTest {
         doAnswer(invocationOnMock -> {
             /* Intercept the request */
             PowerupCardRequest req = (PowerupCardRequest) invocationOnMock.getArguments()[0];
-            CompletableChoice<PowerupCard> c = new CompletableChoice<>(req);
-            c.cancel();
-            return c;
+            return new CompletableChoice<>(req).cancel();
         }).when(mockView).sendChoiceRequest(captor.capture());
 
         /* Move the player out of a spawn point */
