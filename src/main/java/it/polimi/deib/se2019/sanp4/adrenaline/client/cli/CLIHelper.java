@@ -2,12 +2,14 @@ package it.polimi.deib.se2019.sanp4.adrenaline.client.cli;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.common.ColoredObject;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.BoardView;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.PlayerBoardView;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.SquareView;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.CardinalDirection;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.CoordPair;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCubeCost;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.powerup.PowerupCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.WeaponCard;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.player.PlayerColor;
 
 import java.util.*;
 import java.util.function.Function;
@@ -673,6 +675,44 @@ class CLIHelper {
         });
         expandStringRendering(renderedPowerup, generateLine(HORIZONTAL_BORDER, CARD_WIDTH, LEFT_BOTTOM_CORNER, RIGHT_BOTTOM_CORNER));
         return renderedPowerup;
+    }
+
+    /* ===== PLAYER BOARD ===== */
+    private static List<List<String>> renderPlayerBoard(PlayerBoardView playerBoard, String player, Map<String, ColoredObject> playersColor) {
+        List<List<String>> renderedPlayerBoard = new ArrayList<>();
+        if (playerBoard == null) {
+            return renderedPlayerBoard;
+        }
+        // Determine the width of the board according to the number of damages
+        // Setting a minimum value of 20
+        final int boardWidth = playerBoard.getDamages().size() * 2 + 4 < 20 ? 20 : playerBoard.getDamages().size() * 2 + 4;
+        expandStringRendering(renderedPlayerBoard, generateLine(HORIZONTAL_BORDER, boardWidth, LEFT_TOP_CORNER, RIGHT_TOP_CORNER));
+        // Add the colored name of the player
+        List<String> playerNameChunks = splitString(player, boardWidth - 12);
+        playerNameChunks.forEach(nameChunk -> {
+            expandStringRendering(renderedPlayerBoard, generateLine(BLANK, boardWidth, VERTICAL_BORDER, VERTICAL_BORDER));
+            fillLineWithText(renderedPlayerBoard.get(renderedPlayerBoard.size() - 1), nameChunk, 2, ANSI_BOLD, playersColor.get(player).getAnsiCode());
+        });
+        // Then add indicators for deaths
+        List<String> playerInfoLine = renderedPlayerBoard.get(1);
+        playerInfoLine.set(playerInfoLine.size() - 4, String.format("%2d", playerBoard.getDeaths()));
+        playerInfoLine.remove(playerInfoLine.size() - 2);
+        playerInfoLine.set(playerInfoLine.size() - 6, ANSI_SKULL);
+        playerInfoLine.set(playerInfoLine.size() - 8, "|");
+        expandStringRendering(renderedPlayerBoard, generateLine(LIGHT_HORIZONTAL_BORDER, boardWidth, LIGHT_LEFT_VERTICAL_SEPARATOR, LIGHT_RIGHT_VERTICAL_SEPARATOR));
+        // Render damages
+        expandStringRendering(renderedPlayerBoard, generateLine(BLANK, boardWidth, VERTICAL_BORDER, VERTICAL_BORDER));
+        fillLineWithObjects(
+                renderedPlayerBoard.get(renderedPlayerBoard.size() - 1),
+                playerBoard.getDamages(),
+                p -> playersColor.get(p).getAnsiCode(),
+                p -> ANSI_DOT,
+                2,
+                2
+        );
+        // Add bottom border
+        expandStringRendering(renderedPlayerBoard, generateLine(HORIZONTAL_BORDER, boardWidth, LEFT_BOTTOM_CORNER, RIGHT_BOTTOM_CORNER));
+        return renderedPlayerBoard;
     }
 
     /* ===== KILLSHOTS TRACK ===== */
