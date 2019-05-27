@@ -50,6 +50,11 @@ public class WeaponCardTest {
         new WeaponCard(validId, validName, null, validEffects);
     }
 
+    @Test(expected = NullPointerException.class)
+    public void createCard_nullEffectsProvided_shouldThrowNullPointerException() {
+        new WeaponCard(validId, validName, validCost, null);
+    }
+
     @Test(expected = IllegalArgumentException.class)
     public void createCard_emptyIdProvided_shouldThrowIllegalArgumentException(){
         new WeaponCard("", validName, validCost, validEffects);
