@@ -255,7 +255,7 @@ public class Player extends Observable<ModelUpdate> {
      * Does not handle changing from regular to frenzy
      * Note: needs {@link ActionCardCreator} to be properly set up
      */
-    void updateActionCard() {
+    public void updateActionCard() {
         int damage = playerBoard.getDamageCount();
         setActionCard(actionCard.next(damage));
     }
