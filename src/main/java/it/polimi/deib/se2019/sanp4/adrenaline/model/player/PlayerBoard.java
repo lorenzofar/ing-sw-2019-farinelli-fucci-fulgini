@@ -269,10 +269,9 @@ public class PlayerBoard extends Observable<ModelUpdate> {
      * @throws PlayerException if there are damages on the board
      */
     public void turnFrenzy() throws  PlayerException {
-        if(damages.isEmpty()) {
+        if(!damages.isEmpty()) {
             throw new PlayerException("The player is damaged");
         }
-        damages.clear(); // Clear the list of damages
         state = new FrenzyPlayerBoardState(); // Change player board
     }
 

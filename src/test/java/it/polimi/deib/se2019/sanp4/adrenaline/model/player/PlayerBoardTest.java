@@ -219,28 +219,25 @@ public class PlayerBoardTest {
     }
 
     @Test
-    public void turnFrenzy_playerHasNoDamages_shouldThrowException(){
+    public void turnFrenzy_playerHasNoDamages_shouldTurnTheBoard() throws PlayerException {
         Player player = new Player(validName, validActionCard, validColor);
         PlayerBoard playerBoard = new PlayerBoard(player);
         // Here the player has no damages
-        try {
-            playerBoard.turnFrenzy();
-        } catch (PlayerException e) {
-            assertTrue(true);
-        }
+
+        playerBoard.turnFrenzy(); /* Should throw no exception */
     }
 
     @Test
-    public void turnFrenzy_playerHasDamages_damagesShouldBeReset(){
+    public void turnFrenzy_playerHasDamages_shouldThrowException(){
         Player player = new Player(validName, validActionCard, validColor);
         Player shooter = new Player("Another name", validActionCard, validColor);
         PlayerBoard playerBoard = new PlayerBoard(player);
         playerBoard.addDamage(shooter, 2);
         try {
             playerBoard.turnFrenzy();
-            assertTrue(playerBoard.getDamages().isEmpty());
-        } catch (PlayerException e) {
             fail();
+        } catch (PlayerException e) {
+            assertFalse(playerBoard.getDamages().isEmpty());
         }
     }
 

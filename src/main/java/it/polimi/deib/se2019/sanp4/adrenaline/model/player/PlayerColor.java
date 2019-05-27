@@ -1,9 +1,11 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.model.player;
 
+import it.polimi.deib.se2019.sanp4.adrenaline.common.ColoredObject;
+
 /**
  * Represents the possible colors a player can have
  */
-public enum PlayerColor {
+public enum PlayerColor implements ColoredObject {
     /**
      * Blue color
      */
@@ -40,10 +42,12 @@ public enum PlayerColor {
         return message;
     }
 
-    public String getANSICode() {
+    @Override
+    public String getAnsiCode() {
         return ansiCode;
     }
 
+    @Override
     public String getHexCode() {
         return hexCode;
     }

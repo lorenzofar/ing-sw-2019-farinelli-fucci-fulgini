@@ -1,9 +1,11 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo;
 
+import it.polimi.deib.se2019.sanp4.adrenaline.common.ColoredObject;
+
 /**
  * Identifies the color of an ammo cube
  */
-public enum AmmoCube {
+public enum AmmoCube implements ColoredObject {
 
     /**
      * Blue color
@@ -33,10 +35,12 @@ public enum AmmoCube {
         return message;
     }
 
-    public String getANSICode() {
+    @Override
+    public String getAnsiCode() {
         return ansiCode;
     }
 
+    @Override
     public String getHexCode() {
         return hexCode;
     }

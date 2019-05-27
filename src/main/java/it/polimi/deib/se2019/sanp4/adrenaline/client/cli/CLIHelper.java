@@ -1,12 +1,15 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.client.cli;
 
+import it.polimi.deib.se2019.sanp4.adrenaline.common.ColoredObject;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.BoardView;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.PlayerBoardView;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.SquareView;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.CardinalDirection;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.CoordPair;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCubeCost;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.powerup.PowerupCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.WeaponCard;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.player.PlayerColor;
 
 import java.util.*;
 import java.util.function.Function;
@@ -132,7 +135,7 @@ class CLIHelper {
      * @param args     Optional arguments to insert inside the template
      */
     static void printlnColored(String template, String color, Object... args) {
-        print(color +template+ANSI_RESET, args);
+        print(color + template + ANSI_RESET, args);
         print("\n");
     }
 
@@ -476,7 +479,7 @@ class CLIHelper {
      * @return The list of all the rows the rendered square is composed of.
      * Each row is a list of string containing all the cells of the rendered square.
      */
-    static List<List<String>> renderSquare(SquareView square) {
+    static List<List<String>> renderSquare(SquareView square, Map<String, ColoredObject> playersColors) {
         // We first initialize the main list
         List<List<String>> squareRows = new ArrayList<>();
 
@@ -519,9 +522,12 @@ class CLIHelper {
         int playersCount = square.getPlayers().size();
         // We compute the starting point of the line
         int playerX = centerX - playersCount / 2;
-        //TODO: Add players
+        for (String player : square.getPlayers()) {
+            squareRows.get(centerY).set(playerX, String.format(TRISTRING_TEMPLATE, playersColors.get(player).getAnsiCode(), ANSI_DOT, square.getRoomColor().getAnsiCode()));
+            playerX++;
+        }
         // Then eventually put the correct ANSI code for the square color
-        squareRows.forEach(row -> row.add(0, square.getRoomColor().getANSICode()));
+        squareRows.forEach(row -> row.add(0, square.getRoomColor().getAnsiCode()));
 
         return squareRows;
     }
@@ -531,7 +537,7 @@ class CLIHelper {
      *
      * @param board The object representing the board
      */
-    public static List<List<String>> renderBoard(BoardView board) {
+    public static List<List<String>> renderBoard(BoardView board, Map<String, ColoredObject> playersColors) {
         int width = board.getColumnsCount();
         int height = board.getRowsCount();
         // We define an initial list of lists to hold the rendered board
@@ -541,11 +547,11 @@ class CLIHelper {
         for (int r = 0; r < height; r++) {
             // Then for each row we have to take all the squares that are inside it and append their rendered value
             // We add the first square of the row
-            List<List<String>> rowSquares = renderSquare(board.getSquare(new CoordPair(0, r)));
+            List<List<String>> rowSquares = renderSquare(board.getSquare(new CoordPair(0, r)), playersColors);
             for (int c = 1; c < width; c++) {
                 // We concatenate all the squares in the row
                 // by adding all the lists to the previous ones
-                List<List<String>> renderedSquare = renderSquare(board.getSquare(new CoordPair(c, r)));
+                List<List<String>> renderedSquare = renderSquare(board.getSquare(new CoordPair(c, r)), playersColors);
                 for (int i = 0; i < rowSquares.size(); i++) {
                     rowSquares.get(i).addAll(renderedSquare.get(i));
                 }
@@ -594,7 +600,7 @@ class CLIHelper {
             fillLineWithObjects(
                     renderedWeapon.get(renderedWeapon.size() - 1),
                     chunk,
-                    cube -> cube.getCorrespondingCube().getANSICode(),
+                    AmmoCubeCost::getAnsiCode,
                     cube -> ANSI_DOT,
                     2,
                     2
@@ -623,7 +629,7 @@ class CLIHelper {
                 fillLineWithObjects(
                         renderedWeapon.get(renderedWeapon.size() - 1),
                         effectCostChunk,
-                        cube -> cube.getCorrespondingCube().getANSICode(),
+                        AmmoCubeCost::getAnsiCode,
                         cube -> ANSI_DOT,
                         2,
                         2
@@ -660,7 +666,7 @@ class CLIHelper {
         expandStringRendering(renderedPowerup, generateLine(HORIZONTAL_BORDER, CARD_WIDTH, LEFT_TOP_CORNER, RIGHT_TOP_CORNER));
         powerupNameChunks.forEach(chunk -> {
             expandStringRendering(renderedPowerup, generateLine(BLANK, CARD_WIDTH, VERTICAL_BORDER, VERTICAL_BORDER));
-            fillLineWithText(renderedPowerup.get(renderedPowerup.size() - 1), chunk, 2, ANSI_BOLD, powerupCard.getCubeColor().getANSICode());
+            fillLineWithText(renderedPowerup.get(renderedPowerup.size() - 1), chunk, 2, ANSI_BOLD, powerupCard.getCubeColor().getAnsiCode());
         });
         expandStringRendering(renderedPowerup, generateLine(HORIZONTAL_BORDER, CARD_WIDTH, LEFT_VERTICAL_SEPARATOR, RIGHT_VERTICAL_SEPARATOR));
         powerupDescriptionChunks.forEach(chunk -> {
@@ -669,6 +675,44 @@ class CLIHelper {
         });
         expandStringRendering(renderedPowerup, generateLine(HORIZONTAL_BORDER, CARD_WIDTH, LEFT_BOTTOM_CORNER, RIGHT_BOTTOM_CORNER));
         return renderedPowerup;
+    }
+
+    /* ===== PLAYER BOARD ===== */
+    private static List<List<String>> renderPlayerBoard(PlayerBoardView playerBoard, String player, Map<String, ColoredObject> playersColor) {
+        List<List<String>> renderedPlayerBoard = new ArrayList<>();
+        if (playerBoard == null) {
+            return renderedPlayerBoard;
+        }
+        // Determine the width of the board according to the number of damages
+        // Setting a minimum value of 20
+        final int boardWidth = playerBoard.getDamages().size() * 2 + 4 < 20 ? 20 : playerBoard.getDamages().size() * 2 + 4;
+        expandStringRendering(renderedPlayerBoard, generateLine(HORIZONTAL_BORDER, boardWidth, LEFT_TOP_CORNER, RIGHT_TOP_CORNER));
+        // Add the colored name of the player
+        List<String> playerNameChunks = splitString(player, boardWidth - 12);
+        playerNameChunks.forEach(nameChunk -> {
+            expandStringRendering(renderedPlayerBoard, generateLine(BLANK, boardWidth, VERTICAL_BORDER, VERTICAL_BORDER));
+            fillLineWithText(renderedPlayerBoard.get(renderedPlayerBoard.size() - 1), nameChunk, 2, ANSI_BOLD, playersColor.get(player).getAnsiCode());
+        });
+        // Then add indicators for deaths
+        List<String> playerInfoLine = renderedPlayerBoard.get(1);
+        playerInfoLine.set(playerInfoLine.size() - 4, String.format("%2d", playerBoard.getDeaths()));
+        playerInfoLine.remove(playerInfoLine.size() - 2);
+        playerInfoLine.set(playerInfoLine.size() - 6, ANSI_SKULL);
+        playerInfoLine.set(playerInfoLine.size() - 8, "|");
+        expandStringRendering(renderedPlayerBoard, generateLine(LIGHT_HORIZONTAL_BORDER, boardWidth, LIGHT_LEFT_VERTICAL_SEPARATOR, LIGHT_RIGHT_VERTICAL_SEPARATOR));
+        // Render damages
+        expandStringRendering(renderedPlayerBoard, generateLine(BLANK, boardWidth, VERTICAL_BORDER, VERTICAL_BORDER));
+        fillLineWithObjects(
+                renderedPlayerBoard.get(renderedPlayerBoard.size() - 1),
+                playerBoard.getDamages(),
+                p -> playersColor.get(p).getAnsiCode(),
+                p -> ANSI_DOT,
+                2,
+                2
+        );
+        // Add bottom border
+        expandStringRendering(renderedPlayerBoard, generateLine(HORIZONTAL_BORDER, boardWidth, LEFT_BOTTOM_CORNER, RIGHT_BOTTOM_CORNER));
+        return renderedPlayerBoard;
     }
 
     /* ===== KILLSHOTS TRACK ===== */

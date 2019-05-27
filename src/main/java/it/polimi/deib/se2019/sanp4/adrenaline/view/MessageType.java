@@ -1,9 +1,10 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.view;
 
+import it.polimi.deib.se2019.sanp4.adrenaline.common.ColoredObject;
 import javafx.scene.control.Alert;
 
 /** Describes the importance level of a message */
-public enum MessageType {
+public enum MessageType implements ColoredObject {
     /** Informational message to show information about the ongoing game */
     INFO("Info", "\u001B[34m", Alert.AlertType.INFORMATION),
     /** Warning message to warn players about potential issues */
@@ -28,6 +29,11 @@ public enum MessageType {
 
     public String getAnsiCode() {
         return ansiCode;
+    }
+
+    @Override
+    public String getHexCode() {
+        return "";
     }
 
     public Alert.AlertType getAlertType() {
