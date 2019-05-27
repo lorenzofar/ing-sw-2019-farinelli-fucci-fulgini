@@ -21,4 +21,13 @@ public class FrenzyPlayerBoardState implements PlayerBoardState {
     public Iterator<Integer> getDamageScores(PlayerBoard board) {
         return new ScoresIterator(POINTS, 0);
     }
+
+    /**
+     * Returns a string representation suitable for identifying the state
+     * @return a string representation
+     */
+    @Override
+    public String toString() {
+        return "frenzy";
+    }
 }
