@@ -25,6 +25,7 @@ public class MatchTest {
     private static Match mockMatch;
     private static MatchConfiguration validConfig;
     private static Set<String> validNames;
+    private static int skulls = 5;
 
     @BeforeClass
     public static void classSetup() {
@@ -34,7 +35,7 @@ public class MatchTest {
         /* Load schemas and assets */
         ModelTestUtil.loadCreatorResources();
 
-        validConfig = new MatchConfiguration(0, 5);
+        validConfig = new MatchConfiguration(0, skulls);
 
         /* Create list of unique users */
         validNames = new HashSet<>();
@@ -115,6 +116,47 @@ public class MatchTest {
         /* Check that the overloaded methods return the same value */
         assertTrue(mockMatch.isPlayerTurn(player));
         assertTrue(mockMatch.isPlayerTurn(player.getName()));
+    }
+
+    @Test
+    public void isFinalPlayer_nullPlayer_shouldReturnFalse() {
+        assertFalse(mockMatch.isFinalPlayer(null));
+    }
+
+    @Test
+    public void isFinalPlayer_killShotsTrackIsNotFull_shouldReturnFalse() {
+        /* Make sure that this is empty */
+        mockMatch.setKillshotsTrack(new ArrayList<>());
+
+        assertFalse(mockMatch.isFinalPlayer(mockMatch.getPlayerByName("bzoto")));
+    }
+
+    @Test
+    public void isFinalPlayer_thisIsTheFinalPlayer_shouldReturnTrue() {
+        Player other = mockMatch.getPlayerByName("slinky");
+        for (int i = 0; i < skulls - 1; i++) {
+            mockMatch.addKillshot(other);
+        }
+
+        Player last = mockMatch.getPlayerByName("bzoto");
+        mockMatch.addKillshot(last);
+        assertTrue(mockMatch.isFinalPlayer(last));
+
+        mockMatch.setKillshotsTrack(new ArrayList<>());
+    }
+
+    @Test
+    public void isFinalPlayer_killShotsTrackIsFull_playerIsNotTheLast_shouldReturnFalse() {
+        Player other = mockMatch.getPlayerByName("slinky");
+        for (int i = 0; i < skulls - 1; i++) {
+            mockMatch.addKillshot(other);
+        }
+
+        Player last = mockMatch.getPlayerByName("bzoto");
+        mockMatch.addKillshot(last);
+        assertFalse(mockMatch.isFinalPlayer(other));
+
+        mockMatch.setKillshotsTrack(new ArrayList<>());
     }
 
     @Test
@@ -253,5 +295,10 @@ public class MatchTest {
         /* Check that all the squares in the board are now full */
         Collection<Square> squares = mockMatch.getBoard().getSquares();
         squares.forEach(sq -> assertTrue(sq.isFull()));
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void setKillshotsTrack_null_shouldThrow() {
+        mockMatch.setKillshotsTrack(null);
     }
 }

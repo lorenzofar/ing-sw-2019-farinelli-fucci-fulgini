@@ -60,9 +60,6 @@ public class Match extends Observable {
     /** A flag indicating whether the match is in frenzy mode or not */
     private boolean frenzy;
 
-    /** A reference to the last player of the match */
-    private Player lastPlayer;
-
     /**
      * Creates a new match for the provided players.
      * It initializes the card stacks using the provided ones.
@@ -100,6 +97,21 @@ public class Match extends Observable {
     public boolean isPlayerTurn(Player player){
         if(currentTurn == null) return false;
         return currentTurn.getTurnOwner().equals(player);
+    }
+
+    /**
+     * Checks whether the given player is the last player who has the right to play.
+     * This is true if the match is in frenzy mode and he's the last one on the killshot track
+     * @param player the player
+     * @return if this is the last player who has to play
+     */
+    public boolean isFinalPlayer(Player player) {
+        if (player == null) return false;
+        if (killshotsTrack.size() == skulls) {
+            return killshotsTrack.get(skulls - 1).equals(player);
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -350,7 +362,8 @@ public class Match extends Observable {
         this.players = players;
     }
 
-    void setLastPlayer(Player player) {
-        this.lastPlayer = player;
+    public void setKillshotsTrack(List<Player> killshotsTrack) {
+        if (killshotsTrack == null) throw new NullPointerException();
+        this.killshotsTrack = killshotsTrack;
     }
 }
