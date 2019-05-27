@@ -11,6 +11,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.model.items.powerup.PowerupCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.WeaponCard;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
 /**
@@ -87,6 +88,8 @@ class CLIHelper {
     /* ===== DIMENSIONS ===== */
     private static final int SQUARE_DIM = 15;
     private static final int CARD_WIDTH = 20;
+    private static final int FULLSCREEN_WIDTH = 119;
+    private static final int FULLSCREEN_TITLE_WIDTH = 40;
 
     /* ===== TEMPLATES ====== */
     private static final String TRISTRING_TEMPLATE = "%s%s%s";
@@ -166,6 +169,96 @@ class CLIHelper {
         if (gameElement != null) {
             gameElement.forEach(line -> println(String.join("", line)));
         }
+    }
+
+    /**
+     * Prints the provided game element to the command line in a full-screen mode
+     * If a null object is provided, nothing is printed
+     *
+     * @param gameElement The textual representation of the element
+     * @param title The title of the screen
+     * @param description The description of the screen
+     */
+    private static void printFullScreenRenderedGameElement(List<List<String>> gameElement, String title, String description) {
+        if (gameElement == null || gameElement.isEmpty()) {
+            return;
+        }
+
+        List<List<String>> output = new ArrayList<>(gameElement);
+        int contentLength = output.get(0).size();
+        AtomicInteger currentLine = new AtomicInteger(0);
+
+        if (!title.equals("")) {
+            List<String> titleChunks = splitString(title, FULLSCREEN_TITLE_WIDTH);
+            titleChunks.forEach(titleChunk -> {
+                output.add(currentLine.get(), generateLine(BLANK, FULLSCREEN_WIDTH, BLANK, BLANK));
+                int i = 0;
+                while (i < (FULLSCREEN_WIDTH - FULLSCREEN_TITLE_WIDTH - 2) / 2) {
+                    output.get(currentLine.get()).set(i, HORIZONTAL_BORDER);
+                    output.get(currentLine.get()).set(FULLSCREEN_WIDTH - 1 - i, HORIZONTAL_BORDER);
+                    i++;
+                }
+                // Make the title bold
+                output.get(currentLine.get()).add(0, ANSI_BOLD);
+                // i marks the start of the empty space for the title
+                // compute the horizontal center
+                int center = i + (FULLSCREEN_TITLE_WIDTH / 2);
+                int textStart = center - titleChunk.length() / 2;
+                for (int l = 0; l < titleChunk.length(); l++) {
+                    output.get(currentLine.get()).set(textStart + l, titleChunk.substring(l, l + 1));
+                }
+                currentLine.getAndIncrement();
+            });
+            output.add(currentLine.get(), generateLine(BLANK, FULLSCREEN_WIDTH, BLANK, BLANK));
+            currentLine.getAndIncrement();
+        }
+
+        // Insert description
+        if(!description.equals("")) {
+            List<String> descriptionChunks = splitString(description, FULLSCREEN_WIDTH - 2);
+            descriptionChunks.forEach(descriptionChunk -> {
+                output.add(currentLine.get(), generateLine(BLANK, FULLSCREEN_WIDTH, BLANK, BLANK));
+                fillLineWithText(output.get(currentLine.get()), descriptionChunk, 1);
+                currentLine.getAndIncrement();
+            });
+            if (!descriptionChunks.isEmpty()) {
+                output.add(currentLine.get(), generateLine(BLANK, FULLSCREEN_WIDTH, BLANK, BLANK));
+                currentLine.getAndIncrement();
+            }
+        }
+
+        // Add left and right padding
+        for (int i = 0; i < (FULLSCREEN_WIDTH - contentLength) / 2; i++) {
+            output.stream().skip(currentLine.get()).forEach(line -> {
+                line.add(BLANK);
+                line.add(0, BLANK);
+            });
+        }
+        // Add bottom border, then clear the screen and print everything
+        expandStringRendering(output, generateLine(BLANK, FULLSCREEN_WIDTH, BLANK, BLANK));
+        clearScreen();
+        printRenderedGameElement(output);
+    }
+
+    /**
+     * Prints the provided game element to the command line in a full-screen mode
+     * If a null object is provided, nothing is printed
+     *
+     * @param gameElement The textual representation of the element
+     * @param title The title of the screen
+     */
+    private static void printFullScreenRenderedGameElement(List<List<String>> gameElement, String title){
+        printFullScreenRenderedGameElement(gameElement, title, "");
+    }
+
+    /**
+     * Prints the provided game element to the command line in a full-screen mode
+     * If a null object is provided, nothing is printed
+     *
+     * @param gameElement The textual representation of the element
+     */
+    private static void printFullScreenRenderedGameElement(List<List<String>> gameElement){
+        printFullScreenRenderedGameElement(gameElement, "", "");
     }
 
     /**
