@@ -9,7 +9,6 @@ import it.polimi.deib.se2019.sanp4.adrenaline.model.board.CoordPair;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCubeCost;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.powerup.PowerupCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.WeaponCard;
-import it.polimi.deib.se2019.sanp4.adrenaline.model.player.PlayerColor;
 
 import java.util.*;
 import java.util.function.Function;
@@ -83,6 +82,7 @@ class CLIHelper {
     /* ===== SYMBOLS ===== */
     private static final String ANSI_DOT = "●";
     private static final String ANSI_SKULL = "☠";
+    private static final String ANSI_MARK = "⊚";
 
     /* ===== DIMENSIONS ===== */
     private static final int SQUARE_DIM = 15;
@@ -698,6 +698,16 @@ class CLIHelper {
         playerInfoLine.set(playerInfoLine.size() - 4, String.format("%2d", playerBoard.getDeaths()));
         playerInfoLine.remove(playerInfoLine.size() - 2);
         playerInfoLine.set(playerInfoLine.size() - 6, ANSI_SKULL);
+        playerInfoLine.set(playerInfoLine.size() - 8, "|");
+        // Add indicator for marks
+        // Check whether there is already a free row, if not create it
+        if (playerNameChunks.size() == 1) {
+            expandStringRendering(renderedPlayerBoard, generateLine(BLANK, boardWidth, VERTICAL_BORDER, VERTICAL_BORDER));
+        }
+        playerInfoLine = renderedPlayerBoard.get(2);
+        playerInfoLine.set(playerInfoLine.size() - 4, String.format("%2d", playerBoard.getMarks()));
+        playerInfoLine.remove(playerInfoLine.size() - 2);
+        playerInfoLine.set(playerInfoLine.size() - 6, ANSI_MARK);
         playerInfoLine.set(playerInfoLine.size() - 8, "|");
         expandStringRendering(renderedPlayerBoard, generateLine(LIGHT_HORIZONTAL_BORDER, boardWidth, LIGHT_LEFT_VERTICAL_SEPARATOR, LIGHT_RIGHT_VERTICAL_SEPARATOR));
         // Render damages
