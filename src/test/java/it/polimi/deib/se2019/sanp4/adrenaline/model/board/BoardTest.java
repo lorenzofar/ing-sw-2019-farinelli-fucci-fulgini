@@ -51,6 +51,8 @@ public class BoardTest {
     @Test
     public void createBoard_ShouldSucceed(){
         Board board = new Board(4,3);
+        /* Check that the board is empty */
+        assertTrue(board.getSquares().isEmpty());
     }
 
     @Test(expected = NullPointerException.class)
@@ -63,14 +65,6 @@ public class BoardTest {
     public void addSquare_SquareOutsideBoardProvided_ShouldThrowNullPointerException(){
         Board board = new Board(4,3);
         CoordPair location = new CoordPair(5,3);
-        board.addSquare(new AmmoSquare(location));
-    }
-
-    @Test
-    public void addSquare_ValidSquareProvided_PreviousSquareExistent_ShouldSucceed(){
-        Board board = new Board(4,3);
-        CoordPair location = new CoordPair(3,2);
-        board.addSquare(new AmmoSquare(location));
         board.addSquare(new AmmoSquare(location));
     }
 

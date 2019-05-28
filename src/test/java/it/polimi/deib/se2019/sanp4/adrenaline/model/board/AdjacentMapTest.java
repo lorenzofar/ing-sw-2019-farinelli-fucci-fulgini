@@ -1,44 +1,36 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.model.board;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
+import static it.polimi.deib.se2019.sanp4.adrenaline.model.board.CardinalDirection.*;
+import static it.polimi.deib.se2019.sanp4.adrenaline.model.board.SquareConnectionType.*;
 
 public class AdjacentMapTest {
 
     @Test (expected = NullPointerException.class)
     public void getConnection_NullDirectionProvided_ShouldThrowNullPointerException() {
         AdjacentMap adjacentMap = new AdjacentMap();
-        adjacentMap.setConnection(CardinalDirection.N, new CoordPair(5,5), SquareConnectionType.DOOR);
         adjacentMap.getConnection(null); /* This will throw */
     }
 
     @Test (expected = NullPointerException.class)
     public void setConnection_NullDirectionProvided_ShouldThrowNullPointerException() {
-        AdjacentMap adjacentMap = new AdjacentMap();
-        adjacentMap.setConnection(null, new CoordPair(5,5), SquareConnectionType.DOOR);
+        new AdjacentMap().setConnection(null, new CoordPair(5,5), DOOR);
     }
 
     @Test
     public void setConnection_ShouldReturnSameConnection() {
         AdjacentMap adjacentMap = new AdjacentMap();
-        adjacentMap.setConnection(CardinalDirection.N, new CoordPair(5,5), SquareConnectionType.DOOR);
-        assertEquals(SquareConnectionType.DOOR, adjacentMap.getConnection(CardinalDirection.N).getConnectionType());
-    }
-
-    @Test
-    public void getSquares_CollectionShouldReturnBothSquares(){
-        AdjacentMap adjacentMap = new AdjacentMap();
-        adjacentMap.setConnection(CardinalDirection.N, new CoordPair(5,5), SquareConnectionType.DOOR);
-
+        adjacentMap.setConnection(N, new CoordPair(5,5), DOOR);
+        assertEquals(DOOR, adjacentMap.getConnection(N).getConnectionType());
     }
 
     @Test
     public void getReachableSquares_ShouldContainProvidedSquare(){
         AdjacentMap adjacentMap = new AdjacentMap();
         CoordPair coordPair = new CoordPair(5,5);
-        adjacentMap.setConnection(CardinalDirection.N, coordPair, SquareConnectionType.DOOR);
+        adjacentMap.setConnection(N, coordPair, DOOR);
         assertTrue(adjacentMap.getReachableSquares().contains(coordPair));
     }
 
@@ -46,17 +38,7 @@ public class AdjacentMapTest {
     public void getSquares_ShouldContainProvidedSquare(){
         AdjacentMap adjacentMap = new AdjacentMap();
         CoordPair coordPair = new CoordPair(5,5);
-        adjacentMap.setConnection(CardinalDirection.N, coordPair, SquareConnectionType.DOOR);
+        adjacentMap.setConnection(N, coordPair, DOOR);
         assertTrue(adjacentMap.getSquares().contains(coordPair));
-    }
-
-    @Ignore
-    public void getConnection_SingleDirectionMap_getConnectionShouldReturnSameConnection() {
-        fail();
-    }
-
-    @Ignore
-    public void getSquares() {
-        fail();
     }
 }

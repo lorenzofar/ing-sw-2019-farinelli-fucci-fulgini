@@ -225,6 +225,7 @@ public class PlayerBoardTest {
         // Here the player has no damages
 
         playerBoard.turnFrenzy(); /* Should throw no exception */
+        assertEquals("frenzy", playerBoard.getState().toString());
     }
 
     @Test
