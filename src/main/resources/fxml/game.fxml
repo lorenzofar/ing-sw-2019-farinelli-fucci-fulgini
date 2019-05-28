@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.VBox?>
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="it.polimi.deib.se2019.sanp4.adrenaline.client.gui.GameController"
+      prefHeight="400.0" prefWidth="600.0">
+
+    <GridPane fx:id="killshotsTrack">
+
+    </GridPane>
+
+    <GridPane fx:id="gameBoard"></GridPane>
+
+    <GridPane fx:id="playerBoard"></GridPane>
+
+    <!-- TODO: Add other player boards -->
+
+</VBox>
