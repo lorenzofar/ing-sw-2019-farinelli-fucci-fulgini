@@ -1,8 +1,15 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.model.board;
 
+import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.ActionCardView;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.AmmoSquareView;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.match.CardStack;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.match.Match;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /** A specialized class representing a square containing ammo cards */
 public class AmmoSquare extends Square {
@@ -24,8 +31,6 @@ public class AmmoSquare extends Square {
         super(location);
         this.ammoCard = null;
     }
-
-
 
     /**
      * Takes the ammo card that is currently placed in the square
@@ -80,5 +85,26 @@ public class AmmoSquare extends Square {
     @Override
     public boolean isFull() {
         return ammoCard != null;
+    }
+
+    /**
+     * Generates the {@link AmmoSquareView} of the ammo square.
+     * @return the ammo square view.
+     */
+    @Override
+    public AmmoSquareView generateView() {
+        AmmoSquareView view = new AmmoSquareView(this.getLocation(), this.getRoom().getColor());
+        view.setPlayers(this.getPlayers()
+                        .stream()
+                        .map(Player::getName)
+                        .collect(Collectors.toSet()));
+        /* From AdjacentMap, create a Map in which the entry is the same and the value is the SquareConnectionType
+        contained by the SquareConnection */
+        Map<CardinalDirection, SquareConnectionType> adjacentMap =
+                        getAdjacentSquares().entrySet()
+                        .stream()
+                        .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().getConnectionType()));
+        view.setAdjacentMap(adjacentMap);
+        return view;
     }
 }

@@ -1,5 +1,7 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.model.action;
 
+import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.ActionCardView;
+
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
@@ -160,5 +162,7 @@ public class ActionCard implements Serializable {
         return Objects.hash(type);
     }
 
-    
+    public ActionCardView generateView() {
+        return new ActionCardView(type, actions, finalAction);
+    }
 }

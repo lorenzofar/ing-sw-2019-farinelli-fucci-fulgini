@@ -2,14 +2,15 @@ package it.polimi.deib.se2019.sanp4.adrenaline.model.board;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.CardNotFoundException;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.FullCapacityException;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.AmmoSquareView;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.SpawnSquareView;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.WeaponCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.match.CardStack;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.match.Match;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /** A specialized class representing a square available as spawn points and that contain weapon cards*/
 public class SpawnSquare extends Square {
@@ -113,5 +114,26 @@ public class SpawnSquare extends Square {
             // if the card is already on this square, it is certainly not in the stack
             weaponCards.add(stack.draw());
         }
+    }
+
+    /**
+     * Generates the {@link SpawnSquareView} of the spawn square.
+     * @return the spawn square view.
+     */
+    @Override
+    public SpawnSquareView generateView(){
+        SpawnSquareView view = new SpawnSquareView(this.getLocation(), this.getRoom().getColor());
+        view.setPlayers(this.getPlayers()
+                .stream()
+                .map(Player::getName)
+                .collect(Collectors.toSet()));
+        /* From AdjacentMap, create a Map in which the entry is the same and the value is the
+        SquareConnectionType contained by the SquareConnection */
+        Map<CardinalDirection, SquareConnectionType> adjacentMap =
+                getAdjacentSquares().entrySet()
+                        .stream()
+                        .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().getConnectionType()));
+        view.setAdjacentMap(adjacentMap);
+        return view;
     }
 }

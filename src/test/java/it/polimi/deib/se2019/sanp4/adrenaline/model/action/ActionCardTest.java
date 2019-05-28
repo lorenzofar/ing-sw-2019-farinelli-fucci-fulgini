@@ -2,6 +2,7 @@ package it.polimi.deib.se2019.sanp4.adrenaline.model.action;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.ActionCardView;
 import it.polimi.deib.se2019.sanp4.adrenaline.utils.JSONUtils;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -220,5 +221,14 @@ public class ActionCardTest {
         ActionCard current = ActionCardCreator.createActionCard(ActionCardEnum.FRENZY2);
         ActionCard next = current.next(3);
         assertThat(next.getType(), is(ActionCardEnum.FRENZY2));
+    }
+
+    @Test
+    public void generateView_ShouldSucceed() {
+        ActionCardView view = (new ActionCard(validMaxActions, validType, validActions, validFinalAction)
+                                .generateView());
+        assertEquals(validType, view.getType());
+        assertTrue(view.getActions().containsAll(view.getActions()));
+        assertEquals(validFinalAction, view.getFinalAction());
     }
 }

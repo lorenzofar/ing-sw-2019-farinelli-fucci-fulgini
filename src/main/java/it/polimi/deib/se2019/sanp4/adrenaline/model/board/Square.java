@@ -3,6 +3,7 @@ package it.polimi.deib.se2019.sanp4.adrenaline.model.board;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.PlayerNotFoundException;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.SquareView;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.Observable;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.ModelUpdate;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.match.Match;
@@ -93,6 +94,12 @@ public abstract class Square extends Observable<ModelUpdate> {
      * @return whether the square is full
      */
     public abstract boolean isFull();
+
+    /**
+     * Generates the {@link SquareView} of the square.
+     * @return the square view.
+     */
+    public abstract SquareView generateView();
 
     /* ===== GETTERS AND SETTERS ===== */
 
