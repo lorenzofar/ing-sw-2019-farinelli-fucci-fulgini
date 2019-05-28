@@ -3,9 +3,10 @@ package it.polimi.deib.se2019.sanp4.adrenaline.common.updates;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.MatchView;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.match.Match;
 
 /**
- * An update sent when the match changes its status.
+ * An update sent when the {@link Match} changes its status.
  */
 public class MatchUpdate extends ModelUpdate {
 

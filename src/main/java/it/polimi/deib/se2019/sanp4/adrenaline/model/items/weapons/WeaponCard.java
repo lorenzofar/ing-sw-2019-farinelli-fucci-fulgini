@@ -7,12 +7,13 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * A class describing a light representation of a weapon
  * Used to represent the weapon card drawn by a player
  */
-public class WeaponCard extends Observable implements Serializable {
+public class WeaponCard implements Serializable {
 
     private static final long serialVersionUID = 2151651272278660643L;
 
@@ -125,6 +126,6 @@ public class WeaponCard extends Observable implements Serializable {
 
     @Override
     public int hashCode(){
-        return 17 + 31*id.hashCode();
+        return Objects.hash(id);
     }
  }

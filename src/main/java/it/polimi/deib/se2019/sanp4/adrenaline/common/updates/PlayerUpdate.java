@@ -3,9 +3,10 @@ package it.polimi.deib.se2019.sanp4.adrenaline.common.updates;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.PlayerView;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
 
 /**
- * An update sent when a player changes its status.
+ * An update sent when a {@link Player} changes its status.
  */
 public class PlayerUpdate extends ModelUpdate {
 

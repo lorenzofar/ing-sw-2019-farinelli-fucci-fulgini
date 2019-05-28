@@ -3,9 +3,10 @@ package it.polimi.deib.se2019.sanp4.adrenaline.common.updates;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.CoordPair;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.board.Square;
 
 /**
- * This update is sent when a player spawns or is moved from one square to another one.
+ * This update is sent when a player spawns or is moved from one {@link Square} to another one.
  */
 public class PlayerMoveUpdate extends ModelUpdate {
 

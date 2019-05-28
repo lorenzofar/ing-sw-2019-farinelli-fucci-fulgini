@@ -24,7 +24,6 @@ public class ActionCardView implements Serializable {
     private ActionCardView() {}
 
     public ActionCardView(ActionCardEnum type, Collection<ActionEnum> actions, ActionEnum finalAction) {
-        //TODO: Check how to handle improper parameters
         this.type = type;
         this.actions = actions;
         this.finalAction = finalAction;

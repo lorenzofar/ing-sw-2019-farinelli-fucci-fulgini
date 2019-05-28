@@ -3,9 +3,10 @@ package it.polimi.deib.se2019.sanp4.adrenaline.common.updates;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.BoardView;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.board.Board;
 
 /**
- * An update sent when the board changes.
+ * An update sent when the {@link Board} changes.
  */
 public class BoardUpdate extends ModelUpdate {
 

@@ -159,4 +159,6 @@ public class ActionCard implements Serializable {
     public int hashCode() {
         return Objects.hash(type);
     }
+
+    
 }
