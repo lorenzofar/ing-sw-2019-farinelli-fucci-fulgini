@@ -184,6 +184,7 @@ public class ModelManager implements ModelUpdateVisitor {
         playerBoardView.setDeaths(update.getPlayerBoard().getDeaths());
         playerBoardView.setDamages(update.getPlayerBoard().getDamages());
         playerBoardView.setMarks(update.getPlayerBoard().getMarks());
+        playerBoardView.setState(update.getPlayerBoard().getState());
         //TODO: Refresh the player board
     }
 

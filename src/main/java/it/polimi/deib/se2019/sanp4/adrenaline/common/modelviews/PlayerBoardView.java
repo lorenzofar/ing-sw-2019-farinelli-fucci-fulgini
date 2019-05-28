@@ -21,6 +21,10 @@ public class PlayerBoardView implements Serializable {
      * Count of marks received by other players
      */
     private int marks;
+    /**
+     * String representation of the state of the board
+     */
+    private String state;
 
     public PlayerBoardView() {
         damages = new ArrayList<>();
@@ -107,5 +111,21 @@ public class PlayerBoardView implements Serializable {
         if (damages != null && !damages.contains(null)) {
             this.damages = damages;
         }
+    }
+
+    /**
+     * Retrieves the state of the board
+     * @return The string representing the state
+     */
+    public String getState() {
+        return state;
+    }
+
+    /**
+     * Sets the state of the board
+     * @param state The string representing the state
+     */
+    public void setState(String state) {
+        this.state = state;
     }
 }
