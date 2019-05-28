@@ -142,4 +142,9 @@ public abstract class Square extends Observable<ModelUpdate> {
     public CoordPair getLocation() {
         return location;
     }
+
+    @Override
+    public String toString() {
+        return String.format("Square{%d,%d}", location.getX(), location.getY());
+    }
 }

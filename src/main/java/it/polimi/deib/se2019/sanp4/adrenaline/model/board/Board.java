@@ -7,7 +7,9 @@ import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCube;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
 
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * This class represents the game board.
@@ -54,7 +56,7 @@ public class Board extends Observable<ModelUpdate> {
      * If there is already a square on the same point, the square is replaced and adjacencies are recomputed
      * @param square the square to be added, not null
      */
-    public void addSquare(Square square){
+    void addSquare(Square square){
         if (square == null) throw new NullPointerException("Cannot add null square to the board");
         int x = square.getLocation().getX();
         int y = square.getLocation().getY();
@@ -64,22 +66,6 @@ public class Board extends Observable<ModelUpdate> {
                     String.format("Cannot add a square at coords (%d, %d) because it's outside the board", x, y));
         }
 
-        // Here we first update the adjacency maps of its neighbours
-        Square previousSquare = squares[x][y];
-        // We check whether there was a square on the same place before
-        if(previousSquare != null){
-            // We check all the cardinal directions
-            for (CardinalDirection direction : CardinalDirection.values()) {
-                // We get the connection in the specified direction
-                SquareConnection neighbourSquare = previousSquare.getAdjacentSquares().getConnection(direction);
-                // If the connection is null we have an edge, so we skip this one
-                if(neighbourSquare == null) continue;
-                // We set the connection of the neighbour to point to the newly inserted one
-                this.getSquare(neighbourSquare.getSquare())
-                        .getAdjacentSquares()
-                        .setConnection(direction.getOppositeDirection(), square.getLocation(), neighbourSquare.getConnectionType());
-            }
-        }
         /* Eventually we put it into the board matrix */
         squares[x][y] = square;
 
@@ -105,80 +91,11 @@ public class Board extends Observable<ModelUpdate> {
     }
 
     /**
-     * Retrieve the set of the squares that can be reached from the provided one with the provided maximum number of moves
-     * @param start The object representing the starting square, not null
-     * @param maxMoves The maximum number of moves, not negative
-     * @return The set of objects representing the navigable squares
-     */
-    public Set<CoordPair> getNavigableSquares(CoordPair start, int maxMoves){
-        if(start == null){
-            throw new NullPointerException("Square cannot be null");
-        }
-        if(maxMoves < 0){
-            throw new IllegalArgumentException("Square cannot be reached by a negative amount of moves");
-        }
-        // We initialize the list of navigable squares with those I can reach with 1 move from the start
-        Set<CoordPair> navigableSquares = new LinkedHashSet<>(this.getSquare(start).getAdjacentSquares().getReachableSquares());
-
-        int startIndex = 0;
-
-        // We iterate over the maximum number of moves
-        // At each step we retrieve all the squares we can move into, by
-        for (int i = 1; i<maxMoves; i++){
-            // First we get all the squares we can navigate from the currently considered squares
-            // We just consider the newly added squares, by taking a subset starting at 'startIndex'
-            List<CoordPair> navigableSquaresToAdd = navigableSquares
-                    .stream()
-                    .skip(startIndex)
-                    .flatMap(location-> {
-                        Collection<CoordPair> squareNeighbours = getSquare(location)
-                                .getAdjacentSquares()
-                                .getReachableSquares();
-                        return squareNeighbours.stream();
-                    }).collect(Collectors.toList());
-            // We update the startIndex to point at the last element of the list (before insertion)
-            startIndex = navigableSquares.size();
-            //We remove the start square from the list of navigable ones
-            navigableSquaresToAdd.remove(start);
-            // And eventually we put all the new squares inside the list
-            navigableSquares.addAll(navigableSquaresToAdd);
-        }
-        return navigableSquares;
-    }
-
-    /**
-     * Determines if a square can be reached from another one with at most the provided number of moves
-     * @param start The object representing the initial square, not null
-     * @param end The object representing the final square, not null
-     * @param maxMoves The upper bound of allowed moves, must be positive
-     * @return {@code true} if the final square is reachable, {@code false} otherwise
-     */
-    public boolean isReachable(CoordPair start, CoordPair end, int maxMoves){
-        if(start == null || end == null){
-            throw new NullPointerException("Squares cannot be null");
-        }
-        if(maxMoves < 0){
-            throw new IllegalArgumentException("Square cannot be reached by a negative amount of moves");
-        }
-        if(maxMoves == 0){
-            // A 0 amount of moves we have to stay in the current square,
-            // hence the destination can be reached only if it the starting point
-            return start.equals(end);
-        }
-
-        // We retrieve the squares we can navigate to from the starting one
-        Set<CoordPair> navigableSquares = getNavigableSquares(start, maxMoves);
-
-        // We check whether we can reach the destination and we return accordingly
-        return navigableSquares.stream().anyMatch(coordPair -> coordPair.equals(end));
-    }
-
-    /**
      * Retrieve all the squares that are visible from the provided squares, according to the game rules
      * @param start The object representing the square
      * @return The set of objects representing the visible squares
      */
-    Set<Square> getVisibleSquares(Square start){
+    public Set<Square> getVisibleSquares(Square start){
         // Here we have to determine which squares are visible from the provided square
         // First we add all the squares that are in its same room
         Set<Square> visibleSquares = new HashSet<>(start.getRoom().getSquares());
@@ -199,54 +116,66 @@ public class Board extends Observable<ModelUpdate> {
     }
 
     /**
-     * Retrieve all the squares that surround the provided square and are at certain minimum and maximum distances
-     * If the provided distances are null it retrieves all surrounding squares on the board
-     * @param start The object representing the square
-     * @param minDist The minimum distance
-     * @param maxDist The maximum distance
-     * @return The set of objects representing the surrounding squares
+     * Performs a width-first recursive visit of the neighbouring squares starting from {@code start},
+     * with the possibility of setting a constrained direction, the type of navigable connections
+     * and the maximum number of steps.
+     * The visit stops when the maximum number of steps is reached or when the visitable neighbors
+     * are already in {@code alreadyVisited}
+     * @param start The square from which to start the navigation, not null
+     * @param alreadyVisited The set of already visited squares, not null, will be modified
+     * @param directionFilter A predicate which constraints the visit to a certain direction, not null
+     * @param connectionFilter A predicate which filters {@link SquareConnectionType}, this will be applied
+     *                         to determine which adjacent squares can be visited
+     * @param maxSteps the maximum number of steps after which the visit ends
+     *                 (if 0 will only add start, if negative it will not add nothing), optional
+     * @return A set with the visited squares, including the ones already visited
+     * @throws NullPointerException If start, alreadyVisited or connectionFilter are null
+     * @throws IllegalArgumentException If maxSteps is negative
      */
-    private Set<Square> getSurroundingSquares(Square start, Integer minDist, Integer maxDist){
-        Set<Square> surroundingSquares = new HashSet<>();
-
-        // If the provided distances are null, we set their value to cover the whole board
-        if(minDist == null){
-            minDist = 0;
+    public Set<Square> visitNeighbors(Square start,
+                                      Set<Square> alreadyVisited,
+                                      Predicate<Map.Entry<CardinalDirection, SquareConnection>> directionFilter,
+                                      Predicate<SquareConnection> connectionFilter,
+                                      Integer maxSteps) {
+        /* Check input parameters */
+        if (start == null || alreadyVisited == null || directionFilter == null || connectionFilter == null) {
+            throw new NullPointerException("Found null parameters");
         }
-        if(maxDist == null){
-            maxDist = squares.length;
+
+        /* Add this square */
+        if (maxSteps == null || maxSteps >= 0) {
+            alreadyVisited.add(start);
         }
 
-        // First we retrieve the X and Y coordinates of the square
-        int startX = start.getLocation().getX();
-        int startY = start.getLocation().getY();
+        /* Now determine the visitable neighbours */
+        Set<Square> toVisit = start.getAdjacentSquares().entrySet().stream()
+                /* Filter by direction */
+                .filter(directionFilter)
+                /* Retrieve the square connections */
+                .map(Map.Entry::getValue)
+                /* Filter by connection type */
+                .filter(connectionFilter)
+                /* Map to coordinates */
+                .map(SquareConnection::getSquare)
+                /* Map coordinates to squares */
+                .map(this::getSquare)
+                /* Strip out the already visited squares */
+                .filter(square -> !alreadyVisited.contains(square))
+                .collect(Collectors.toSet());
 
-        // Then we determine horizontal and vertical bounds
-        int sxBound = startX-maxDist;
-        int dxBound = startX+maxDist;
-        int upBound = startY-maxDist;
-        int dwBound = startY+maxDist;
-
-        // Then we check whether they exceed the bounds of the matrix
-        // In those cases we cap their value with the edge value
-        sxBound = sxBound < 0 ? 0 : sxBound;
-        dxBound = dxBound >= squares.length ? squares.length - 1: dxBound;
-        upBound = upBound < 0 ? 0 : upBound;
-        dwBound = dwBound >= squares[0].length ? squares[0].length - 1 : dwBound;
-
-        // Then we scan the squares inside the computed area
-        for(int x = sxBound; x <= dxBound; x++){
-            for(int y = upBound; y <= dwBound; y++){
-                // Here we compute the distance of the square from the provided one (manhattan distance)
-                int distance = Math.abs(x-startX) + Math.abs(y-startY);
-                // Here we require that the square is inside the distance bounds
-                if(distance <= maxDist && distance >= minDist){
-                    // Eventually we add it to the set
-                    surroundingSquares.add(squares[x][y]);
-                }
+        /* Proceed with visit */
+        if (!toVisit.isEmpty() && (maxSteps == null || maxSteps > 0)) {
+            for (Square square : toVisit) {
+                /* Visit each one of the neighbours and decrement maxSteps */
+                alreadyVisited.addAll(visitNeighbors(
+                        square,alreadyVisited,
+                        directionFilter, connectionFilter,
+                        maxSteps == null ? null : maxSteps - 1));
+                /* The newly visited squares are added to alreadyVisited */
             }
         }
-        return surroundingSquares;
+
+        return alreadyVisited;
     }
 
     /**
@@ -255,58 +184,56 @@ public class Board extends Observable<ModelUpdate> {
      * @param start the square from which start, not null
      * @param visibility determines on which condition you can move from a square to its adjacent
      * @param direction the visit will proceed only in this direction, optional
-     * @param minDist the minimum amount of moves from the starting square
-     * @param maxDist the maximum amount of moves from the starting square
+     * @param minDist the minimum amount of moves from the starting square, optional
+     * @param maxDist the maximum amount of moves from the starting square, optional
      * @return the set of visited squares matching the specified filters
      * @throws IllegalArgumentException if distances are negative or minDist &gt; maxDist
      * @throws NullPointerException if start or visibility are null
      */
-    public Set<Square> getScopedSquares (CoordPair start, VisibilityEnum visibility, CardinalDirection direction,
-                                         Integer minDist, Integer maxDist) {
+    public Set<Square> querySquares(Square start, VisibilityEnum visibility, CardinalDirection direction,
+                                    Integer minDist, Integer maxDist) {
         if (start == null || visibility == null) {
-            throw new NullPointerException("start and visibility must be not null");
+            throw new NullPointerException("Start and visibility must be non-null");
         }
-        if ((minDist != null && minDist < 0) || (maxDist != null && maxDist < 0) ||
-                (minDist != null && maxDist != null && minDist > maxDist)) {
-            throw new IllegalArgumentException();
-        }
-        // We first retrieve the surrounding squares
-        Set<Square> surroundingSquares = this.getSurroundingSquares(this.getSquare(start), minDist, maxDist);
-        // Then we apply the visibility filter
-        Set<Square> scopedSquares = visibility.getFilterFunction().apply(this.getSquare(start), this, surroundingSquares);
-        // Then we apply the cardinality filter (if present)
-        if(direction != null){
-            // we retrieve the squares that are aligned, in the provided direction, to the square
-            Set<Square> alignedSquares = new HashSet<>(Collections.singletonList(this.getSquare(start)));
-            // We get the connection until we find a null value (board edge)
-            // Or until we find a wall (if the visibility is not set to IGNORE_WALLS)
-            SquareConnection connection = this.getSquare(start).getAdjacentSquares().getConnection(direction);
-            while(connection!=null && (visibility == VisibilityEnum.IGNORE_WALLS || connection.getConnectionType() != SquareConnectionType.WALL)){
-                // We retrieve the connected square
-                Square connectedSquare = this.getSquare(connection.getSquare());
-                // And add it to the set
-                alignedSquares.add(connectedSquare);
-                // Then we get the next connection
-                connection = connectedSquare.getAdjacentSquares().getConnection(direction);
-            }
-            // We eventually remove from the set those squares that are not aligned
-            scopedSquares = scopedSquares.stream().filter(alignedSquares::contains).collect(Collectors.toSet());
-        }
-        return scopedSquares;
-    }
+        /* Distance parameters are checked by the visiting function */
 
-    /**
-     * Retrieves the squares composing a path between two provided squares
-     * @param start The object representing the starting square
-     * @param end The object representing the destination square
-     * @return A list of objects representing the squares composing the path
-     */
-    public List<Square> getPath(CoordPair start, CoordPair end){
-        if(start == null || end == null){
-            throw new NullPointerException("Squares cannot be null");
+        /* Retrieve the squares visible according to the visibility modifier */
+        Stream<Square> queried = visibility.squareGenerator.apply(start, this);
+
+        /* Apply distance and direction modifiers if needed */
+        if (direction != null || minDist != null || maxDist != null) {
+            /* Generate direction filter */
+            Predicate<Map.Entry<CardinalDirection, SquareConnection>> directionFilter;
+            if (direction != null) {
+                directionFilter = entry -> entry.getKey() == direction; /* Travel only in that direction */
+            } else {
+                directionFilter = entry -> true; /* All directions are ok */
+            }
+
+            /* Visit within minimum distance (their distance is < min. dist.-1) */
+            /* Note that passing a negative parameter will cause toRemove to be empty */
+            int limit = minDist == null ? -1 : minDist - 1;
+            Set<Square> toRemove = visitNeighbors(start,
+                    new HashSet<>(),
+                    directionFilter,
+                    visibility.connectionFilter,
+                    limit);
+
+            /* Then visit within max distance */
+            Set<Square> toKeep = visitNeighbors(start,
+                    new HashSet<>(),
+                    directionFilter,
+                    visibility.connectionFilter,
+                    maxDist);
+
+            /* Remove the squares within min distance */
+            toKeep.removeAll(toRemove);
+
+            /* Intersect with the squares queried for visibility */
+            queried = queried.filter(toKeep::contains);
         }
-        //TODO: Implement this method
-        return Collections.emptyList();
+
+        return queried.collect(Collectors.toSet());
     }
 
     /**
@@ -318,10 +245,19 @@ public class Board extends Observable<ModelUpdate> {
         if(location == null){
             throw new NullPointerException("Location cannot be null");
         }
+        return getSquare(location.getX(), location.getY());
+    }
 
+    /**
+     * Retrieves the square at the specified coordinates, if it exists
+     * @param x x coordinate (horizontal, left-zero-based)
+     * @param y y coordinate (vertical, top-zero-based)
+     * @return the square at specified cordinates, null if it doesn't exist
+     */
+    public Square getSquare(int x, int y) {
         try {
-            return squares[location.getX()][location.getY()];
-        } catch (IndexOutOfBoundsException e) {
+            return squares[x][y];
+        } catch (IndexOutOfBoundsException ignore) {
             return null;
         }
     }
@@ -355,7 +291,7 @@ public class Board extends Observable<ModelUpdate> {
      * @param color color of the spawn point
      * @param square square where to spawn
      */
-    public void setSpawnPoint(AmmoCube color, SpawnSquare square) {
+    void setSpawnPoint(AmmoCube color, SpawnSquare square) {
         spawnPoints.put(color, square);
     }
 }
