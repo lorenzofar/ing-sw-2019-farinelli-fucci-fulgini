@@ -1,12 +1,19 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.model;
 
+import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionCardCreator;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionCardEnum;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionEnum;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.BoardCreator;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCardCreator;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.powerup.PowerupCreator;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.WeaponCreator;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.player.PlayerColor;
 import it.polimi.deib.se2019.sanp4.adrenaline.utils.JSONUtils;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.logging.LogManager;
 
 /**
@@ -49,5 +56,14 @@ public class ModelTestUtil {
 
     public static void disableLogging() {
         LogManager.getLogManager().reset();
+    }
+
+    public static ActionCard generateActionCard() {
+        List<ActionEnum> actions = Arrays.asList(ActionEnum.ADRENALINE_SHOOT, ActionEnum.ADRENALINE_GRAB);
+        return new ActionCard(2, ActionCardEnum.ADRENALINE2, actions, ActionEnum.RELOAD);
+    }
+
+    public static Player generatePlayer(String name) {
+        return new Player(name, generateActionCard(), PlayerColor.GREEN);
     }
 }

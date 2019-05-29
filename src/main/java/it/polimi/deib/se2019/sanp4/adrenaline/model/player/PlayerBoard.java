@@ -282,4 +282,12 @@ public class PlayerBoard extends Observable<ModelUpdate> {
     public boolean isDead(){
         return damages.size() >= KILLSHOT_DAMAGE;
     }
+
+    /**
+     * Returns the state of the player board (regular, frenzy)
+     * @return the state of the player board
+     */
+    public PlayerBoardState getState() {
+        return state;
+    }
 }

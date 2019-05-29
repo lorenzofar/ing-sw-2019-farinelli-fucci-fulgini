@@ -505,7 +505,7 @@ public class Player extends Observable<ModelUpdate> {
         return color;
     }
 
-
+    @Override
     public void notifyObservers(ModelUpdate update) {
         super.notifyObservers(update);
     }

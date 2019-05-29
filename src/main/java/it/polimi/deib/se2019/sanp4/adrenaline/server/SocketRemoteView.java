@@ -157,7 +157,7 @@ public class SocketRemoteView extends RemoteObservable<ViewEvent>
      */
     @Override
     public <T extends Serializable> void performRequest(ChoiceRequest<T> request) throws IOException {
-
+        sendCommand(new PerformRequestCommand(request));
     }
 
     /**

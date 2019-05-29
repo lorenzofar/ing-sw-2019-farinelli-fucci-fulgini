@@ -26,7 +26,6 @@ public class DrawnPowerupUpdateTest {
 
         DrawnPowerupUpdate update = new DrawnPowerupUpdate(player, powerupCard);
         String s = objectMapper.writeValueAsString(update);
-        System.out.println(s);
         DrawnPowerupUpdate drawnPowerupUpdate = objectMapper.readValue(s, DrawnPowerupUpdate.class);
 
         assertEquals(player, drawnPowerupUpdate.getPlayer());

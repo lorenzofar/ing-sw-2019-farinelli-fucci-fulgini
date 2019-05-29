@@ -67,11 +67,7 @@ public abstract class RemoteRoutingObservable<T> {
     public void notifyObservers(String username, T event) {
         Set<RemoteObserver<T>> observers = observersMap.get(username);
         for (RemoteObserver<T> observer : observers) {
-            try {
-                observer.update(event);
-            } catch (IOException ignore) {
-                /* Ignore the exception: this observer is not able to get the update */
-            }
+            safeNotify(observer, event);
         }
     }
 

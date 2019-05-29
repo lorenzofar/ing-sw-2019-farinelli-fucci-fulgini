@@ -60,5 +60,7 @@ public class AmmoCardCreatorTest {
     @Test
     public void loadAmmoCardPack_StandardPack_ShouldSucceed() {
         AmmoCardCreator.loadAmmoCardPack("/assets/standard_ammocards.json");
+        /* Just check the count */
+        assertEquals(36, AmmoCardCreator.getAmmoCardDeck().size());
     }
 }
