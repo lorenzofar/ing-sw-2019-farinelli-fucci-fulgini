@@ -1,34 +1,39 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.common.observer;
 
+import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
 
-import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
+@RunWith(MockitoJUnitRunner.class)
 public class ObservableObserverTest {
 
     private String message = "Message";
 
+    @Mock
+    private static Observer<String> observer;
+
+    @Mock
+    private static Observer<String> anotherObserver;
+
+    private static ObservableImpl observable;
+
+    private static RoutingObservableImpl routingObservable;
+
+    @Before
+    public void setUp() {
+        observable = new ObservableImpl();
+        routingObservable = new RoutingObservableImpl();
+    }
+
     public class ObservableImpl extends Observable<String>{
         ObservableImpl(){
             super();
-        }
-    }
-
-    public class ObserverImpl implements Observer<String> {
-
-        boolean shouldReceiveUpdate;
-
-        @Override
-        public void update(String event) {
-            if (shouldReceiveUpdate) {
-                assertEquals(message, event);
-            } else {
-                fail();
-            }
         }
     }
 
@@ -40,95 +45,74 @@ public class ObservableObserverTest {
 
     @Test
     public void addObserver_Notify_ShouldSucceed(){
-        ObservableImpl observableImpl = new ObservableImpl();
-        ObserverImpl observer = new ObserverImpl();
-        observableImpl.addObserver(observer);
-        observer.shouldReceiveUpdate = true;
-        observableImpl.notifyObservers(message);
+        observable.addObserver(observer);
+        observable.notifyObservers(message);
+
+        /* Check that the observer received the message */
+        verify(observer).update(message);
     }
 
     @Test
-    public void removeObserver_ShouldSucceed(){
-        ObservableImpl observableImpl = new ObservableImpl();
-        ObserverImpl observer = new ObserverImpl();
-        observableImpl.addObserver(observer);
-        observer.shouldReceiveUpdate = true;
-        observableImpl.notifyObservers(message);
-        observableImpl.removeObserver(observer);
-        observer.shouldReceiveUpdate = false;
-        observableImpl.notifyObservers(message);
+    public void removeObserver_thenNotify_shouldNotBeNotified(){
+        observable.addObserver(observer);
+        observable.removeObserver(observer);
+
+        observable.notifyObservers(message);
+
+        verify(observer, never()).update(anyString());
     }
 
     @Test
     public void removeNotAddedObserver_ShouldNotThrowException(){
-        ObservableImpl observableImpl = new ObservableImpl();
-        ObserverImpl observer = new ObserverImpl();
-        observableImpl.removeObserver(observer);
+        observable.removeObserver(observer);
     }
 
     @Test
     public void routingAddObserver_Notify_ShouldSucceed(){
-        ObserverImpl observer = new ObserverImpl();
-        RoutingObservableImpl routingObservable = new RoutingObservableImpl();
         routingObservable.addObserver("Giammarco", observer);
-        observer.shouldReceiveUpdate = true;
         routingObservable.notifyObservers(message);
+
+        verify(observer).update(message);
     }
 
     @Test
     public void routingRemoveObserver_ShouldSucceed(){
-        ObserverImpl observer = new ObserverImpl();
-        RoutingObservableImpl routingObservable = new RoutingObservableImpl();
         routingObservable.addObserver("Giammarco", observer);
         routingObservable.removeObserver("Giammarco", observer);
         routingObservable.removeObserver("Giammarco", observer);
-        observer.shouldReceiveUpdate = false;
         routingObservable.notifyObservers(message);
+
+        verify(observer, never()).update(anyString());
     }
 
     @Test
     public void routingRemoveAllObservers_ShouldSucceed(){
-        ObserverImpl observer = new ObserverImpl();
-        ObserverImpl observer2 = new ObserverImpl();
-        RoutingObservableImpl routingObservable = new RoutingObservableImpl();
         routingObservable.addObserver("Giammarco", observer);
-        routingObservable.addObserver("Giammarco", observer2);
+        routingObservable.addObserver("Giammarco", anotherObserver);
         routingObservable.removeAllObservers("Giammarco");
-        observer.shouldReceiveUpdate = false;
-        observer2.shouldReceiveUpdate = false;
         routingObservable.notifyObservers(message);
+
+        verify(observer, never()).update(anyString());
+        verify(anotherObserver, never()).update(anyString());
     }
 
     @Test
-    public void routingAddObserver_NotifyUser_ShouldSucceed(){
-        ObserverImpl observer = new ObserverImpl();
-        RoutingObservableImpl routingObservable = new RoutingObservableImpl();
+    public void routingAddObserver_NotifyUser_NullUserProvided_ShouldNotNotify(){
         routingObservable.addObserver("Giammarco", observer);
-        observer.shouldReceiveUpdate = true;
-        routingObservable.notifyObservers("Giammarco", message);
-    }
+        routingObservable.notifyObservers((String) null, message);
 
-    @Test
-    public void routingAddObserver_NotifyUser_NullUserProvided_ShouldSucceed(){
-        ObserverImpl observer = new ObserverImpl();
-        RoutingObservableImpl routingObservable = new RoutingObservableImpl();
-        routingObservable.addObserver("Giammarco", observer);
-        observer.shouldReceiveUpdate = true;
-        String user = null;
-        routingObservable.notifyObservers(user, message);
+        verify(observer, never()).update(message);
     }
 
     @Test
     public void routingNotifyObservers_ShouldSucceed(){
-        ObserverImpl observerG = new ObserverImpl();
-        ObserverImpl observerS = new ObserverImpl();
         RoutingObservableImpl routingObservable = new RoutingObservableImpl();
-        routingObservable.addObserver("Giammarco", observerG);
-        routingObservable.addObserver("Stefano", observerS);
-        observerG.shouldReceiveUpdate = true;
-        observerS.shouldReceiveUpdate = true;
+        routingObservable.addObserver("Giammarco", observer);
+        routingObservable.addObserver("Stefano", anotherObserver);
         routingObservable.notifyObservers(Arrays.asList("Stefano", "Giammarco", "German"), message);
 
+        verify(observer).update(message);
+        verify(anotherObserver).update(message);
     }
 
 
