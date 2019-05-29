@@ -191,7 +191,7 @@ public class LobbyTest {
     }
 
     @Test
-    public void run_thenInterrupt_shouldEmptyWaitingListAndNotify() throws IOException {
+    public void shutdown_shouldEmptyWaitingListAndNotify() throws IOException {
         Lobby lobby = new Lobby();
 
         /* Artificially create a waiting list */
@@ -199,10 +199,7 @@ public class LobbyTest {
         Map<String, RemoteView> waitingList = lobby.getWaitingPlayers();
         waitingList.put("name", remote);
 
-        Thread t = new Thread(lobby);
-
-        t.start();
-        t.interrupt();
+        lobby.shutdown();
 
         /* Check that the waiting list has been emptied and that the player has been updated */
         verify(remote).update(any(LobbyUpdate.class));

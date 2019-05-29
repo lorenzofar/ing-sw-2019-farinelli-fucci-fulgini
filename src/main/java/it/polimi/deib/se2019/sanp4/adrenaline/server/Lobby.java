@@ -238,7 +238,7 @@ public class Lobby implements Runnable {
      * Shuts down this lobby when the thread it runs in is interrupted.
      * This causes the disconnection of all waiting players
      */
-    private void shutdown() {
+    void shutdown() {
         logger.log(Level.INFO, "Shutting down Lobby");
         /* Stop listening for incoming players */
         stayActive = false;
