@@ -145,4 +145,15 @@ public abstract class SquareView implements Serializable {
             this.adjacentMap = adjacentMap;
         }
     }
+
+    @Override
+    public boolean equals(Object obj){
+        if(obj == this) return true;
+        if(!(obj instanceof SquareView)) return false;
+        return (players == ((SquareView) obj).players
+                && location == ((SquareView) obj).location
+                && roomColor == ((SquareView) obj).roomColor
+                && adjacentMap == ((SquareView) obj).adjacentMap);
+    }
+
 }

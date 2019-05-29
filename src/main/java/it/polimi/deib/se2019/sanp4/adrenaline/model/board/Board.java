@@ -1,5 +1,7 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.model.board;
 
+import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.BoardView;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.SquareView;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.Observable;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.ModelUpdate;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.PlayerMoveUpdate;
@@ -293,5 +295,23 @@ public class Board extends Observable<ModelUpdate> {
      */
     void setSpawnPoint(AmmoCube color, SpawnSquare square) {
         spawnPoints.put(color, square);
+    }
+
+    /**
+     * Generates the {@link BoardView} of the board
+     * @return the board view
+     */
+    public BoardView generateView(){
+        SquareView[][] squareViewMatrix = new SquareView[squares.length][squares[0].length];
+        BoardView view = new BoardView(squares.length, squares[0].length);
+        for(int x = 0; x < squares.length; x++) {
+            for(int y = 0; y < squares[0].length; y++) {
+                if (squares[x][y] != null) {
+                    squareViewMatrix[x][y] = squares[x][y].generateView();
+                }
+            }
+        }
+        view.setSquares(squareViewMatrix);
+        return view;
     }
 }

@@ -3,6 +3,7 @@ package it.polimi.deib.se2019.sanp4.adrenaline.model.board;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.BoardNotFoundException;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.ModelTestUtil;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.BoardView;
 import it.polimi.deib.se2019.sanp4.adrenaline.utils.JSONUtils;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -366,5 +367,17 @@ public class BoardTest {
 
         assertTrue(visited.containsAll(expected));
         assertTrue(expected.containsAll(visited));
+    }
+
+    @Test
+    public void generateView_ShouldSucceed() {
+        BoardView boardView = testBoard.generateView();
+        for (int x = 0; x < boardView.getColumnsCount(); x++) {
+            for (int y = 0; y < boardView.getRowsCount(); y++) {
+                if (boardView.getSquares()[x][y] != null) {
+                    assertEquals(new CoordPair(x,y), boardView.getSquares()[x][y].getLocation());
+                }
+            }
+        }
     }
 }
