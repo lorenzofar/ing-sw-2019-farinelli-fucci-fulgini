@@ -21,14 +21,13 @@ public class Lobby implements Runnable {
     private boolean stayActive = true;
 
     /** Minimum number of players to start a match */
-    private static final int MIN_PLAYERS = 3;
+    public static final int MIN_PLAYERS = 3;
 
     /** Maxmimum number of players in a match */
-    private static final int MAX_PLAYERS = 5;
+    public static final int MAX_PLAYERS = 5;
 
     /** Waiting time of the timer, in seconds (default 30 sec.) */
-    private static final int WAITING_TIME = Integer.parseInt((String)AdrenalineProperties.getProperties()
-            .getOrDefault("adrenaline.waitingtime", "20"));
+    private final int waitingTime;
 
     /** This will contain the players coming from the server */
     private BlockingQueue<Map.Entry<String, RemoteView>> incomingPlayers = new LinkedBlockingQueue<>();
@@ -41,6 +40,14 @@ public class Lobby implements Runnable {
 
     /** The return value of the timer */
     private Future<?> timer;
+
+    /**
+     * Creates an empty lobby and reads the configured timeout
+     */
+    public Lobby() {
+        waitingTime = Integer.parseInt((String)AdrenalineProperties.getProperties()
+                .getOrDefault("adrenaline.waitingtime", "30"));
+    }
 
     /**
      * Inserts an incoming player that has just logged in in the incoming queue.
@@ -91,7 +98,7 @@ public class Lobby implements Runnable {
     }
 
     synchronized void timerCallback() {
-        logger.log(Level.INFO, "Callback");
+        logger.log(Level.INFO, "Lobby timer callback");
         /* Disconnect all inactive players */
         disconnectInactive();
         /* Check if we still have enough players */
@@ -102,7 +109,7 @@ public class Lobby implements Runnable {
         timer = null; /* Reset the timer */
     }
 
-    synchronized void triggerMatchStart() {
+    private synchronized void triggerMatchStart() {
         /* Remove the players from the waiting map and pass them to the server */
         Map<String, RemoteView> players = new HashMap<>(waitingPlayers);
         waitingPlayers.clear();
@@ -177,15 +184,33 @@ public class Lobby implements Runnable {
         }
     }
 
-    synchronized void startTimer() {
-        timer = executor.schedule(this::timerCallback, WAITING_TIME, TimeUnit.SECONDS);
+    private synchronized void startTimer() {
+        timer = executor.schedule(this::timerCallback, waitingTime, TimeUnit.SECONDS);
     }
 
-    synchronized void stopTimer() {
+    private synchronized void stopTimer() {
         if (timer != null) {
             timer.cancel(true);
             timer = null;
         }
+    }
+
+    /* ========= GETTERS ========== */
+
+    /**
+     * Returns the blocking queue with incoming players
+     * @return the blocking queue with incoming players
+     */
+    BlockingQueue<Map.Entry<String, RemoteView>> getIncomingPlayers() {
+        return incomingPlayers;
+    }
+
+    /**
+     * Returns a map with the players waiting for a match to be created
+     * @return a map with the players waiting for a match to be created
+     */
+    ConcurrentMap<String, RemoteView> getWaitingPlayers() {
+        return waitingPlayers;
     }
 
     /* ========= RUNNING ========== */
@@ -196,6 +221,7 @@ public class Lobby implements Runnable {
     @Override
     public void run() {
         logger.log(Level.FINER, "Running lobby");
+        stayActive = true;
         while (stayActive) {
             try {
                 /* This call blocks waiting for a player */
@@ -209,13 +235,17 @@ public class Lobby implements Runnable {
     }
 
     /**
-     * Shuts down this lobby when the thread it runs in is interrupted
+     * Shuts down this lobby when the thread it runs in is interrupted.
+     * This causes the disconnection of all waiting players
      */
-    void shutdown() {
+    private void shutdown() {
         logger.log(Level.INFO, "Shutting down Lobby");
         /* Stop listening for incoming players */
         stayActive = false;
         /* Stop any running timer */
         stopTimer();
+        /* Empty the waiting list and notify players */
+        notifyWaitingList();
+        waitingPlayers.clear();
     }
 }
