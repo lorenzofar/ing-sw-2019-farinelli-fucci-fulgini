@@ -21,6 +21,7 @@ import java.util.Set;
  * Please note that JSON schemas are not loaded automatically, so they should be loaded on startup.
  */
 public class JSONUtils {
+
     private static Schema weaponPackSchema;
     private static Schema weaponSchema;
     private static Schema powerupPackSchema;
@@ -28,7 +29,8 @@ public class JSONUtils {
     private static Schema actionCardPackSchema;
     private static Schema boardPackSchema;
     private static Schema boardSchema;
-    /* TODO: Add more schemas */
+
+    private static final String SCHEMA_NOT_LOADED = "You must load the schema first!";
 
     /** Object mapper specifically configured for network streams */
     private static final ObjectMapper networkObjectMapper = new ObjectMapper()
@@ -89,7 +91,7 @@ public class JSONUtils {
      * @throws IllegalStateException if the validation schema had not been previously loaded
      */
     public static void validateWeaponPack(JSONObject pack) {
-        if (weaponPackSchema == null) throw new IllegalStateException("You must load the schema first!");
+        if (weaponPackSchema == null) throw new IllegalStateException(SCHEMA_NOT_LOADED);
         weaponPackSchema.validate(pack);
     }
 
@@ -108,7 +110,7 @@ public class JSONUtils {
      * @throws IllegalStateException if the validation schema had not been previously loaded
      */
     public static void validateWeapon(JSONObject weapon) {
-        if (weaponSchema == null) throw new IllegalStateException("You must load the schema first!");
+        if (weaponSchema == null) throw new IllegalStateException(SCHEMA_NOT_LOADED);
         weaponSchema.validate(weapon);
     }
 
@@ -127,7 +129,7 @@ public class JSONUtils {
      * @throws IllegalStateException if the validation schema had not been previously loaded
      */
     public static void validatePowerupPack(JSONObject pack){
-        if (powerupPackSchema == null) throw new IllegalStateException("You must load the powerup schema first!");
+        if (powerupPackSchema == null) throw new IllegalStateException(SCHEMA_NOT_LOADED);
         powerupPackSchema.validate(pack);
     }
 
@@ -146,7 +148,7 @@ public class JSONUtils {
      * @throws IllegalStateException if the validation schema had not been previously loaded
      */
     public static void validateAmmoCardPack(JSONObject pack){
-        if (ammoCardPackSchema == null) throw new IllegalStateException("You must load the ammo card pack schema first!");
+        if (ammoCardPackSchema == null) throw new IllegalStateException(SCHEMA_NOT_LOADED);
         ammoCardPackSchema.validate(pack);
     }
 
@@ -165,7 +167,7 @@ public class JSONUtils {
      * @throws IllegalStateException if the validation schema had not been previously loaded
      */
     public static void validateActionCardPack(JSONObject pack){
-        if (actionCardPackSchema == null) throw new IllegalStateException("You must load the action card pack schema first!");
+        if (actionCardPackSchema == null) throw new IllegalStateException(SCHEMA_NOT_LOADED);
         actionCardPackSchema.validate(pack);
     }
 
@@ -184,7 +186,7 @@ public class JSONUtils {
      * @throws IllegalStateException if the validation schema had not been previously loaded
      */
     public static void validateBoardPack(JSONObject pack){
-        if (boardPackSchema == null) throw new IllegalStateException("You must load the board pack schema first!");
+        if (boardPackSchema == null) throw new IllegalStateException(SCHEMA_NOT_LOADED);
         boardPackSchema.validate(pack);
     }
 
@@ -203,7 +205,7 @@ public class JSONUtils {
      * @throws IllegalStateException if the validation schema had not been previously loaded
      */
     public static void validateBoard(JSONObject board) {
-        if (boardSchema == null) throw new IllegalStateException("You must load the schema first!");
+        if (boardSchema == null) throw new IllegalStateException(SCHEMA_NOT_LOADED);
         boardSchema.validate(board);
     }
 

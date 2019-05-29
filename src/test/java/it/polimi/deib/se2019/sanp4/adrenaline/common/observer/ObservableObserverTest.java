@@ -8,6 +8,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.Arrays;
 
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -64,7 +65,11 @@ public class ObservableObserverTest {
 
     @Test
     public void removeNotAddedObserver_ShouldNotThrowException(){
-        observable.removeObserver(observer);
+        try {
+            observable.removeObserver(observer);
+        } catch (RuntimeException e) {
+            fail();
+        }
     }
 
     @Test
