@@ -159,51 +159,6 @@ public class Match extends Observable {
         suspendedPlayer.setState(PlayerState.ONLINE);
     }
 
-    /**
-     * Prepares the board for the next turn, calling {@link #refillBoard()}
-     */
-    public void prepareTurn(){
-        this.refillBoard();
-    }
-
-    /**
-     * Based on the current turn, picks the next player who is able to play
-     * and sets up its turn.
-     * If there are no online players, this will keep the current turn.
-     * This methods requires the list of players not to be empty
-     */
-    public void selectNextTurn(){
-        int currentPlayerIndex;
-
-        if (currentTurn == null){
-            /* This is the first turn, so pick the first player who is able to play */
-            currentPlayerIndex = -1;
-        } else {
-            /* Get the index of the player owning the current turn */
-            currentPlayerIndex = players.indexOf(currentTurn.getTurnOwner());
-        }
-
-
-        Player nextPlayer;
-        PlayerTurn nextTurn = null;
-        int nextPlayerIndex = currentPlayerIndex + 1; /* Go to the next player */
-        do {
-            /* If we reached the end of the list, we start again */
-            if (nextPlayerIndex >= players.size()) nextPlayerIndex = 0;
-
-            nextPlayer = players.get(nextPlayerIndex);
-
-            if (nextPlayer.getState().canPlay()) {
-                /* This player is the next player */
-                nextTurn = new PlayerTurn(nextPlayer);
-                setCurrentTurn(nextTurn); /* Set it as the new turn and notify the players */
-            } else {
-                nextPlayerIndex++;
-            }
-        } while (nextTurn == null /* Stop if there are no players who are able to play */
-                && nextPlayerIndex != currentPlayerIndex + 1);
-    }
-
 
     /**
      * Ends the current turn, if the owner of the turn was the last one, also ends the match
@@ -249,7 +204,7 @@ public class Match extends Observable {
      * Refills all the squares in the board with their items (e.g. weapons, powerups)
      * drawn from the stacks. Calls {@link Square#refill(Match)} on each square of the board
      */
-    void refillBoard() {
+    public void refillBoard() {
         Collection<Square> squares = board.getSquares();
         for (Square sq : squares) {
             sq.refill(this);
@@ -340,7 +295,7 @@ public class Match extends Observable {
     /**
      * Sets the current turn.
      * A null value will reset the turn sequence, i.e. the first player will be the
-     * next selected player when calling {@link #selectNextTurn()}, so a null value
+     * next selected player when selecting the next turn, so a null value
      * should be passed only for test purposes
      * @param currentTurn The object representing the current turn
      */

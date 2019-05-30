@@ -111,8 +111,8 @@ public class MatchTest {
 
     @Test
     public void isPlayerTurn_checkConsistency() {
-        mockMatch.selectNextTurn();
-        Player player = mockMatch.getCurrentTurn().getTurnOwner();
+        Player player = mockMatch.getPlayers().get(0);
+        mockMatch.setCurrentTurn(new PlayerTurn(player));
 
         /* Check that the overloaded methods return the same value */
         assertTrue(mockMatch.isPlayerTurn(player));
@@ -207,47 +207,6 @@ public class MatchTest {
     }
 
     /* ======== TURN-RELATED METHODS ========= */
-
-    @Test
-    public void selectNextTurn_noCurrentTurn_shouldSelectFirstPlayer() {
-        /* Check that there is no current turn */
-        assertNull(mockMatch.getCurrentTurn());
-
-        /* Ask to select the next turn */
-        mockMatch.selectNextTurn();
-
-        /* Check that the first player has been selected */
-        Player first = mockMatch.getPlayers().get(0);
-        assertTrue(mockMatch.isPlayerTurn(first));
-
-        /* Now delete the selected turn in order not to have side-effects */
-        mockMatch.setCurrentTurn(null);
-    }
-
-    @Test
-    public void selectNextTurn_suspendedPlayer_shouldBeSkipped() {
-        assertNull(mockMatch.getCurrentTurn()); /* Check that there is no current turn */
-        mockMatch.selectNextTurn(); /* Selects the first player */
-
-        /* Now we suspend the second player */
-        Player suspended = mockMatch.getPlayers().get(1);
-        suspended.setState(PlayerState.SUSPENDED);
-
-        mockMatch.selectNextTurn();
-
-        /* Check that the third player has been picked */
-        Player third = mockMatch.getPlayers().get(2);
-        assertTrue(mockMatch.isPlayerTurn(third));
-
-        /* Select the next player again and check that the first player is selected */
-        mockMatch.selectNextTurn();
-        Player first = mockMatch.getPlayers().get(0);
-        assertTrue(mockMatch.isPlayerTurn(first));
-
-        /* Delete side-effects */
-        suspended.setState(PlayerState.ONLINE);
-        mockMatch.setCurrentTurn(null);
-    }
 
     @Test
     public void refillAmmoSquare_empty_ShouldBeRefilled() {
