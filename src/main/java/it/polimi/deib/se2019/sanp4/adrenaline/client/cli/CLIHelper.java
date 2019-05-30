@@ -3,9 +3,11 @@ package it.polimi.deib.se2019.sanp4.adrenaline.client.cli;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.ColoredObject;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.BoardView;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.PlayerBoardView;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.SpawnSquareView;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.SquareView;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.CardinalDirection;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.CoordPair;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCube;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCubeCost;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.powerup.PowerupCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.WeaponCard;
@@ -90,6 +92,7 @@ class CLIHelper {
     private static final int CARD_WIDTH = 20;
     private static final int FULLSCREEN_WIDTH = 119;
     private static final int FULLSCREEN_TITLE_WIDTH = 40;
+    private static final int SPAWN_WEAPONS_CELL_DIM = 40;
 
     /* ===== TEMPLATES ====== */
     private static final String TRISTRING_TEMPLATE = "%s%s%s";
@@ -868,6 +871,45 @@ class CLIHelper {
         );
         expandStringRendering(renderedTrack, generateLine(HORIZONTAL_BORDER, trackWidth, LEFT_BOTTOM_CORNER, RIGHT_BOTTOM_CORNER));
         return renderedTrack;
+    }
+
+    /* ===== SPAWN SQUARES WEAPONS ===== */
+
+    /**
+     * Renders a cell showing information about the weapons contained in a spawn square
+     *
+     * @param color    The object representing the color of the spawn square
+     * @param location The object representing the location of the square (in coordinates)
+     * @param board    The object representing the board view
+     * @return The textual representation of the cell
+     */
+    private static List<List<String>> renderSpawnWeaponsCell(ColoredObject color, CoordPair location, BoardView board) {
+        //TODO: Use weapons factory to retrieve weapon names
+        List<List<String>> renderedCell = new ArrayList<>();
+        List<String> weapons = ((SpawnSquareView) board.getSquare(location)).getWeapons();
+        expandStringRendering(renderedCell, generateLine(HORIZONTAL_BORDER, SPAWN_WEAPONS_CELL_DIM, LEFT_TOP_CORNER, RIGHT_TOP_CORNER));
+        expandStringRendering(renderedCell, generateLine(BLANK, SPAWN_WEAPONS_CELL_DIM, VERTICAL_BORDER, VERTICAL_BORDER));
+        fillLineWithText(renderedCell.get(renderedCell.size() - 1), String.format("%d,%d", location.getX(), location.getY()), 2, ANSI_BOLD, color.getAnsiCode());
+        expandStringRendering(renderedCell, generateLine(LIGHT_HORIZONTAL_BORDER, SPAWN_WEAPONS_CELL_DIM, LIGHT_LEFT_VERTICAL_SEPARATOR, LIGHT_RIGHT_VERTICAL_SEPARATOR));
+        weapons.stream().filter(Objects::nonNull).forEach(weapon -> {
+            expandStringRendering(renderedCell, generateLine(BLANK, SPAWN_WEAPONS_CELL_DIM, VERTICAL_BORDER, VERTICAL_BORDER));
+            fillLineWithText(renderedCell.get(renderedCell.size() - 1), weapon, 2);
+        });
+        expandStringRendering(renderedCell, generateLine(HORIZONTAL_BORDER, SPAWN_WEAPONS_CELL_DIM, LEFT_BOTTOM_CORNER, RIGHT_BOTTOM_CORNER));
+        return renderedCell;
+    }
+
+    /**
+     * Renders a table showing information about the weapons contained in all the provided spawn squares
+     *
+     * @param spawnSquares The map storing the spawn square for each color
+     * @param board        The object representing the board view
+     * @return The textual representation of the table
+     */
+    private static List<List<String>> renderSpawnWeaponsTable(Map<AmmoCube, CoordPair> spawnSquares, BoardView board) {
+        List<List<List<String>>> renderedCells = new ArrayList<>();
+        spawnSquares.forEach((color, location) -> renderedCells.add(renderSpawnWeaponsCell(color, location, board)));
+        return concatRenderedElements(renderedCells, 1);
     }
 
     /* ===== RENDERINGS MANIPULATION ===== */
