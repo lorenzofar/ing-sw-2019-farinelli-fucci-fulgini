@@ -2,6 +2,7 @@ package it.polimi.deib.se2019.sanp4.adrenaline.controller;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.FullCapacityException;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.PowerupCardRequest;
+import it.polimi.deib.se2019.sanp4.adrenaline.controller.answerers.CancelRequestAnswer;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.requests.CompletableChoice;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.ModelTestUtil;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.Board;
@@ -90,11 +91,7 @@ public class SpawnControllerTest {
         /* Set up the username of the player (different from the other test) */
         when(mockView.getUsername()).thenReturn("b");
         /* Mock the user's answer */
-        doAnswer(invocationOnMock -> {
-            /* Intercept the request */
-            PowerupCardRequest req = (PowerupCardRequest) invocationOnMock.getArguments()[0];
-            return new CompletableChoice<>(req).cancel();
-        }).when(mockView).sendChoiceRequest(captor.capture());
+        doAnswer(new CancelRequestAnswer()).when(mockView).sendChoiceRequest(captor.capture());
 
         try {
             /* Test the first spawn */
@@ -207,11 +204,7 @@ public class SpawnControllerTest {
         Player player = match.getPlayerByName(mockView.getUsername());
 
         /* Mock the user's answer */
-        doAnswer(invocationOnMock -> {
-            /* Intercept the request */
-            PowerupCardRequest req = (PowerupCardRequest) invocationOnMock.getArguments()[0];
-            return new CompletableChoice<>(req).cancel();
-        }).when(mockView).sendChoiceRequest(captor.capture());
+        doAnswer(new CancelRequestAnswer()).when(mockView).sendChoiceRequest(captor.capture());
 
         /* Move the player out of a spawn point */
         Board board = match.getBoard();
