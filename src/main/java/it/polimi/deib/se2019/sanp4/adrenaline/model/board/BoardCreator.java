@@ -91,7 +91,7 @@ public class BoardCreator {
 
         /* Build the empty board */
         Board board = new Board(
-                boardDesc.getInt("xSize"),
+                id, boardDesc.getInt("xSize"),
                 boardDesc.getInt("ySize")
         );
 

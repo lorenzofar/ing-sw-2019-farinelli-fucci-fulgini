@@ -21,6 +21,9 @@ import java.util.stream.Stream;
  */
 public class Board extends Observable<ModelUpdate> {
 
+    /** The unique identifier of this board configuration */
+    private int id;
+
     /** A matrix of objects representing the squares the board is composed of. The addressing is [x][y] */
     private Square[][] squares;
 
@@ -34,11 +37,14 @@ public class Board extends Observable<ModelUpdate> {
 
     /**
      * Creates an empty game board of given size.
+     * @param id unique identifier of this board configuration
      * @param xSize horizontal size (number of columns)
      * @param ySize vertical size (number of rows)
      */
-    public Board(int xSize, int ySize){
+    public Board(int id, int xSize, int ySize){
         if (xSize <= 0 || ySize <=0) throw new IllegalArgumentException("Board size must be greater than 0");
+
+        this.id = id;
 
         /* Allocate the matrix */
         squares = new Square[xSize][ySize];
@@ -286,6 +292,14 @@ public class Board extends Observable<ModelUpdate> {
      */
     public Map<AmmoCube, Square> getSpawnPoints() {
         return Collections.unmodifiableMap(spawnPoints);
+    }
+
+    /**
+     * Returns the identifier of this board configuration
+     * @return the identifier of this board configuration
+     */
+    public int getId() {
+        return id;
     }
 
     /**

@@ -65,6 +65,8 @@ public class BoardCreatorTest {
     }
 
     public void checkTestBoard(Board board){
+        /* Verify the id */
+        assertEquals(0, board.getId());
         /* Verifying that the (0,0) square respects our test board structure */
         CoordPair currSquare = new CoordPair(0,0);
         assertEquals(RoomColor.PURPLE, board.getSquare(currSquare).getRoom().getColor());

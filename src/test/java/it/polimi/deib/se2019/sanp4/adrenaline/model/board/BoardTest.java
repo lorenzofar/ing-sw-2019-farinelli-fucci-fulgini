@@ -46,38 +46,38 @@ public class BoardTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void createBoard_NegativeValueProvided_ShouldThrowIllegalArgumentException(){
-        Board board = new Board(-1, 0);
+        Board board = new Board(0, -1, 0);
     }
 
     @Test
     public void createBoard_ShouldSucceed(){
-        Board board = new Board(4,3);
+        Board board = new Board(0, 4,3);
         /* Check that the board is empty */
         assertTrue(board.getSquares().isEmpty());
     }
 
     @Test(expected = NullPointerException.class)
     public void addSquare_NullSquareProvided_ShouldThrowNullPointerException(){
-        Board board = new Board(4,3);
+        Board board = new Board(0, 4,3);
         board.addSquare(null);
     }
 
     @Test(expected = IndexOutOfBoundsException.class)
     public void addSquare_SquareOutsideBoardProvided_ShouldThrowNullPointerException(){
-        Board board = new Board(4,3);
+        Board board = new Board(0, 4,3);
         CoordPair location = new CoordPair(5,3);
         board.addSquare(new AmmoSquare(location));
     }
 
     @Test(expected = NullPointerException.class)
     public void getSquare_NullSquareProvided_ShouldThrowNullPointerException(){
-        Board board = new Board(4,3);
+        Board board = new Board(0, 4,3);
         board.getSquare(null);
     }
 
     @Test
     public void getSquare_ShouldReturnSameSquare(){
-        Board board = new Board(4,3);
+        Board board = new Board(0, 4,3);
         CoordPair location = new CoordPair(3,2);
         Square square = new AmmoSquare(location);
         board.addSquare(square);
