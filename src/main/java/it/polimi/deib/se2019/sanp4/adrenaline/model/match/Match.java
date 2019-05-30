@@ -1,5 +1,6 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.model.match;
 
+import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.MatchView;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.Observable;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.Board;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.Square;
@@ -73,6 +74,18 @@ public class Match extends Observable {
         }
         this.killshotsTrack = new ArrayList<>();
         this.skulls = skulls;
+    }
+
+    /**
+     * Generates the {@link MatchView} of the match
+     * @return the match view
+     */
+    public MatchView generateView(){
+        MatchView view = new MatchView();
+        view.setKillshotsCount(this.getKillshotsTrack().size());
+        view.setTotalSkulls(this.skulls);
+        view.setFrenzy(this.frenzy);
+        return view;
     }
 
     /* ===== TURN METHODS ===== */
