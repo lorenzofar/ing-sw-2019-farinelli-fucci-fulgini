@@ -3,6 +3,7 @@ package it.polimi.deib.se2019.sanp4.adrenaline.model.player;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.CardNotFoundException;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.FullCapacityException;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.NotEnoughAmmoException;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.PlayerView;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.Observable;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.AddedWeaponUpdate;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.ModelUpdate;
@@ -508,5 +509,17 @@ public class Player extends Observable<ModelUpdate> {
     @Override
     public void notifyObservers(ModelUpdate update) {
         super.notifyObservers(update);
+    }
+
+    /**
+     * Generates the {@link PlayerView} of the player
+     * @return the player view
+     */
+    public PlayerView generateView(){
+        PlayerView view = new PlayerView(name, color);
+        view.setAmmo(ammo);
+        view.setWeapons(weapons);
+        view.setPowerups(powerups);
+        return view;
     }
 }

@@ -161,6 +161,10 @@ public class PlayerTurn {
         this.remainingActions = remainingActions;
     }
 
+    /**
+     * Generates the {@link PlayerTurnView} of the player turn
+     * @return the player turn view
+     */
     public PlayerTurnView generateView(){
         PlayerTurnView view = new PlayerTurnView(this.getTurnOwner().getName());
         view.setRemainingActions(this.getRemainingActions());

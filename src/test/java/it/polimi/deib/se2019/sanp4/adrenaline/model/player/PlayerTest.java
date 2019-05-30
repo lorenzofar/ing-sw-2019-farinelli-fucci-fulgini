@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.CardNotFoundException;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.FullCapacityException;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.NotEnoughAmmoException;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.PlayerView;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionCardCreator;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionCardEnum;
@@ -481,4 +482,24 @@ public class PlayerTest {
         }
     }
 
+    @Test
+    public void generateView() throws FullCapacityException {
+        Player player = new Player(validName, validActionCard, validColor);
+        Map<AmmoCube, Integer> validAmmo = new EnumMap<>(AmmoCube.class);
+        validAmmo.put(AmmoCube.YELLOW, 1);
+        validAmmo.put(AmmoCube.RED, 2);
+        validAmmo.put(AmmoCube.BLUE, 1);
+        player.addAmmo(validAmmo);
+        PowerupCard powerup = new PowerupCard(PowerupEnum.NEWTON, AmmoCube.RED);
+        player.addPowerup(powerup);
+        player.addWeapon(validWeaponCard);
+
+        PlayerView view = player.generateView();
+
+        assertEquals(player.getName(), view.getName());
+        assertEquals(player.getColor(), view.getColor());
+        assertEquals(player.getAmmo(), view.getAmmo());
+        assertEquals(player.getWeapons(), view.getWeapons());
+        assertEquals(player.getPowerups(), view.getPowerups());
+    }
 }
