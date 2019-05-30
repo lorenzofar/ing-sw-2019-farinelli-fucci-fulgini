@@ -47,6 +47,7 @@ public class GUIRenderer extends Application implements UIRenderer {
         try {
             Scene scene = new Scene(loader.load());
             this.stage.setScene(scene);
+
             currentController = loader.getController();
             currentController.setClientView(clientView);
             return true;
@@ -80,36 +81,11 @@ public class GUIRenderer extends Application implements UIRenderer {
     }
 
     @Override
-    public void updateLobby(Collection<String> connectedPlayers) {
+    public void updateLobby(Collection<String> connectedPlayers, boolean matchStarting) {
         LobbyController lobbyController = (LobbyController) currentController;
         try {
             lobbyController.setConnectedPlayers(connectedPlayers);
-        } catch (Exception ignore) {
-            // Errors are ignored if the method is invoked when the current scene is wrong
-        }
-    }
-
-    /**
-     * Notify the user about the imminent start of the game
-     */
-    @Override
-    public void startWaitingMatch() {
-        LobbyController lobbyController = (LobbyController) currentController;
-        try {
-            lobbyController.showMatchWaiting();
-        } catch (Exception ignore) {
-            // Errors are ignored if the method is invoked when the current scene is wrong
-        }
-    }
-
-    /**
-     * Cancel the waiting indicators when the game start is cancelled (e.g. due to lack of players)
-     */
-    @Override
-    public void cancelWaitingMatch() {
-        LobbyController lobbyController = (LobbyController) currentController;
-        try {
-            lobbyController.hideMatchWaiting();
+            lobbyController.setMatchStarting(matchStarting);
         } catch (Exception ignore) {
             // Errors are ignored if the method is invoked when the current scene is wrong
         }

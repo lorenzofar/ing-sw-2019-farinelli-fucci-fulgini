@@ -89,7 +89,7 @@ public class ModelManager implements ModelUpdateVisitor {
 
     @Override
     public void handle(LobbyUpdate update) {
-        clientView.getRenderer().updateLobby(update.getWaitingPlayers());
+        clientView.getRenderer().updateLobby(update.getWaitingPlayers(), update.isStarting());
     }
 
     @Override
