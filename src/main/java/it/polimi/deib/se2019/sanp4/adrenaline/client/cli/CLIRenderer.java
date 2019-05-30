@@ -12,6 +12,9 @@ import java.util.Collections;
 
 public class CLIRenderer implements UIRenderer {
 
+    private static final String LOBBY_MATCH_NOTSTARTING = "The match is about to start, wait for other players to join";
+    private static final String LOBBY_MATCH_STARTING = "The match is starting soon with these players";
+
     private ClientView clientView;
 
     /* ASCII-art version of the game title */
@@ -93,12 +96,13 @@ public class CLIRenderer implements UIRenderer {
 
     /**
      * Prints the lobby screen, listing the provided connected players
+     *
      * @param connectedPlayers The list of connected players
      */
-    private void printLobbyScreen(Collection<String> connectedPlayers) {
+    private void printLobbyScreen(Collection<String> connectedPlayers, boolean matchStarting) {
         CLIHelper.clearScreen();
         CLIHelper.printTitle("waiting room");
-        CLIHelper.println("The game is about to start, wait for other players to join");
+        CLIHelper.println(matchStarting ? LOBBY_MATCH_STARTING : LOBBY_MATCH_NOTSTARTING);
         CLIHelper.printlnColored("Connected players:", CLIHelper.ANSI_YELLOW);
         connectedPlayers.forEach(player -> CLIHelper.println("* %s", player));
         CLIHelper.startSpinner();
@@ -106,28 +110,12 @@ public class CLIRenderer implements UIRenderer {
 
     @Override
     public void showLobby() {
-        printLobbyScreen(Collections.emptyList());
+        printLobbyScreen(Collections.emptyList(), false);
     }
 
     @Override
-    public void updateLobby(Collection<String> connectedPlayers) {
-        printLobbyScreen(connectedPlayers);
-    }
-
-    /**
-     * Notify the user about the imminent start of the game
-     */
-    @Override
-    public void startWaitingMatch() {
-        CLIHelper.println("The match is starting soon");
-    }
-
-    /**
-     * Cancel the waiting indicators when the game start is cancelled (e.g. due to lack of players)
-     */
-    @Override
-    public void cancelWaitingMatch() {
-        CLIHelper.println("There are not enough players, we'll wait a bit more...");
+    public void updateLobby(Collection<String> connectedPlayers, boolean matchStarting) {
+        printLobbyScreen(connectedPlayers, matchStarting);
     }
 
     /**

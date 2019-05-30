@@ -151,10 +151,6 @@ public class ClientView extends RemoteObservable<ViewEvent> implements RemoteVie
     public void selectScene(ViewScene scene) {
         if (scene == ViewScene.LOBBY) {
             renderer.showLobby();
-        } else if (scene == ViewScene.MATCH_STARTING) {
-            renderer.startWaitingMatch();
-        } else if (scene == ViewScene.MATCH_START_CANCELLED) {
-            renderer.cancelWaitingMatch();
         }
         //TODO: Implement more scenes
     }

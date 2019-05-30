@@ -20,17 +20,7 @@ public interface UIRenderer {
     /**
      * Updates the lobby with current information about connected players
      */
-    void updateLobby(Collection<String> waitingPlayers);
-
-    /**
-     * Notify the user about the imminent start of the game
-     */
-    void startWaitingMatch();
-
-    /**
-     * Cancel the waiting indicators when the game start is cancelled (e.g. due to lack of players)
-     */
-    void cancelWaitingMatch();
+    void updateLobby(Collection<String> waitingPlayers, boolean matchStarting);
 
     /**
      * Prepare the client for the game

@@ -49,21 +49,10 @@ public class LobbyController extends GUIController {
     }
 
     /**
-     * Inform user about the imminent start of the game
-     * Show a progress ring and a loading message
+     * Sets whether the match is about to start or not
+     * @param matchStarting {@code true} if the match is starting, {@code false} otherwise
      */
-    public void showMatchWaiting() {
-        matchStarting.set(true);
-
+    public void setMatchStarting(boolean matchStarting){
+        this.matchStarting.set(matchStarting);
     }
-
-    /**
-     * Remove the progress ring for match waiting when the game start is cancelled
-     */
-    public void hideMatchWaiting() {
-        matchStarting.set(false);
-    }
-
-    //TODO: Listen for connected/disconnected events to update the list of connected players
-
 }
