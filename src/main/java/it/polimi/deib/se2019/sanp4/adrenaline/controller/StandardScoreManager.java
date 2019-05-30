@@ -24,6 +24,7 @@ public class StandardScoreManager implements ScoreManager {
     /**
      * Assign scores to players according to the damage boards of the provided players
      * Is also responsible of adding revenge marks to overkill shooters
+     * and updating the counters of performed killshots and overkills
      * @param players The list of players whose damage boards have to be considered
      */
     private void assignScores(List<Player> players){
@@ -32,11 +33,16 @@ public class StandardScoreManager implements ScoreManager {
             Map<Player, Integer> shootersScores = player.getPlayerBoard().getPlayerScores();
             // Assign scores to the players
             shootersScores.forEach(Player::addScorePoints);
+            // Update the counter of killshots on the killer
+            Player killer = player.getPlayerBoard().getKillshot();
+            killer.addPerformedKillshot();
             // Get the player who performed overkill (if present)
-            Player overkillShooter = player.getPlayerBoard().getOverkill();
-            if(overkillShooter != null){
+            Player overKiller = player.getPlayerBoard().getOverkill();
+            if(overKiller != null){
                 // Add a revenge mark to him from the current player
-                overkillShooter.getPlayerBoard().addMark(player, 1);
+                overKiller.getPlayerBoard().addMark(player, 1);
+                // Update the counter
+                overKiller.addPerformedOverkill();
             }
         });
     }
@@ -63,6 +69,18 @@ public class StandardScoreManager implements ScoreManager {
                 .forEach(entry -> entry.getKey().addScorePoints(1)); // We give them one extra point
     }
 
+
+    /**
+     * Perform turn scoring of the turn on the provided match
+     * Updates:
+     * <ul>
+     *     <li>Scores of the players</li>
+     *     <li>Counters of killshots and overkills on players</li>
+     *     <li>Killshot track</li>
+     *     <li>Revenge marks due to killshots</li>
+     * </ul>
+     * @param match The object representing the match, not null
+     */
     @Override
     public void scoreTurn(Match match) {
         if(match == null){
@@ -79,21 +97,19 @@ public class StandardScoreManager implements ScoreManager {
         manageKillshotsAndAssignExtraPoints(deadPlayers, match);
     }
 
+    /**
+     * Perform final scoring on the provided match
+     * assuming that the scoring of the turn has already been performed
+     * @param match The object representing the match, not null
+     * @return A map of the scores got from the killshot track by the players
+     */
     @Override
     public Map<Player, Integer> scoreFinal(Match match) {
         if(match == null){
             throw new NullPointerException("Match cannot be null");
         }
 
-        // Retrieve all the players that have damages on their boards
-        List<Player> playersToConsider = match.getPlayers().stream()
-                .filter(player -> player.getPlayerBoard().getDamages().isEmpty())
-                .collect(Collectors.toList());
-
-        // Assign scores according to their boards
-        assignScores(playersToConsider);
-
-        // Then consider the killshot track
+        // Consider the killshot track
         Map<Player, Integer> killshotsCount = new HashMap<>();
         // Count how many killshots has each player performed
         match.getKillshotsTrack().forEach(player -> killshotsCount.merge(player, 1, Integer::sum));

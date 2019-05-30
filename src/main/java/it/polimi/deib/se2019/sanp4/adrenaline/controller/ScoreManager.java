@@ -12,13 +12,14 @@ import java.util.Map;
 public interface ScoreManager {
 
     /**
-     * Perform turn scoring on the provided match
+     * Perform turn scoring of the turn on the provided match
      * @param match The object representing the match, not null
      */
     void scoreTurn(Match match);
 
     /**
      * Perform final scoring on the provided match
+     * assuming that the scoring of the turn has already been performed
      * @param match The object representing the match, not null
      * @return A map of the scores got from the killshot track by the players
      */
