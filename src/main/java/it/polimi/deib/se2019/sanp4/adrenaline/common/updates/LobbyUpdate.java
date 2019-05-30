@@ -16,19 +16,27 @@ public class LobbyUpdate extends ModelUpdate {
 
     private Collection<String> waitingPlayers;
 
+    private boolean starting;
+
     /**
      * Creates the lobby update with the names of the players waiting for the match to start
      * @param waitingPlayers a collection with the names of the waiting players, not null
+     * @param starting whether the match is starting or not
      * @throws NullPointerException if the collection is null
      */
     @JsonCreator
-    public LobbyUpdate(@JsonProperty("waitingPlayers") Collection<String> waitingPlayers) {
+    public LobbyUpdate(@JsonProperty("waitingPlayers") Collection<String> waitingPlayers,
+                       @JsonProperty("starting") boolean starting) {
         if (waitingPlayers == null) throw new NullPointerException();
         this.waitingPlayers = waitingPlayers;
     }
 
     public Collection<String> getWaitingPlayers() {
         return waitingPlayers;
+    }
+
+    public boolean isStarting() {
+        return starting;
     }
 
     /**

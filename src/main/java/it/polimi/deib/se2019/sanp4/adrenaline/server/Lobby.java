@@ -81,19 +81,20 @@ public class Lobby implements Runnable {
         /* Show the lobby scene to the player */
         selectLobbyScene(view);
 
-        /* Notify the players that a new player has connected */
-        notifyWaitingList();
-
         /* Disconnect inactive players */
         disconnectInactive();
 
         /* First check if we can start straight away */
         if (waitingPlayers.size() == MAX_PLAYERS) {
             stopTimer(); /* Stop any running timer */
+            notifyWaitingList(true);
             triggerMatchStart();
         } else if (waitingPlayers.size() >= MIN_PLAYERS && !isTimerRunning()) {
             /* If the minimum number of players has been reached and the timer is not started, start it */
+            notifyWaitingList(true);
             startTimer();
+        } else {
+            notifyWaitingList(false);
         }
     }
 
@@ -103,6 +104,7 @@ public class Lobby implements Runnable {
         disconnectInactive();
         /* Check if we still have enough players */
         if (waitingPlayers.size() >= MIN_PLAYERS) {
+            notifyWaitingList(true);
             triggerMatchStart();
         }
         /* If we do not have minimum number of players, a new timer will be scheduled when we do */
@@ -142,8 +144,6 @@ public class Lobby implements Runnable {
         logger.log(Level.INFO, "Player \"{0}\" does not respond, deleting...", username);
         /* Remove it from local */
         waitingPlayers.remove(username);
-        /* Notify the players that a player has disconnected */
-        notifyWaitingList();
         ServerImpl.getInstance().unreserveUsername(username);
     }
 
@@ -163,11 +163,12 @@ public class Lobby implements Runnable {
 
     /**
      * Sends the current list of waiting players to the waiting players
+     * @param starting whether the match is going to start shortly or not
      */
-    void notifyWaitingList() {
+    void notifyWaitingList(boolean starting) {
         for (RemoteView view : waitingPlayers.values()) {
             try {
-                view.update(new LobbyUpdate(new ArrayList<>(waitingPlayers.keySet())));
+                view.update(new LobbyUpdate(new ArrayList<>(waitingPlayers.keySet()), starting));
             } catch (IOException ignore) {
                 /* Ignore the exception */
             }
@@ -245,7 +246,7 @@ public class Lobby implements Runnable {
         /* Stop any running timer */
         stopTimer();
         /* Empty the waiting list and notify players */
-        notifyWaitingList();
+        notifyWaitingList(false);
         waitingPlayers.clear();
     }
 }

@@ -15,20 +15,22 @@ public class LobbyUpdateTest {
 
     @Test
     public void create_validCollection_shouldCreate() {
-        LobbyUpdate u = new LobbyUpdate(Arrays.asList("1", "2", "3"));
+        LobbyUpdate u = new LobbyUpdate(Arrays.asList("1", "2", "3"), false);
         assertEquals(Arrays.asList("1", "2", "3"), u.getWaitingPlayers());
+        assertFalse(u.isStarting());
     }
 
     @Test(expected = NullPointerException.class)
     public void create_nullCollection_shouldThrow() {
-        new LobbyUpdate(null);
+        new LobbyUpdate(null, false);
     }
 
     @Test
     public void serializationTest() throws IOException {
-        LobbyUpdate u = new LobbyUpdate(Arrays.asList("1", "2", "3"));
+        LobbyUpdate u = new LobbyUpdate(Arrays.asList("1", "2", "3"), false);
         String ser = mapper.writeValueAsString(u);
         LobbyUpdate unser = mapper.readValue(ser, LobbyUpdate.class);
         assertTrue(unser.getWaitingPlayers().containsAll(u.getWaitingPlayers()));
+        assertFalse(unser.isStarting());
     }
 }

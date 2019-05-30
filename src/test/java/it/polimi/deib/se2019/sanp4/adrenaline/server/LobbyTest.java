@@ -117,7 +117,7 @@ public class LobbyTest {
     }
 
     @Test
-    public void disconnectPlayer_shouldRemoveFromWaitingListAndNotifyOthers() throws IOException {
+    public void disconnectPlayer_shouldRemoveFromWaitingList() {
         Lobby lobby = new Lobby();
         RemoteView faulty = mock(RemoteView.class);
         RemoteView other = mock(RemoteView.class);
@@ -132,9 +132,6 @@ public class LobbyTest {
 
         /* Check that he's not in the waiting list anymore */
         assertFalse(waitingList.containsKey("faulty"));
-
-        /* Check that the other has been informed of the disconnection */
-        verify(other).update(any(LobbyUpdate.class));
     }
 
     @Test
@@ -184,7 +181,7 @@ public class LobbyTest {
         Map<String, RemoteView> waitingList = lobby.getWaitingPlayers();
         waitingList.put("faulty", faulty);
 
-        lobby.notifyWaitingList();
+        lobby.notifyWaitingList(false);
 
         /* Check that the player is still in the waiting list */
         assertTrue(waitingList.containsKey("faulty"));
