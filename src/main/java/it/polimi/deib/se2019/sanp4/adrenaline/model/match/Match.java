@@ -82,9 +82,9 @@ public class Match extends Observable {
      */
     public MatchView generateView(){
         MatchView view = new MatchView();
-        view.setKillshotsCount(this.getKillshotsTrack().size());
-        view.setTotalSkulls(this.skulls);
-        view.setFrenzy(this.frenzy);
+        view.setKillshotsCount(getKillshotsTrack().size());
+        view.setTotalSkulls(skulls);
+        view.setFrenzy(frenzy);
         return view;
     }
 

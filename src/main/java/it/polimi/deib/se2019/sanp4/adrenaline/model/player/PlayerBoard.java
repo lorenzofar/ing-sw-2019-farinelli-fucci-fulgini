@@ -302,9 +302,9 @@ public class PlayerBoard extends Observable<ModelUpdate> {
         view.setDamages(this.getDamages().stream()
                         .map(Player::getName)
                         .collect(Collectors.toList()));
-        view.setDeaths(this.deaths);
-        view.setMarks(this.marks.size());
-        view.setState(this.state.toString());
+        view.setDeaths(deaths);
+        view.setMarks(marks.size());
+        view.setState(state.toString());
         return view;
     }
 }
