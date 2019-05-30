@@ -1,4 +1,10 @@
-.title-text{
+.title-text {
     -fx-font-weight: bold;
     -fx-font-size: 12pt;
+}
+
+#gameBoard {
+    -fx-background-size: contain;
+    -fx-background-position: left top, center;
+    -fx-background-repeat: no-repeat;
 }
