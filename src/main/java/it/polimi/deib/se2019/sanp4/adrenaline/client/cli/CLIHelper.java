@@ -176,7 +176,7 @@ class CLIHelper {
      * If a null object is provided, nothing is printed
      *
      * @param gameElement The textual representation of the element
-     * @param title The title of the screen
+     * @param title       The title of the screen
      * @param description The description of the screen
      */
     private static void printFullScreenRenderedGameElement(List<List<String>> gameElement, String title, String description) {
@@ -214,7 +214,7 @@ class CLIHelper {
         }
 
         // Insert description
-        if(!description.equals("")) {
+        if (!description.equals("")) {
             List<String> descriptionChunks = splitString(description, FULLSCREEN_WIDTH - 2);
             descriptionChunks.forEach(descriptionChunk -> {
                 output.add(currentLine.get(), generateLine(BLANK, FULLSCREEN_WIDTH, BLANK, BLANK));
@@ -245,9 +245,9 @@ class CLIHelper {
      * If a null object is provided, nothing is printed
      *
      * @param gameElement The textual representation of the element
-     * @param title The title of the screen
+     * @param title       The title of the screen
      */
-    private static void printFullScreenRenderedGameElement(List<List<String>> gameElement, String title){
+    private static void printFullScreenRenderedGameElement(List<List<String>> gameElement, String title) {
         printFullScreenRenderedGameElement(gameElement, title, "");
     }
 
@@ -257,7 +257,7 @@ class CLIHelper {
      *
      * @param gameElement The textual representation of the element
      */
-    private static void printFullScreenRenderedGameElement(List<List<String>> gameElement){
+    private static void printFullScreenRenderedGameElement(List<List<String>> gameElement) {
         printFullScreenRenderedGameElement(gameElement, "", "");
     }
 
@@ -651,6 +651,24 @@ class CLIHelper {
             }
             // We then concatenate the row with the previous one
             boardRows.addAll(rowSquares);
+        }
+        // Add coordinates indicators
+        int row = 0;
+        for (int i = 0; i < boardRows.size(); i++) {
+            // Consider the index of the current row
+            // Check whether is the center of a square
+            if (i == row * SQUARE_DIM / 2 + SQUARE_DIM / 4) {
+                boardRows.get(i).add(0, String.format("%s%2d ", ANSI_RESET, row));
+                row++;
+            } else {
+                boardRows.get(i).add(0, "   ");
+            }
+        }
+        // Add a new line on top of the board
+        boardRows.add(0, generateLine(BLANK, boardRows.get(0).size(), BLANK, BLANK));
+        // Set the coordinates on the vertical centers of the square
+        for (int col = 0; col < width; col++) {
+            boardRows.get(0).set(3 + col * SQUARE_DIM + SQUARE_DIM / 2, String.format("%d", col));
         }
         return boardRows;
     }
