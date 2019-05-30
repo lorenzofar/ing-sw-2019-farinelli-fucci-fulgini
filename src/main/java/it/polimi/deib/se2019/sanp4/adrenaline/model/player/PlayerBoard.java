@@ -2,6 +2,8 @@ package it.polimi.deib.se2019.sanp4.adrenaline.model.player;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.PlayerBoardView;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.PlayerView;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.Observable;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.DamageUpdate;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.ModelUpdate;
@@ -289,5 +291,20 @@ public class PlayerBoard extends Observable<ModelUpdate> {
      */
     public PlayerBoardState getState() {
         return state;
+    }
+
+    /**
+     * Generates the {@link PlayerBoardView} of the player board
+     * @return the player board view
+     */
+    public PlayerBoardView generateView() {
+        PlayerBoardView view = new PlayerBoardView();
+        view.setDamages(this.getDamages().stream()
+                        .map(Player::getName)
+                        .collect(Collectors.toList()));
+        view.setDeaths(this.deaths);
+        view.setMarks(this.marks.size());
+        view.setState(this.state.toString());
+        return view;
     }
 }

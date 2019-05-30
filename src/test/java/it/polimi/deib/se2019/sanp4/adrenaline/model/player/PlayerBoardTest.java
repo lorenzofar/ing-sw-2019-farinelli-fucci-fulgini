@@ -1,5 +1,7 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.model.player;
 
+import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.BoardView;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.PlayerBoardView;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionCardEnum;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionEnum;
@@ -11,14 +13,18 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
 
 public class PlayerBoardTest {
 
     private final static String validName = "player1";
+    private final static String enemyName = "Brutus";
     private static ActionCard validActionCard;
     private static PlayerColor validColor = PlayerColor.YELLOW;
+    private static Player player;
+    private static Player enemyPlayer;
 
     @BeforeClass
     public static void setup(){
@@ -32,6 +38,10 @@ public class PlayerBoardTest {
         RoomColor validColor = RoomColor.BLUE;
 
         validActionCard = new ActionCard(validMaxActions, validType, validActions, validFinalAction);
+
+        player = new Player(validName, validActionCard, PlayerColor.BLUE);
+        enemyPlayer = new Player(enemyName, validActionCard, PlayerColor.BLUE);
+        PlayerBoard playerBoard = new PlayerBoard(player);
     }
 
     @Test(expected = NullPointerException.class)
@@ -286,4 +296,22 @@ public class PlayerBoardTest {
         assertTrue(playerBoard.isDead());
     }
 
+    @Test
+    public void generateView_ShouldSucceed() throws PlayerException {
+        PlayerBoard playerBoard = new PlayerBoard(player);
+        playerBoard.addDeath();
+        playerBoard.addDeath();
+        playerBoard.turnFrenzy();
+        playerBoard.addDamage(enemyPlayer, 6);
+        playerBoard.addMark(enemyPlayer,2);
+
+        PlayerBoardView view = playerBoard.generateView();
+
+        assertEquals(playerBoard.getDamages().stream()
+                                .map(Player::getName)
+                                .collect(Collectors.toList()), view.getDamages());
+        assertEquals(playerBoard.getDeaths(), view.getDeaths());
+        assertEquals(playerBoard.getDeaths(), view.getDeaths());
+        assertEquals(playerBoard.getState().toString(), view.getState());
+    }
 }
