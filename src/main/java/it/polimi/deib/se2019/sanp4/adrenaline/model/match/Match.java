@@ -161,7 +161,8 @@ public class Match extends Observable {
 
 
     /**
-     * Set the state of the current turn to {@link PlayerTurnState#OVER}
+     * Set the state of the current turn to {@link PlayerTurnState#OVER
+     * }
      */
     public void endCurrentTurn(){
         // Update the state of the current turn
