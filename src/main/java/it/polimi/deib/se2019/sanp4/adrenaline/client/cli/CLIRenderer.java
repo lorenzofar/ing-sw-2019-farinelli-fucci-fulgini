@@ -83,6 +83,7 @@ public class CLIRenderer implements UIRenderer {
         while (!loggedIn) {
             try {
                 clientView.getServerConnection().login(username);
+                clientView.setUsername(username);
                 loggedIn = true;
             } catch (IOException e) {
                 CLIHelper.printError("An error occurred while logging in");

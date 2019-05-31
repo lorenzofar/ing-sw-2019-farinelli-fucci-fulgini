@@ -12,7 +12,7 @@ import java.io.Serializable;
 
 public class ClientView extends RemoteObservable<ViewEvent> implements RemoteView {
     /**
-     * The username of the username owning the view
+     * The username of the player owning the view
      */
     private String username;
     /**
