@@ -1,0 +1,23 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "board_pack.schema.json",
+  "tile": "Board Pack",
+  "type" : "object",
+  "properties": {
+    "packName" : {
+      "description": "Name of this board package",
+      "type": "string"
+    },
+    "boardFiles" : {
+      "description": "List of relative paths to the board description files in this package",
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "additionalItems": false,
+      "minItems": 1,
+      "uniqueItems": true
+    }
+  },
+  "required": ["packName", "boardFiles"]
+}

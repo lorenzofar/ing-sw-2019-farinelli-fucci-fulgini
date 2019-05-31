@@ -1,0 +1,26 @@
+{
+  "packName" : "Standard weapons",
+  "weaponFiles" : [
+    "/assets/std_weapons/lock_rifle.json",
+    "/assets/std_weapons/machine_gun.json",
+    "/assets/std_weapons/thor.json",
+    "/assets/std_weapons/plasma_gun.json",
+    "/assets/std_weapons/whisper.json",
+    "/assets/std_weapons/electroscythe.json",
+    "/assets/std_weapons/tractor_beam.json",
+    "/assets/std_weapons/vortex_cannon.json",
+    "/assets/std_weapons/furnace.json",
+    "/assets/std_weapons/heatseeker.json",
+    "/assets/std_weapons/hellion.json",
+    "/assets/std_weapons/flamethrower.json",
+    "/assets/std_weapons/grenade_launcher.json",
+    "/assets/std_weapons/rocket_launcher.json",
+    "/assets/std_weapons/railgun.json",
+    "/assets/std_weapons/cyberblade.json",
+    "/assets/std_weapons/zx-2.json",
+    "/assets/std_weapons/shotgun.json",
+    "/assets/std_weapons/power_glove.json",
+    "/assets/std_weapons/shockwave.json",
+    "/assets/std_weapons/sledgehammer.json"
+  ]
+}

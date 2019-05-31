@@ -1,0 +1,43 @@
+{
+  "id" : "lock_rifle",
+  "name" : "Lock Rifle",
+  "type" : "OPTIONAL_EFFECTS",
+  "cost" : ["BLUE", "BLUE"],
+  "effects" : [
+    {
+      "id" : "basic",
+      "name" : "Basic effect",
+      "type" : "BASIC",
+      "description" : "Deal 2 damage and 1 mark to 1 target you can see.",
+      "cost" : [],
+      "dependsOnEffects" : [],
+      "targets" : [
+        {
+          "id" : "red",
+          "targetMode" : "PLAYER",
+          "visibility" : "VISIBLE",
+          "damage" : 2,
+          "mark" : 1
+        }
+      ]
+    },
+    {
+      "id" : "second_lock",
+      "name" : "Second Lock",
+      "type" : "OPTIONAL",
+      "description" : "Deal 1 mark to a different target you can see.",
+      "cost" : ["RED"],
+      "dependsOnEffects" : ["basic"],
+      "targets" : [
+        {
+          "id" : "blue",
+          "targetMode" : "PLAYER",
+          "visibility" : "VISIBLE",
+          "excludePlayers" : ["red"],
+          "damage" : 0,
+          "mark" : 1
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "id" : "rocket_launcher",
+  "name" : "Rocket Launcher",
+  "type" : "OPTIONAL_EFFECTS",
+  "cost" : ["RED", "RED"],
+  "effects" : [
+    {
+      "id" : "basic",
+      "name" : "Basic effect",
+      "type" : "BASIC",
+      "description" : "Deal 2 damage to 1 target you can see that is not on your square. Then you may move the target 1 square.",
+      "dependsOnEffects" : [],
+      "targets" : [
+        {
+          "id" : "red",
+          "targetMode" : "PLAYER",
+          "visibility" : "VISIBLE",
+          "squareRef" : "sqr",
+          "minDist" : 1,
+          "moveTargetAfter" : 1,
+          "damage" : 2
+        }
+      ]
+    },
+    {
+      "id" : "rocket_jump",
+      "name" : "Rocket Jump",
+      "type" : "MOVEMENT",
+      "description" : "Move 1 or 2 squares. This effect can be used either before or after the basic effect.",
+      "cost" : ["BLUE"],
+      "dependsOnEffects" : [],
+      "playerMoves" : 2
+    },
+    {
+      "id" : "fragmenting_warhead",
+      "name" : "Charged Shot",
+      "type" : "OPTIONAL",
+      "description" : "During the basic effect, deal 1 damage to every player on your target's original square – including the target, even if you move it.",
+      "cost" : ["YELLOW"],
+      "dependsOnEffects" : ["basic"],
+      "targets" : [
+        {
+          "id" : "sqr",
+          "targetMode" : "SQUARE",
+          "visibility" : "ANY",
+          "excludePlayers" : ["red"],
+          "damage" : 1
+        },
+        {
+          "id" : "red",
+          "targetMode" : "PLAYER",
+          "visibility" : "ANY",
+          "damage" : 1
+        }
+      ]
+    }
+  ]
+}

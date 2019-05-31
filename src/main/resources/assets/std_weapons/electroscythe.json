@@ -1,0 +1,37 @@
+{
+  "id" : "electroscythe",
+  "name" : "Electroscythe",
+  "type" : "ALTERNATIVE_MODES",
+  "cost" : ["BLUE"],
+  "effects" : [
+    {
+      "id" : "basic",
+      "name" : "Basic Mode",
+      "type" : "MODE",
+      "description" : "Deal 1 damage to every other player on your square.",
+      "targets" : [
+        {
+          "id" : "sqr",
+          "targetMode" : "SQUARE",
+          "maxDist" : 0,
+          "damage" : 1
+        }
+      ]
+    },
+    {
+      "id" : "reaper_mode",
+      "name" : "Reaper Mode",
+      "type" : "MODE",
+      "description" : "Deal 2 damage to every other player on your square.",
+      "cost" : ["BLUE", "RED"],
+      "targets" : [
+        {
+          "id" : "sqr",
+          "targetMode" : "SQUARE",
+          "maxDist" : 0,
+          "damage" : 2
+        }
+      ]
+    }
+  ]
+}

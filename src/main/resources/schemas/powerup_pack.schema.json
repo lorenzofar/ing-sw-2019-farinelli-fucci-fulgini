@@ -1,0 +1,33 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "powerups.schema.json",
+  "title" : "Powerup Pack",
+  "type" : "object",
+  "definitions": {
+    "count" : {
+      "type": "integer",
+      "minimum": 0
+    },
+    "colorCount": {
+      "type": "object",
+      "properties": {
+        "RED": { "$ref": "#/definitions/count" },
+        "YELLOW": { "$ref": "#/definitions/count" },
+        "BLUE": { "$ref": "#/definitions/count" }
+      },
+      "required": ["RED", "YELLOW", "BLUE"]
+    }
+  },
+  "properties": {
+    "deck": {
+      "type": "object",
+      "properties": {
+        "TARGETING_SCOPE": { "$ref": "#/definitions/colorCount" },
+        "NEWTON": { "$ref": "#/definitions/colorCount" },
+        "TAGBACK": { "$ref": "#/definitions/colorCount" },
+        "TELEPORTER": { "$ref": "#/definitions/colorCount" }
+      },
+      "required": ["TARGETING_SCOPE", "NEWTON", "TAGBACK", "TELEPORTER"]
+    }
+  }
+}

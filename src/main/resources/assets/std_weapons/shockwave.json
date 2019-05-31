@@ -1,0 +1,62 @@
+{
+  "id" : "shockwave",
+  "name" : "Shockwave",
+  "type" : "ALTERNATIVE_MODES",
+  "cost" : ["YELLOW"],
+  "direction" : "CARDINAL",
+  "effects" : [
+    {
+      "id" : "basic",
+      "name" : "Basic Mode",
+      "type" : "MODE",
+      "description" : "Choose up to 3 targets on different squares, each exactly 1 move away. Deal 1 damage to each target.",
+      "targets" : [
+        {
+          "id" : "red",
+          "targetMode" : "PLAYER",
+          "visibility" : "ANY",
+          "minDist": 1,
+          "maxDist": 1,
+          "squareRef" : "sqr_red",
+          "damage" : 1
+        },
+        {
+          "id" : "blue",
+          "targetMode" : "PLAYER",
+          "visibility" : "ANY",
+          "minDist": 1,
+          "maxDist": 1,
+          "squareRef" : "sqr_blue",
+          "excludeSquares" : ["sqr_red"],
+          "damage" : 1
+        },
+        {
+          "id" : "green",
+          "targetMode" : "PLAYER",
+          "visibility" : "ANY",
+          "minDist": 1,
+          "maxDist": 1,
+          "excludeSquares" : ["sqr_red", "sqr_blue"],
+          "damage" : 1
+        }
+      ]
+    },
+    {
+      "id" : "tsunami_mode",
+      "name" : "Tsunami Mode",
+      "type" : "MODE",
+      "description" : "Deal 1 damage to all targets that are exactly 1 move away.",
+      "cost" : ["YELLOW"],
+      "targets" : [
+        {
+          "id" : "radius",
+          "targetMode" : "RADIUS",
+          "visibility" : "ANY",
+          "minDist": 1,
+          "maxDist": 1,
+          "damage" : 1
+        }
+      ]
+    }
+  ]
+}

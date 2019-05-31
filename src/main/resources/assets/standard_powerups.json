@@ -1,0 +1,22 @@
+{
+  "TARGETING_SCOPE": {
+    "RED": 2,
+    "YELLOW": 2,
+    "BLUE": 2
+  },
+  "NEWTON": {
+    "RED": 2,
+    "YELLOW": 2,
+    "BLUE": 2
+  },
+  "TAGBACK": {
+    "RED": 2,
+    "YELLOW": 2,
+    "BLUE": 2
+  },
+  "TELEPORTER": {
+    "RED": 2,
+    "YELLOW": 2,
+    "BLUE": 2
+  }
+}

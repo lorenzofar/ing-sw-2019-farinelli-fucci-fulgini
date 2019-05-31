@@ -1,0 +1,52 @@
+{
+  "id" : "zx-2",
+  "name" : "ZX-2",
+  "type" : "ALTERNATIVE_MODES",
+  "cost" : ["YELLOW", "RED"],
+  "effects" : [
+    {
+      "id" : "basic",
+      "name" : "Basic Mode",
+      "type" : "MODE",
+      "description" : "Deal 1 damage and 2 marks to 1 target you can see.",
+      "targets" : [
+        {
+          "id" : "red",
+          "targetMode" : "PLAYER",
+          "visibility" : "VISIBLE",
+          "damage" : 1,
+          "marks" : 2
+        }
+      ]
+    },
+    {
+      "id" : "scanner_mode",
+      "name" : "Scanner Mode",
+      "type" : "MODE",
+      "description" : "Choose up to 3 targets you can see and deal 1 mark to each.",
+      "cost" : [],
+      "targets" : [
+        {
+          "id" : "red",
+          "targetMode" : "PLAYER",
+          "visibility" : "VISIBLE",
+          "mark" : 1
+        },
+        {
+          "id" : "blue",
+          "targetMode" : "PLAYER",
+          "visibility" : "VISIBLE",
+          "excludePlayers" : ["red"],
+          "mark" : 1
+        },
+        {
+          "id" : "green",
+          "targetMode" : "PLAYER",
+          "visibility" : "VISIBLE",
+          "excludePlayers" : ["red", "blue"],
+          "mark" : 1
+        }
+      ]
+    }
+  ]
+}

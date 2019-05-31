@@ -1,0 +1,22 @@
+{
+  "id" : "heatseeker",
+  "name" : "Heatseeker",
+  "type" : "ALTERNATIVE_MODES",
+  "cost" : ["RED", "RED", "YELLOW"],
+  "effects" : [
+    {
+      "id" : "basic",
+      "name" : "Basic Mode",
+      "type" : "MODE",
+      "description" : "Choose 1 target you cannot see and deal 3 damage to it.",
+      "targets" : [
+        {
+          "id" : "red",
+          "targetMode" : "PLAYER",
+          "visibility" : "NOT_VISIBLE",
+          "damage" : 3
+        }
+      ]
+    }
+  ]
+}

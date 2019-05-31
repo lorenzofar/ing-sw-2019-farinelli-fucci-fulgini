@@ -1,0 +1,60 @@
+{
+  "id" : "thor",
+  "name" : "T.H.O.R.",
+  "type" : "OPTIONAL_EFFECTS",
+  "cost" : ["BLUE", "RED"],
+  "effects" : [
+    {
+      "id" : "basic",
+      "name" : "Basic effect",
+      "type" : "BASIC",
+      "description" : "Deal 2 damage to 1 target you can see.",
+      "cost" : [],
+      "dependsOnEffects" : [],
+      "targets" : [
+        {
+          "id" : "red",
+          "targetMode" : "PLAYER",
+          "visibility" : "VISIBLE",
+          "damage" : 2
+        }
+      ]
+    },
+    {
+      "id" : "chain_reaction",
+      "name" : "Chain Reaction",
+      "type" : "OPTIONAL",
+      "description" : "Deal 1 damage to a second target that your first target can see.",
+      "cost" : ["BLUE"],
+      "dependsOnEffects" : ["basic"],
+      "targets" : [
+        {
+          "id" : "blue",
+          "targetMode" : "PLAYER",
+          "visibility" : "ANY",
+          "excludePlayers" : ["red"],
+          "visibleFromPlayer" : "red",
+          "damage" : 1
+        }
+      ]
+    },
+    {
+      "id" : "high_voltage",
+      "name" : "High Voltage",
+      "type" : "OPTIONAL",
+      "description" : "Deal 2 damage to a third target that your second target can see. You cannot use this effect unless you first use the chain reaction.",
+      "cost" : ["BLUE"],
+      "dependsOnEffects" : ["basic", "chain_reaction"],
+      "targets" : [
+        {
+          "id" : "green",
+          "targetMode" : "PLAYER",
+          "visibility" : "ANY",
+          "excludePlayers" : ["red", "blue"],
+          "visibleFromPlayer" : "blue",
+          "damage" : 2
+        }
+      ]
+    }
+  ]
+}

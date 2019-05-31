@@ -1,0 +1,45 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "action_card_pack.schema.json",
+  "title": "Action Card Pack",
+  "type": "object",
+  "definitions": {
+    "actionEnum": {
+      "type": "string",
+      "enum": ["RUN", "GRAB", "SHOOT", "RELOAD", "ADRENALINE_GRAB", "ADRENALINE_SHOOT",
+        "FRENZY2_SHOOT", "FRENZY2_RUN", "FRENZY2_GRAB", "FRENZY1_SHOOT", "FRENZY1_GRAB"]
+    },
+    "actionCard": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["REGULAR", "ADRENALINE1", "ADRENALINE2", "FRENZY1", "FRENZY2"]
+        },
+        "maxActions": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "actions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/actionEnum"
+          }
+        },
+        "finalAction": {
+          "$ref": "#/definitions/actionEnum"
+        }
+      },
+      "required": ["type", "maxActions", "actions"]
+    }
+  },
+  "properties": {
+    "actionCards": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/actionCard"
+      }
+    }
+  },
+  "required": ["actionCards"]
+}
