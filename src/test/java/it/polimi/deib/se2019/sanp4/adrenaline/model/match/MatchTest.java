@@ -206,6 +206,31 @@ public class MatchTest {
         player.setState(PlayerState.ONLINE);
     }
 
+    @Test(expected = NullPointerException.class)
+    public void unsuspendPlayer_null_shouldThrow() {
+        mockMatch.unsuspendPlayer(null);
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void unsuspendPlayer_inexistent_shouldThrow() {
+        mockMatch.unsuspendPlayer("inexistent");
+    }
+
+    @Test
+    public void suspendPlayer_suspended_shouldBecomeOnline() {
+        mockMatch.suspendPlayer("bzoto");
+
+        /* Set it back online */
+        mockMatch.unsuspendPlayer("bzoto");
+        assertTrue(mockMatch.getPlayerByName("bzoto").getState().canPlay());
+    }
+
+    @Test
+    public void suspendPlayer_notSuspended_shouldRemainUnsuspended() {
+        mockMatch.unsuspendPlayer("bzoto");
+        assertTrue(mockMatch.getPlayerByName("bzoto").getState().canPlay());
+    }
+
     /* ======== TURN-RELATED METHODS ========= */
 
     @Test
@@ -257,9 +282,48 @@ public class MatchTest {
         squares.forEach(sq -> assertTrue(sq.isFull()));
     }
 
+    /* ========== KILLSHOT TRACK =========== */
+
     @Test(expected = NullPointerException.class)
     public void setKillshotsTrack_null_shouldThrow() {
         mockMatch.setKillshotsTrack(null);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void addKillshot_nullPlayer_shouldThrow() {
+        mockMatch.addKillshot(null);
+    }
+
+    @Test
+    public void addKillshot_notFull_shouldAdd() {
+        Player p = mockMatch.getPlayerByName("bzoto");
+
+        mockMatch.addKillshot(p);
+
+        assertEquals(p, mockMatch.getKillshotsTrack().get(0));
+        assertEquals(1, mockMatch.getKillshotsTrack().size());
+
+        mockMatch.setKillshotsTrack(new LinkedList<>()); /* Reset */
+    }
+
+    @Test
+    public void addKillshot_full_shouldNotAdd() {
+        Player b = mockMatch.getPlayerByName("bzoto");
+        Player z = mockMatch.getPlayerByName("zoniMyLord");
+
+        /* Refill killshot track */
+        for (int i = 0; i < skulls; i++) {
+            mockMatch.addKillshot(z);
+        }
+
+        /* Try to add another killshot */
+        mockMatch.addKillshot(b);
+
+        /* Check that it has not been added */
+        assertEquals(skulls, mockMatch.getKillshotsTrack().size());
+        assertFalse(mockMatch.getKillshotsTrack().contains(b));
+
+        mockMatch.setKillshotsTrack(new LinkedList<>()); /* Reset */
     }
 
     @Test

@@ -161,12 +161,11 @@ public class Match extends Observable {
 
 
     /**
-     * Ends the current turn, if the owner of the turn was the last one, also ends the match
+     * Set the state of the current turn to {@link PlayerTurnState#OVER}
      */
     public void endCurrentTurn(){
         // Update the state of the current turn
         currentTurn.setTurnState(PlayerTurnState.OVER);
-        //TODO: Finish implementing this method
     }
 
     /* ===== FRENZY METHODS ===== */
