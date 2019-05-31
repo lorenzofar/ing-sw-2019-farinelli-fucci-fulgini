@@ -38,16 +38,22 @@ public class PlayerView implements Serializable {
      * The list of powerups belonging to the player
      */
     private List<PowerupCard> powerups;
+    /**
+     * The current score of the player
+     */
+    private int score;
 
     /**
      * Private constructor to be used only by Jackson
      */
     @JsonCreator
-    private PlayerView() {}
+    private PlayerView() {
+    }
 
     public PlayerView(String name, PlayerColor color) {
         this.name = name;
         this.color = color;
+        this.score = 0;
         this.ammo = new EnumMap<>(AmmoCube.class);
         this.weapons = new ArrayList<>();
         this.powerups = new ArrayList<>();
@@ -131,6 +137,27 @@ public class PlayerView implements Serializable {
     public void setPowerups(List<PowerupCard> powerups) {
         if (powerups != null && !powerups.contains(null)) {
             this.powerups = powerups;
+        }
+    }
+
+    /**
+     * Retrieves the current score of the player
+     *
+     * @return The score of the player
+     */
+    public int getScore() {
+        return score;
+    }
+
+    /**
+     * Sets the current score of the player
+     * If a negative value is passed, nothing happens
+     *
+     * @param score The score of the player
+     */
+    public void setScore(int score) {
+        if (score >= 0) {
+            this.score = score;
         }
     }
 }

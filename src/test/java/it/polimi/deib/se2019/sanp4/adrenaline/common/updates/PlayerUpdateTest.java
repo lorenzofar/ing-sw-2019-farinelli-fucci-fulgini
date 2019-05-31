@@ -1,7 +1,6 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.common.updates;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.ActionCardView;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.PlayerView;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionCardEnum;
@@ -27,6 +26,7 @@ public class PlayerUpdateTest {
 
     private PlayerView playerView;
     private String name = "Luca";
+    private int score = 777;
     private Collection<ActionEnum> actions = new HashSet<>();
     private ActionCard actionCard;
     private PlayerColor color = PlayerColor.BLUE;
@@ -52,6 +52,7 @@ public class PlayerUpdateTest {
         playerView = new PlayerView(name, color);
         playerView.setAmmo(ammo);
         playerView.setWeapons(weaponCards);
+        playerView.setScore(score);
 
         /* Serialize */
         PlayerUpdate update = new PlayerUpdate(playerView);
@@ -63,6 +64,7 @@ public class PlayerUpdateTest {
         /* Check all the attributes */
         assertEquals(playerView.getName(), playerUpdate.getPlayer().getName());
         assertEquals(playerView.getColor(), playerUpdate.getPlayer().getColor());
+        assertEquals(playerView.getScore(), playerUpdate.getPlayer().getScore());
         assertEquals(playerView.getAmmo(), playerUpdate.getPlayer().getAmmo());
         assertEquals(playerView.getWeapons(), playerUpdate.getPlayer().getWeapons());
         assertEquals(playerView.getPowerups(), playerUpdate.getPlayer().getPowerups());
