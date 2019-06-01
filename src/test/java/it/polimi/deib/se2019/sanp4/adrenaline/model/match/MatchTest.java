@@ -1,6 +1,7 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.model.match;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.MatchView;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.InitialUpdate;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.ModelTestUtil;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.AmmoSquare;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.CoordPair;
@@ -333,6 +334,18 @@ public class MatchTest {
         int matchSkulls = mockMatch.getSkulls() + mockMatch.getKillshotsTrack().size();
         assertEquals(matchSkulls, view.getTotalSkulls());
         assertEquals(mockMatch.getKillshotsTrack().size(), view.getKillshotsCount());
+    }
 
+    @Test
+    public void generateUpdate_ShouldSucceed() {
+        InitialUpdate update = mockMatch.generateUpdate();
+        assertNotNull(update.getPlayers());
+        assertNotNull(update.getPlayerBoards());
+        assertNotNull(update.getActionCards());
+        assertEquals(mockMatch.getPlayers().size(), update.getPlayers().size());
+        assertEquals(mockMatch.getPlayers().size(), update.getPlayerBoards().size());
+        assertEquals(mockMatch.getPlayers().size(), update.getActionCards().size());
+        assertNotNull(update.getMatch());
+        assertNotNull(update.getBoard());
     }
 }
