@@ -25,19 +25,25 @@ public class SpawnController {
 
     private static final String CHOOSE_SPAWN_MESSAGE = "Choose a powerup as your spawn point";
 
-    /* Prevent instantiation */
-    private SpawnController() {}
+    private Match match;
+
+    /**
+     * Creates a new spawn controller for given match
+     * @param match The match to be controlled, not null
+     */
+    public SpawnController(Match match) {
+        this.match = match;
+    }
 
     /**
      * Handles the initial spawn of the player.
      * Doesn't check that the player needs to spawn
      * If the player doesn't respond in time, no spawn location is chosen and the player won't spawn at all.
      * @param view the view of the player who has to spawn
-     * @param match the instance of the match
      * @throws CancellationException if the request to the player gets cancelled
      * @throws InterruptedException if the thread gets interrupted
      */
-    public static void initialSpawn(PersistentView view, Match match) throws InterruptedException {
+    public void initialSpawn(PersistentView view) throws InterruptedException {
         Player player = match.getPlayerByName(view.getUsername());
         /* Draw two cards from the powerup stack */
         CardStack<PowerupCard> stack = match.getPowerupStack();
@@ -73,10 +79,9 @@ public class SpawnController {
      * the user is automatically spawned on the location corresponding to the card he drew.
      * This function also guarantees that the drawn card will be the first in the request
      * @param view the view of the player who needs to be respawned
-     * @param match the instance of the match
      * @throws InterruptedException if the thread gets interrupted
      */
-    public static void respawn(PersistentView view, Match match) throws InterruptedException {
+    public void respawn(PersistentView view) throws InterruptedException {
         int timeout = Integer.parseInt((String) AdrenalineProperties.getProperties()
                 .getOrDefault("adrenaline.timeout.spawn", "30"));
         Player player = match.getPlayerByName(view.getUsername());

@@ -43,6 +43,8 @@ public class SpawnControllerTest {
 
     private static Match match;
 
+    private static SpawnController spawnController; /* UUT */
+
     @BeforeClass
     public static void classSetup() {
         ModelTestUtil.loadCreatorResources();
@@ -53,6 +55,7 @@ public class SpawnControllerTest {
         usernames.add("b");
         usernames.add("c");
         match = MatchCreator.createMatch(usernames, new MatchConfiguration(0, 5));
+        spawnController = new SpawnController(match);
     }
 
     @Test
@@ -72,7 +75,7 @@ public class SpawnControllerTest {
         }).when(mockView).sendChoiceRequest(captor.capture());
 
         /* Test the first spawn */
-        SpawnController.initialSpawn(mockView, match);
+        spawnController.initialSpawn(mockView);
 
         /* Check that the user is in the correct position */
         Square spawnPoint = match.getBoard().getSpawnPoints().get(selectedSpawnPointColor[0]);
@@ -95,7 +98,7 @@ public class SpawnControllerTest {
 
         try {
             /* Test the first spawn */
-            SpawnController.initialSpawn(mockView, match);
+            spawnController.initialSpawn(mockView);
             fail();
         } catch (CancellationException e) {
             /* Check that the user is not spawned */
@@ -127,7 +130,7 @@ public class SpawnControllerTest {
         player.addPowerup(previous);
 
         /* Test the respawn */
-        SpawnController.respawn(mockView, match);
+        spawnController.respawn(mockView);
 
         /* Check that the user is in the correct position */
         Square spawnPoint = match.getBoard().getSpawnPoints().get(selectedSpawnPointColor[0]);
@@ -166,7 +169,7 @@ public class SpawnControllerTest {
         player.addPowerup(previous.get(1));
 
         /* Test the respawn */
-        SpawnController.respawn(mockView, match);
+        spawnController.respawn(mockView);
 
         /* Check that the user has the powerups he did not use ti spawn */
         assertTrue(player.getPowerups().contains(otherPowerups[0]));
@@ -189,7 +192,7 @@ public class SpawnControllerTest {
         board.movePlayer(player, board.getSquare(new CoordPair(1,1)));
 
         /* Try to respawn */
-        SpawnController.respawn(mockView, match);
+        spawnController.respawn(mockView);
 
         /* Now it should be on a spawn point */
         assertTrue(board.getSpawnPoints().values().contains(player.getCurrentSquare()));
@@ -211,7 +214,7 @@ public class SpawnControllerTest {
         board.movePlayer(player, board.getSquare(new CoordPair(1,1)));
 
         /* Try to respawn */
-        SpawnController.respawn(mockView, match);
+        spawnController.respawn(mockView);
 
         /* Now it should be on a spawn point */
         assertTrue(board.getSpawnPoints().values().contains(player.getCurrentSquare()));
