@@ -1,6 +1,7 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.client.gui;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.LoginException;
+import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -35,6 +36,10 @@ public class LoginController extends GUIController {
      */
     private BooleanProperty connectionSet;
     /**
+     * Property to check whether the user has succesfully logged in
+     */
+    private BooleanProperty loggedIn;
+    /**
      * Property to store the inserted hostname
      */
     private StringProperty serverHostname;
@@ -49,12 +54,14 @@ public class LoginController extends GUIController {
         username = new SimpleStringProperty("");
         serverConnected = new SimpleBooleanProperty(false);
         connectionSet = new SimpleBooleanProperty(false);
+        loggedIn = new SimpleBooleanProperty(false);
         hostnameTextField.textProperty().bindBidirectional(serverHostname);
         usernameTextField.textProperty().bindBidirectional(username);
         hostnameTextField.disableProperty().bind(serverConnected);
+        usernameTextField.disableProperty().bind(loggedIn);
         socketToggle.disableProperty().bind(connectionSet);
         rmiToggle.disableProperty().bind(connectionSet);
-        connectBtn.disableProperty().bind(username.isEmpty().or(serverConnected.not().and(serverHostname.isEmpty())));
+        connectBtn.disableProperty().bind(username.isEmpty().or(serverConnected.not().and(serverHostname.isEmpty())).or(loggedIn));
     }
 
     /**
@@ -72,8 +79,7 @@ public class LoginController extends GUIController {
                     clientView.setRMIConnection();
                 }
                 connectionSet.set(true);
-            }
-            catch (Exception ignore){
+            } catch (Exception ignore) {
                 // The connection has already been set in the view
                 connectionSet.set(true);
             }
@@ -90,8 +96,8 @@ public class LoginController extends GUIController {
         try {
             clientView.getServerConnection().login(username.getValue());
             clientView.setUsername(username.getValue());
-            new Alert(Alert.AlertType.INFORMATION, "Succesfully connected", ButtonType.OK).showAndWait();
-            //TODO: Handle successful login
+            loggedIn.set(true);
+            Platform.runLater(() -> new Alert(Alert.AlertType.INFORMATION, "Succesfully connected", ButtonType.OK).show());
         } catch (IOException e) {
             new Alert(Alert.AlertType.ERROR, "A network error occurred").showAndWait();
             // A network error occurred

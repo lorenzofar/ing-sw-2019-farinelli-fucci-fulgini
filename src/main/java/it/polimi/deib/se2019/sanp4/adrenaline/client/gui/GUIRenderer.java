@@ -77,18 +77,21 @@ public class GUIRenderer extends Application implements UIRenderer {
     /* ===== LOBBY ===== */
     @Override
     public void showLobby() {
-        showScene("/fxml/lobby.fxml");
+        Platform.runLater(() -> showScene("/fxml/lobby.fxml"));
     }
 
     @Override
     public void updateLobby(Collection<String> connectedPlayers, boolean matchStarting) {
-        LobbyController lobbyController = (LobbyController) currentController;
-        try {
-            lobbyController.setConnectedPlayers(connectedPlayers);
-            lobbyController.setMatchStarting(matchStarting);
-        } catch (Exception ignore) {
-            // Errors are ignored if the method is invoked when the current scene is wrong
-        }
+        Platform.runLater(() -> {
+            LobbyController lobbyController = (LobbyController) currentController;
+            try {
+                lobbyController.setConnectedPlayers(connectedPlayers);
+                lobbyController.setMatchStarting(matchStarting);
+            } catch (Exception ignore) {
+                // If the previous calls fail, it means the lobby is not yet initialized
+                showLobby();
+            }
+        });
     }
     /* ================== */
 
