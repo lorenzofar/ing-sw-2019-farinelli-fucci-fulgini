@@ -11,7 +11,11 @@ public enum ViewScene {
     /** Match start has been cancelled (e.g. lack of players) */
     MATCH_START_CANCELLED("Match cancelled"),
     /** The view is asking the player to select a spawn point */
-    SPAWN_FORM("Spawn point selection");
+    SPAWN_FORM("Spawn point selection"),
+    /** Scene of the current player */
+    TURN_PLAYING("Current turn"),
+    /** Scene of the players waiting for their turn */
+    TURN_IDLE("Waiting for turn");
 
     //TODO: Add more states
 
