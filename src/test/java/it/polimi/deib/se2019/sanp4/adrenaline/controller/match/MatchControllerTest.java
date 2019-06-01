@@ -1,6 +1,6 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.controller.match;
 
-import it.polimi.deib.se2019.sanp4.adrenaline.controller.PersistentView;
+import it.polimi.deib.se2019.sanp4.adrenaline.controller.*;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.answerers.FirstChoiceAnswer;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.ModelTestUtil;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.Board;
@@ -59,8 +59,17 @@ public class MatchControllerTest {
             when(v.getUsername()).thenReturn(n);
             views.put(n,v);
         });
+
+        /* Create a match */
         match = MatchCreator.createMatch(validNames, validConfig);
-        matchController = new MatchController(match, views);
+
+        /* Create a stub of the controller factory (only stub relevant methods) */
+        ControllerFactory controllerFactory = mock(ControllerFactory.class);
+        when(controllerFactory.createSpawnController()).thenReturn(new SpawnController(match));
+        when(controllerFactory.createScoreManager()).thenReturn(new StandardScoreManager());
+
+        /* Create the instance of the match controller */
+        matchController = new MatchController(match, views, controllerFactory);
     }
 
     /* ============================= SELECT NEXT TURN =============================== */

@@ -1,9 +1,6 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.controller.match;
 
-import it.polimi.deib.se2019.sanp4.adrenaline.controller.PersistentView;
-import it.polimi.deib.se2019.sanp4.adrenaline.controller.ScoreManager;
-import it.polimi.deib.se2019.sanp4.adrenaline.controller.SpawnController;
-import it.polimi.deib.se2019.sanp4.adrenaline.controller.StandardScoreManager;
+import it.polimi.deib.se2019.sanp4.adrenaline.controller.*;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionCardCreator;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionCardEnum;
@@ -28,6 +25,8 @@ public class MatchController {
 
     private Map<String, PersistentView> views;
 
+    private SpawnController spawnController;
+
     private ScoreManager scoreManager;
 
     private List<Player> deadPlayers;
@@ -36,19 +35,24 @@ public class MatchController {
 
     private boolean finished;
 
+    private ControllerFactory factory;
+
     /**
      * Creates the controller for given match
      *
      * @param match the match to be controller, in its initial phase, not null
      * @param views the persistent views of the players, not null
+     * @param factory the factory to be used for creating sub-controllers
      */
-    public MatchController(Match match, Map<String, PersistentView> views) {
+    public MatchController(Match match, Map<String, PersistentView> views, ControllerFactory factory) {
         this.match = match;
         this.views = views;
-        this.scoreManager = new StandardScoreManager();
+        this.scoreManager = factory.createScoreManager();
+        this.spawnController = factory.createSpawnController();
         this.players = match.getPlayers();
         this.deadPlayers = new ArrayList<>();
         this.finished = false;
+        this.factory = factory;
     }
 
     /**
@@ -84,15 +88,15 @@ public class MatchController {
     }
 
     /**
-     * Given that match.currentTurn is set, gets the player and calls
-     * the PlayerTurnController to actually run the turn
+     * Given that match.currentTurn is set, gets the player and
+     * asks the {@link TurnController} to actually run the turn
      */
-    void runCurrentTurn() {
-        /* Select the view of the player */
-        String username = match.getCurrentTurn().getTurnOwner().getName();
-        PersistentView current = views.get(username);
+    void runCurrentTurn() throws InterruptedException {
+        /* Select the current turn */
+        PlayerTurn turn = match.getCurrentTurn();
 
-        /* TODO: Ask the PlayerTurnController to run the turn */
+        TurnController turnController = factory.createTurnController(turn);
+        turnController.runTurn();
     }
 
     /**
@@ -252,7 +256,6 @@ public class MatchController {
      * @throws InterruptedException if the thread gets interrupted while waiting
      */
     void respawnDeadPlayers() throws InterruptedException {
-        SpawnController spawnController = new SpawnController(match);
         for (Player p : deadPlayers) {
             PersistentView view = views.get(p.getName());
             spawnController.respawn(view);
