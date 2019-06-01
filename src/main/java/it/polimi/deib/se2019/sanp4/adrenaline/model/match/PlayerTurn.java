@@ -5,10 +5,9 @@ import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionEnum;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
 
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+
+import static it.polimi.deib.se2019.sanp4.adrenaline.model.match.PlayerTurnState.*;
 
 /**
  * A representation of the turn of a player
@@ -22,23 +21,17 @@ import java.util.Set;
  */
 public class PlayerTurn {
 
-    /** The current action performed by the player */
-    private ActionEnum currentAction;
-
     /** The number of actions the player can still perform */
     private int remainingActions;
 
     /** The player the turn belongs to */
     private Player turnOwner;
 
-    /** If the player has already performed the final action in this turn */
-    private boolean hasPerformedFinalAction;
-
     /** The state of the turn */
     private PlayerTurnState state;
 
     /** The list of players that received a damage in the turn */
-    private Set<Player> hitPlayers;
+    private Set<Player> damagedPlayers;
 
     /**
      * Creates a new turn for the specified player.
@@ -48,8 +41,7 @@ public class PlayerTurn {
         if(player == null){
             throw new NullPointerException("Player cannot be null");
         }
-        currentAction = null;
-        hitPlayers = new LinkedHashSet<>();
+        damagedPlayers = new LinkedHashSet<>();
         turnOwner = player;
         // Set the remaining actions according to the player's action card
         remainingActions = player.getActionCard().getMaxActions();
@@ -63,11 +55,25 @@ public class PlayerTurn {
     }
 
     /**
-     * Retrieves the list of actions the player can perform
-     * @return The list of objects representing the actions
+     * Retrieves the list of actions the player can perform, according to the current state of the turn
+     * <ul>
+     *     <li>If the turn is over, the collection is empty</li>
+     *     <li>If the user still has remaining actions, all the actions in the action card are returned</li>
+     *     <li>If the user has finished his remaining actions, then the final action is returned</li>
+     * </ul>
+     * @return A read-only collection with the actions that the user can choose to perform
      */
-    public List<ActionEnum> getAvailableActions(){
-        return (List<ActionEnum>) turnOwner.getActionCard().getActions();
+    public Collection<ActionEnum> getAvailableActions(){
+        ActionCard actionCard = turnOwner.getActionCard();
+        if (state == OVER) {
+            return Collections.emptyList(); /* No actions to perform */
+        } else if(remainingActions > 0) {
+            return actionCard.getActions(); /* Main + Final actions */
+        } else if (actionCard.hasFinalAction()) {
+            return Collections.singletonList(actionCard.getFinalAction()); /* Only final action */
+        } else {
+            return Collections.emptyList(); /* No action to perform */
+        }
     }
 
     /**
@@ -90,18 +96,6 @@ public class PlayerTurn {
     }
 
     /**
-     * Checks whether the provided action is being performed by the player
-     * @param action The action to test, not null
-     * @return {@code true} is the action is active, {@code false} otherwise
-     */
-    public boolean isActionActive(ActionEnum action){
-        if(action == null){
-            throw new NullPointerException("Action cannot be null");
-        }
-        return currentAction.toString().equals(action.toString());
-    }
-
-    /**
      * Retrieves the state the turn is into
      * @return The object representing the state
      */
@@ -119,11 +113,19 @@ public class PlayerTurn {
     }
 
     /**
-     * Retrieves the list of players that received a damage during this turn
-     * @return The list of objects representing the players
+     * Adds given player to the set of players damaged during this turn
+     * @param player The player to be added
      */
-    public List<Player> getHitPlayers(){
-        return new ArrayList<>(this.hitPlayers);
+    public void addDamagedPlayer(Player player) {
+        damagedPlayers.add(player);
+    }
+
+    /**
+     * Retrieves the list of players that received a damage during this turn
+     * @return A set of objects representing the players
+     */
+    public Set<Player> getDamagedPlayers(){
+        return Collections.unmodifiableSet(damagedPlayers);
     }
 
     /**
@@ -132,14 +134,6 @@ public class PlayerTurn {
      */
     public Player getTurnOwner() {
         return turnOwner;
-    }
-
-    /**
-     * Retrieves the action that is currently being performed
-     * @return The object representing the action
-     */
-    public ActionEnum getCurrentAction() {
-        return currentAction;
     }
 
     /**
