@@ -288,8 +288,7 @@ class CLIHelper {
 
         do {
             if (n != null) print("This choice does not exist!");
-            print(PROMPT_TEMPLATE, "");
-            n = scanner.nextInt();
+            n = parseInt();
             scanner.nextLine(); /* Catch newline */
         } while (n > maxN || n < 0);
 
