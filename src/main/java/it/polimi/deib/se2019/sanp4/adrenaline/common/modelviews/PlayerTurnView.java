@@ -1,5 +1,6 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.match.PlayerTurnState;
 
 import java.io.Serializable;
@@ -25,7 +26,12 @@ public class PlayerTurnView implements Serializable {
      */
     private PlayerTurnState state;
 
-    public PlayerTurnView(String player) {
+    /**
+     * Creates a new player turn view
+     * @param player the name of the player
+     */
+    public PlayerTurnView(
+            @JsonProperty("player") String player) {
         if (player == null) {
             throw new NullPointerException("Player cannot be null");
         }

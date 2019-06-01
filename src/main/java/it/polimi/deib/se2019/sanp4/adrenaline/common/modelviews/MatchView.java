@@ -1,5 +1,7 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+
 import java.io.Serializable;
 
 /**
@@ -21,6 +23,10 @@ public class MatchView implements Serializable {
      */
     private boolean frenzy;
 
+    /**
+     * Creates a new match view
+     */
+    @JsonCreator
     public MatchView() {
         this.killshotsCount = 0;
         this.frenzy = false;

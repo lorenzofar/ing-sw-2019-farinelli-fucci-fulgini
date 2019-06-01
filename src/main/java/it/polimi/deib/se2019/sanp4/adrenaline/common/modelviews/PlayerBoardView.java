@@ -26,6 +26,9 @@ public class PlayerBoardView implements Serializable {
      */
     private String state;
 
+    /**
+     * Creates a new player board view
+     */
     public PlayerBoardView() {
         damages = new ArrayList<>();
         deaths = 0;

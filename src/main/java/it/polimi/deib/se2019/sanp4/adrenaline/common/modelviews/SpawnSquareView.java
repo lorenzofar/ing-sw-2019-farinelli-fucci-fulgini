@@ -1,6 +1,7 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.CoordPair;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.RoomColor;
 
@@ -20,14 +21,14 @@ public class SpawnSquareView extends SquareView {
     private List<String> weapons;
 
     /**
-     * Private constructor to be used only by Jackson.
+     * Creates a spawn square view
+     * @param location the coordinates of the spawn square
+     * @param roomColor the color of the room the square is in
      */
     @JsonCreator
-    private SpawnSquareView() {
-        super();
-    }
-
-    public SpawnSquareView(CoordPair location, RoomColor roomColor) {
+    public SpawnSquareView(
+            @JsonProperty("location") CoordPair location,
+            @JsonProperty("roomColor") RoomColor roomColor) {
         super(location, roomColor);
         weapons = new ArrayList<>();
     }

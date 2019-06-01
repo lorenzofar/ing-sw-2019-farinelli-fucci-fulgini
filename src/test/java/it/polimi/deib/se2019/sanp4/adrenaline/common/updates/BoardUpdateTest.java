@@ -26,7 +26,7 @@ public class BoardUpdateTest {
 
     @Test
     public void serialize_ShouldSucceed() throws IOException {
-        board = new BoardView(rows,columns);
+        board = new BoardView(0, rows,columns);
         AmmoSquareView ammoSquareView = new AmmoSquareView(new CoordPair(0,0),
                                         RoomColor.BLUE);
         SpawnSquareView spawnSquareView = new SpawnSquareView(new CoordPair(0,1),

@@ -317,7 +317,7 @@ public class Board extends Observable<ModelUpdate> {
      */
     public BoardView generateView(){
         SquareView[][] squareViewMatrix = new SquareView[squares.length][squares[0].length];
-        BoardView view = new BoardView(squares.length, squares[0].length);
+        BoardView view = new BoardView(this.id, squares.length, squares[0].length);
         for(int x = 0; x < squares.length; x++) {
             for(int y = 0; y < squares[0].length; y++) {
                 if (squares[x][y] != null) {
@@ -326,6 +326,11 @@ public class Board extends Observable<ModelUpdate> {
             }
         }
         view.setSquares(squareViewMatrix);
+        /* From spawnPoints, creates a new Map in which the key is the same and the value contains
+        only the location of the spawn squares */
+        view.setSpawnPoints(spawnPoints.entrySet()
+                    .stream()
+                    .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().getLocation())));
         return view;
     }
 }

@@ -1,6 +1,7 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.*;
@@ -42,12 +43,13 @@ public abstract class SquareView implements Serializable {
     private Map<CardinalDirection, SquareConnectionType> adjacentMap;
 
     /**
-     * Private constructor to be used only by Jackson.
+     * Creates a new square view
+     * @param location the coordinates of the square
+     * @param roomColor the color of the room the square is in
      */
-    @JsonCreator
-    SquareView() {}
-
-    public SquareView(CoordPair location, RoomColor roomColor) {
+    public SquareView(
+            @JsonProperty("location") CoordPair location,
+            @JsonProperty("roomColor") RoomColor roomColor) {
         this.location = location;
         this.roomColor = roomColor;
         this.players = new HashSet<>();

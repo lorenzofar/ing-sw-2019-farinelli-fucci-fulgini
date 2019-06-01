@@ -1,9 +1,13 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.CoordPair;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCube;
 
 import java.io.Serializable;
+import java.util.Map;
 
 /**
  * A lightweight representation of the game board in the view
@@ -12,16 +16,31 @@ public class BoardView implements Serializable {
 
     private static final long serialVersionUID = -444568262120667535L;
     /**
-     * A matrix representing the disposal of squares in the board
+     * A matrix representing the disposal of squares in the board.
      */
     private SquareView[][] squares;
 
     /**
-     * Private constructor to be used only by Jackson.
+     * The unique identifier of this board configuration.
      */
-    private BoardView() {}
+    private final int id;
+    /**
+     * Maps each color in the powerups to its spawn point.
+     */
+    private Map<AmmoCube, CoordPair> spawnPoints;
 
-    public BoardView(int xSize, int ySize) {
+    /**
+     * Creates a new board view
+     * @param id the board identifier
+     * @param xSize the number of columns
+     * @param ySize the number of rows
+     */
+    @JsonCreator
+    public BoardView(
+            @JsonProperty("id") int id,
+            @JsonProperty("xSize") int xSize,
+            @JsonProperty("ySize") int ySize) {
+        this.id = id;
         this.squares = new SquareView[xSize][ySize];
     }
 
@@ -80,5 +99,17 @@ public class BoardView implements Serializable {
         } catch (IndexOutOfBoundsException e) {
             return null;
         }
+    }
+
+    public Map<AmmoCube, CoordPair> getSpawnPoints() {
+        return spawnPoints;
+    }
+
+    public void setSpawnPoints(Map<AmmoCube, CoordPair> spawnPoints) {
+        this.spawnPoints = spawnPoints;
+    }
+
+    public int getId() {
+        return id;
     }
 }

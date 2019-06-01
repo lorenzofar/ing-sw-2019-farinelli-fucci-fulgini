@@ -2,6 +2,7 @@ package it.polimi.deib.se2019.sanp4.adrenaline.model.board;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.BoardNotFoundException;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.ModelTestUtil;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCube;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.BoardView;
 import it.polimi.deib.se2019.sanp4.adrenaline.utils.JSONUtils;
@@ -11,6 +12,7 @@ import org.junit.Test;
 
 import java.util.*;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
 import static it.polimi.deib.se2019.sanp4.adrenaline.model.board.CardinalDirection.*;
@@ -379,5 +381,8 @@ public class BoardTest {
                 }
             }
         }
+        assertEquals(boardView.getSpawnPoints().get(AmmoCube.RED), new CoordPair(0,1));
+        assertEquals(boardView.getSpawnPoints().get(AmmoCube.BLUE), new CoordPair(2,0));
+        assertEquals(boardView.getSpawnPoints().get(AmmoCube.YELLOW), new CoordPair(3,2));
     }
 }
