@@ -60,7 +60,7 @@ public class PersistentViewImpl extends RemoteObservable<ViewEvent> implements P
 
     private final ExecutorService callbackExecutor = Executors.newSingleThreadExecutor();
 
-    private final ExecutorService updateExecutor = Executors.newCachedThreadPool();
+    private final ExecutorService updateExecutor = Executors.newSingleThreadExecutor();
 
     private Future<?> timer;
 

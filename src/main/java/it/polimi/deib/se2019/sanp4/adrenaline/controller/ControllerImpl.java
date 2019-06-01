@@ -3,17 +3,21 @@ package it.polimi.deib.se2019.sanp4.adrenaline.controller;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.events.ViewEvent;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.network.RemoteView;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.RemoteObservable;
+import it.polimi.deib.se2019.sanp4.adrenaline.controller.match.MatchController;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.MatchOperationalState;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.Model;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.ModelImpl;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.match.Match;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.match.MatchConfiguration;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.match.MatchCreator;
+import it.polimi.deib.se2019.sanp4.adrenaline.view.MessageType;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Implementation of the Controller, which uses {@link PersistentView}s to decorate the
@@ -55,12 +59,18 @@ public class ControllerImpl implements Controller {
             Match match = MatchCreator.createMatch(usernames, config);
             model.setMatch(match);
 
+            /* Create the controller factory */
+            ControllerFactory factory = new StandardControllerFactory(match, views);
+
             /* Send the initial update (with the whole state of the model) to all the views */
             usernames.forEach(model::sendInitialUpdate);
 
             /* Set the operational state of the match */
             model.setOperationalState(MatchOperationalState.ACTIVE);
-            /* TODO: Ask the match controller to start the match */
+
+            /* Create the match controller and run the match */
+            MatchController matchController = factory.createMatchController();
+            matchController.runMatch();
 
             /* When the match is over, change the operational state again */
             model.setOperationalState(MatchOperationalState.FINISHED);
@@ -107,7 +117,7 @@ public class ControllerImpl implements Controller {
     public boolean reconnectRemoteView(String username, RemoteView remote) {
         PersistentView view = views.get(username);
         if (view == null) return false;
-        return view.reconnectRemoteView(view);
+        return view.reconnectRemoteView(remote);
     }
 
     /**
@@ -145,9 +155,15 @@ public class ControllerImpl implements Controller {
         /* Subscribe for updates */
         model.addObserver(username, view);
 
-        /* Set callback */
+        /* Set callbacks */
         view.setNetworkFaultCallback(() -> {
             model.suspendPlayer(username);
+            return null;
+        });
+
+        view.setReconnectionCallback(() -> {
+            model.unsuspendPlayer(username);
+            model.sendInitialUpdate(username);
             return null;
         });
     }

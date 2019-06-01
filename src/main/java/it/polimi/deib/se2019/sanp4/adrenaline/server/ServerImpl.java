@@ -6,6 +6,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.common.network.RemoteServer;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.network.RemoteView;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.network.socket.SocketServer;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.Controller;
+import it.polimi.deib.se2019.sanp4.adrenaline.controller.ControllerImpl;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -48,6 +49,9 @@ public class ServerImpl implements SocketServer, RemoteServer, Runnable {
 
     /** Executor for the lobby */
     private ExecutorService lobbyExecutor = Executors.newSingleThreadExecutor();
+
+    /** Executor for the controllers of the matches */
+    private ExecutorService matchExecutor = Executors.newFixedThreadPool(10);
 
     /** The lobby used to handle waiting players */
     private Lobby lobby = new Lobby();
@@ -150,13 +154,27 @@ public class ServerImpl implements SocketServer, RemoteServer, Runnable {
             throw new LoginException("Please provide an username");
         }
 
-        if (isUsernameReserved(username)) throw new LoginException("This name is already taken");
+        boolean success = false;
 
-        /* If the username is valid then reserve it */
-        reserveUsername(username);
+        if (!isUsernameReserved(username)) {
+            /* The player is not actually in a match */
+            reserveUsername(username);
 
-        /* Send the player to the Lobby */
-        lobby.insertPlayer(username, view);
+            /* Send the player to the Lobby */
+            lobby.insertPlayer(username, view);
+            success = true;
+        } else {
+            /* Check if the player is in a match */
+            Controller controller = playerMatches.get(username);
+            if(controller != null) {
+                /* Try to reconnect the player */
+                success = controller.reconnectRemoteView(username, view);
+            }
+        }
+
+        if (!success) {
+            throw new LoginException("This name is already taken");
+        }
     }
 
 
@@ -218,10 +236,20 @@ public class ServerImpl implements SocketServer, RemoteServer, Runnable {
      * @param players a map with username as the key and the RemoteView of the player as the value
      */
     public void startNewMatch(Map<String, RemoteView> players) {
-        logger.log(Level.INFO, () -> String.format("Starting new match from players: %s", players.keySet()));
-        /* TODO: Create a controller for this match, from given players */
+        Set<String> usernames = players.keySet();
+        logger.log(Level.INFO, () -> String.format("Starting new match from players: %s", usernames));
+
+        /* Create the controller for the match */
+        Controller controller = new ControllerImpl(players);
 
         /* Set the controller for each player in the map */
+        usernames.forEach(u -> playerMatches.put(u, controller));
+
+        /* Run the controller in another thread */
+        matchExecutor.submit(() -> {
+            controller.run(); /* Run */
+            usernames.forEach(this::unreserveUsername); /* Unreserve usernames when finished */
+        });
     }
 
     /* ========== GETTERS ============= */
