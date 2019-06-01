@@ -38,6 +38,7 @@ public class MatchController {
 
     /**
      * Creates the controller for given match
+     *
      * @param match the match to be controller, in its initial phase, not null
      * @param views the persistent views of the players, not null
      */
@@ -52,6 +53,7 @@ public class MatchController {
 
     /**
      * Runs the match
+     *
      * @throws InterruptedException if the thread is interrupted while running the match
      */
     public void runMatch() throws InterruptedException {
@@ -97,8 +99,8 @@ public class MatchController {
      * When the turn is over and the scoring has been performed, this checks it the match is over.
      * The match can end for two reasons:
      * <ol>
-     *     <li>It reached its final end: the final player performed his turn</li>
-     *     <li>The number of active players is not sufficient to continue</li>
+     * <li>It reached its final end: the final player performed his turn</li>
+     * <li>The number of active players is not sufficient to continue</li>
      * </ol>
      * If the match is detected to be over, then the flag {@code finished is set}
      */
@@ -117,11 +119,11 @@ public class MatchController {
     /**
      * Implements the first part of the post-turn procedure:
      * <ol>
-     *     <li>Set turn state</li>
-     *     <li>Scoring</li>
-     *     <li>Resetting player boards</li>
-     *     <li>Setting up frenzy mode</li>
-     *     <li>Assigning action cards</li>
+     * <li>Set turn state</li>
+     * <li>Scoring</li>
+     * <li>Resetting player boards</li>
+     * <li>Setting up frenzy mode</li>
+     * <li>Assigning action cards</li>
      * </ol>
      */
     void endCurrentTurn() {
@@ -171,9 +173,9 @@ public class MatchController {
     /**
      * When the last skull has been drawn, call this
      * <ul>
-     *     <li>Sets the frenzy attribute in {@link Match}</li>
-     *     <li>Sets the proper action cards</li>
-     *     <li>Saves the last player</li>
+     * <li>Sets the frenzy attribute in {@link Match}</li>
+     * <li>Sets the proper action cards</li>
+     * <li>Saves the last player</li>
      * </ul>
      */
     private void setupFrenzyMode() {
@@ -203,12 +205,12 @@ public class MatchController {
      * If there are no online players or if the final player is encountered while
      * selecting the next turn, this will set the {@code finished} flag
      */
-    void selectNextTurn(){
+    void selectNextTurn() {
         int startingIndex;
         int nextPlayerIndex;
         PlayerTurn currentTurn = match.getCurrentTurn();
 
-        if (currentTurn == null){
+        if (currentTurn == null) {
             /* This is the first turn, so pick the first player who is able to play */
             startingIndex = 0;
             nextPlayerIndex = 0; /* No duplication, just prevent infinite loop */
@@ -246,20 +248,22 @@ public class MatchController {
      * Each player is asked to choose where to respawn based on powerups.
      * If the player is unable to respond, the spawn is automatic.
      * Every player is guaranteed to be respawned (if the thread is not interrupted)
+     *
      * @throws InterruptedException if the thread gets interrupted while waiting
      */
     void respawnDeadPlayers() throws InterruptedException {
+        SpawnController spawnController = new SpawnController(match);
         for (Player p : deadPlayers) {
             PersistentView view = views.get(p.getName());
-            SpawnController.respawn(view, match);
+            spawnController.respawn(view);
         }
     }
 
     /**
      * Called when the match is over (end of the main loop)
      * <ul>
-     *     <li>Perform final scoring</li>
-     *     <li>Send the leaderboard to the views</li>
+     * <li>Perform final scoring</li>
+     * <li>Send the leaderboard to the views</li>
      * </ul>
      */
     void endMatch() {

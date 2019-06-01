@@ -139,5 +139,7 @@ public abstract class ChoiceRequest<T extends Serializable> implements Serializa
         return uuid;
     }
 
-    abstract public void accept(ChoiceRequestVisitor visitor);
+    public void accept(ChoiceRequestVisitor visitor){
+        // Do nothing by default
+    }
 }
