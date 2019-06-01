@@ -2,6 +2,7 @@ package it.polimi.deib.se2019.sanp4.adrenaline.model;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.Observable;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.RemoteRoutingObservable;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.InitialUpdate;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.match.Match;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.ModelUpdate;
 
@@ -100,7 +101,9 @@ public class ModelImpl extends RemoteRoutingObservable<ModelUpdate> implements M
      */
     @Override
     public void sendInitialUpdate(String username) {
-        /* TODO: Implement this method */
+        if (match == null) return;
+        InitialUpdate update = match.generateUpdate();
+        notifyObservers(username, update);
     }
 
     /**
