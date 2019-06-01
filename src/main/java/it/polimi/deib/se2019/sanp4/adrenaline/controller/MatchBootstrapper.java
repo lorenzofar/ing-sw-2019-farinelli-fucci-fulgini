@@ -60,13 +60,13 @@ public class MatchBootstrapper {
 
     private CompletableChoice<Integer> askForBoardId(PersistentView view) {
         /* Generate request */
-        BoardRequest req = new BoardRequest(integersTo(NUMBER_OF_BOARDS));
+        BoardRequest req = new BoardRequest(integerRange(0, NUMBER_OF_BOARDS - 1));
         return requestWithTimer(view, req);
     }
 
     private CompletableChoice<Integer> askForSkullsCount(PersistentView view) {
         /* Generate request */
-        SkullCountRequest req = new SkullCountRequest(integersTo(MAX_SKULLS));
+        SkullCountRequest req = new SkullCountRequest(integerRange(1, MAX_SKULLS));
         return requestWithTimer(view, req);
     }
 
@@ -77,9 +77,9 @@ public class MatchBootstrapper {
         return pendingChoice;
     }
 
-    private List<Integer> integersTo(int max) {
+    private List<Integer> integerRange(int min, int max) {
         List<Integer> choices = new LinkedList<>();
-        for (int i = 1; i <= max; i++) {
+        for (int i = min; i <= max; i++) {
             choices.add(i);
         }
         return choices;
