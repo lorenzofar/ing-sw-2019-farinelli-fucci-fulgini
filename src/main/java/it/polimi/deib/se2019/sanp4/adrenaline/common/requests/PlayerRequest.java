@@ -37,4 +37,9 @@ public class PlayerRequest extends ChoiceRequest<String> {
     public PlayerRequest(String message, List<String> choices, boolean optional) {
         super(message, choices, optional, String.class);
     }
+
+    @Override
+    public void accept(ChoiceRequestVisitor visitor) {
+        visitor.handle(this);
+    }
 }

@@ -33,4 +33,9 @@ public class BoardRequest extends ChoiceRequest<Integer> {
     public BoardRequest(List<Integer> choices) {
         super("Please select the board", choices, false, Integer.class);
     }
+
+    @Override
+    public void accept(ChoiceRequestVisitor visitor) {
+        visitor.handle(this);
+    }
 }

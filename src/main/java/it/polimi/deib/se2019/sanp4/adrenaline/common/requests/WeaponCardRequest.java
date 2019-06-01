@@ -38,4 +38,9 @@ public class WeaponCardRequest extends ChoiceRequest<WeaponCard> {
     public WeaponCardRequest(String message, List<WeaponCard> choices, boolean optional) {
         super(message, choices, optional, WeaponCard.class);
     }
+
+    @Override
+    public void accept(ChoiceRequestVisitor visitor) {
+        visitor.handle(this);
+    }
 }

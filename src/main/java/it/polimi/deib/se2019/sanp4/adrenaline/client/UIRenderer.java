@@ -1,10 +1,11 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.client;
 
+import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.ChoiceRequestVisitor;
 import it.polimi.deib.se2019.sanp4.adrenaline.view.MessageType;
 
 import java.util.Collection;
 
-public interface UIRenderer {
+public interface UIRenderer extends ChoiceRequestVisitor {
 
     /**
      * Initialize the renderer and show the launch screen of the game,

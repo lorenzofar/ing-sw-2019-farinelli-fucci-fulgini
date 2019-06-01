@@ -32,4 +32,9 @@ public class PlayerOperationRequest extends ChoiceRequest<PlayerOperationEnum> {
     public PlayerOperationRequest(List<PlayerOperationEnum> choices) {
         super("Choose the operation you want to perform", choices, false, PlayerOperationEnum.class);
     }
+
+    @Override
+    public void accept(ChoiceRequestVisitor visitor) {
+        visitor.handle(this);
+    }
 }

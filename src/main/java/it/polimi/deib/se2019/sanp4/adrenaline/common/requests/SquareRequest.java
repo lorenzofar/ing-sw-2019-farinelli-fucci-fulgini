@@ -37,4 +37,9 @@ public class SquareRequest extends ChoiceRequest<CoordPair> {
     public SquareRequest(String message, List<CoordPair> choices, boolean optional) {
         super(message, choices, optional, CoordPair.class);
     }
+
+    @Override
+    public void accept(ChoiceRequestVisitor visitor) {
+        visitor.handle(this);
+    }
 }

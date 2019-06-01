@@ -38,4 +38,9 @@ public class PowerupCardRequest extends ChoiceRequest<PowerupCard> {
     public PowerupCardRequest(String message, List<PowerupCard> choices, boolean optional) {
         super(message, choices, optional, PowerupCard.class);
     }
+
+    @Override
+    public void accept(ChoiceRequestVisitor visitor) {
+        visitor.handle(this);
+    }
 }

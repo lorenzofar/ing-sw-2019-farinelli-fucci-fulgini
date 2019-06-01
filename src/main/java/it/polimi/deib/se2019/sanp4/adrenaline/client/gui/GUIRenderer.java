@@ -2,6 +2,7 @@ package it.polimi.deib.se2019.sanp4.adrenaline.client.gui;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.client.ClientView;
 import it.polimi.deib.se2019.sanp4.adrenaline.client.UIRenderer;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.*;
 import it.polimi.deib.se2019.sanp4.adrenaline.view.MessageType;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -113,5 +114,45 @@ public class GUIRenderer extends Application implements UIRenderer {
     @Override
     public void showMessage(String text, MessageType type) {
         new Alert(type.getAlertType(), text, ButtonType.OK).showAndWait();
+    }
+
+    @Override
+    public void handle(ActionRequest request) {
+        //TODO: Implement this method
+    }
+
+    @Override
+    public void handle(BoardRequest request) {
+        //TODO: Implement this method
+    }
+
+    @Override
+    public void handle(PlayerOperationRequest request) {
+        //TODO: Implement this method
+    }
+
+    @Override
+    public void handle(PlayerRequest request) {
+        //TODO: Implement this method
+    }
+
+    @Override
+    public void handle(PowerupCardRequest request) {
+        //TODO: Implement this method
+    }
+
+    @Override
+    public void handle(SkullCountRequest request) {
+        //TODO: Implement this method
+    }
+
+    @Override
+    public void handle(SquareRequest request) {
+        //TODO: Implement this method
+    }
+
+    @Override
+    public void handle(WeaponCardRequest request) {
+        //TODO: Implement this method
     }
 }

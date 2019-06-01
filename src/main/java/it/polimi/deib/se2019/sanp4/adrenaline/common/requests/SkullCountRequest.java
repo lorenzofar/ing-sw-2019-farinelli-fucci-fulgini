@@ -34,4 +34,9 @@ public class SkullCountRequest extends ChoiceRequest<Integer> {
     public SkullCountRequest(List<Integer> choices) {
         super("Please select the number of skulls", choices, false, Integer.class);
     }
+
+    @Override
+    public void accept(ChoiceRequestVisitor visitor) {
+        visitor.handle(this);
+    }
 }

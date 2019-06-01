@@ -38,4 +38,9 @@ public class ActionRequest extends ChoiceRequest<ActionEnum> {
     public ActionRequest(String message, List<ActionEnum> choices, boolean optional) {
         super(message, choices, optional, ActionEnum.class);
     }
+
+    @Override
+    public void accept(ChoiceRequestVisitor visitor) {
+        visitor.handle(this);
+    }
 }
