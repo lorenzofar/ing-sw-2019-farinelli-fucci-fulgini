@@ -2,19 +2,23 @@ package it.polimi.deib.se2019.sanp4.adrenaline.controller.answerers;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.ChoiceRequest;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.requests.CompletableChoice;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
+
+import java.io.Serializable;
 
 /**
  * Mockito answer to sendChoiceRequests which cancels any incoming request
  */
-public class CancelRequestAnswer implements Answer<CompletableChoice> {
-    @Override
-    public CompletableChoice answer(InvocationOnMock invocationOnMock) throws Throwable {
-        /* Intercept the request */
-        ChoiceRequest req = (ChoiceRequest) invocationOnMock.getArguments()[0];
+public class CancelRequestAnswer implements SendChoiceRequestAnswer<Serializable> {
 
-        /* Cancel it immediately */
+    /**
+     * Used to build the answer (choice) based on the request
+     *
+     * @param req Request sent by the caller
+     * @return the response to the request
+     */
+    @Override
+    public CompletableChoice<Serializable> answer(ChoiceRequest<Serializable> req) {
+        /* Immediately cancel the request */
         return new CompletableChoice<>(req).cancel();
     }
 }
