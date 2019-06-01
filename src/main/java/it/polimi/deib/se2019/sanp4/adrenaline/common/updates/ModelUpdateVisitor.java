@@ -1,7 +1,5 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.common.updates;
 
-import it.polimi.deib.se2019.sanp4.adrenaline.model.player.PlayerBoard;
-
 /**
  * An interface describing an object using the visitor pattern to handle model updates
  */

@@ -2,6 +2,7 @@ package it.polimi.deib.se2019.sanp4.adrenaline.client;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.common.events.ViewEvent;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.network.RemoteView;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.Observer;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.RemoteObservable;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.ChoiceRequest;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.ModelUpdate;
@@ -9,6 +10,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.view.MessageType;
 import it.polimi.deib.se2019.sanp4.adrenaline.view.ViewScene;
 
 import java.io.Serializable;
+import java.util.Deque;
 
 public class ClientView extends RemoteObservable<ViewEvent> implements RemoteView {
     /**
@@ -27,9 +29,19 @@ public class ClientView extends RemoteObservable<ViewEvent> implements RemoteVie
      * The manager of the local model
      */
     private ModelManager modelManager;
+    /**
+     * The choice request that is currently being handled
+     */
+    private ChoiceRequest currentRequest;
+    /**
+     * The deque of requests that are waiting to be handled
+     * It is managed with a FIFO policy
+     */
+    private Deque<ChoiceRequest> pendingRequests;
 
     public ClientView() {
         this.modelManager = new ModelManager(this);
+        this.currentRequest = null;
     }
 
     /**
@@ -116,7 +128,7 @@ public class ClientView extends RemoteObservable<ViewEvent> implements RemoteVie
      *
      * @return The object representing the rendering engine
      */
-    public UIRenderer getRenderer() {
+    UIRenderer getRenderer() {
         return renderer;
     }
 
@@ -134,12 +146,38 @@ public class ClientView extends RemoteObservable<ViewEvent> implements RemoteVie
 
     /**
      * Performs the provided request on the view
+     * If a null request is provided, it is discarded
      *
-     * @param request The object representing the request, not null
+     * @param request The object representing the request
      */
     @Override
     public <T extends Serializable> void performRequest(ChoiceRequest<T> request) {
-        //TODO: Implement this method
+        if (request == null) {
+            return;
+        }
+        if (currentRequest == null) {
+            this.currentRequest = request;
+            request.accept(renderer);
+        } else {
+            pendingRequests.push(request);
+        }
+    }
+
+    /**
+     * Method to be called when a request is handled,
+     * in order to consider the next pending request (if present)
+     */
+    public void onRequestCompleted(){
+        performRequest(pendingRequests.pop());
+    }
+
+    /**
+     * Retrieves the currently pending request
+     *
+     * @return The object representing the request
+     */
+    public ChoiceRequest getCurrentRequest() {
+        return this.currentRequest;
     }
 
     @Override
@@ -157,6 +195,17 @@ public class ClientView extends RemoteObservable<ViewEvent> implements RemoteVie
 
     @Override
     public void update(ModelUpdate event) {
-        /* TODO: Implement this method */
+        event.accept(modelManager);
+    }
+
+    /**
+     * Sends the given event to all subscribed observers (i.e. calls {@link Observer#update(Object)} on them).
+     * If calling {@code update()} throws an {@code IOException}, the exception is simply ignored.
+     *
+     * @param event event to be sent to observers
+     */
+    @Override
+    public void notifyObservers(ViewEvent event) {
+        super.notifyObservers(event);
     }
 }
