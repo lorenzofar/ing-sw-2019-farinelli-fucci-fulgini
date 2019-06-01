@@ -1,7 +1,8 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.model.match;
 
-import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.MatchView;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.*;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.Observable;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.InitialUpdate;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.Board;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.Square;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCard;
@@ -86,6 +87,34 @@ public class Match extends Observable {
         view.setTotalSkulls(skulls);
         view.setFrenzy(frenzy);
         return view;
+    }
+
+    /**
+     * Generates an {@link InitialUpdate} of the match
+     * @return the initial update
+     */
+    public InitialUpdate generateUpdate() {
+        Map<String, PlayerView> players = new HashMap<>();
+        Map<String, PlayerBoardView> playerBoards = new HashMap<>();
+        Map<String, ActionCardView> actionCards = new HashMap<>();
+        MatchView match;
+        BoardView board;
+        PlayerTurnView currentTurn;
+
+        for(Player player : this.players) {
+            players.put(player.getName(), player.generateView());
+            playerBoards.put(player.getName(), player.getPlayerBoard().generateView());
+            actionCards.put(player.getName(), player.getActionCard().generateView());
+        }
+        match = this.generateView();
+        board = this.getBoard().generateView();
+        if(this.currentTurn != null) {
+            currentTurn = this.currentTurn.generateView();
+        } else {
+            currentTurn = null;
+        }
+
+        return new InitialUpdate(players, playerBoards, actionCards, match, board, currentTurn);
     }
 
     /* ===== TURN METHODS ===== */

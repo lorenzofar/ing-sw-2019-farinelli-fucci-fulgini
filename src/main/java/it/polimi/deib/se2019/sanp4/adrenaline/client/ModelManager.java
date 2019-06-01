@@ -197,4 +197,9 @@ public class ModelManager implements ModelUpdateVisitor {
     public void handle(DrawnPowerupUpdate update) {
         //TODO: Implement this method
     }
+
+    @Override
+    public void handle(InitialUpdate update) {
+        //TODO: Implement this method
+    }
 }
