@@ -3,31 +3,24 @@ package it.polimi.deib.se2019.sanp4.adrenaline.client.gui.controls;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Button;
 import javafx.scene.control.Control;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Consumer;
 
-public abstract class SelectableOverlay extends Button {
+/**
+ * A class describing an overlay that can be selected (e.g. by clicking on it)
+ * It extends the ObservableOverlay to notify listeners that it has been selected
+ */
+public abstract class SelectableOverlay extends ObservableOverlay {
 
     private static final String SELECTABLE_CLASS = "selectable";
-
-    /**
-     * List of consumers listening for selection events from the overlay
-     */
-    private List<Consumer<SelectableOverlay>> listeners;
 
     /**
      * Property to store whether the element is selectable or not
      */
     private BooleanProperty selectable = new SimpleBooleanProperty(false);
 
-
     SelectableOverlay(String resource) {
-        listeners = new ArrayList<>();
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(resource));
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
@@ -63,21 +56,4 @@ public abstract class SelectableOverlay extends Button {
     public void setSelectable(boolean selectable) {
         this.selectable.set(selectable);
     }
-
-    public void addListener(Consumer<SelectableOverlay> listener) {
-        if (listener != null) {
-            listeners.add(listener);
-        }
-    }
-
-    /**
-     * Notify the listeners that the element has been selected
-     * Listeners are notified only when the element can actually be selected
-     */
-    void notifyListeners() {
-        if (selectable.get()) {
-            listeners.forEach(listener -> listener.accept(this));
-        }
-    }
-
 }

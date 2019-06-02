@@ -1,7 +1,7 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.client.gui;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.client.ClientView;
-import it.polimi.deib.se2019.sanp4.adrenaline.client.gui.controls.SelectableOverlay;
+import it.polimi.deib.se2019.sanp4.adrenaline.client.gui.controls.ObservableOverlay;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.events.ChoiceResponse;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.ChoiceRequest;
 
@@ -14,7 +14,7 @@ import java.util.function.Function;
  *
  * @param <T> The type of choice to retrieve
  */
-public class SelectionHandler<T extends Serializable> implements Consumer<SelectableOverlay> {
+public class SelectionHandler<T extends Serializable> implements Consumer<ObservableOverlay> {
 
     /**
      * The client view to act on
@@ -23,15 +23,15 @@ public class SelectionHandler<T extends Serializable> implements Consumer<Select
     /**
      * Function to retrieve data from the selected overlay
      */
-    private Function<SelectableOverlay, T> dataExtractor;
+    private Function<ObservableOverlay, T> dataExtractor;
 
-    SelectionHandler(ClientView clientView, Function<SelectableOverlay, T> dataExtractor) {
+    SelectionHandler(ClientView clientView, Function<ObservableOverlay, T> dataExtractor) {
         this.clientView = clientView;
         this.dataExtractor = dataExtractor;
     }
 
     @Override
-    public void accept(SelectableOverlay selectedOverlay) {
+    public void accept(ObservableOverlay selectedOverlay) {
         ChoiceRequest request = clientView.getCurrentRequest();
         if (request == null) {
             // We are trying to reply to a request that does not exist, hence we stop
@@ -44,8 +44,8 @@ public class SelectionHandler<T extends Serializable> implements Consumer<Select
     }
 
     @Override
-    public Consumer<SelectableOverlay> andThen(Consumer<? super SelectableOverlay> consumer) {
-        return (SelectableOverlay t) -> {
+    public Consumer<ObservableOverlay> andThen(Consumer<? super ObservableOverlay> consumer) {
+        return (ObservableOverlay t) -> {
             accept(t);
             consumer.accept(t);
         };
