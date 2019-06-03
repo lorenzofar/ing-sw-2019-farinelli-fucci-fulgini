@@ -168,7 +168,7 @@ class CLIHelper {
      *
      * @param gameElement The textual representation of the element
      */
-    private static void printRenderedGameElement(List<List<String>> gameElement) {
+    public static void printRenderedGameElement(List<List<String>> gameElement) {
         if (gameElement != null) {
             gameElement.forEach(line -> println(String.join("", line)));
         }
@@ -267,19 +267,20 @@ class CLIHelper {
     /**
      * Asks the user to choose among a list of options
      *
-     * @param message   A message to show to the user
-     * @param options   The list of objects representing the options
-     * @param allowNull Allows a null option to be chosen
+     * @param message         A message to show to the user
+     * @param options         The list of objects representing the options
+     * @param allowNull       Allows a null option to be chosen
+     * @param stringConverter The function describing how to print each element
      * @return The object representing the selected option, could be {@code null} if allowNull is {@code true}
      */
-    static <T> T askOptionFromList(String message, List<T> options, boolean allowNull) {
+    static <T> T askOptionFromList(String message, List<T> options, boolean allowNull, Function<T, String> stringConverter) {
         Integer n = null;
 
         print(ANSI_CYAN);
         println("%s", message);
         resetColor();
 
-        options.forEach(option -> println("%d.\t%s", options.indexOf(option), option));
+        options.forEach(option -> println("%d.\t%s", options.indexOf(option), stringConverter.apply(option)));
         if (allowNull) {
             print("%d. None", options.size());
         }
@@ -298,14 +299,37 @@ class CLIHelper {
     /**
      * Asks the user to choose among a list of options
      *
+     * @param message         A message to show to the user
+     * @param options         The list of objects representing the options
+     * @param stringConverter The function describing how to print each element
+     * @return The object representing the selected option
+     */
+    static <T> T askOptionFromList(String message, List<T> options, Function<T, String> stringConverter) {
+        return askOptionFromList(message, options, false, stringConverter);
+    }
+
+    /**
+     * Asks the user to choose among a list of options
+     *
+     * @param message   A message to show to the user
+     * @param options   The list of objects representing the options
+     * @param allowNull Allows a null option to be chosen
+     * @return The object representing the selected option
+     */
+    static <T> T askOptionFromList(String message, List<T> options, boolean allowNull) {
+        return askOptionFromList(message, options, allowNull, Object::toString);
+    }
+
+    /**
+     * Asks the user to choose among a list of options
+     *
      * @param message A message to show to the user
      * @param options The list of objects representing the options
      * @return The object representing the selected option
      */
     static <T> T askOptionFromList(String message, List<T> options) {
-        return askOptionFromList(message, options, false);
+        return askOptionFromList(message, options, false, Object::toString);
     }
-
 
     /**
      * Waits for the user to press the enter key
@@ -920,7 +944,7 @@ class CLIHelper {
      * @param spacing  The spacing between two consecutive elements
      * @return A list of all the lines composing the concatenated elements
      */
-    private static List<List<String>> concatRenderedElements(List<List<List<String>>> elements, int spacing) {
+    public static List<List<String>> concatRenderedElements(List<List<List<String>>> elements, int spacing) {
         //First retrieve the tallest element
         Optional<List<List<String>>> tallestElement = elements.stream().max(Comparator.comparingInt(List::size));
         if (!(tallestElement.isPresent())) {
