@@ -150,7 +150,17 @@ public class CLIRenderer implements UIRenderer {
 
     @Override
     public void handle(BoardRequest request) {
-        //TODO: Implement this method
+        CLIHelper.printTitle("Board configuration");
+        // Ask for user input
+        Integer selectedCount = CLIHelper.askOptionFromList(
+                "Please select the board that will be used for the match",
+                request.getChoices(),
+                false);
+        // Then create a new response and reply to the server
+        ChoiceResponse<Integer> response = new ChoiceResponse<>(clientView.getUsername(), clientView.getCurrentRequest().getUuid(), selectedCount);
+        clientView.notifyObservers(response);
+        clientView.onRequestCompleted();
+        //TODO: Check how to better render board information
     }
 
     @Override
