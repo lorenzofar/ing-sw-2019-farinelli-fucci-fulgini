@@ -5,14 +5,17 @@ import it.polimi.deib.se2019.sanp4.adrenaline.client.UIRenderer;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.events.ChoiceResponse;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.LoginException;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.*;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.items.powerup.PowerupCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.WeaponCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.view.MessageType;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class CLIRenderer implements UIRenderer {
@@ -148,75 +151,84 @@ public class CLIRenderer implements UIRenderer {
 
     @Override
     public void handle(ActionRequest request) {
-        //TODO: Implement this method
+        requestRoutine("Action selection", request, actionEnum -> String.format("%s : %s", actionEnum.name(), actionEnum.toString()));
     }
 
     @Override
     public void handle(BoardRequest request) {
-        CLIHelper.printTitle("Board configuration");
-        // Ask for user input
-        Integer selectedCount = CLIHelper.askOptionFromList(
-                "Please select the board that will be used for the match",
-                request.getChoices(),
-                false);
-        // Then create a new response and reply to the server
-        ChoiceResponse<Integer> response = new ChoiceResponse<>(clientView.getUsername(), request.getUuid(), selectedCount);
-        clientView.notifyObservers(response);
-        clientView.onRequestCompleted();
+        requestRoutine("Board configuration", request);
         //TODO: Check how to better render board information
     }
 
     @Override
     public void handle(PlayerOperationRequest request) {
-        //TODO: Implement this method
+        requestRoutine("Operation selection", request); // Operations enum already returns the message when converted to string
     }
 
     @Override
     public void handle(PlayerRequest request) {
-        //TODO: Implement this method
+        requestRoutine("Player selection", request); // Players are already string, we do not need additional formatting
     }
 
     @Override
     public void handle(PowerupCardRequest request) {
-        //TODO: Implement this method
+        // First render all the powerup cards we can choose among
+        List<List<List<String>>> renderedPowerupCards = request.getChoices().stream().map(CLIHelper::renderPowerupCard).collect(Collectors.toList());
+        // Then show them to the user by concatenating them
+        CLIHelper.printRenderedGameElement(CLIHelper.concatRenderedElements(renderedPowerupCards, 1));
+        requestRoutine("Powerup selection", request, PowerupCard::getName);
     }
 
     @Override
     public void handle(SkullCountRequest request) {
-        CLIHelper.printTitle("Skulls count");
-        // Ask for user input
-        Integer selectedCount = CLIHelper.askOptionFromList(
-                request.getMessage(),
-                request.getChoices(),
-                false);
-        // Then create a new response and reply to the server
-        ChoiceResponse<Integer> response = new ChoiceResponse<>(clientView.getUsername(), request.getUuid(), selectedCount);
-        clientView.notifyObservers(response);
-        clientView.onRequestCompleted();
+        requestRoutine("Skulls configuration", request);
     }
 
     @Override
     public void handle(SquareRequest request) {
-        //TODO: Implement this method
+        // First make sure the board is shown to the user, hence refresh the match screen
+        showMatchScreen();
+        requestRoutine("Square selection", request, coordPair -> String.format("(%d:%d)", coordPair.getX(), coordPair.getY()));
     }
 
     @Override
     public void handle(WeaponCardRequest request) {
-        // First reneder all the weapon cards we can choose among
+        // First render all the weapon cards we can choose among
         List<List<List<String>>> renderedWeaponCards = request.getChoices().stream().map(CLIHelper::renderWeaponCard).collect(Collectors.toList());
         // Then show them to the user by concatenating them
         CLIHelper.printRenderedGameElement(CLIHelper.concatRenderedElements(renderedWeaponCards, 1));
-        // Then print the selection screen
-        // If the request is optional, we allow for empty selection
-        WeaponCard selectedWeaponCard = CLIHelper.askOptionFromList(
+        requestRoutine("Weapon card selection", request, WeaponCard::getName);
+    }
+
+    /**
+     * Performs the provided request on the user, replying to the server with the selected object
+     *
+     * @param request         The oject representing the request
+     * @param stringConverter The conversion function to print the available choices
+     * @param <T>             The type of the choices
+     */
+    private <T extends Serializable> void requestRoutine(String title, ChoiceRequest<T> request, Function<T, String> stringConverter) {
+        CLIHelper.printTitle(title);
+        // Ask the user to select a choice
+        T selectedObject = CLIHelper.askOptionFromList(
                 request.getMessage(),
                 request.getChoices(),
                 request.isOptional(),
-                WeaponCard::getName
+                stringConverter
         );
         // Then create a response accordingly and reply to server
-        ChoiceResponse<WeaponCard> response = new ChoiceResponse<>(clientView.getUsername(), request.getUuid(), selectedWeaponCard);
+        ChoiceResponse<T> response = new ChoiceResponse<>(clientView.getUsername(), request.getUuid(), selectedObject);
         clientView.notifyObservers(response);
         clientView.onRequestCompleted();
+    }
+
+    /**
+     * Performs the provided request on the user, replying to the server with the selected object
+     *
+     * @param request The oject representing the request
+     * @param <T>     The type of the choices
+     */
+    private <T extends Serializable> void requestRoutine(String title, ChoiceRequest<T> request) {
+        requestRoutine(title, request, Object::toString);
     }
 }
