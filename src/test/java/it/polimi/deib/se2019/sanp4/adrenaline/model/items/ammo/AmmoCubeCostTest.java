@@ -2,6 +2,8 @@ package it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo;
 
 import org.junit.Test;
 
+import java.util.*;
+
 import static org.junit.Assert.*;
 
 public class AmmoCubeCostTest {
@@ -69,5 +71,148 @@ public class AmmoCubeCostTest {
     @Test
     public void getCorrespondingCube_cubeisANY_shouldReturnNull(){
         assertNull(AmmoCubeCost.ANY.getCorrespondingCube());
+    }
+
+    @Test
+    public void calculateRemainingCost_enoughAmmo_noAny_shouldHaveNoRemainingCost() {
+        /* Create the two maps */
+        Map<AmmoCubeCost, Integer> initialCost = new EnumMap<>(AmmoCubeCost.class);
+        initialCost.put(AmmoCubeCost.RED, 2);
+        initialCost.put(AmmoCubeCost.BLUE, 3);
+
+        Map<AmmoCube, Integer> availableAmmo = new EnumMap<>(AmmoCube.class);
+        availableAmmo.put(AmmoCube.RED, 3);
+        availableAmmo.put(AmmoCube.BLUE, 3);
+
+        /* Call the method */
+        Map<AmmoCubeCost, Integer> remainingCost = AmmoCubeCost.calculateRemainingCost(initialCost, availableAmmo);
+
+        /* Check the result */
+        remainingCost.forEach((k,v) -> assertEquals(0, (int) v));
+    }
+
+    @Test
+    public void calculateRemainingCost_enoughAmmo_withAny_shouldHaveNoRemainingCost() {
+        /* Create the two maps */
+        Map<AmmoCubeCost, Integer> initialCost = new EnumMap<>(AmmoCubeCost.class);
+        initialCost.put(AmmoCubeCost.RED, 1);
+        initialCost.put(AmmoCubeCost.BLUE, 3);
+        initialCost.put(AmmoCubeCost.ANY, 2);
+
+        Map<AmmoCube, Integer> availableAmmo = new EnumMap<>(AmmoCube.class);
+        availableAmmo.put(AmmoCube.RED, 3);
+        availableAmmo.put(AmmoCube.BLUE, 3);
+
+        /* Call the method */
+        Map<AmmoCubeCost, Integer> remainingCost = AmmoCubeCost.calculateRemainingCost(initialCost, availableAmmo);
+
+        /* Check the result */
+        remainingCost.forEach((k,v) -> assertEquals(0, (int) v));
+    }
+
+    @Test
+    public void calculateRemainingCost_notEnoughToPayNormal_noAny_shouldHaveRemainingCost() {
+        /* Create the two maps */
+        Map<AmmoCubeCost, Integer> initialCost = new EnumMap<>(AmmoCubeCost.class);
+        initialCost.put(AmmoCubeCost.RED, 1);
+        initialCost.put(AmmoCubeCost.BLUE, 3);
+        initialCost.put(AmmoCubeCost.YELLOW, 3);
+
+        Map<AmmoCube, Integer> availableAmmo = new EnumMap<>(AmmoCube.class);
+        availableAmmo.put(AmmoCube.RED, 3);
+        availableAmmo.put(AmmoCube.BLUE, 3);
+        availableAmmo.put(AmmoCube.YELLOW, 1);
+
+        /* Call the method */
+        Map<AmmoCubeCost, Integer> remainingCost = AmmoCubeCost.calculateRemainingCost(initialCost, availableAmmo);
+
+        /* Check the result */
+        assertEquals(0, (int) remainingCost.get(AmmoCubeCost.RED));
+        assertEquals(0, (int) remainingCost.get(AmmoCubeCost.BLUE));
+        assertEquals(2, (int) remainingCost.get(AmmoCubeCost.YELLOW));
+    }
+
+    @Test
+    public void calculateRemainingCost_notEnoughToPayNormal_withAny_shouldHaveRemainingCost() {
+        /* Create the two maps */
+        Map<AmmoCubeCost, Integer> initialCost = new EnumMap<>(AmmoCubeCost.class);
+        initialCost.put(AmmoCubeCost.RED, 1);
+        initialCost.put(AmmoCubeCost.BLUE, 3);
+        initialCost.put(AmmoCubeCost.YELLOW, 3);
+        initialCost.put(AmmoCubeCost.ANY, 1);
+
+        Map<AmmoCube, Integer> availableAmmo = new EnumMap<>(AmmoCube.class);
+        availableAmmo.put(AmmoCube.RED, 3);
+        availableAmmo.put(AmmoCube.BLUE, 3);
+        availableAmmo.put(AmmoCube.YELLOW, 1);
+
+        /* Call the method */
+        Map<AmmoCubeCost, Integer> remainingCost = AmmoCubeCost.calculateRemainingCost(initialCost, availableAmmo);
+
+        /* Check the result */
+        assertEquals(0, (int) remainingCost.getOrDefault(AmmoCubeCost.RED, 0));
+        assertEquals(0, (int) remainingCost.getOrDefault(AmmoCubeCost.BLUE, 0));
+        assertEquals(2, (int) remainingCost.getOrDefault(AmmoCubeCost.YELLOW, 0));
+        assertEquals(0, (int) remainingCost.getOrDefault(AmmoCubeCost.ANY, 0));
+    }
+
+    @Test
+    public void calculateRemainingCost_notEnoughToPayAny_shouldHaveRemainingCost() {
+        /* Create the two maps */
+        Map<AmmoCubeCost, Integer> initialCost = new EnumMap<>(AmmoCubeCost.class);
+        initialCost.put(AmmoCubeCost.RED, 1);
+        initialCost.put(AmmoCubeCost.ANY, 3);
+
+        Map<AmmoCube, Integer> availableAmmo = new EnumMap<>(AmmoCube.class);
+        availableAmmo.put(AmmoCube.RED, 2);
+        availableAmmo.put(AmmoCube.BLUE, 1);
+
+        /* Call the method */
+        Map<AmmoCubeCost, Integer> remainingCost = AmmoCubeCost.calculateRemainingCost(initialCost, availableAmmo);
+
+        /* Check the result */
+        assertEquals(0, (int) remainingCost.getOrDefault(AmmoCubeCost.RED, 0));
+        assertEquals(0, (int) remainingCost.getOrDefault(AmmoCubeCost.BLUE, 0));
+        assertEquals(0, (int) remainingCost.getOrDefault(AmmoCubeCost.YELLOW, 0));
+        assertEquals(1, (int) remainingCost.getOrDefault(AmmoCubeCost.ANY, 0));
+    }
+
+    @Test
+    public void canPayAmmoCost_enoughAmmo_shouldReturnTrue() {
+        /* Create the two maps */
+        Map<AmmoCubeCost, Integer> cost = new EnumMap<>(AmmoCubeCost.class);
+        cost.put(AmmoCubeCost.RED, 1);
+
+        Map<AmmoCube, Integer> availableAmmo = new EnumMap<>(AmmoCube.class);
+        availableAmmo.put(AmmoCube.RED, 2);
+        availableAmmo.put(AmmoCube.BLUE, 1);
+
+        assertTrue(AmmoCubeCost.canPayAmmoCost(cost, availableAmmo));
+    }
+
+    @Test
+    public void canPayAmmoCost_notEnoughAmmo_shouldReturnFalse() {
+        /* Create the two maps */
+        Map<AmmoCubeCost, Integer> cost = new EnumMap<>(AmmoCubeCost.class);
+        cost.put(AmmoCubeCost.RED, 5);
+
+        Map<AmmoCube, Integer> availableAmmo = new EnumMap<>(AmmoCube.class);
+        availableAmmo.put(AmmoCube.RED, 2);
+        availableAmmo.put(AmmoCube.BLUE, 1);
+
+        assertFalse(AmmoCubeCost.canPayAmmoCost(cost, availableAmmo));
+    }
+
+    @Test
+    public void mapFromCollection_shouldCountCorrectly() {
+        /* Create a collection */
+        List<AmmoCubeCost> list = Arrays.asList(AmmoCubeCost.BLUE, AmmoCubeCost.BLUE, AmmoCubeCost.RED);
+
+        Map<AmmoCubeCost, Integer> map = AmmoCubeCost.mapFromCollection(list);
+
+        assertEquals(1, (int) map.getOrDefault(AmmoCubeCost.RED, 0));
+        assertEquals(2, (int) map.getOrDefault(AmmoCubeCost.BLUE, 0));
+        assertEquals(0, (int) map.getOrDefault(AmmoCubeCost.YELLOW, 0));
+        assertEquals(0, (int) map.getOrDefault(AmmoCubeCost.ANY, 0));
     }
 }
