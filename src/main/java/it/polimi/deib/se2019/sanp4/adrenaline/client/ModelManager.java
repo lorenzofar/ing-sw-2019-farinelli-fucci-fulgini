@@ -200,6 +200,12 @@ public class ModelManager implements ModelUpdateVisitor {
 
     @Override
     public void handle(InitialUpdate update) {
-        //TODO: Implement this method
+        this.actionCards = update.getActionCards();
+        this.board = update.getBoard();
+        this.currentTurn = update.getCurrentTurn();
+        this.match = update.getMatch();
+        this.players = update.getPlayers();
+        this.playerBoards = update.getPlayerBoards();
+        //TODO: Refresh the match screen
     }
 }
