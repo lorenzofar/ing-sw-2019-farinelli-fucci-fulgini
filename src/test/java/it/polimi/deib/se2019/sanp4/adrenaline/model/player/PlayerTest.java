@@ -331,7 +331,7 @@ public class PlayerTest {
     @Test(expected = NullPointerException.class)
     public void addAmmo_nullMapProvided_shouldThrowNullPointerException(){
         Player player = new Player(validName, validActionCard, validColor);
-        player.addAmmo(null);
+        player.addAmmo((Map<AmmoCube,Integer>) null);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -355,6 +355,29 @@ public class PlayerTest {
             initialAmmo.merge(AmmoCube.values()[i], validAmmo.get(AmmoCube.values()[i]), Integer::sum);
         }
         assertEquals(initialAmmo, player.getAmmo());
+    }
+
+    @Test
+    public void addAmmo_singleAmmo_notFull_shouldBeAdded() {
+        Player player = new Player(validName, validActionCard, validColor);
+
+        player.addAmmo(AmmoCube.BLUE);
+
+        /* The player already has one ammo by default */
+        assertEquals(2, (int) player.getAmmo().get(AmmoCube.BLUE));
+    }
+
+    @Test
+    public void addAmmo_singleAmmo_full_shouldNotBeAdded() {
+        Player player = new Player(validName, validActionCard, validColor);
+
+        Map<AmmoCube, Integer> initial = new EnumMap<>(AmmoCube.class);
+        initial.put(AmmoCube.BLUE, 3);
+        player.addAmmo(initial);
+
+        player.addAmmo(AmmoCube.BLUE);
+
+        assertEquals(3, (int) player.getAmmo().get(AmmoCube.BLUE));
     }
 
     @Test(expected = NullPointerException.class)

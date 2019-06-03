@@ -155,10 +155,9 @@ public class Player extends Observable<ModelUpdate> {
                     .stream()
                     .filter(entry -> {
                         Integer userAmmo = entry.getValue();
-                        Integer pendingAmmo = convertedAmmo.get(entry.getKey());
-                        pendingAmmo = pendingAmmo != null ? pendingAmmo : 0;
+                        Integer pendingAmmo = convertedAmmo.getOrDefault(entry.getKey(),0);
                         // Here we check that the player has enough ammo to pay for the pending ammo and for the generic cube
-                        return userAmmo != null && userAmmo != 0 && userAmmo - pendingAmmo > 0;
+                        return userAmmo != null && userAmmo - pendingAmmo > 0;
                     })
                     .findAny();
             // We check whether that cube is really present, if not we throw an exception
@@ -412,6 +411,17 @@ public class Player extends Observable<ModelUpdate> {
             playerAmmo = playerAmmo + value > MAX_AMMO_CUBES ? MAX_AMMO_CUBES : playerAmmo + value; // Check whether the final amount exceeds maximum capacity
             this.ammo.put(key, playerAmmo);
         });
+    }
+
+    /**
+     * Adds ammo cube to the current player. If given ammo exceeds capacity, it is simply discarded.
+     * @param ammoCube The ammo cube to be added, not null
+     */
+    public void addAmmo(AmmoCube ammoCube) {
+        int currentCount = ammo.getOrDefault(ammoCube, 0);
+        if (currentCount < MAX_AMMO_CUBES) {
+            ammo.put(ammoCube, currentCount + 1);
+        }
     }
 
     /**
