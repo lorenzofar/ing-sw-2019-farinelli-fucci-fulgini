@@ -11,6 +11,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCube;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCubeCost;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.powerup.PowerupCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.WeaponCard;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.player.PlayerColor;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -93,6 +94,7 @@ class CLIHelper {
     private static final int FULLSCREEN_WIDTH = 119;
     private static final int FULLSCREEN_TITLE_WIDTH = 40;
     private static final int SPAWN_WEAPONS_CELL_DIM = 40;
+    private static final int PLAYERS_OVERVIEW_DIM = 25;
 
     /* ===== TEMPLATES ====== */
     private static final String TRISTRING_TEMPLATE = "%s%s%s";
@@ -587,6 +589,21 @@ class CLIHelper {
         }
         return chunks;
     }
+
+
+    /**
+     * Truncate the provided string to fit the provided width
+     *
+     * @param text     The string to truncate
+     * @param maxWidth The maximum width to fits
+     * @return The truncated string
+     */
+    private static String truncateString(String text, int maxWidth) {
+        if (text.length() <= maxWidth) {
+            return text;
+        }
+        return text.substring(0, maxWidth);
+    }
     /* =================== */
 
     /* ===== SQUARES ===== */
@@ -933,6 +950,35 @@ class CLIHelper {
         List<List<List<String>>> renderedCells = new ArrayList<>();
         spawnSquares.forEach((color, location) -> renderedCells.add(renderSpawnWeaponsCell(color, location, board)));
         return concatRenderedElements(renderedCells, 1);
+    }
+
+    /* ===== PLAYERS OVERVIEW ===== */
+
+    /**
+     * Renders a table showing the list of players along with their color id
+     *
+     * @param players The map storing the color for each player
+     * @return The textual representation of the table
+     */
+    private static List<List<String>> renderPlayersOverview(Map<String, PlayerColor> players) {
+        List<List<String>> renderedOverview = new ArrayList<>();
+        expandStringRendering(renderedOverview, generateLine(HORIZONTAL_BORDER, PLAYERS_OVERVIEW_DIM, LEFT_TOP_CORNER, RIGHT_TOP_CORNER));
+        expandStringRendering(renderedOverview, generateLine(BLANK, PLAYERS_OVERVIEW_DIM, VERTICAL_BORDER, VERTICAL_BORDER));
+        fillLineWithText(renderedOverview.get(renderedOverview.size() - 1), "Players", 2, ANSI_BOLD);
+        expandStringRendering(renderedOverview, generateLine(LIGHT_HORIZONTAL_BORDER, PLAYERS_OVERVIEW_DIM, LIGHT_LEFT_VERTICAL_SEPARATOR, LIGHT_RIGHT_VERTICAL_SEPARATOR));
+        players.forEach((player, color) -> {
+            expandStringRendering(renderedOverview, generateLine(BLANK, PLAYERS_OVERVIEW_DIM, VERTICAL_BORDER, VERTICAL_BORDER));
+            fillLineWithText(
+                    renderedOverview.get(renderedOverview.size() - 1),
+                    String.format("%s - %s", color.name().substring(0, 1), truncateString(player, PLAYERS_OVERVIEW_DIM - 8)),
+                    2,
+                    color.getAnsiCode());
+            // TODO: Find a way to distinguish between green and gray
+            expandStringRendering(renderedOverview, generateLine(BLANK, PLAYERS_OVERVIEW_DIM, VERTICAL_BORDER, VERTICAL_BORDER));
+        });
+        renderedOverview.remove(renderedOverview.size() - 1);
+        expandStringRendering(renderedOverview, generateLine(HORIZONTAL_BORDER, PLAYERS_OVERVIEW_DIM, LEFT_BOTTOM_CORNER, RIGHT_BOTTOM_CORNER));
+        return renderedOverview;
     }
 
     /* ===== RENDERINGS MANIPULATION ===== */
