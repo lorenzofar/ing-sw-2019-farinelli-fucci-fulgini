@@ -1,6 +1,6 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.client.gui.controls;
 
-import javafx.scene.control.Control;
+import javafx.scene.control.Button;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +9,7 @@ import java.util.function.Consumer;
 /**
  * A class describing an overlay that can be observed to catch fired events
  */
-public class ObservableOverlay extends Control {
+public class ObservableOverlay extends Button {
     /**
      * List of consumers listening for selection events from the overlay
      */

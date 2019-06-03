@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<fx:root xmlns="http://javafx.com/javafx"
+         xmlns:fx="http://javafx.com/fxml"
+         fx:id="overlayRoot"
+         type="javafx.scene.control.Button"
+         styleClass="skull-selection-overlay"
+         stylesheets="@../style.css">
+
+</fx:root>

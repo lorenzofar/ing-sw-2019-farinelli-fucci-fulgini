@@ -143,7 +143,11 @@ public class GUIRenderer extends Application implements UIRenderer {
 
     @Override
     public void handle(SkullCountRequest request) {
-        //TODO: Implement this method
+        try {
+            ((LobbyController) currentController).showSkullsSelectionWindow(request);
+        } catch (Exception ignore) {
+            // We ignore this request if we're not in the lobby
+        }
     }
 
     @Override

@@ -9,6 +9,12 @@
     -fx-background-repeat: no-repeat;
 }
 
+.square-overlay {
+    -fx-background-color: green;
+    -fx-border-width: 0;
+    -fx-opacity: 0.3;
+}
+
 .selectable {
     -fx-border-color: red;
     -fx-border-width: 5;
@@ -16,8 +22,22 @@
     -fx-opacity: 1;
 }
 
-.square-overlay {
-    -fx-background-color: green;
+.transparent-overlay{
+    -fx-border-color: transparent;
     -fx-border-width: 0;
-    -fx-opacity: 0.3;
+    -fx-background-radius: 0;
+    -fx-background-color: transparent;
+}
+
+/* ===== SKULLS ===== */
+
+.skull-selection-overlay{
+    -fx-opacity: 0.4;
+    -fx-border-width: 2;
+    -fx-border-color: #F8B73C;
+    -fx-background-color: black;
+}
+
+.skull-selection-overlay.focused{
+    -fx-opacity: 1;
 }
