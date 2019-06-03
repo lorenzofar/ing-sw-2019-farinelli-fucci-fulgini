@@ -2,6 +2,7 @@ package it.polimi.deib.se2019.sanp4.adrenaline.client.cli;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.client.ClientView;
 import it.polimi.deib.se2019.sanp4.adrenaline.client.UIRenderer;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.events.ChoiceResponse;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.LoginException;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.*;
 import it.polimi.deib.se2019.sanp4.adrenaline.view.MessageType;
@@ -169,7 +170,16 @@ public class CLIRenderer implements UIRenderer {
 
     @Override
     public void handle(SkullCountRequest request) {
-        //TODO: Implement this method
+        CLIHelper.printTitle("Skulls count");
+        // Ask for user input
+        Integer selectedCount = CLIHelper.askOptionFromList(
+                "Please select the number of skulls that will be in the killshots track",
+                request.getChoices(),
+                false);
+        // Then create a new response and reply to the server
+        ChoiceResponse<Integer> response = new ChoiceResponse<>(clientView.getUsername(), clientView.getCurrentRequest().getUuid(), selectedCount);
+        clientView.notifyObservers(response);
+        clientView.onRequestCompleted();
     }
 
     @Override
