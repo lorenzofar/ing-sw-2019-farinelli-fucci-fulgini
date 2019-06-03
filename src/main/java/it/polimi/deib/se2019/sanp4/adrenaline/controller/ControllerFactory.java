@@ -16,24 +16,30 @@ public interface ControllerFactory {
      * Creates the controller for the match of this factory
      * @return the controller for the match of this factory
      */
-    public abstract MatchController createMatchController();
+    MatchController createMatchController();
 
     /**
      * Creates a new controller for the current turn of the match.
      * @param turn The turn to be controlled, not null
      * @throws NullPointerException If the turn is null
      */
-    public abstract TurnController createTurnController(PlayerTurn turn);
+    TurnController createTurnController(PlayerTurn turn);
 
     /**
      * Creates the spawn controller associated to the match of this factory
      * @return the spawn controller associated to the match of this factory
      */
-    public abstract SpawnController createSpawnController();
+    SpawnController createSpawnController();
 
     /**
      * Returns the score manager for this match
      * @return the score manager for this match
      */
-    public abstract ScoreManager createScoreManager();
+    ScoreManager createScoreManager();
+
+    /**
+     * Creates the controller for the Move basic action
+     * @return the controller for the Move basic action
+     */
+    MoveActionController createMoveActionController();
 }

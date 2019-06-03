@@ -138,7 +138,6 @@ public class Board extends Observable<ModelUpdate> {
      *                 (if 0 will only add start, if negative it will not add nothing), optional
      * @return A set with the visited squares, including the ones already visited
      * @throws NullPointerException If start, alreadyVisited or connectionFilter are null
-     * @throws IllegalArgumentException If maxSteps is negative
      */
     public Set<Square> visitNeighbors(Square start,
                                       Set<Square> alreadyVisited,

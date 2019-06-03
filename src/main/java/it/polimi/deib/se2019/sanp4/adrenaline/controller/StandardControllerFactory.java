@@ -22,6 +22,8 @@ public class StandardControllerFactory implements ControllerFactory {
 
     private final ScoreManager scoreManager;
 
+    private final MoveActionController moveActionController;
+
     /**
      * Creates a factory associated to the given match and views of the players,
      * which will be injected as dependencies where needed.
@@ -38,6 +40,7 @@ public class StandardControllerFactory implements ControllerFactory {
         /* Create match-wide controllers */
         spawnController = new SpawnController(match);
         scoreManager = new StandardScoreManager();
+        moveActionController = new MoveActionController(match);
     }
 
     /**
@@ -79,6 +82,11 @@ public class StandardControllerFactory implements ControllerFactory {
     @Override
     public ScoreManager createScoreManager() {
         return scoreManager;
+    }
+
+    @Override
+    public MoveActionController createMoveActionController() {
+        return moveActionController;
     }
 
     /* ======= GETTERS ======= */
