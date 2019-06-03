@@ -5,12 +5,15 @@ import it.polimi.deib.se2019.sanp4.adrenaline.client.UIRenderer;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.events.ChoiceResponse;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.LoginException;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.*;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.WeaponCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.view.MessageType;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class CLIRenderer implements UIRenderer {
 
@@ -157,7 +160,7 @@ public class CLIRenderer implements UIRenderer {
                 request.getChoices(),
                 false);
         // Then create a new response and reply to the server
-        ChoiceResponse<Integer> response = new ChoiceResponse<>(clientView.getUsername(), clientView.getCurrentRequest().getUuid(), selectedCount);
+        ChoiceResponse<Integer> response = new ChoiceResponse<>(clientView.getUsername(), request.getUuid(), selectedCount);
         clientView.notifyObservers(response);
         clientView.onRequestCompleted();
         //TODO: Check how to better render board information
@@ -183,11 +186,11 @@ public class CLIRenderer implements UIRenderer {
         CLIHelper.printTitle("Skulls count");
         // Ask for user input
         Integer selectedCount = CLIHelper.askOptionFromList(
-                "Please select the number of skulls that will be in the killshots track",
+                request.getMessage(),
                 request.getChoices(),
                 false);
         // Then create a new response and reply to the server
-        ChoiceResponse<Integer> response = new ChoiceResponse<>(clientView.getUsername(), clientView.getCurrentRequest().getUuid(), selectedCount);
+        ChoiceResponse<Integer> response = new ChoiceResponse<>(clientView.getUsername(), request.getUuid(), selectedCount);
         clientView.notifyObservers(response);
         clientView.onRequestCompleted();
     }
@@ -199,6 +202,21 @@ public class CLIRenderer implements UIRenderer {
 
     @Override
     public void handle(WeaponCardRequest request) {
-        //TODO: Implement this method
+        // First reneder all the weapon cards we can choose among
+        List<List<List<String>>> renderedWeaponCards = request.getChoices().stream().map(CLIHelper::renderWeaponCard).collect(Collectors.toList());
+        // Then show them to the user by concatenating them
+        CLIHelper.printRenderedGameElement(CLIHelper.concatRenderedElements(renderedWeaponCards, 1));
+        // Then print the selection screen
+        // If the request is optional, we allow for empty selection
+        WeaponCard selectedWeaponCard = CLIHelper.askOptionFromList(
+                request.getMessage(),
+                request.getChoices(),
+                request.isOptional(),
+                WeaponCard::getName
+        );
+        // Then create a response accordingly and reply to server
+        ChoiceResponse<WeaponCard> response = new ChoiceResponse<>(clientView.getUsername(), request.getUuid(), selectedWeaponCard);
+        clientView.notifyObservers(response);
+        clientView.onRequestCompleted();
     }
 }
