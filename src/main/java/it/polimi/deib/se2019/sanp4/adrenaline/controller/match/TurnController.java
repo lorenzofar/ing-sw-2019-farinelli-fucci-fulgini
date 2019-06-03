@@ -286,6 +286,9 @@ public class TurnController {
         /* TODO: Implement actions */
         switch (action) {
             case RUN:
+                /* The player can move for max. 3 steps */
+                factory.createMoveActionController()
+                        .execute(currentView, 3);
                 break;
             case GRAB:
                 break;
@@ -300,6 +303,9 @@ public class TurnController {
             case FRENZY2_SHOOT:
                 break;
             case FRENZY2_RUN:
+                /* The player can move for max. 4 steps */
+                factory.createMoveActionController()
+                        .execute(currentView, 4);
                 break;
             case FRENZY2_GRAB:
                 break;
