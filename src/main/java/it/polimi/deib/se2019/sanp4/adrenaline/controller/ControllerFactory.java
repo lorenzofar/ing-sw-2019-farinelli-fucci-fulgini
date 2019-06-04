@@ -38,6 +38,12 @@ public interface ControllerFactory {
     ScoreManager createScoreManager();
 
     /**
+     * Returns the payment handler for this match
+     * @return the payment handler for this match
+     */
+    PaymentHandler createPaymentHandler();
+
+    /**
      * Creates the controller for the Move basic action
      * @return the controller for the Move basic action
      */

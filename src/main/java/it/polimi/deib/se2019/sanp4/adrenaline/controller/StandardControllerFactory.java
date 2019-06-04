@@ -12,21 +12,29 @@ import java.util.Map;
  */
 public class StandardControllerFactory implements ControllerFactory {
 
-    /** The match associated to this factory */
+    /**
+     * The match associated to this factory
+     */
     private final Match match;
 
-    /** The views of the players playing in the match */
+    /**
+     * The views of the players playing in the match
+     */
     private final Map<String, PersistentView> views;
 
+    /* Match-wide controllers */
     private final SpawnController spawnController;
 
     private final ScoreManager scoreManager;
+
+    private final PaymentHandler paymentHandler;
 
     private final MoveActionController moveActionController;
 
     /**
      * Creates a factory associated to the given match and views of the players,
      * which will be injected as dependencies where needed.
+     *
      * @param match the match to be controlled, not null
      * @param views the persistent views of the players, not null
      */
@@ -40,6 +48,7 @@ public class StandardControllerFactory implements ControllerFactory {
         /* Create match-wide controllers */
         spawnController = new SpawnController(match);
         scoreManager = new StandardScoreManager();
+        paymentHandler = new PaymentHandler(match);
         moveActionController = new MoveActionController(match);
     }
 
@@ -84,6 +93,21 @@ public class StandardControllerFactory implements ControllerFactory {
         return scoreManager;
     }
 
+    /**
+     * Returns the payment handler for this match
+     *
+     * @return the payment handler for this match
+     */
+    @Override
+    public PaymentHandler createPaymentHandler() {
+        return paymentHandler;
+    }
+
+    /**
+     * Creates the controller for the Move basic action
+     *
+     * @return the controller for the Move basic action
+     */
     @Override
     public MoveActionController createMoveActionController() {
         return moveActionController;
