@@ -1,6 +1,7 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.controller;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.SquareRequest;
+import it.polimi.deib.se2019.sanp4.adrenaline.controller.action.MoveActionController;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.answerers.CancelRequestAnswer;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.answerers.SendChoiceRequestAnswer;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.requests.CompletableChoice;

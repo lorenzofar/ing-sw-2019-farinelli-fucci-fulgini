@@ -1,6 +1,7 @@
-package it.polimi.deib.se2019.sanp4.adrenaline.controller;
+package it.polimi.deib.se2019.sanp4.adrenaline.controller.action;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.SquareRequest;
+import it.polimi.deib.se2019.sanp4.adrenaline.controller.PersistentView;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.Board;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.CoordPair;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.Square;

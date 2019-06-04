@@ -3,6 +3,7 @@ package it.polimi.deib.se2019.sanp4.adrenaline.controller;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.FullCapacityException;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.PowerupCardRequest;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.answerers.CancelRequestAnswer;
+import it.polimi.deib.se2019.sanp4.adrenaline.controller.match.SpawnController;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.requests.CompletableChoice;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.ModelTestUtil;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.Board;
