@@ -5,8 +5,9 @@ import it.polimi.deib.se2019.sanp4.adrenaline.common.ColoredObject;
 import java.util.Collection;
 import java.util.EnumMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
-import static java.lang.Integer.*;
+import static java.lang.Integer.max;
 
 /** Describes the possible costs in terms of ammo cube colors*/
 public enum AmmoCubeCost implements ColoredObject {
@@ -89,14 +90,16 @@ public enum AmmoCubeCost implements ColoredObject {
             Map<AmmoCubeCost, Integer> initialCost, Map<AmmoCube, Integer> availableAmmo) {
 
         /* Make a copy of the original maps */
-        Map<AmmoCubeCost, Integer> remainingCost = new EnumMap<>(initialCost);
-        Map<AmmoCube, Integer> remainingAmmo = new EnumMap<>(availableAmmo);
+        Map<AmmoCubeCost, Integer> remainingCost = new EnumMap<>(AmmoCubeCost.class);
+        remainingCost.putAll(initialCost);
+        Map<AmmoCube, Integer> remainingAmmo = new EnumMap<>(AmmoCube.class);
+        remainingAmmo.putAll(availableAmmo);
 
         /* First we try to cover the cost for all the colors except ANY */
         for (Map.Entry<AmmoCubeCost, Integer> e : remainingCost.entrySet()) {
             AmmoCubeCost costColor = e.getKey();
-            int costCount = e.getValue();
-            if (costColor == ANY) continue; /* Skip cost ANY */
+            int costCount = e.getValue() == null ? 0 : e.getValue();
+            if (costColor == ANY || costCount == 0) continue; /* Skip cost ANY or costs not to cover */
 
             /* Determine the corresponding cube and the number of cubes available to pay */
             AmmoCube cubeColor = costColor.getCorrespondingCube();
@@ -110,13 +113,15 @@ public enum AmmoCubeCost implements ColoredObject {
         /* Then we try to cover the cost for ANY */
         int anyCount = remainingCost.getOrDefault(ANY, 0);
 
-        /* Determine how many cubes can pay for ANY */
-        int canPayAnyCount = remainingAmmo.entrySet().stream()
-                .filter(e -> ANY.canPayFor(e.getKey()))
-                .mapToInt(e -> e.getValue() != null ? e.getValue() : 0) /* Default value is 0 */
-                .sum();
+        if (anyCount > 0) {
+            /* Determine how many cubes can pay for ANY */
+            int canPayAnyCount = remainingAmmo.entrySet().stream()
+                    .filter(e -> ANY.canPayFor(e.getKey()))
+                    .mapToInt(e -> e.getValue() != null ? e.getValue() : 0) /* Default value is 0 */
+                    .sum();
 
-        remainingCost.put(ANY, max(0, anyCount - canPayAnyCount));
+            remainingCost.put(ANY, max(0, anyCount - canPayAnyCount));
+        }
 
         return remainingCost;
     }
@@ -144,9 +149,7 @@ public enum AmmoCubeCost implements ColoredObject {
      * @return A map with counted occurrences
      */
     public static Map<AmmoCubeCost, Integer> mapFromCollection(Collection<AmmoCubeCost> cost) {
-        Map<AmmoCubeCost, Integer> map = new EnumMap<>(AmmoCubeCost.class);
-        cost.forEach(e -> map.merge(e, 1, Integer::sum));
-        return map;
+        return cost.stream().collect(Collectors.toMap(k -> k, k -> 1, Integer::sum));
     }
 
     @Override

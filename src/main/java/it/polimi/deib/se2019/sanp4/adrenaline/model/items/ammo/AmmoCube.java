@@ -3,8 +3,8 @@ package it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.ColoredObject;
 
 import java.util.Collection;
-import java.util.EnumMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Identifies the color of an ammo cube
@@ -42,9 +42,7 @@ public enum AmmoCube implements ColoredObject {
      * @return A map with counted occurrences
      */
     public static Map<AmmoCube, Integer> mapFromCollection(Collection<AmmoCube> ammoCubes) {
-        Map<AmmoCube, Integer> map = new EnumMap<>(AmmoCube.class);
-        ammoCubes.forEach(e -> map.merge(e, 1, Integer::sum));
-        return map;
+        return ammoCubes.stream().collect(Collectors.toMap(k -> k, k -> 1, Integer::sum));
     }
 
     @Override
