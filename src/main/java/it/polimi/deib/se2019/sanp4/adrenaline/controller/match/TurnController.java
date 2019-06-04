@@ -5,7 +5,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.ActionRequest;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.PlayerOperationRequest;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.ControllerFactory;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.PersistentView;
-import it.polimi.deib.se2019.sanp4.adrenaline.controller.PlayerOperationEnum;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.match.PlayerOperationEnum;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.SpawnController;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionEnum;
@@ -169,9 +169,6 @@ public class TurnController {
             case USE_POWERUP:
                 usePowerupHandler();
                 break;
-            case CONVERT_POWERUP:
-                convertPowerupHandler();
-                break;
             case END_TURN:
                 endTurnHandler();
                 break;
@@ -179,10 +176,6 @@ public class TurnController {
     }
 
     void usePowerupHandler() {
-        /* TODO: Implement this method */
-    }
-
-    void convertPowerupHandler() {
         /* TODO: Implement this method */
     }
 

@@ -2,7 +2,7 @@ package it.polimi.deib.se2019.sanp4.adrenaline.common.requests;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import it.polimi.deib.se2019.sanp4.adrenaline.controller.PlayerOperationEnum;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.match.PlayerOperationEnum;
 
 import java.util.List;
 
