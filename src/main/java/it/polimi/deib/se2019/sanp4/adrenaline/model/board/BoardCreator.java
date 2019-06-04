@@ -20,21 +20,25 @@ import java.util.MissingResourceException;
  */
 public class BoardCreator {
 
-    /** The format is {@code &lt;board id, file path&gt;} */
+    /**
+     * The format is {@code &lt;board id, file path&gt;}
+     */
     private static final Map<Integer, String> boardFiles = new HashMap<>();
 
     /* Commodity */
     private static ObjectMapper objectMapper = JSONUtils.getObjectMapper();
 
     /* This class is static and should not be instantiated */
-    private BoardCreator() {}
+    private BoardCreator() {
+    }
 
     /**
      * Loads and validates all boards specified in a board pack JSON file.
+     *
      * @param filePath absolute resource path of the pack JSON file
      * @throws MissingResourceException if any of the required resources is not found
-     * @throws JSONException if there are errors in the JSON itself
-     * @throws ValidationException if the JSON is invalid
+     * @throws JSONException            if there are errors in the JSON itself
+     * @throws ValidationException      if the JSON is invalid
      */
     public static void loadBoardPack(String filePath) {
         /* Load the file as JSON */
@@ -47,17 +51,18 @@ public class BoardCreator {
         JSONArray boardFiles = pack.getJSONArray("boardFiles");
 
         /* The array contains resource paths of the boards */
-        for (int i=0; i < boardFiles.length(); i++) {
+        for (int i = 0; i < boardFiles.length(); i++) {
             loadBoard(boardFiles.getString(i));
         }
     }
 
     /**
      * Loads the given board from file.
+     *
      * @param filePath description of the board
      * @throws MissingResourceException if the required file is not found
-     * @throws JSONException if anything goes wrong while parsing JSON
-     * @throws ValidationException if the JSON is invalid
+     * @throws JSONException            if anything goes wrong while parsing JSON
+     * @throws ValidationException      if the JSON is invalid
      */
     public static void loadBoard(String filePath) {
         /* Load the resource */
@@ -74,12 +79,28 @@ public class BoardCreator {
     }
 
     /**
+     * Retrieves the description of the board corresponding to the provided id
+     *
+     * @param boardId The id of the board
+     * @return The description of the board
+     */
+    public static String getBoardDescription(int boardId) {
+        String filePath = boardFiles.get(boardId);
+        if (filePath == null) {
+            return "";
+        }
+        JSONObject board = JSONUtils.loadJSONResource(filePath);
+        return board.getString("description");
+    }
+
+    /**
      * Creates a new board with given id, which must have been previously loaded.
+     *
      * @param id id of the board to be created
      * @return the new board
-     * @throws BoardNotFoundException if the board description has not been loaded
+     * @throws BoardNotFoundException   if the board description has not been loaded
      * @throws MissingResourceException if the board description file cannot be found
-     * @throws JSONException if anything goes wrong while parsing JSON
+     * @throws JSONException            if anything goes wrong while parsing JSON
      */
     public static Board createBoard(int id) throws BoardNotFoundException {
         /* Load the resource */
@@ -130,6 +151,7 @@ public class BoardCreator {
 
     /**
      * Returns whether the board with specified id has been loaded or not.
+     *
      * @param id id of the board
      * @return if the board is available or not
      */

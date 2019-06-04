@@ -7,7 +7,6 @@ import org.everit.json.schema.ValidationException;
 import org.json.JSONException;
 import org.junit.After;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -189,4 +188,18 @@ public class BoardCreatorTest {
         /* But it comes around when building the board */
         BoardCreator.createBoard(0); /* This throws */
     }
+
+    @Test
+    public void getBoardDescription_notLoaded_shouldReturnEmptyString(){
+        String description = BoardCreator.getBoardDescription(0);
+        assertEquals("", description);
+    }
+
+    @Test
+    public void getBoardDescription_loaded_shouldReturnDescription(){
+        BoardCreator.loadBoard("/assets/test_boards/board_valid.json");
+        String description = BoardCreator.getBoardDescription(0);
+        assertEquals("description", description);
+    }
+
 }

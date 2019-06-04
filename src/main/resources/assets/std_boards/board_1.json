@@ -2,6 +2,7 @@
   "id": 1,
   "xSize": 4,
   "ySize": 3,
+  "description": "Good for 3 or 4 players",
   "squares": [
     {
       "location": { "x": 0, "y": 0 },

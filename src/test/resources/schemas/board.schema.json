@@ -80,6 +80,9 @@
       "type": "integer",
       "minimum": 0
     },
+    "description": {
+      "type": "string"
+    },
     "xSize": {
       "$ref": "#/definitions/size"
     },
@@ -109,6 +112,6 @@
       "required": ["RED", "BLUE", "YELLOW"]
     }
   },
-  "required": ["id", "xSize", "ySize", "squares", "rooms"],
+  "required": ["id", "description", "xSize", "ySize", "squares", "rooms"],
   "additionalProperties": false
 }

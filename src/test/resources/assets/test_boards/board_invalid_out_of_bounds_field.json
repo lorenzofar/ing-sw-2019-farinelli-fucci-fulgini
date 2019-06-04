@@ -2,6 +2,7 @@
   "id": 0,
   "xSize": 3,
   "ySize": 2,
+  "description": "description",
   "squares": [
     {
       "location": { "x": 200, "y": 500 },
