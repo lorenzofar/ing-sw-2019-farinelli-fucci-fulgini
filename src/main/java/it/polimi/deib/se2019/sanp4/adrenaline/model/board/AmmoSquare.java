@@ -1,6 +1,5 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.model.board;
 
-import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.ActionCardView;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.AmmoSquareView;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.SquareUpdate;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCard;
@@ -8,7 +7,6 @@ import it.polimi.deib.se2019.sanp4.adrenaline.model.match.CardStack;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.match.Match;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -89,6 +87,16 @@ public class AmmoSquare extends Square {
     @Override
     public boolean isFull() {
         return ammoCard != null;
+    }
+
+    /**
+     * Accepts to be visited by a {@link SquareVisitor}.
+     *
+     * @param visitor The visitor who wants to visit this square
+     */
+    @Override
+    public void accept(SquareVisitor visitor) {
+        visitor.visit(this);
     }
 
     /**

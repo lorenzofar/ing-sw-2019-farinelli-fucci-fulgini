@@ -1,11 +1,7 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.model.board;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.AmmoSquareView;
-import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.SquareView;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.ModelTestUtil;
-import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionCard;
-import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionCardEnum;
-import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionEnum;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCube;
 
@@ -13,18 +9,24 @@ import it.polimi.deib.se2019.sanp4.adrenaline.model.match.Match;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.match.MatchConfiguration;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.match.MatchCreator;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
-import it.polimi.deib.se2019.sanp4.adrenaline.model.player.PlayerColor;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static java.util.Arrays.asList;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
+@RunWith(MockitoJUnitRunner.class)
 public class AmmoSquareTest {
+
+    @Mock
+    private static SquareVisitor visitor;
 
     private static AmmoSquare ammoSquare;
     private static AmmoCard ammoCard;
@@ -97,5 +99,12 @@ public class AmmoSquareTest {
                 .stream()
                 .map(Player::getName)
                 .collect(Collectors.toSet())));
+    }
+
+    @Test
+    public void accept_shouldAcceptVisitor() {
+        ammoSquare.accept(visitor);
+
+        verify(visitor).visit(ammoSquare);
     }
 }

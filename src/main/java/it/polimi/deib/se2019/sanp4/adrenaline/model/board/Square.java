@@ -147,6 +147,14 @@ public abstract class Square extends Observable<ModelUpdate> {
         return location;
     }
 
+    /**
+     * Accepts to be visited by a {@link SquareVisitor}.
+     * Subclasses may accept or not to be visited by calling
+     * the proper method on the visitor
+     * @param visitor The visitor who wants to visit this square
+     */
+    public abstract void accept(SquareVisitor visitor);
+
     @Override
     public String toString() {
         return String.format("Square{%d,%d}", location.getX(), location.getY());

@@ -2,7 +2,6 @@ package it.polimi.deib.se2019.sanp4.adrenaline.model.board;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.CardNotFoundException;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.FullCapacityException;
-import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.AmmoSquareView;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.SpawnSquareView;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.SquareUpdate;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.WeaponCard;
@@ -118,6 +117,16 @@ public class SpawnSquare extends Square {
             weaponCards.add(stack.draw());
         }
         this.notifyObservers(new SquareUpdate(this.generateView()));
+    }
+
+    /**
+     * Accepts to be visited by a {@link SquareVisitor}.
+     *
+     * @param visitor The visitor who wants to visit this square
+     */
+    @Override
+    public void accept(SquareVisitor visitor) {
+        visitor.visit(this);
     }
 
     /**

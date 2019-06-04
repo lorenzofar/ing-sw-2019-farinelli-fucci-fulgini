@@ -2,7 +2,6 @@ package it.polimi.deib.se2019.sanp4.adrenaline.model.board;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.CardNotFoundException;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.FullCapacityException;
-import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.AmmoSquareView;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.SpawnSquareView;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.ModelTestUtil;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCard;
@@ -17,14 +16,23 @@ import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
+@RunWith(MockitoJUnitRunner.class)
 public class SpawnSquareTest {
+
+    @Mock
+    private static SquareVisitor visitor;
+
     private static SpawnSquare square;
     private static AmmoCard ammoCard;
     private static Match mockMatch;
@@ -187,5 +195,12 @@ public class SpawnSquareTest {
                         .stream()
                         .map(Player::getName)
                         .collect(Collectors.toSet())));
+    }
+
+    @Test
+    public void accept_shouldAcceptVisitor() {
+        square.accept(visitor);
+
+        verify(visitor).visit(square);
     }
 }
