@@ -5,6 +5,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.client.UIRenderer;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.events.ChoiceResponse;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.LoginException;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.*;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.board.BoardCreator;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.powerup.PowerupCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.WeaponCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.view.MessageType;
@@ -156,8 +157,7 @@ public class CLIRenderer implements UIRenderer {
 
     @Override
     public void handle(BoardRequest request) {
-        requestRoutine("Board configuration", request);
-        //TODO: Check how to better render board information
+        requestRoutine("Board configuration", request, BoardCreator::getBoardDescription);
     }
 
     @Override
