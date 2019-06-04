@@ -7,7 +7,6 @@ import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.SpawnSquareView;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.SquareView;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.CardinalDirection;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.CoordPair;
-import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCube;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCubeCost;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.powerup.PowerupCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.WeaponCard;
@@ -16,6 +15,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.model.player.PlayerColor;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * An utility class to interact with the command-line.
@@ -832,7 +832,7 @@ class CLIHelper {
     }
 
     /* ===== PLAYER BOARD ===== */
-    private static List<List<String>> renderPlayerBoard(PlayerBoardView playerBoard, String player, Map<String, ColoredObject> playersColor) {
+    public static List<List<String>> renderPlayerBoard(PlayerBoardView playerBoard, String player, Map<String, ColoredObject> playersColor) {
         List<List<String>> renderedPlayerBoard = new ArrayList<>();
         if (playerBoard == null) {
             return renderedPlayerBoard;
@@ -942,13 +942,12 @@ class CLIHelper {
     /**
      * Renders a table showing information about the weapons contained in all the provided spawn squares
      *
-     * @param spawnSquares The map storing the spawn square for each color
-     * @param board        The object representing the board view
+     * @param board The object representing the board view
      * @return The textual representation of the table
      */
-    private static List<List<String>> renderSpawnWeaponsTable(Map<AmmoCube, CoordPair> spawnSquares, BoardView board) {
+    public static List<List<String>> renderSpawnWeaponsTable(BoardView board) {
         List<List<List<String>>> renderedCells = new ArrayList<>();
-        spawnSquares.forEach((color, location) -> renderedCells.add(renderSpawnWeaponsCell(color, location, board)));
+        board.getSpawnPoints().forEach((color, location) -> renderedCells.add(renderSpawnWeaponsCell(color, location, board)));
         return concatRenderedElements(renderedCells, 1);
     }
 
@@ -960,7 +959,7 @@ class CLIHelper {
      * @param players The map storing the color for each player
      * @return The textual representation of the table
      */
-    private static List<List<String>> renderPlayersOverview(Map<String, PlayerColor> players) {
+    public static List<List<String>> renderPlayersOverview(Map<String, PlayerColor> players) {
         List<List<String>> renderedOverview = new ArrayList<>();
         expandStringRendering(renderedOverview, generateLine(HORIZONTAL_BORDER, PLAYERS_OVERVIEW_DIM, LEFT_TOP_CORNER, RIGHT_TOP_CORNER));
         expandStringRendering(renderedOverview, generateLine(BLANK, PLAYERS_OVERVIEW_DIM, VERTICAL_BORDER, VERTICAL_BORDER));
@@ -984,6 +983,31 @@ class CLIHelper {
     /* ===== RENDERINGS MANIPULATION ===== */
 
     /**
+     * Compute the left displacement to be put before an element when concatenating,
+     * according to the elements on its left that are shorter than the current height
+     *
+     * @param currentHeight The current height
+     * @param elements      The list of all the elements
+     * @param elementIndex  The index of the currently evaluated element
+     * @param spacing       The spacing between two consecutive elements
+     * @return The displacement to be put at the left of the element
+     */
+    private static int computeLeftDisplacement(int currentHeight, List<List<List<String>>> elements, int elementIndex, int spacing) {
+        // Check how many elements on its left do not have content
+        List<List<List<String>>> leftBlankElements = elements.subList(0, elementIndex).stream().filter(leftElement -> leftElement.size() <= currentHeight).collect(Collectors.toList());
+        // Check if there is an element taller than the current height on its left and, if present, remove all the elements at his left
+        Optional<List<List<String>>> rightBoundingElement = elements.subList(0, elementIndex).stream().filter(el -> el.size() > currentHeight).findFirst();
+        rightBoundingElement.ifPresent(lists -> leftBlankElements.removeAll(elements.subList(0, elements.indexOf(lists))));
+        return leftBlankElements.stream().map(blankElement -> {
+            if (blankElement == null || blankElement.isEmpty()) {
+                return 0;
+            } else {
+                return blankElement.get(0).size();
+            }
+        }).reduce(0, Integer::sum) + spacing * leftBlankElements.size();
+    }
+
+    /**
      * Generates a rendering of the provided elements so that they are placed one after the other
      *
      * @param elements The elements to concat
@@ -991,20 +1015,33 @@ class CLIHelper {
      * @return A list of all the lines composing the concatenated elements
      */
     public static List<List<String>> concatRenderedElements(List<List<List<String>>> elements, int spacing) {
-        //First retrieve the tallest element
+        // First retrieve the tallest element
         Optional<List<List<String>>> tallestElement = elements.stream().max(Comparator.comparingInt(List::size));
         if (!(tallestElement.isPresent())) {
             // This happens when the provided list is empty
             return Collections.emptyList();
         }
-        List<List<String>> baseReference = new ArrayList<>(tallestElement.get());
-        // Then add all the other elements
-        elements.stream().filter(element -> element != tallestElement.get()).forEach(element -> {
-            for (int i = 0; i < baseReference.size(); i++) {
+        // And create a container fitting that max height
+        List<List<String>> baseReference = new ArrayList<>();
+        for (int i = 0; i < tallestElement.get().size(); i++) {
+            baseReference.add(new ArrayList<>());
+        }
+
+        // Then add all the other elements in order
+        elements.forEach(element -> {
+            // We iterate over the whole set of lines
+            for (int i = 0; i < tallestElement.get().size(); i++) {
+                // But consider just those index that are within the bounds of the currently evaluated element
                 if (i < element.size()) {
+                    final int leftDisplacement = computeLeftDisplacement(i, elements, elements.indexOf(element), spacing);
+                    if (leftDisplacement != 0) {
+                        baseReference.get(i).addAll(generateLine(BLANK, leftDisplacement));
+                    }
                     if (spacing >= 0) {
+                        // If a non-negative spacing is provided add blank space
                         baseReference.get(i).addAll(generateLine(BLANK, spacing));
                     }
+                    // And eventually append the element's chunk
                     baseReference.get(i).addAll(element.get(i));
                 }
             }
@@ -1019,7 +1056,7 @@ class CLIHelper {
      * @param spacing  The spacing between two consecutive elements
      * @return A list of all the lines composing the rendered stacked elements
      */
-    private static List<List<String>> stackRenderedElements(List<List<List<String>>> elements, int spacing) {
+    public static List<List<String>> stackRenderedElements(List<List<List<String>>> elements, int spacing) {
         if (elements == null) {
             return Collections.emptyList();
         }
