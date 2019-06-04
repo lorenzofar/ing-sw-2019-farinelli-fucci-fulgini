@@ -4,6 +4,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.CardNotFoundExce
 import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.FullCapacityException;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.AmmoSquareView;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.SpawnSquareView;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.SquareUpdate;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.WeaponCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.match.CardStack;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.match.Match;
@@ -66,6 +67,7 @@ public class SpawnSquare extends Square {
         }
         /* If it exists, remove it and return it */
         weaponCards.remove(card.get());
+        this.notifyObservers(new SquareUpdate(this.generateView()));
         return card.get();
     }
 
@@ -87,6 +89,7 @@ public class SpawnSquare extends Square {
             throw new FullCapacityException(MAX_WEAPON_CARDS);
         }
         this.weaponCards.add(weapon);
+        this.notifyObservers(new SquareUpdate(this.generateView()));
     }
 
     /**
@@ -114,6 +117,7 @@ public class SpawnSquare extends Square {
             // if the card is already on this square, it is certainly not in the stack
             weaponCards.add(stack.draw());
         }
+        this.notifyObservers(new SquareUpdate(this.generateView()));
     }
 
     /**
@@ -122,7 +126,9 @@ public class SpawnSquare extends Square {
      */
     @Override
     public SpawnSquareView generateView(){
-        SpawnSquareView view = new SpawnSquareView(this.getLocation(), this.getRoom().getColor());
+        /* Assign a random color if room is null in test cases */
+        RoomColor color = getRoom() == null ? RoomColor.BLUE : getRoom().getColor();
+        SpawnSquareView view = new SpawnSquareView(this.getLocation(), color);
         view.setPlayers(this.getPlayers()
                 .stream()
                 .map(Player::getName)

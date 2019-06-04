@@ -1,6 +1,7 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.model.match;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.PlayerTurnView;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.PlayerTurnUpdate;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionEnum;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
@@ -19,7 +20,7 @@ import static it.polimi.deib.se2019.sanp4.adrenaline.model.match.PlayerTurnState
  *     <li>The list of all the players damaged during the turn</li>
  * </ul>
  */
-public class PlayerTurn {
+public class PlayerTurn extends Observable{
 
     /** The number of actions the player can still perform */
     private int remainingActions;
@@ -109,6 +110,7 @@ public class PlayerTurn {
         if(state == null){
             throw new NullPointerException("State cannot be null");
         }
+        if (this.state != state) this.notifyObservers(new PlayerTurnUpdate(this.generateView()));
         this.state = state;
     }
 

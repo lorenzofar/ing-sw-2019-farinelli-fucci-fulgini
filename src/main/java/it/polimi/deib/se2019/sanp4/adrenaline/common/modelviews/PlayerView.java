@@ -6,6 +6,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCube;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.powerup.PowerupCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.WeaponCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.PlayerColor;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.player.PlayerState;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -43,6 +44,10 @@ public class PlayerView implements Serializable {
      * The current score of the player
      */
     private int score;
+    /**
+     * The current state of the player
+     */
+    private PlayerState state;
 
     /**
      * Creates a new player view
@@ -58,6 +63,7 @@ public class PlayerView implements Serializable {
         this.ammo = new EnumMap<>(AmmoCube.class);
         this.weapons = new ArrayList<>();
         this.powerups = new ArrayList<>();
+        this.state = PlayerState.ONLINE;
     }
 
     /**
@@ -160,5 +166,13 @@ public class PlayerView implements Serializable {
         if (score >= 0) {
             this.score = score;
         }
+    }
+
+    public PlayerState getState() {
+        return state;
+    }
+
+    public void setState(PlayerState state) {
+        this.state = state;
     }
 }

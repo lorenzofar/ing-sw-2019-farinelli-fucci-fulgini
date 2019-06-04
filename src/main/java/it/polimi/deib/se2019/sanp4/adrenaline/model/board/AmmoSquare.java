@@ -2,6 +2,7 @@ package it.polimi.deib.se2019.sanp4.adrenaline.model.board;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.ActionCardView;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.AmmoSquareView;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.SquareUpdate;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.match.CardStack;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.match.Match;
@@ -41,6 +42,7 @@ public class AmmoSquare extends Square {
         if(this.ammoCard != null) {
             AmmoCard picked = this.ammoCard;
             this.ammoCard = null;
+            this.notifyObservers(new SquareUpdate(this.generateView()));
             return picked;
         } else {
             throw new IllegalStateException("Currently no ammo on this square");
@@ -60,6 +62,7 @@ public class AmmoSquare extends Square {
             throw new NullPointerException("Ammo cannot be null");
         }
         this.ammoCard = ammo;
+        this.notifyObservers(new SquareUpdate(this.generateView()));
     }
 
     /**
@@ -75,6 +78,7 @@ public class AmmoSquare extends Square {
             CardStack<AmmoCard> stack = match.getAmmoStack();
             insertAmmo(stack.draw());
         }
+        this.notifyObservers(new SquareUpdate(this.generateView()));
     }
 
     /**
@@ -93,7 +97,9 @@ public class AmmoSquare extends Square {
      */
     @Override
     public AmmoSquareView generateView() {
-        AmmoSquareView view = new AmmoSquareView(this.getLocation(), this.getRoom().getColor());
+        /* Assign a random color if room is null in test cases */
+        RoomColor color = getRoom() == null ? RoomColor.BLUE : getRoom().getColor();
+        AmmoSquareView view = new AmmoSquareView(this.getLocation(), color);
         view.setPlayers(this.getPlayers()
                         .stream()
                         .map(Player::getName)

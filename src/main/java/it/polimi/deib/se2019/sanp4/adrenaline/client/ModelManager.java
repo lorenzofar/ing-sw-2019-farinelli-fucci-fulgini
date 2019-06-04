@@ -208,4 +208,9 @@ public class ModelManager implements ModelUpdateVisitor {
         this.playerBoards = update.getPlayerBoards();
         //TODO: Refresh the match screen
     }
+
+    @Override
+    public void handle(PlayerTurnUpdate update) {
+        //TODO: Implement this method
+    }
 }

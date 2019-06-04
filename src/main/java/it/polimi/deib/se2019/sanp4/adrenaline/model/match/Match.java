@@ -2,7 +2,7 @@ package it.polimi.deib.se2019.sanp4.adrenaline.model.match;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.*;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.Observable;
-import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.InitialUpdate;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.*;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.Board;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.Square;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCard;
@@ -30,7 +30,7 @@ import java.util.*;
  *     <li>Whether the match is in frenzy mode or not</li>
  * </ul>
  */
-public class Match extends Observable {
+public class Match extends Observable<ModelUpdate> {
 
     private static final String NULL_PLAYER_ERROR = "Player cannot be null";
     private static final String NULL_CARD_STACK = "Cannot set card stack to null";
@@ -188,7 +188,6 @@ public class Match extends Observable {
         suspendedPlayer.setState(PlayerState.ONLINE);
     }
 
-
     /**
      * Set the state of the current turn to {@link PlayerTurnState#OVER
      * }
@@ -213,6 +212,7 @@ public class Match extends Observable {
      */
     public void goFrenzy(){
         frenzy = true;
+        this.notifyObservers(new MatchUpdate(this.generateView()));
     }
 
     /**
@@ -227,6 +227,7 @@ public class Match extends Observable {
         if(killshotsTrack.size() < skulls){
             killshotsTrack.add(player);
         }
+        this.notifyObservers(new MatchUpdate(this.generateView()));
     }
 
     /**
@@ -329,7 +330,10 @@ public class Match extends Observable {
      * @param currentTurn The object representing the current turn
      */
     public void setCurrentTurn(PlayerTurn currentTurn){
-        this.currentTurn = currentTurn;
+        if (this.currentTurn != currentTurn) {
+            this.notifyObservers(new PlayerTurnUpdate(currentTurn.generateView()));
+            this.currentTurn = currentTurn;
+        }
     }
 
     /* The following setters must only be used by MatchCreator when creating the match */

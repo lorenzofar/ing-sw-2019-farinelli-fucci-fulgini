@@ -3,6 +3,8 @@ package it.polimi.deib.se2019.sanp4.adrenaline.model.board;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.BoardView;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.SquareView;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.Observable;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.Observer;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.BoardUpdate;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.ModelUpdate;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.PlayerMoveUpdate;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCube;
@@ -76,7 +78,6 @@ public class Board extends Observable<ModelUpdate> {
 
         /* Eventually we put it into the board matrix */
         squares[x][y] = square;
-
     }
 
     /**
@@ -92,7 +93,9 @@ public class Board extends Observable<ModelUpdate> {
         end.addPlayer(player);
         player.setCurrentSquare(end);
         if(start != null) {
-            player.notifyObservers(new PlayerMoveUpdate(player.getName(), start.getLocation(), end.getLocation()));
+            if(start.getLocation() != end.getLocation()) {
+                player.notifyObservers(new PlayerMoveUpdate(player.getName(), start.getLocation(), end.getLocation()));
+            }
         } else {
             player.notifyObservers(new PlayerMoveUpdate(player.getName(), null, end.getLocation()));
         }
@@ -308,6 +311,7 @@ public class Board extends Observable<ModelUpdate> {
      */
     void setSpawnPoint(AmmoCube color, SpawnSquare square) {
         spawnPoints.put(color, square);
+        this.notifyObservers(new BoardUpdate(this.generateView()));
     }
 
     /**

@@ -7,6 +7,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.PlayerView;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.Observable;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.DamageUpdate;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.ModelUpdate;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.PlayerBoardUpdate;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -84,6 +85,7 @@ public class PlayerBoard extends Observable<ModelUpdate> {
      */
     public void addDeath() {
         deaths += 1;
+        this.notifyObservers(new PlayerBoardUpdate(this.generateView(), player.getName()));
     }
 
     /**
@@ -148,6 +150,7 @@ public class PlayerBoard extends Observable<ModelUpdate> {
         // If I reached the maximum amount of marks, cap the value to it
         playerMarks = playerMarks > MAX_MARKS_PER_PLAYER ? MAX_MARKS_PER_PLAYER : playerMarks;
         marks.put(shooter, playerMarks);
+        this.notifyObservers(new PlayerBoardUpdate(this.generateView(), player.getName()));
     }
 
     /**
@@ -263,6 +266,7 @@ public class PlayerBoard extends Observable<ModelUpdate> {
         addDeath();
         damages = new ArrayList<>();
         marks = new HashMap<>();
+        this.notifyObservers(new PlayerBoardUpdate(this.generateView(), player.getName()));
     }
 
     /**
@@ -275,6 +279,7 @@ public class PlayerBoard extends Observable<ModelUpdate> {
             throw new PlayerException("The player is damaged");
         }
         state = new FrenzyPlayerBoardState(); // Change player board
+        this.notifyObservers(new PlayerBoardUpdate(this.generateView(), player.getName()));
     }
 
     /**

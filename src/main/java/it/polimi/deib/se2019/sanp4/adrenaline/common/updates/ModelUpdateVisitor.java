@@ -21,4 +21,5 @@ public interface ModelUpdateVisitor {
     void handle(DrawnPowerupUpdate update);
     void handle(DrawnWeaponUpdate update);
     void handle(InitialUpdate update);
+    void handle(PlayerTurnUpdate update);
 }

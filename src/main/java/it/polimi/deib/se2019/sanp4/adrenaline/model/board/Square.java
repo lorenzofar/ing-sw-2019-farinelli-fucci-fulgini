@@ -6,6 +6,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.PlayerNotFoundEx
 import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.SquareView;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.Observable;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.ModelUpdate;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.SquareUpdate;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.match.Match;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
 
@@ -65,6 +66,7 @@ public abstract class Square extends Observable<ModelUpdate> {
             throw new NullPointerException("Player cannot be null");
         }
         this.players.add(player);
+        this.notifyObservers(new SquareUpdate(this.generateView()));
     }
 
     /**
@@ -80,6 +82,7 @@ public abstract class Square extends Observable<ModelUpdate> {
             throw new PlayerNotFoundException("The player is not inside the square");
         }
         this.players.remove(player);
+        this.notifyObservers(new SquareUpdate(this.generateView()));
     }
 
     /**
@@ -117,6 +120,7 @@ public abstract class Square extends Observable<ModelUpdate> {
      */
     public void setRoom(Room room) {
         this.room = room;
+        this.notifyObservers(new SquareUpdate(this.generateView()));
     }
 
     /**

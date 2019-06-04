@@ -12,6 +12,8 @@ public class AmmoSquareView extends SquareView {
 
     private static final long serialVersionUID = -5130799856399259160L;
 
+    //TODO: decide whether to put the ammocard or not
+
     /**
      * Creates a new ammo square view
      * @param location the coordinates of the square

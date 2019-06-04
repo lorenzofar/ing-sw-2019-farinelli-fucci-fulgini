@@ -7,6 +7,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.PlayerView;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.Observable;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.AddedWeaponUpdate;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.ModelUpdate;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.PlayerUpdate;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.RemovedWeaponUpdate;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionCardCreator;
@@ -24,7 +25,7 @@ import java.util.*;
 public class Player extends Observable<ModelUpdate> {
 
     /**
-     * Load the inital cubes of each color a player has at the beginning of a match
+     * Load the initial cubes of each color a player has at the beginning of a match
      * Fall back to a default value of 1 cube per color if none is set
      */
     public static final int INITIAL_AMMO = 1;
@@ -347,6 +348,7 @@ public class Player extends Observable<ModelUpdate> {
         }
 
         weapons.remove(weapon);
+        notifyObservers(new RemovedWeaponUpdate(this.getName(), weapon.getId()));
         weapon.getState().reset(weapon);
         return weapon;
     }
@@ -505,7 +507,9 @@ public class Player extends Observable<ModelUpdate> {
         if(state == null){
             throw new NullPointerException("State cannot be null");
         }
+        if(this.state != state) this.notifyObservers(new PlayerUpdate(generateView()));
         this.state = state;
+
     }
 
     /**
