@@ -81,6 +81,8 @@ class CLIHelper {
     private static final String LIGHT_LEFT_VERTICAL_SEPARATOR = "╟";
     private static final String LIGHT_RIGHT_VERTICAL_SEPARATOR = "╢";
     private static final String LIGHT_HORIZONTAL_BORDER = "─";
+    private static final String VERTICAL_WALL = "┃";
+    private static final String HORIZONTAL_WALL = "━";
     private static final String BLANK = " ";
 
     /* ===== SYMBOLS ===== */
@@ -462,6 +464,9 @@ class CLIHelper {
      * @param rightBorder The string representing the right border
      */
     private static List<String> generateLine(String template, int length, String leftBorder, String rightBorder) {
+        if (length == 0) {
+            return Collections.emptyList();
+        }
         List<String> line = new ArrayList<>(Collections.nCopies(length, template));
         line.set(0, leftBorder);
         line.set(line.size() - 1, rightBorder);
@@ -616,39 +621,38 @@ class CLIHelper {
      * Each row is a list of string containing all the cells of the rendered square.
      */
     static List<List<String>> renderSquare(SquareView square, Map<String, ColoredObject> playersColors) {
-        // We first initialize the main list
-        List<List<String>> squareRows = new ArrayList<>();
-
-        // We initialize all the rows by putting blank cells
-        for (int i = 0; i < SQUARE_DIM / 2; i++) {
-            squareRows.add(new ArrayList<>(Collections.nCopies(SQUARE_DIM, " ")));
-        }
-
-        // If the provided square is null, we just return an empty list
+        List<List<String>> renderedSquare = new ArrayList<>();
         if (square == null) {
-            return squareRows;
+            for (int i = 0; i < SQUARE_DIM / 2; i++) {
+                renderedSquare.add(new ArrayList<>(Collections.nCopies(SQUARE_DIM, BLANK)));
+            }
+            return renderedSquare;
         }
 
-        // We then build left and right edges, by setting the first and last character of each row according to the connection type
-        squareRows.forEach(row -> {
-            row.set(0, square.getAdjacentMap().get(CardinalDirection.W).getVerticalCharacterRepresentation());
-            row.set(row.size() - 1, square.getAdjacentMap().get(CardinalDirection.E).getVerticalCharacterRepresentation());
-        });
+        // We first initialize the main list
+        expandStringRendering(renderedSquare, generateLine(
+                square.getAdjacentMap().get(CardinalDirection.N) != null ? square.getAdjacentMap().get(CardinalDirection.N).getHorizontalCharacterRepresentation() : HORIZONTAL_WALL,
+                SQUARE_DIM,
+                LIGHT_LEFT_TOP_CORNER,
+                LIGHT_RIGHT_TOP_CORNER
+        ));
 
-        // Then we take top and bottom border and we update their characters according to the connection type
-        List<String> topBorder = squareRows.get(0);
-        List<String> bottomBorder = squareRows.get(squareRows.size() - 1);
-        topBorder.replaceAll(s -> square.getAdjacentMap().get(CardinalDirection.N).getHorizontalCharacterRepresentation());
-        bottomBorder.replaceAll(s -> square.getAdjacentMap().get(CardinalDirection.S).getHorizontalCharacterRepresentation());
+        for (int y = 0; y < SQUARE_DIM / 2 - 2; y++) {
+            expandStringRendering(renderedSquare, generateLine(BLANK, SQUARE_DIM,
+                    square.getAdjacentMap().get(CardinalDirection.W) != null ? square.getAdjacentMap().get(CardinalDirection.W).getVerticalCharacterRepresentation() : VERTICAL_WALL,
+                    square.getAdjacentMap().get(CardinalDirection.E) != null ? square.getAdjacentMap().get(CardinalDirection.E).getVerticalCharacterRepresentation() : VERTICAL_WALL
+            ));
+        }
 
-        // We add corners around the square
-        topBorder.set(0, LIGHT_LEFT_TOP_CORNER);
-        topBorder.set(topBorder.size() - 1, LIGHT_RIGHT_TOP_CORNER);
-        bottomBorder.set(0, LIGHT_LEFT_BOTTOM_CORNER);
-        bottomBorder.set(bottomBorder.size() - 1, LIGHT_RIGHT_BOTTOM_CORNER);
+        expandStringRendering(renderedSquare, generateLine(
+                square.getAdjacentMap().get(CardinalDirection.S) != null ? square.getAdjacentMap().get(CardinalDirection.S).getHorizontalCharacterRepresentation() : HORIZONTAL_WALL,
+                SQUARE_DIM,
+                LIGHT_LEFT_BOTTOM_CORNER,
+                LIGHT_RIGHT_BOTTOM_CORNER
+        ));
 
         // We add the marker indicating the square type
-        squareRows.get(1).set(1, square.printTypeMarker());
+        renderedSquare.get(1).set(1, square.printTypeMarker());
 
         /* ===== PLAYERS RENDERING ===== */
         // We first calculate the center of the square
@@ -659,13 +663,13 @@ class CLIHelper {
         // We compute the starting point of the line
         int playerX = centerX - playersCount / 2;
         for (String player : square.getPlayers()) {
-            squareRows.get(centerY).set(playerX, String.format(TRISTRING_TEMPLATE, playersColors.get(player).getAnsiCode(), ANSI_DOT, square.getRoomColor().getAnsiCode()));
+            renderedSquare.get(centerY).set(playerX, String.format(TRISTRING_TEMPLATE, playersColors.get(player).getAnsiCode(), ANSI_DOT, square.getRoomColor().getAnsiCode()));
             playerX++;
         }
         // Then eventually put the correct ANSI code for the square color
-        squareRows.forEach(row -> row.add(0, square.getRoomColor().getAnsiCode()));
+        renderedSquare.forEach(row -> row.add(0, square.getRoomColor().getAnsiCode()));
 
-        return squareRows;
+        return renderedSquare;
     }
 
     /**
@@ -674,46 +678,40 @@ class CLIHelper {
      * @param board The object representing the board
      */
     public static List<List<String>> renderBoard(BoardView board, Map<String, ColoredObject> playersColors) {
-        int width = board.getColumnsCount();
-        int height = board.getRowsCount();
-        // We define an initial list of lists to hold the rendered board
-        List<List<String>> boardRows = new ArrayList<>();
+        int width = board.getSquares().length;
 
-        // We then proceed by considering each row
-        for (int r = 0; r < height; r++) {
-            // Then for each row we have to take all the squares that are inside it and append their rendered value
-            // We add the first square of the row
-            List<List<String>> rowSquares = renderSquare(board.getSquare(new CoordPair(0, r)), playersColors);
-            for (int c = 1; c < width; c++) {
-                // We concatenate all the squares in the row
-                // by adding all the lists to the previous ones
-                List<List<String>> renderedSquare = renderSquare(board.getSquare(new CoordPair(c, r)), playersColors);
-                for (int i = 0; i < rowSquares.size(); i++) {
-                    rowSquares.get(i).addAll(renderedSquare.get(i));
-                }
+        // We define an initial list of lists to hold the rendered board
+        List<List<List<String>>> renderedRows = new ArrayList<>();
+
+        // We then render each row and append it to the list
+        for (int i = 0; i < board.getSquares()[0].length; i++) {
+            List<List<List<String>>> renderedSquares = new ArrayList<>();
+            for (int j = 0; j < width; j++) {
+                renderedSquares.add(renderSquare(board.getSquares()[j][i], playersColors));
             }
-            // We then concatenate the row with the previous one
-            boardRows.addAll(rowSquares);
+            renderedRows.add(concatRenderedElements(renderedSquares, 0));
         }
+        List<List<String>> renderedBoard = stackRenderedElements(renderedRows, 0);
+
         // Add coordinates indicators
         int row = 0;
-        for (int i = 0; i < boardRows.size(); i++) {
+        for (int i = 0; i < renderedBoard.size(); i++) {
             // Consider the index of the current row
             // Check whether is the center of a square
-            if (i == row * SQUARE_DIM / 2 + SQUARE_DIM / 4) {
-                boardRows.get(i).add(0, String.format("%s%2d ", ANSI_RESET, row));
+            if (i == row * (SQUARE_DIM / 2) + (SQUARE_DIM / 4)) {
+                renderedBoard.get(i).add(0, String.format("%s%2d ", ANSI_RESET, row));
                 row++;
             } else {
-                boardRows.get(i).add(0, "   ");
+                renderedBoard.get(i).add(0, "   ");
             }
         }
         // Add a new line on top of the board
-        boardRows.add(0, generateLine(BLANK, boardRows.get(0).size(), BLANK, BLANK));
+        renderedBoard.add(0, generateLine(BLANK, renderedBoard.get(0).size(), BLANK, BLANK));
         // Set the coordinates on the vertical centers of the square
         for (int col = 0; col < width; col++) {
-            boardRows.get(0).set(3 + col * SQUARE_DIM + SQUARE_DIM / 2, String.format("%d", col));
+            renderedBoard.get(0).set(3 + col * SQUARE_DIM + SQUARE_DIM / 2, String.format("%d", col));
         }
-        return boardRows;
+        return renderedBoard;
     }
 
     /* ===== WEAPON CARDS ===== */
@@ -1037,7 +1035,7 @@ class CLIHelper {
                     if (leftDisplacement != 0) {
                         baseReference.get(i).addAll(generateLine(BLANK, leftDisplacement));
                     }
-                    if (spacing >= 0) {
+                    if (spacing > 0) {
                         // If a non-negative spacing is provided add blank space
                         baseReference.get(i).addAll(generateLine(BLANK, spacing));
                     }
@@ -1063,7 +1061,7 @@ class CLIHelper {
         List<List<String>> baseReference = new ArrayList<>();
         elements.forEach(element -> {
             baseReference.addAll(element);
-            if (spacing >= 0) {
+            if (spacing > 0) {
                 baseReference.addAll(Collections.singletonList(generateLine(BLANK, spacing)));
             }
         });

@@ -15,7 +15,7 @@ public enum SquareConnectionType {
     /**
      * The squares are connected and belong to the same room
      */
-    FLOOR("Floor", " ", "");
+    FLOOR("Floor", " ", " ");
 
     private String message;
     private String hCharacterRepresentation;
