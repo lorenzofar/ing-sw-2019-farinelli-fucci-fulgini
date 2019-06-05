@@ -10,14 +10,11 @@ import it.polimi.deib.se2019.sanp4.adrenaline.model.ModelImpl;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.match.Match;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.match.MatchConfiguration;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.match.MatchCreator;
-import it.polimi.deib.se2019.sanp4.adrenaline.view.MessageType;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Implementation of the Controller, which uses {@link PersistentView}s to decorate the

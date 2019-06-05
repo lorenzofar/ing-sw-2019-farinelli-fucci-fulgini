@@ -9,7 +9,6 @@ import it.polimi.deib.se2019.sanp4.adrenaline.model.board.VisibilityEnum;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.match.Match;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CancellationException;
 import java.util.stream.Collectors;
