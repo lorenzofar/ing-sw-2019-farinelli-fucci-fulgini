@@ -1,6 +1,7 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.client.cli;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.client.ClientView;
+import it.polimi.deib.se2019.sanp4.adrenaline.client.ModelManager;
 import it.polimi.deib.se2019.sanp4.adrenaline.client.UIRenderer;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.events.ChoiceResponse;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.LoginException;
@@ -12,10 +13,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.view.MessageType;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -136,7 +134,79 @@ public class CLIRenderer implements UIRenderer {
     public void showMatchScreen() {
         CLIHelper.stopSpinner();
         CLIHelper.clearScreen();
-        //TODO: Implement this method
+
+        /*  The match screen is divided into two main panes,
+            that correspond to two different contexts
+            - LEFT PANE : game information
+            - RIGHT PANE : players information
+
+            In the left pane there will be:
+            - TOP ROW showing killshots track and spawn squares
+            - MIDDLE ROW showing the game board
+            - BOTTOM ROW showing the player board of the user
+
+            In the right pane there will be:
+            - turn information
+            - players table
+            - stacked players board
+        */
+
+        ModelManager modelManager = clientView.getModelManager();
+        // We first render the killshots track
+        List<List<String>> renderedKillshotsTrack = CLIHelper.renderKillshotsTrack(
+                modelManager.getMatch().getKillshotsCount(),
+                modelManager.getMatch().getTotalSkulls());
+        // Then the table showing information about spawn points
+        List<List<String>> renderedSpawnTable = CLIHelper.renderSpawnWeaponsTable(modelManager.getBoard());
+        // Then we build the first row
+        List<List<String>> leftTopRow = CLIHelper.concatRenderedElements(
+                Arrays.asList(renderedKillshotsTrack, renderedSpawnTable),
+                4);
+        // We then render the board
+        List<List<String>> renderedBoard = CLIHelper.renderBoard(
+                modelManager.getBoard(),
+                modelManager.getPlayersColors());
+        // Then the player board of the user
+        List<List<String>> renderedUserPlayerBoard = CLIHelper.renderPlayerBoard(
+                modelManager.getPlayerBoards().get(clientView.getUsername()),
+                clientView.getUsername(),
+                modelManager.getPlayersColors()
+        );
+        // And eventually build the left pane
+        List<List<String>> leftPane = CLIHelper.stackRenderedElements(
+                Arrays.asList(leftTopRow, renderedBoard, renderedUserPlayerBoard),
+                2
+        );
+
+        // Then we consider the right pane
+        // We first render the players overview
+        List<List<String>> renderedPlayersList = CLIHelper.renderPlayersOverview(
+                modelManager.getPlayers().entrySet().stream().collect(Collectors.toMap(
+                        Map.Entry::getKey, e -> e.getValue().getColor()
+                ))
+        );
+        // Then we generate all the player boards, removing the one of the current player
+        List<List<List<String>>> renderedPlayerBoards = modelManager.getPlayerBoards().entrySet().stream()
+                .filter(e -> !e.getKey().equals(clientView.getUsername()))
+                .map(e -> CLIHelper.renderPlayerBoard(e.getValue(), e.getKey(), modelManager.getPlayersColors()))
+                .collect(Collectors.toList());
+
+        //TODO: Generate turn rendering and show information about frenzy mode
+        //TODO: Show score of the user
+        //TODO: Show ammo of the user
+
+        // Then we stack each board on top of the other
+        List<List<String>> stackedPlayerBoards = CLIHelper.stackRenderedElements(renderedPlayerBoards, 1);
+        List<List<String>> rightPane = CLIHelper.stackRenderedElements(
+                Arrays.asList(renderedPlayersList, stackedPlayerBoards),
+                2
+        );
+
+        // Then we place the two panes one after the other
+        List<List<String>> matchScreen = CLIHelper.concatRenderedElements(Arrays.asList(leftPane, rightPane), 2);
+
+        // And finally print the match screen
+        CLIHelper.printRenderedGameElement(matchScreen);
     }
 
     /**

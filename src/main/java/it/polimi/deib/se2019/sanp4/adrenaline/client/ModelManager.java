@@ -59,6 +59,10 @@ public class ModelManager implements ModelUpdateVisitor {
         this.board = board;
     }
 
+    public Map<String, PlayerBoardView> getPlayerBoards(){
+        return playerBoards;
+    }
+
     public PlayerTurnView getCurrentTurn() {
         return currentTurn;
     }
