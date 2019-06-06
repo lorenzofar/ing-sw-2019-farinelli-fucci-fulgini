@@ -667,7 +667,7 @@ class CLIHelper {
             playerX++;
         }
         // Then eventually put the correct ANSI code for the square color
-        renderedSquare.forEach(row -> row.add(0, square.getRoomColor().getAnsiCode()));
+        renderedSquare.forEach(row -> row.set(0, String.format("%s%s", square.getRoomColor().getAnsiCode(), row.get(0))));
 
         return renderedSquare;
     }
@@ -704,6 +704,7 @@ class CLIHelper {
             } else {
                 renderedBoard.get(i).add(0, "   ");
             }
+            renderedBoard.get(i).set(renderedBoard.get(i).size() - 1, String.format("%s%s", renderedBoard.get(i).get(renderedBoard.get(i).size() - 1), ANSI_RESET));
         }
         // Add a new line on top of the board
         renderedBoard.add(0, generateLine(BLANK, renderedBoard.get(0).size(), BLANK, BLANK));
@@ -1019,6 +1020,7 @@ class CLIHelper {
             // This happens when the provided list is empty
             return Collections.emptyList();
         }
+
         // And create a container fitting that max height
         List<List<String>> baseReference = new ArrayList<>();
         for (int i = 0; i < tallestElement.get().size(); i++) {
@@ -1058,11 +1060,19 @@ class CLIHelper {
         if (elements == null) {
             return Collections.emptyList();
         }
+        // Also consider when each element is of different width
+        // We first get the maximum width
+        int maxWidth = elements.stream().filter(element -> !element.isEmpty()).map(element -> element.get(0).size()).max(Integer::compareTo).orElse(0);
+        // Then retrieve those elements shorter than it
+        elements.stream().filter(element -> !element.isEmpty()).filter(element -> element.get(0).size() < maxWidth).forEach(element ->
+                element.forEach(elementLine -> elementLine.addAll(generateLine(BLANK, maxWidth - elementLine.size())))
+        );
+
         List<List<String>> baseReference = new ArrayList<>();
         elements.forEach(element -> {
             baseReference.addAll(element);
             if (spacing > 0) {
-                baseReference.addAll(Collections.singletonList(generateLine(BLANK, spacing)));
+                baseReference.addAll(Collections.nCopies(spacing, generateLine(BLANK, maxWidth)));
             }
         });
         return baseReference;
