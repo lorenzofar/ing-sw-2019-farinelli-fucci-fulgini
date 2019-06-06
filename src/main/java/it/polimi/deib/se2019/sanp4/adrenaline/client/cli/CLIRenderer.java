@@ -286,6 +286,12 @@ public class CLIRenderer implements UIRenderer {
                 request.isOptional(),
                 stringConverter
         );
+        if ((selectedObject == null && !request.isOptional()) || clientView.getCurrentRequest() == null) {
+            // The request has been cancelled, hence we stop here
+            // We also check whether the current request has been deleted, in order to avoid issues when the
+            // request allows an optional choice
+            return;
+        }
         // Then create a response accordingly and reply to server
         ChoiceResponse<T> response = new ChoiceResponse<>(clientView.getUsername(), request.getUuid(), selectedObject);
         clientView.notifyObservers(response);

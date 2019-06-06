@@ -12,7 +12,9 @@ import it.polimi.deib.se2019.sanp4.adrenaline.model.items.powerup.PowerupCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.WeaponCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.PlayerColor;
 
+import java.io.InputStreamReader;
 import java.util.*;
+import java.util.concurrent.CancellationException;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -36,7 +38,7 @@ class CLIHelper {
     /**
      * Scanner to read user input
      */
-    private static final Scanner scanner = new Scanner(System.in);
+    private static final CancellableInput input = new CancellableInput(new InputStreamReader(System.in));
     /**
      * Stack of characters used for the spinner animation
      */
@@ -294,7 +296,9 @@ class CLIHelper {
         do {
             if (n != null) print("This choice does not exist!");
             n = parseInt();
-            scanner.nextLine(); /* Catch newline */
+            if (n == null) {
+                return null;
+            }
         } while (n > maxN || n < 0);
 
         return n == options.size() ? null : options.get(n);
@@ -336,16 +340,6 @@ class CLIHelper {
     }
 
     /**
-     * Waits for the user to press the enter key
-     */
-    static void waitEnterKey() {
-        String s = scanner.next();
-        while (!s.equalsIgnoreCase("\r")) {
-            s = scanner.next();
-        }
-    }
-
-    /**
      * Clears the console screen by using ANSI escape codes
      */
     static void clearScreen() {
@@ -356,6 +350,13 @@ class CLIHelper {
 
     private static void resetColor() {
         print(ANSI_RESET);
+    }
+
+    /**
+     * Cancels the current input request
+     */
+    public static void cancelInput() {
+        input.cancel();
     }
 
     /**
@@ -370,7 +371,7 @@ class CLIHelper {
         println(message);
         resetColor();
         print(PROMPT_TEMPLATE);
-        return scanner.next();
+        return input.readLine();
 
     }
 
@@ -380,12 +381,18 @@ class CLIHelper {
      *
      * @return The integer entered by the user
      */
-    private static int parseInt() {
+    private static Integer parseInt() {
         print(PROMPT_TEMPLATE);
-        String input = scanner.next();
+        int n = 0;
         try {
-            return Integer.parseInt(input);
-        } catch (Exception ex) {
+            n = input.read();
+            input.readLine();
+            return Character.getNumericValue(n);
+        } catch (CancellationException e) {
+            input.readLine();
+            return null;
+        } catch (Exception e) {
+            input.readLine();
             println("Please insert a valid input");
             return parseInt();
         }
@@ -398,7 +405,7 @@ class CLIHelper {
      * @param message An message to show to the user
      * @return The integer entered by the user
      */
-    private static int parseInt(String message) {
+    private static Integer parseInt(String message) {
         print(ANSI_CYAN);
         println(message);
         resetColor();
