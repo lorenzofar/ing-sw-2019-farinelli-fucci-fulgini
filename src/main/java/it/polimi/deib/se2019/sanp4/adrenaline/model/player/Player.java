@@ -287,7 +287,7 @@ public class Player extends Observable<ModelUpdate> {
     }
 
     /**
-     * Add a weapon card in player's hands, also resets its state.
+     * Add a weapon card in player's hands.
      * Also takes care of the fact that you cannot have more than more than {@link #MAX_WEAPONS} cards.
      * @param weapon weapon card that should be added, not null
      * @throws NullPointerException if weapon is null
@@ -305,7 +305,6 @@ public class Player extends Observable<ModelUpdate> {
         if (weapons.size() >= MAX_WEAPONS) {
             throw new FullCapacityException(MAX_WEAPONS);
         }
-        weapon.getState().reset(weapon); // Resets weapon state
         weapons.add(weapon);
         notifyObservers(new AddedWeaponUpdate(this.getName(), weapon.getName()));
     }

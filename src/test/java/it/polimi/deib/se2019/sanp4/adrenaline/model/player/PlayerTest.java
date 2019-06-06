@@ -10,7 +10,6 @@ import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionCardCreator;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionCardEnum;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionEnum;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.CoordPair;
-import it.polimi.deib.se2019.sanp4.adrenaline.model.board.RoomColor;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.SpawnSquare;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.Square;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCube;
@@ -28,8 +27,6 @@ import java.util.*;
 import static org.junit.Assert.*;
 
 public class PlayerTest {
-
-    private final static ObjectMapper mapper = JSONUtils.getObjectMapper();
 
     private final static String validName = "player1";
     private static ActionCard validActionCard;
@@ -51,8 +48,6 @@ public class PlayerTest {
         validActions.add(ActionEnum.ADRENALINE_SHOOT);
         ActionCardEnum validType = ActionCardEnum.ADRENALINE1;
         ActionEnum validFinalAction = ActionEnum.RELOAD;
-        String validDescription = "description1";
-        RoomColor validColor = RoomColor.BLUE;
         validWeaponCost = new ArrayList<>();
         validWeaponCost.add(AmmoCubeCost.BLUE);
         validWeaponCost.add(AmmoCubeCost.RED);
@@ -157,7 +152,6 @@ public class PlayerTest {
     @Test
     public void updateActionCard_fromRegularToAdrenaline1_shouldSucceed() {
         /* Set up regular action card */
-        ActionCard actionCard = ActionCard.initial();
         Player player = new Player(validName, ActionCard.initial(), validColor);
 
         /* Create another player who will target this */
