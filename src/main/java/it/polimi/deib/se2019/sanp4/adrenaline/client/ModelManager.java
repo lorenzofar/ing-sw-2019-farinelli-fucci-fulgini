@@ -139,6 +139,8 @@ public class ModelManager implements ModelUpdateVisitor {
         playerView.setAmmo(update.getPlayer().getAmmo());
         playerView.setPowerups(update.getPlayer().getPowerups());
         playerView.setWeapons(update.getPlayer().getWeapons());
+        playerView.setState(update.getPlayer().getState());
+        playerView.setScore(update.getPlayer().getScore());
         //TODO: Check whether to refresh something
     }
 
@@ -168,6 +170,7 @@ public class ModelManager implements ModelUpdateVisitor {
     @Override
     public void handle(BoardUpdate update) {
         board.setSquares(update.getBoard().getSquares());
+        board.setSpawnPoints(update.getBoard().getSpawnPoints());
         //TODO: Refresh the displayed board
     }
 
@@ -215,6 +218,9 @@ public class ModelManager implements ModelUpdateVisitor {
 
     @Override
     public void handle(PlayerTurnUpdate update) {
-        //TODO: Implement this method
+        currentTurn.setRemainingActions(update.getPlayerTurn().getRemainingActions());
+        currentTurn.setPlayer(update.getPlayerTurn().getPlayer());
+        currentTurn.setState(update.getPlayerTurn().getState());
+        //TODO: Refresh the match screen
     }
 }
