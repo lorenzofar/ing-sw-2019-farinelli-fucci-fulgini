@@ -1,23 +1,31 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.controller.action;
 
+import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.CardNotFoundException;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.FullCapacityException;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.network.RemoteView;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.PowerupCardRequest;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.WeaponCardRequest;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.DrawnPowerupUpdate;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.ControllerFactory;
+import it.polimi.deib.se2019.sanp4.adrenaline.controller.PaymentHandler;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.PersistentView;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.AmmoSquare;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.SpawnSquare;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.Square;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.SquareVisitor;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCard;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCubeCost;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.powerup.PowerupCard;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.PickupState;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.WeaponCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.match.Match;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
 import it.polimi.deib.se2019.sanp4.adrenaline.view.MessageType;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CancellationException;
 
 /**
@@ -31,14 +39,22 @@ public class GrabActionController implements SquareVisitor {
     private static final String MESSAGE_DISCARD_POWERUP = "You have reached the maximum number of powerups, " +
             "please choose one to discard";
 
+    private static final String MESSAGE_EMPTY_SPAWNSQUARE = "Your current square does not contain any weapons!";
+
+    private static final String MESSAGE_PICKUP_WEAPON = "Choose a weapon to pick up";
+
+    private static final String MESSAGE_DISCARD_WEAPON = "You have reached the maximum number of weapons, " +
+            "please choose one to discard";
+
+    private static final String MESSAGE_CANNOT_PAY = "You don't have enough items to pay for this weapon";
+
     private final Match match;
 
     private final PersistentView view;
 
     private final Player player;
 
-    private ControllerFactory factory;
-
+    private final PaymentHandler paymentHandler;
 
     /**
      * Creates a new instance of GrabActionController that can be used to execute a single
@@ -52,7 +68,7 @@ public class GrabActionController implements SquareVisitor {
         this.match = match;
         this.view = view;
         this.player = match.getPlayerByName(view.getUsername());
-        this.factory = factory;
+        this.paymentHandler = factory.createPaymentHandler();
     }
 
 
@@ -164,12 +180,156 @@ public class GrabActionController implements SquareVisitor {
     }
 
     /**
-     * Executes the Grab action on {@link SpawnSquare}
+     * Executes the Grab action on {@link SpawnSquare}.
+     * The action takes place as follows:
+     * <ol>
+     *     <li>If there are no weapons on the square the user gets notified and the action ends</li>
+     *     <li>The user is asked to select a weapon and to pay for its cost, if he can't pay he gets notified
+     *     and asked to select a weapon from the remaining ones. If the player cannot pay for any of the weapons
+     *     in the square, the action ends</li>
+     *     <li>If the player has selected a weapon and can pay for it (has already converted the necessary powerups),
+     *     then the methods checks if he has reached the maximum number of weapons in his hand and asks him to
+     *     discard one. The discarded card is unloaded and put into the square</li>
+     *     <li>If the player has been able to pick a weapon, pay for its cost and made space for another weapon,
+     *     then the new weapon gets loaded and added to his cards</li>
+     * </ol>
+     *
+     * <p>
+     *     A {@link CancellationException} may occur in three cases:
+     *     <ul>
+     *         <li>When the user is asked to select a card to grab, in this case the action ends and no card
+     *         is grabbed</li>
+     *         <li>When the user is paying, also here the action ends and no cards is grabbed</li>
+     *         <li>When the user is selecting a card to discard, in this case no card is discarded and the card
+     *         the user chose to pick is left in the square.
+     *         The player does not lose any ammo or weapons, but any powerups that have been chosen to pay
+     *         will have been converted to ammo cubes</li>
+     *     </ul>
+     * </p>
      *
      * @param square The square to be visited
+     * @throws CancellationException If a request to the user gets cancelled
      */
     @Override
     public void visit(SpawnSquare square) {
+        try {
+            /* Get the list of weapons in this square */
+            List<WeaponCard> selectableWeapons = new LinkedList<>(square.getWeaponCards());
 
+            if (selectableWeapons.isEmpty()) {
+                /* The player cannot grab a weapon */
+                view.showMessage(MESSAGE_EMPTY_SPAWNSQUARE, MessageType.WARNING);
+                return;
+            }
+
+            WeaponCard selectedWeapon = null;
+            while (selectedWeapon == null && !selectableWeapons.isEmpty()) {
+                /* Ask the user to choose a weapon */
+                selectedWeapon = askToPickUpWeapon(selectableWeapons);
+
+                if (selectedWeapon == null) return; /* The user chose not to grab a weapon */
+
+                /* If there is a cost to pay the user must produce the ammo to pay it */
+                boolean canPay = askToPayLoadCost(selectedWeapon);
+
+                if (!canPay) {
+                    /* The player was unable to pay the cost for this, so it gets removed from the list of choices */
+                    selectableWeapons.remove(selectedWeapon);
+                    selectedWeapon = null;
+
+                    /* Notify the player */
+                    view.showMessage(MESSAGE_CANNOT_PAY, MessageType.INFO);
+                }
+            }
+
+            if (selectedWeapon != null) {
+                /* The player has selected a weapon and is able to load it */
+
+                /* Check if he has to discard first */
+                WeaponCard discarded = null;
+                if (player.getWeapons().size() == Player.MAX_WEAPONS) {
+                    /* The player should discard a weapon first */
+                    discarded = askToDiscardWeapon(); /* <- This might throw */
+                }
+
+                /* Grab the weapon, load it and give it to the player */
+                square.grabWeaponCard(selectedWeapon.getId());
+                selectedWeapon.getState().reload(player, selectedWeapon);
+                player.addWeapon(selectedWeapon);
+
+                /* If there is a card that has to be discarded, put it in the square */
+                if (discarded != null) {
+                    square.insertWeaponCard(discarded);
+                }
+            }
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        } catch (FullCapacityException e) {
+            /* Does not happen */
+        } catch (CardNotFoundException e) {
+            /* TODO: Make this RuntimeException */
+        }
+    }
+
+    /**
+     * Asks the user to choose one or no card to pick up among the given choices.
+     * @param choices The cards from which the user can choose
+     * @return The card that the user chose, or null if he did not choose, not null
+     * @throws CancellationException If the request to the user gets cancelled
+     * @throws InterruptedException If the thread is interrupted while waiting for user's response
+     */
+    private WeaponCard askToPickUpWeapon(List<WeaponCard> choices) throws InterruptedException {
+        WeaponCardRequest req = new WeaponCardRequest(MESSAGE_PICKUP_WEAPON, choices, true);
+        return view.sendChoiceRequest(req).get();
+    }
+
+    /**
+     * Asks the player to discard a weapon among the ones he has.
+     * The selected weapon is removed from the player's hands.
+     * @throws CancellationException If the request to the user gets cancelled, in this case no weapon is discarded
+     * @throws InterruptedException If the thread is interrupted while waiting for user's response
+     * @return The card the user chose to discard
+     */
+    private WeaponCard askToDiscardWeapon() throws InterruptedException {
+        /* Prepare the request and send it */
+        List<WeaponCard> choices = player.getWeapons();
+        WeaponCardRequest req = new WeaponCardRequest(MESSAGE_DISCARD_WEAPON, choices, false);
+
+        try {
+            WeaponCard selected = view.sendChoiceRequest(req).get();
+
+            player.removeWeapon(selected); /* Remove from player */
+            return selected;
+        } catch (CardNotFoundException e) {
+            /* TODO: Make this RuntimeException */
+            return null;
+        }
+    }
+
+    /**
+     * Determines the cost of the weapon and asks the user to load it if necessary.
+     * The weapon does not actually get loaded and no ammo is taken from the user.
+     *
+     * @param weapon The weapon that has to be reloaded, not null and in the {@link PickupState}
+     * @return {@code true} if the user has been able to pay the cost, {@code false} if he hasn't
+     * @throws CancellationException If a request to the user gets cancelled
+     * @throws InterruptedException If the thread gets interrupted while waiting for user's response
+     */
+    private boolean askToPayLoadCost(WeaponCard weapon) throws InterruptedException {
+        /* Determine the load cost */
+        List<AmmoCubeCost> costList = weapon.getCost();
+
+        boolean canPay;
+        if (costList.size() > 1) {
+            /* Then the user must pay an additional cost: the total cost except the first cube */
+            Map<AmmoCubeCost, Integer> costMap = AmmoCubeCost.mapFromCollection(costList.subList(1, costList.size()));
+
+            /* Ask to pay but do not remove the ammo cubes from the player */
+            canPay = paymentHandler.payAmmoCost(view, costMap, false);
+        } else {
+            canPay = true; /* The user can certainly pay zero cost */
+        }
+
+        return canPay;
     }
 }

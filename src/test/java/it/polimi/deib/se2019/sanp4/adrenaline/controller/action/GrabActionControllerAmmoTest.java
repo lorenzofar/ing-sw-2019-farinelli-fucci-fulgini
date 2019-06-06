@@ -34,7 +34,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
-public class GrabActionControllerTest {
+public class GrabActionControllerAmmoTest {
     private static Match match;
     private static Board board;
     private static String name = "bzoto";
@@ -87,7 +87,6 @@ public class GrabActionControllerTest {
     public void setUp() {
         /* The view of the player must respond with his name */
         when(view.getUsername()).thenReturn(name);
-        /* TODO: Mock payment handler */
     }
 
     @After
@@ -118,7 +117,7 @@ public class GrabActionControllerTest {
     /* ======= GRAB FROM AMMO SQUARE ======= */
 
     @Test
-    public void execute_AmmoSquare_ammoCardWithPowerups_playerHasNoResources_shouldGetResources() {
+    public void execute_ammoCardWithPowerups_playerHasNoResources_shouldGetResources() {
         /* Move the player to an ammo square */
         board.movePlayer(player, ammoSquare);
 
@@ -145,7 +144,7 @@ public class GrabActionControllerTest {
     }
 
     @Test
-    public void execute_AmmoSquare_ammoCardWithoutPowerups_playerHasNoResources_shouldGetResources() {
+    public void execute_ammoCardWithoutPowerups_playerHasNoResources_shouldGetResources() {
         /* Move the player to an ammo square */
         board.movePlayer(player, ammoSquare);
 
@@ -172,7 +171,7 @@ public class GrabActionControllerTest {
     }
 
     @Test
-    public void execute_AmmoSquare_ammoCardWithPowerups_playerHasMaxPowerups_discardsDrawn_shouldKeepInitialPowerups()
+    public void execute_ammoCardWithPowerups_playerHasMaxPowerups_discardsDrawn_shouldKeepInitialPowerups()
             throws Exception {
         /* Move the player to an ammo square */
         board.movePlayer(player, ammoSquare);
@@ -210,7 +209,7 @@ public class GrabActionControllerTest {
     }
 
     @Test
-    public void execute_AmmoSquare_ammoCardWithPowerups_playerHasMaxPowerups_discardsFromHisHand_shouldHaveDrawnPowerup()
+    public void execute_ammoCardWithPowerups_playerHasMaxPowerups_discardsFromHisHand_shouldHaveDrawnPowerup()
             throws Exception {
         /* Move the player to an ammo square */
         board.movePlayer(player, ammoSquare);
@@ -253,7 +252,7 @@ public class GrabActionControllerTest {
     }
 
     @Test
-    public void execute_AmmoSquare_ammoCardWithPowerups_playerHasMaxPowerups_cancelRequest_shouldKeepInitialPowerupsAndThrow()
+    public void execute_ammoCardWithPowerups_playerHasMaxPowerups_cancelRequest_shouldKeepInitialPowerupsAndThrow()
             throws Exception {
         /* Move the player to an ammo square */
         board.movePlayer(player, ammoSquare);
@@ -293,7 +292,7 @@ public class GrabActionControllerTest {
     }
 
     @Test
-    public void execute_AmmoSquare_noAmmoCard_shouldNotThrowAndNotifyPlayer() {
+    public void execute_noAmmoCard_shouldNotThrowAndNotifyPlayer() {
         /* Move the player to an ammo square */
         board.movePlayer(player, ammoSquare);
 

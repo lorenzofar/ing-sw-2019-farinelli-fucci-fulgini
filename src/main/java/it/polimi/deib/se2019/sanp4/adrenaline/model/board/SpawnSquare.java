@@ -44,7 +44,7 @@ public class SpawnSquare extends Square {
      * @return An unmodifiable list of weapon cards
      */
     public List<WeaponCard> getWeaponCards() {
-        return Collections.unmodifiableList(weaponCards);
+        return new ArrayList<>(weaponCards);
     }
 
     /**
