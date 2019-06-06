@@ -28,9 +28,9 @@ public abstract class WeaponCardState extends Observable<ModelUpdate> implements
     }
 
     @JsonIgnore
-    abstract boolean isUsable();
+    public abstract boolean isUsable();
 
-    abstract void reload(Player player, WeaponCard weapon);
+    public abstract void reload(Player player, WeaponCard weapon);
     public void unload(WeaponCard weapon){
         weapon.setState(new UnloadedState());
     }

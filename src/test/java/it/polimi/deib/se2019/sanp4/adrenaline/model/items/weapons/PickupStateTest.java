@@ -86,25 +86,6 @@ public class PickupStateTest {
     }
 
     @Test
-    public void reloadWeapon_playerDoesNotHaveWeapon_playerAmmoShouldNotBeDecreasedAndWeaponStateShouldBePickup(){
-        Player player = new Player(validPlayerName, validActionCard, validColor);
-        weaponCard.setState(new PickupState());
-        weaponCard.getState().reload(player, weaponCard);
-        assertEquals(initialPlayerAmmo, player.getAmmo());
-        assertEquals(PickupState.class, weaponCard.getState().getClass());
-    }
-
-    @Test
-    public void reloadWeapon_playerHasWeaponButNotEnoughAmmo_playerAmmoShouldNotBeDecreasedAndWeaponStateShouldBePickup(){
-        Player player = new Player(validPlayerName, validActionCard, validColor);
-        WeaponCard expensiveWeaponCard = new WeaponCard(validId, validName, invalidCost, new ArrayList<>());
-        expensiveWeaponCard.setState(new PickupState());
-        expensiveWeaponCard.getState().reload(player, expensiveWeaponCard);
-        assertEquals(initialPlayerAmmo, player.getAmmo());
-        assertEquals(PickupState.class, weaponCard.getState().getClass());
-    }
-
-    @Test
     public void reloadWeapon_playerHasWeaponAndEnoughAmmo_playerAmmoShouldBeDecreasedAndWeaponStateShouldBeLoaded(){
         Player player = new Player(validPlayerName, validActionCard, validColor);
         try {

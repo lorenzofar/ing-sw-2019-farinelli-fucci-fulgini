@@ -1,6 +1,5 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons;
 
-import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.CardNotFoundException;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.NotEnoughAmmoException;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCubeCost;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
@@ -31,12 +30,8 @@ public class PickupState extends WeaponCardState {
          We then charge the user only the remaining amount of cubes
          (if there are no other cubes, the user pays nothing and the weapon becomes loaded)
 
-         We use try/catches to avoid setting the new state when the user cannot pay or does not own the weapon*/
+         We use try/catches to avoid setting the new state when the user cannot pay */
         try{
-            // Check whether the player owns the weapon
-            if(!player.hasWeaponCard(weapon.getId())){
-                throw new CardNotFoundException();
-            }
             // Get the cost of the weapon card
             List<AmmoCubeCost> weaponCost = weapon.getCost();
             if(weaponCost.size() > 1){
@@ -47,7 +42,7 @@ public class PickupState extends WeaponCardState {
             }
             weapon.setState(new LoadedState());
         }
-        catch(NotEnoughAmmoException | CardNotFoundException ex){
+        catch(NotEnoughAmmoException e){
             // Here the user does not have enough ammo to pay the reload cost
         }
     }

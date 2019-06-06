@@ -293,8 +293,7 @@ public class GrabActionControllerTest {
     }
 
     @Test
-    public void execute_AmmoSquare_noAmmoCard_shouldNotThrowAndNotifyPlayer()
-            throws Exception {
+    public void execute_AmmoSquare_noAmmoCard_shouldNotThrowAndNotifyPlayer() {
         /* Move the player to an ammo square */
         board.movePlayer(player, ammoSquare);
 
