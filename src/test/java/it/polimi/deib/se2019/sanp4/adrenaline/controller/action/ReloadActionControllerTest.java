@@ -128,7 +128,7 @@ public class ReloadActionControllerTest {
         Optional<WeaponCard> w = player.getWeapons().stream()
                 .filter(c -> c.getId().equals("thor")).findFirst();
         assertTrue(w.isPresent());
-        assertTrue(w.get().getState().isUsable());
+        assertTrue(w.get().isUsable());
 
         /* Check that the player paid the cost */
         Map<AmmoCube, Integer> playerAmmo = player.getAmmo();
@@ -165,7 +165,7 @@ public class ReloadActionControllerTest {
         Optional<WeaponCard> w = player.getWeapons().stream()
                 .filter(c -> c.getId().equals("tractor_beam")).findFirst();
         assertTrue(w.isPresent());
-        assertTrue(w.get().getState().isUsable());
+        assertTrue(w.get().isUsable());
 
         /* Check that the player paid the cost */
         Map<AmmoCube, Integer> playerAmmo = player.getAmmo();

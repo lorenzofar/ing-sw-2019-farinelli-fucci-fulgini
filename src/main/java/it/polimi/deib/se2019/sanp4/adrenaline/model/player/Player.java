@@ -315,7 +315,7 @@ public class Player extends Observable<ModelUpdate> {
      * @return weapon card drawn from player
      * @throws CardNotFoundException if the requested card is not owned by the player
      */
-    public WeaponCard removeWeapon(String weaponId) throws CardNotFoundException {
+    public WeaponCard removeWeapon(String weaponId) {
         if (weaponId == null) {
             throw new NullPointerException("Weapon id cannot be null");
         }
@@ -337,7 +337,7 @@ public class Player extends Observable<ModelUpdate> {
      * @return weapon card drawn from player
      * @throws CardNotFoundException if the requested card is not in available in this square
      */
-    public WeaponCard removeWeapon(WeaponCard weapon) throws CardNotFoundException {
+    public WeaponCard removeWeapon(WeaponCard weapon) {
         if(weapon == null){
             throw new NullPointerException("Weapon cannot be null");
         }

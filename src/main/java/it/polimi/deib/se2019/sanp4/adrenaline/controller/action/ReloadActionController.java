@@ -58,7 +58,7 @@ public class ReloadActionController {
 
         /* Determine the weapons which can be reloaded */
         List<WeaponCard> selectable = player.getWeapons().stream()
-                .filter(w -> !w.getState().isUsable())
+                .filter(w -> !w.isUsable())
                 .collect(Collectors.toList());
 
         while (!selectable.isEmpty()) {
@@ -110,7 +110,7 @@ public class ReloadActionController {
 
         if (canPay) {
             /* Then reload the weapon */
-            weapon.getState().reload(player, weapon);
+            weapon.reload(player);
         } else {
             /* Notify the player that he can't pay the cost */
             view.showMessage(MESSAGE_CANT_PAY_RELOAD_COST, MessageType.WARNING);

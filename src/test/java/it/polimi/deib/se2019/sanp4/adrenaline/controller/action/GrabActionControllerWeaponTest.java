@@ -200,7 +200,7 @@ public class GrabActionControllerWeaponTest {
         /* Check that the player got the card */
         Optional<WeaponCard> card = player.getWeapons().stream().filter(w -> w.getId().equals("furnace")).findFirst();
         assertTrue(card.isPresent());
-        assertTrue(card.get().getState().isUsable());
+        assertTrue(card.get().isUsable());
 
         /* Check that he paid the load cost */
         assertEquals(0, (int) player.getAmmo().getOrDefault(AmmoCube.BLUE, 0));
@@ -274,13 +274,13 @@ public class GrabActionControllerWeaponTest {
         /* Check that the player got the card */
         Optional<WeaponCard> card = player.getWeapons().stream().filter(w -> w.getId().equals("furnace")).findFirst();
         assertTrue(card.isPresent());
-        assertTrue(card.get().getState().isUsable());
+        assertTrue(card.get().isUsable());
 
         /* Check that the spawn square has the discarded weapon in the correct state */
         Optional<WeaponCard> discarded = spawnSquare.getWeaponCards().stream()
                 .filter(w -> w.getId().equals("heatseeker")).findFirst();
         assertTrue(discarded.isPresent());
-        assertFalse(discarded.get().getState().isUsable());
+        assertFalse(discarded.get().isUsable());
 
         /* Check that the user paid his ammo */
         assertEquals(0, (int) player.getAmmo().getOrDefault(AmmoCube.BLUE, 0));
@@ -361,6 +361,6 @@ public class GrabActionControllerWeaponTest {
         Optional<WeaponCard> card = player.getWeapons().stream()
                 .filter(w -> w.getId().equals("electroscythe")).findFirst();
         assertTrue(card.isPresent());
-        assertTrue(card.get().getState().isUsable());
+        assertTrue(card.get().isUsable());
     }
 }

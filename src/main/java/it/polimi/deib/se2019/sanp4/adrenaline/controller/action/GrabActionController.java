@@ -1,6 +1,5 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.controller.action;
 
-import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.CardNotFoundException;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.FullCapacityException;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.network.RemoteView;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.PowerupCardRequest;
@@ -254,7 +253,7 @@ public class GrabActionController implements SquareVisitor {
 
                 /* Grab the weapon, load it and give it to the player */
                 square.grabWeaponCard(selectedWeapon.getId());
-                selectedWeapon.getState().reload(player, selectedWeapon);
+                selectedWeapon.reload(player);
                 player.addWeapon(selectedWeapon);
 
                 /* If there is a card that has to be discarded, put it in the square */
