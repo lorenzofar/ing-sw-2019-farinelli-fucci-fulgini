@@ -266,8 +266,6 @@ public class GrabActionController implements SquareVisitor {
             Thread.currentThread().interrupt();
         } catch (FullCapacityException e) {
             /* Does not happen */
-        } catch (CardNotFoundException e) {
-            /* TODO: Make this RuntimeException */
         }
     }
 
@@ -294,16 +292,10 @@ public class GrabActionController implements SquareVisitor {
         /* Prepare the request and send it */
         List<WeaponCard> choices = player.getWeapons();
         WeaponCardRequest req = new WeaponCardRequest(MESSAGE_DISCARD_WEAPON, choices, false);
+        WeaponCard selected = view.sendChoiceRequest(req).get();
 
-        try {
-            WeaponCard selected = view.sendChoiceRequest(req).get();
-
-            player.removeWeapon(selected); /* Remove from player */
-            return selected;
-        } catch (CardNotFoundException e) {
-            /* TODO: Make this RuntimeException */
-            return null;
-        }
+        player.removeWeapon(selected); /* Remove from player */
+        return selected;
     }
 
     /**

@@ -1,6 +1,6 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions;
 
-public class CardNotFoundException extends Exception {
+public class CardNotFoundException extends RuntimeException {
 
     private static final long serialVersionUID = 1611554844941738693L;
 

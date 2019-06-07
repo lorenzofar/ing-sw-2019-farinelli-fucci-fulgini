@@ -9,7 +9,7 @@ public class UnloadedState extends WeaponCardState {
 
     private static final long serialVersionUID = 135834435035814091L;
 
-    UnloadedState(){
+    public UnloadedState(){
         super("unloaded");
     }
 

@@ -6,7 +6,7 @@ public class LoadedState extends WeaponCardState {
 
     private static final long serialVersionUID = -549790312074151192L;
 
-    LoadedState(){
+    public LoadedState(){
         super("loaded");
     }
 

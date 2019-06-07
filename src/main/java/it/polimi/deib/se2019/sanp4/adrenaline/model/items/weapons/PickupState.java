@@ -10,7 +10,7 @@ public class PickupState extends WeaponCardState {
 
     private static final long serialVersionUID = -5853062872021530478L;
 
-    PickupState(){
+    public PickupState(){
         super("pickup");
     }
 
