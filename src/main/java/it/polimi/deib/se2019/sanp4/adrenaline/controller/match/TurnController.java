@@ -278,17 +278,27 @@ public class TurnController {
         /* TODO: Implement actions */
         switch (action) {
             case RUN:
-                /* The player can move for max. 3 steps */
                 factory.createMoveActionController()
-                        .execute(currentView, 3);
+                        .execute(currentView, 3); /* Move max. 3 steps */
                 break;
             case GRAB:
+                factory.createMoveActionController()
+                        .execute(currentView, 1); /* Move max. 1 step */
+                factory.createGrabActionController(currentView)
+                        .execute(); /* Grab */
                 break;
             case SHOOT:
                 break;
             case RELOAD:
+                factory.createReloadActionController()
+                        .execute(currentView); /* Reload any number of weapons */
                 break;
             case ADRENALINE_GRAB:
+            case FRENZY2_GRAB:
+                factory.createMoveActionController()
+                        .execute(currentView, 2); /* Move max. 2 steps */
+                factory.createGrabActionController(currentView)
+                        .execute(); /* Grab */
                 break;
             case ADRENALINE_SHOOT:
                 break;
@@ -299,11 +309,13 @@ public class TurnController {
                 factory.createMoveActionController()
                         .execute(currentView, 4);
                 break;
-            case FRENZY2_GRAB:
-                break;
             case FRENZY1_SHOOT:
                 break;
             case FRENZY1_GRAB:
+                factory.createMoveActionController()
+                        .execute(currentView, 3); /* Move max. 3 steps */
+                factory.createGrabActionController(currentView)
+                        .execute(); /* Grab */
                 break;
         }
     }

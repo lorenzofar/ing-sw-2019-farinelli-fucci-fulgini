@@ -1,6 +1,8 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.controller;
 
+import it.polimi.deib.se2019.sanp4.adrenaline.controller.action.GrabActionController;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.action.MoveActionController;
+import it.polimi.deib.se2019.sanp4.adrenaline.controller.action.ReloadActionController;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.match.MatchController;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.match.SpawnController;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.match.TurnController;
@@ -50,4 +52,17 @@ public interface ControllerFactory {
      * @return the controller for the Move basic action
      */
     MoveActionController createMoveActionController();
+
+    /**
+     * Creates the controller for a single Grab basic action
+     * @param view The view of the player who wants to perform the action, not null
+     * @return The controller for the Grab basic action
+     */
+    GrabActionController createGrabActionController(PersistentView view);
+
+    /**
+     * Creates the controller for the Reload basic action
+     * @return The controller for the Reload basic action
+     */
+    ReloadActionController createReloadActionController();
 }

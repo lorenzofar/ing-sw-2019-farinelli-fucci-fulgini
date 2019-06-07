@@ -1,6 +1,8 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.controller;
 
+import it.polimi.deib.se2019.sanp4.adrenaline.controller.action.GrabActionController;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.action.MoveActionController;
+import it.polimi.deib.se2019.sanp4.adrenaline.controller.action.ReloadActionController;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.match.MatchController;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.match.SpawnController;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.match.TurnController;
@@ -33,6 +35,8 @@ public class StandardControllerFactory implements ControllerFactory {
 
     private final MoveActionController moveActionController;
 
+    private final ReloadActionController reloadActionController;
+
     /**
      * Creates a factory associated to the given match and views of the players,
      * which will be injected as dependencies where needed.
@@ -52,6 +56,7 @@ public class StandardControllerFactory implements ControllerFactory {
         scoreManager = new StandardScoreManager();
         paymentHandler = new PaymentHandler(match);
         moveActionController = new MoveActionController(match);
+        reloadActionController = new ReloadActionController(match, this);
     }
 
     /**
@@ -113,6 +118,27 @@ public class StandardControllerFactory implements ControllerFactory {
     @Override
     public MoveActionController createMoveActionController() {
         return moveActionController;
+    }
+
+    /**
+     * Creates the controller for a single Grab basic action
+     *
+     * @param view The view of the player who wants to perform the action, not null
+     * @return The controller for the Grab basic action
+     */
+    @Override
+    public GrabActionController createGrabActionController(PersistentView view) {
+        return new GrabActionController(match, view, this);
+    }
+
+    /**
+     * Creates the controller for the Reload basic action
+     *
+     * @return The controller for the Reload basic action
+     */
+    @Override
+    public ReloadActionController createReloadActionController() {
+        return reloadActionController;
     }
 
     /* ======= GETTERS ======= */
