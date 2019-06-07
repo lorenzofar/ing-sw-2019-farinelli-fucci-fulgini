@@ -29,6 +29,7 @@ public class LobbyUpdate extends ModelUpdate {
                        @JsonProperty("starting") boolean starting) {
         if (waitingPlayers == null) throw new NullPointerException();
         this.waitingPlayers = waitingPlayers;
+        this.starting = starting;
     }
 
     public Collection<String> getWaitingPlayers() {
