@@ -1,10 +1,12 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import it.polimi.deib.se2019.sanp4.adrenaline.model.board.*;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.board.CardinalDirection;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.board.CoordPair;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.board.RoomColor;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.board.SquareConnectionType;
 
 import java.io.Serializable;
 import java.util.*;

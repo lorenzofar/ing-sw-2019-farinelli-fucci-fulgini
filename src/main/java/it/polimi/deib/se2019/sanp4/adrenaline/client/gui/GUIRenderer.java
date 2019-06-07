@@ -84,8 +84,8 @@ public class GUIRenderer extends Application implements UIRenderer {
     @Override
     public void updateLobby(Collection<String> connectedPlayers, boolean matchStarting) {
         Platform.runLater(() -> {
-            LobbyController lobbyController = (LobbyController) currentController;
             try {
+                LobbyController lobbyController = (LobbyController) currentController;
                 lobbyController.setConnectedPlayers(connectedPlayers);
                 lobbyController.setMatchStarting(matchStarting);
             } catch (Exception ignore) {
@@ -103,6 +103,12 @@ public class GUIRenderer extends Application implements UIRenderer {
     @Override
     public void showMatchScreen() {
         showScene("/fxml/game.fxml");
+        try {
+            GameController gameController = (GameController) currentController;
+            gameController.buildMatchScreen();
+        } catch (Exception ignore) {
+            // An error occurred while building the match screen
+        }
     }
 
     /**
