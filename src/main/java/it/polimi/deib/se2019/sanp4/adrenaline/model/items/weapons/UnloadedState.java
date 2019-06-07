@@ -38,7 +38,6 @@ public class UnloadedState extends WeaponCardState {
             }
             player.payAmmo(weapon.getCost());
             weapon.setState(new LoadedState());
-            notifyObservers(new ReloadUpdate(player.getName(), weapon.getName()));
         }
         catch(NotEnoughAmmoException | CardNotFoundException ex){
             // Here the user does not have enough ammo to pay the reload cost

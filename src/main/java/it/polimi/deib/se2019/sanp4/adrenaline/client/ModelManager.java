@@ -223,4 +223,9 @@ public class ModelManager implements ModelUpdateVisitor {
         currentTurn.setState(update.getPlayerTurn().getState());
         //TODO: Refresh the match screen
     }
+
+    @Override
+    public void handle(WeaponCardUpdate update){
+        //TODO: Implement this method
+    }
 }

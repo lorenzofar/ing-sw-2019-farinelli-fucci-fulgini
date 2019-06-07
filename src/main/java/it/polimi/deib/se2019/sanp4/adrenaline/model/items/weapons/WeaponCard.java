@@ -1,7 +1,10 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.Observable;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.ModelUpdate;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.WeaponCardUpdate;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCubeCost;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -13,7 +16,7 @@ import java.util.Objects;
  * A class describing a light representation of a weapon
  * Used to represent the weapon card drawn by a player
  */
-public class WeaponCard implements Serializable {
+public class WeaponCard extends Observable<ModelUpdate> implements Serializable {
 
     private static final long serialVersionUID = 2151651272278660643L;
 
@@ -65,6 +68,34 @@ public class WeaponCard implements Serializable {
         this.cost = cost;
         this.effects = effects;
         this.state = new PickupState();
+    }
+
+    /**
+     * Reloads the weapon by calling the reload method in {@link WeaponCardState}
+     * and notifies all the observers
+     * @param player the player who reloads the weapon
+     */
+    public void reload(Player player){
+        this.state.reload(player, this);
+        this.notifyObservers(new WeaponCardUpdate(this));
+    }
+
+    /**
+     * Unloads the weapon by calling the unload method in {@link WeaponCardState}
+     * and notifies all the observers
+     */
+    public void unload(){
+        this.state.unload(this);
+        this.notifyObservers(new WeaponCardUpdate(this));
+    }
+
+    /**
+     * Resets the weapon by calling the reset method in {@link WeaponCardState}
+     * and notifies all the observer
+     */
+    public void reset(){
+        this.state.reset(this);
+        this.notifyObservers(new WeaponCardUpdate(this));
     }
 
     /**
