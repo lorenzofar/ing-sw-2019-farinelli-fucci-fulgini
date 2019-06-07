@@ -383,16 +383,11 @@ class CLIHelper {
      */
     private static Integer parseInt() {
         print(PROMPT_TEMPLATE);
-        int n = 0;
         try {
-            n = input.read();
-            input.readLine();
-            return Character.getNumericValue(n);
+            return Integer.parseInt(input.readLine());
         } catch (CancellationException e) {
-            input.readLine();
             return null;
         } catch (Exception e) {
-            input.readLine();
             println("Please insert a valid input");
             return parseInt();
         }
