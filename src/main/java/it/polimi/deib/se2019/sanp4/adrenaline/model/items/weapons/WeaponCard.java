@@ -1,5 +1,6 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.Observable;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.ModelUpdate;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.WeaponCardUpdate;
@@ -96,6 +97,15 @@ public class WeaponCard extends Observable<ModelUpdate> implements Serializable 
     public void reset(){
         this.state.reset(this);
         this.notifyObservers(new WeaponCardUpdate(this));
+    }
+
+    /**
+     * Returns whether this weapon can be used to shoot or not
+     * @return {@code true} if the weapon can shoot, {@code false} otherwise
+     */
+    @JsonIgnore
+    public boolean isUsable() {
+        return this.state.isUsable();
     }
 
     /**
