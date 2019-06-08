@@ -1,20 +1,15 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.client.gui;
 
-import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.SkullCountRequest;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.control.ListView;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 
-import java.io.IOException;
 import java.util.Collection;
 
 
@@ -59,21 +54,5 @@ public class LobbyController extends GUIController {
      */
     void setMatchStarting(boolean matchStarting){
         this.matchStarting.set(matchStarting);
-    }
-
-    void showSkullsSelectionWindow(SkullCountRequest request){
-        try {
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("/fxml/skullsConfig.fxml"));
-            Stage stage = new Stage();
-            stage.setTitle("Skulls selection");
-            Scene skullsScene = new Scene(loader.load());
-            stage.setScene(skullsScene);
-            ((SkullsConfigController)loader.getController()).setSkullsCount(request.getChoices().size());
-            stage.show();
-        }
-        catch (IOException ignore) {
-            // Ignore errors
-        }
     }
 }

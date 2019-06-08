@@ -46,6 +46,7 @@ public abstract class SelectableOverlay extends ObservableOverlay {
                 }
             }
         });
+        control.setOnMouseClicked(event -> this.notifyListeners());
     }
 
     /**

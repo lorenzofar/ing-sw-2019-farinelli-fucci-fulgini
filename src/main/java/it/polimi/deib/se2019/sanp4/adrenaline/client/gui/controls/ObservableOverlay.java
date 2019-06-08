@@ -27,6 +27,24 @@ public class ObservableOverlay extends Button {
     }
 
     /**
+     * Removes the provided listeners from the list of attached ones
+     *
+     * @param listener The object representing the listener
+     */
+    public void removeListener(Consumer<ObservableOverlay> listener) {
+        if (listener != null) {
+            listeners.remove(listener);
+        }
+    }
+
+    /**
+     * Removes all the attached listeners from the overlay
+     */
+    public void clearListeners() {
+        listeners.clear();
+    }
+
+    /**
      * Notify the listeners that the element has fired an event
      */
     protected void notifyListeners() {

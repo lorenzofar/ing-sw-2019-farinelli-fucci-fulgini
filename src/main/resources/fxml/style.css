@@ -29,6 +29,21 @@
     -fx-background-color: transparent;
 }
 
+/* ===== BOARD CONFIGURATION ===== */
+.board-selection-overlay{
+    -fx-max-width: 100;
+    -fx-max-height: 100;
+}
+.board-selection-overlay.selectable{
+    -fx-border-width: 2;
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+.board-selection-overlay.selectable:hover{
+    -fx-border-width: 2;
+    -fx-border-color: #F8B73C;
+}
+
 /* ===== SKULLS ===== */
 
 .skull-selection-overlay{

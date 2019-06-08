@@ -47,7 +47,7 @@ public class GUIRenderer extends Application implements UIRenderer {
         loader.setLocation(getClass().getResource(fxmlResource));
         try {
             Scene scene = new Scene(loader.load());
-            this.stage.setScene(scene);
+            Platform.runLater(() -> this.stage.setScene(scene));
 
             currentController = loader.getController();
             currentController.setClientView(clientView);
@@ -71,7 +71,7 @@ public class GUIRenderer extends Application implements UIRenderer {
 
         showScene("/fxml/login.fxml");
 
-        primaryStage.show();
+        Platform.runLater(primaryStage::show);
     }
 
 
@@ -96,6 +96,31 @@ public class GUIRenderer extends Application implements UIRenderer {
     }
     /* ================== */
 
+
+    /**
+     * Spawns a new windows with the provided title and showing the provided FXML file
+     *
+     * @param resource The path of the FXML file
+     * @param title    The title of the window
+     * @return The controller associated to the newly created window
+     */
+    private GUIController showNewWindow(String resource, String title) {
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource(resource));
+            Stage newStage = new Stage();
+            newStage.setTitle(title);
+            Scene newScene = new Scene(loader.load());
+            Platform.runLater(() -> newStage.setScene(newScene));
+            ((GUIController) loader.getController()).setClientView(clientView);
+            Platform.runLater(newStage::show);
+            return (GUIController) loader.getController();
+        } catch (IOException ignore) {
+            // Ignore errors
+            return null;
+        }
+    }
+
     /**
      * Prepare the client for the game
      * Triggered when the match starts
@@ -105,7 +130,7 @@ public class GUIRenderer extends Application implements UIRenderer {
         showScene("/fxml/game.fxml");
         try {
             GameController gameController = (GameController) currentController;
-            gameController.buildMatchScreen();
+            Platform.runLater(gameController::buildMatchScreen);
         } catch (Exception ignore) {
             // An error occurred while building the match screen
         }
@@ -129,7 +154,14 @@ public class GUIRenderer extends Application implements UIRenderer {
 
     @Override
     public void handle(BoardRequest request) {
-        //TODO: Implement this method
+        try {
+            BoardConfigController boardConfigController = (BoardConfigController) showNewWindow("/fxml/BoardConfig.fxml", "Board configuration");
+            if (boardConfigController != null) {
+                boardConfigController.setBoards(request.getChoices());
+            }
+        } catch (Exception ignore) {
+            // Errors are ignores
+        }
     }
 
     @Override
@@ -150,9 +182,12 @@ public class GUIRenderer extends Application implements UIRenderer {
     @Override
     public void handle(SkullCountRequest request) {
         try {
-            ((LobbyController) currentController).showSkullsSelectionWindow(request);
+            SkullsConfigController skullsConfigController = (SkullsConfigController) showNewWindow("/fxml/skullsConfig.fxml", "Skulls config");
+            if (skullsConfigController != null) {
+                skullsConfigController.setSkullsCount(request.getChoices().size());
+            }
         } catch (Exception ignore) {
-            // We ignore this request if we're not in the lobby
+            // We ignore this error
         }
     }
 

@@ -11,6 +11,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.view.ViewScene;
 
 import java.io.Serializable;
 import java.util.Deque;
+import java.util.NoSuchElementException;
 
 public class ClientView extends RemoteObservable<ViewEvent> implements RemoteView {
     /**
@@ -168,7 +169,12 @@ public class ClientView extends RemoteObservable<ViewEvent> implements RemoteVie
      * in order to consider the next pending request (if present)
      */
     public void onRequestCompleted(){
-        performRequest(pendingRequests.pop());
+        try {
+            performRequest(pendingRequests.pop());
+        }
+        catch (NoSuchElementException e){
+            currentRequest = null;
+        }
     }
 
     /**
