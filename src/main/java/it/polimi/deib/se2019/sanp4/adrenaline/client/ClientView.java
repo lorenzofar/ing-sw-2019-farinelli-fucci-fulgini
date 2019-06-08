@@ -1,5 +1,6 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.client;
 
+import it.polimi.deib.se2019.sanp4.adrenaline.client.gui.SelectionHandler;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.events.ViewEvent;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.network.RemoteView;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.Observer;
@@ -39,6 +40,11 @@ public class ClientView extends RemoteObservable<ViewEvent> implements RemoteVie
      * It is managed with a FIFO policy
      */
     private Deque<ChoiceRequest> pendingRequests;
+
+    /**
+     * The current selection handler
+     */
+    private SelectionHandler selectionHandler;
 
     public ClientView() {
         this.modelManager = new ModelManager(this);
@@ -213,5 +219,13 @@ public class ClientView extends RemoteObservable<ViewEvent> implements RemoteVie
     @Override
     public void notifyObservers(ViewEvent event) {
         super.notifyObservers(event);
+    }
+
+    public SelectionHandler getSelectionHandler() {
+        return selectionHandler;
+    }
+
+    public void setSelectionHandler(SelectionHandler selectionHandler) {
+        this.selectionHandler = selectionHandler;
     }
 }

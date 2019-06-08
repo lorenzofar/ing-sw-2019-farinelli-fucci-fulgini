@@ -9,7 +9,7 @@ import java.util.function.Consumer;
 /**
  * A class describing an overlay that can be observed to catch fired events
  */
-public class ObservableOverlay extends Button {
+public abstract class ObservableOverlay extends Button {
     /**
      * List of consumers listening for selection events from the overlay
      */
@@ -50,5 +50,15 @@ public class ObservableOverlay extends Button {
     protected void notifyListeners() {
         listeners.forEach(listener -> listener.accept(this));
     }
+
+    /**
+     * Enables the overlay to fire observable events
+     */
+    public abstract void enable();
+
+    /**
+     * Resets the overlay and prevents it from firing observable events
+     */
+    public abstract void reset();
 
 }

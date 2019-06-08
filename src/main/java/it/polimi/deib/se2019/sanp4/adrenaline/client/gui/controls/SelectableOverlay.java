@@ -57,4 +57,20 @@ public abstract class SelectableOverlay extends ObservableOverlay {
     public void setSelectable(boolean selectable) {
         this.selectable.set(selectable);
     }
+
+    /**
+     * Enables the overlay to fire observable events
+     */
+    @Override
+    void enable() {
+        this.selectable.set(true);
+    }
+
+    /**
+     * Resets the overlay and prevents it from firing observable events
+     */
+    @Override
+    public void reset() {
+        this.selectable.set(false);
+    }
 }

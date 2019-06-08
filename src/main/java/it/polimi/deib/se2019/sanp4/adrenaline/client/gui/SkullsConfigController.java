@@ -47,7 +47,10 @@ public class SkullsConfigController extends GUIController {
         }
         skullsContainer.getChildren().clear();
         skullsContainer.getChildren().addAll(skulls);
-        skulls.forEach(skull -> skull.addListener(this::onSkullHovered));
+        skulls.forEach(skull -> {
+            skull.enable();
+            skull.addListener(this::onSkullHovered);
+        });
     }
 
     public void submitSkulls() {

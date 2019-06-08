@@ -13,7 +13,7 @@ public class BoardConfigController extends GUIController {
     @FXML
     public GridPane boardsContainer;
 
-    private List<BoardSelectionOverlay> boardSelectionOverlays;
+    private List<ObservableOverlay> boardSelectionOverlays;
 
     @FXML
     public void initialize() {
@@ -21,7 +21,6 @@ public class BoardConfigController extends GUIController {
     }
 
     void setBoards(List<Integer> boards) {
-        SelectionHandler<Integer> selectionHandler = new SelectionHandler<>(clientView, overlay -> ((BoardSelectionOverlay) overlay).getBoardId());
         boardSelectionOverlays.forEach(ObservableOverlay::clearListeners);
         boardSelectionOverlays.clear();
         boardsContainer.getChildren().clear();
@@ -35,12 +34,14 @@ public class BoardConfigController extends GUIController {
         boards.forEach(i -> {
             BoardSelectionOverlay overlay = new BoardSelectionOverlay();
             overlay.setBoardId(i);
-            overlay.addListener(selectionHandler);
             overlay.setSelectable(true);
             boardSelectionOverlays.add(overlay);
             GridPane.setColumnIndex(overlay, i % 2);
             GridPane.setRowIndex(overlay, i / 2);
         });
+
+        clientView.setSelectionHandler(new SelectionHandler<Integer>(clientView, boardSelectionOverlays,  overlay -> ((BoardSelectionOverlay) overlay).getBoardId()));
+
         boardsContainer.getChildren().addAll(boardSelectionOverlays);
     }
 }

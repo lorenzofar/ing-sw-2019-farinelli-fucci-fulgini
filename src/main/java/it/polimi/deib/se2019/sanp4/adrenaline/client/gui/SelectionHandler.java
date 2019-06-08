@@ -6,6 +6,8 @@ import it.polimi.deib.se2019.sanp4.adrenaline.common.events.ChoiceResponse;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.ChoiceRequest;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -25,9 +27,16 @@ public class SelectionHandler<T extends Serializable> implements Consumer<Observ
      */
     private Function<ObservableOverlay, T> dataExtractor;
 
-    SelectionHandler(ClientView clientView, Function<ObservableOverlay, T> dataExtractor) {
+    private Collection<ObservableOverlay> observedPool;
+
+    SelectionHandler(ClientView clientView, Collection<ObservableOverlay> observedPool, Function<ObservableOverlay, T> dataExtractor) {
         this.clientView = clientView;
         this.dataExtractor = dataExtractor;
+        this.observedPool = new ArrayList<>(observedPool);
+        observedPool.forEach(overlay -> {
+            overlay.addListener(this);
+            overlay.enable();
+        });
     }
 
     @Override
@@ -49,5 +58,16 @@ public class SelectionHandler<T extends Serializable> implements Consumer<Observ
             accept(t);
             consumer.accept(t);
         };
+    }
+
+    /**
+     * Cancels the pending selection
+     */
+    public void cancel() {
+        // Deregister from all the observed overlays
+        observedPool.forEach(overlay -> {
+            overlay.removeListener(this);
+            overlay.reset();
+        });
     }
 }

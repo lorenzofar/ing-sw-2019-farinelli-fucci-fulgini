@@ -12,6 +12,8 @@ public class HoverableOverlay extends ObservableOverlay {
 
     private boolean hovered = false;
 
+    private boolean enabled = false;
+
     public HoverableOverlay(String resource) {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(resource));
         fxmlLoader.setRoot(this);
@@ -25,12 +27,13 @@ public class HoverableOverlay extends ObservableOverlay {
 
     /**
      * Sets the root element that triggers hovering events
+     *
      * @param control The object representing the root element
      */
     public void setHoverableRoot(Control control) {
         control.hoverProperty().addListener(((observableValue, oldValue, newValue) -> {
             hovered = newValue;
-            if (oldValue != newValue) {
+            if ((oldValue != newValue) && enabled) {
                 notifyListeners();
             }
         }));
@@ -43,5 +46,21 @@ public class HoverableOverlay extends ObservableOverlay {
      */
     public boolean isHovered() {
         return hovered;
+    }
+
+    /**
+     * Enables the overlay to fire observable events
+     */
+    @Override
+    public void enable() {
+        enabled = true;
+    }
+
+    /**
+     * Resets the overlay and prevents it from firing observable events
+     */
+    @Override
+    public void reset() {
+        enabled = false;
     }
 }
