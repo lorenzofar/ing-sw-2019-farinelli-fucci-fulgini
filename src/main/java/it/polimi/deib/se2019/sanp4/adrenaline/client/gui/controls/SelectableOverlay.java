@@ -48,21 +48,12 @@ public abstract class SelectableOverlay extends ObservableOverlay {
         });
         control.setOnMouseClicked(event -> this.notifyListeners());
     }
-
-    /**
-     * Sets whether the element can be selected or not
-     *
-     * @param selectable {@code true} if the element can be selected, {@code false otherwise}
-     */
-    public void setSelectable(boolean selectable) {
-        this.selectable.set(selectable);
-    }
-
+    
     /**
      * Enables the overlay to fire observable events
      */
     @Override
-    void enable() {
+    public void enable() {
         this.selectable.set(true);
     }
 

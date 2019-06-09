@@ -4,6 +4,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.client.ClientView;
 import it.polimi.deib.se2019.sanp4.adrenaline.client.gui.controls.ObservableOverlay;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.events.ChoiceResponse;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.ChoiceRequest;
+import javafx.stage.Stage;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -23,15 +24,20 @@ public class SelectionHandler<T extends Serializable> implements Consumer<Observ
      */
     private ClientView clientView;
     /**
+     * The stage the request has been performed into, to close once it's completed
+     */
+    private Stage stage;
+    /**
      * Function to retrieve data from the selected overlay
      */
     private Function<ObservableOverlay, T> dataExtractor;
 
     private Collection<ObservableOverlay> observedPool;
 
-    SelectionHandler(ClientView clientView, Collection<ObservableOverlay> observedPool, Function<ObservableOverlay, T> dataExtractor) {
+    SelectionHandler(ClientView clientView, Collection<ObservableOverlay> observedPool, Function<ObservableOverlay, T> dataExtractor, Stage stage) {
         this.clientView = clientView;
         this.dataExtractor = dataExtractor;
+        this.stage = stage;
         this.observedPool = new ArrayList<>(observedPool);
         observedPool.forEach(overlay -> {
             overlay.addListener(this);
@@ -39,17 +45,31 @@ public class SelectionHandler<T extends Serializable> implements Consumer<Observ
         });
     }
 
+    /**
+     * Ends the selection routine by notifying the view about completion and by closing the stage if needed
+     */
+    private void endSelection() {
+        clientView.onRequestCompleted();
+        // Try to close the stage if one has been provided
+        // If no stage has been provided, it means it shouldn't be closed
+        if (stage != null) {
+            stage.close();
+        }
+    }
+
     @Override
     public void accept(ObservableOverlay selectedOverlay) {
+        observedPool.forEach(ObservableOverlay::reset);
         ChoiceRequest request = clientView.getCurrentRequest();
         if (request == null) {
             // We are trying to reply to a request that does not exist, hence we stop
+            endSelection();
             return;
         }
         T choice = dataExtractor.apply(selectedOverlay);
         ChoiceResponse<T> choiceResponse = new ChoiceResponse<>(clientView.getUsername(), clientView.getCurrentRequest().getUuid(), choice);
         clientView.notifyObservers(choiceResponse);
-        clientView.onRequestCompleted();
+        endSelection();
     }
 
     @Override

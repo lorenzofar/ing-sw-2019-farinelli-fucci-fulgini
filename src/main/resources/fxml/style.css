@@ -2,6 +2,10 @@
     -fx-font-weight: bold;
     -fx-font-size: 12pt;
 }
+.subtitle-text{
+    -fx-font-weight: medium;
+    -fx-font-size: 11pt;
+}
 
 #gameBoard {
     -fx-background-size: contain;
@@ -24,24 +28,26 @@
 
 .transparent-overlay{
     -fx-border-color: transparent;
-    -fx-border-width: 0;
+    -fx-border-width: 2;
     -fx-background-radius: 0;
     -fx-background-color: transparent;
 }
 
-/* ===== BOARD CONFIGURATION ===== */
-.board-selection-overlay{
-    -fx-max-width: 100;
-    -fx-max-height: 100;
-}
-.board-selection-overlay.selectable{
+.selectable{
     -fx-border-width: 2;
     -fx-background-color: transparent;
     -fx-border-color: transparent;
 }
-.board-selection-overlay.selectable:hover{
+.selectable:hover{
     -fx-border-width: 2;
     -fx-border-color: #F8B73C;
+}
+
+/* ===== BOARD CONFIGURATION ===== */
+
+.board-selection-overlay{
+    -fx-max-width: 100;
+    -fx-max-height: 100;
 }
 
 /* ===== SKULLS ===== */

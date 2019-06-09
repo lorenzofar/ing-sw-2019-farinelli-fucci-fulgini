@@ -11,6 +11,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.view.MessageType;
 import it.polimi.deib.se2019.sanp4.adrenaline.view.ViewScene;
 
 import java.io.Serializable;
+import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.NoSuchElementException;
 
@@ -49,6 +50,7 @@ public class ClientView extends RemoteObservable<ViewEvent> implements RemoteVie
     public ClientView() {
         this.modelManager = new ModelManager(this);
         this.currentRequest = null;
+        pendingRequests = new ArrayDeque<>();
     }
 
     /**

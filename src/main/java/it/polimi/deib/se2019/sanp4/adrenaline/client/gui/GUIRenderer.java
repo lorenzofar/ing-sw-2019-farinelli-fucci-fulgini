@@ -2,7 +2,10 @@ package it.polimi.deib.se2019.sanp4.adrenaline.client.gui;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.client.ClientView;
 import it.polimi.deib.se2019.sanp4.adrenaline.client.UIRenderer;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.ResourcesLoader;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.*;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.items.powerup.PowerupCard;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.items.powerup.PowerupCreator;
 import it.polimi.deib.se2019.sanp4.adrenaline.view.MessageType;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -14,7 +17,9 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 public class GUIRenderer extends Application implements UIRenderer {
 
@@ -51,6 +56,7 @@ public class GUIRenderer extends Application implements UIRenderer {
 
             currentController = loader.getController();
             currentController.setClientView(clientView);
+            currentController.setStage(this.stage);
             return true;
         } catch (IOException e) {
             // An error occurred loading the scene
@@ -74,8 +80,33 @@ public class GUIRenderer extends Application implements UIRenderer {
         Platform.runLater(primaryStage::show);
     }
 
+    /**
+     * Spawns a new windows with the provided title and showing the provided FXML file
+     *
+     * @param resource The path of the FXML file
+     * @param title    The title of the window
+     * @return The controller associated to the newly created window
+     */
+    private GUIController showNewWindow(String resource, String title) {
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource(resource));
+            Stage newStage = new Stage();
+            newStage.setTitle(title);
+            Scene newScene = new Scene(loader.load());
+            Platform.runLater(() -> newStage.setScene(newScene));
+            ((GUIController) loader.getController()).setClientView(clientView);
+            ((GUIController) loader.getController()).setStage(newStage);
+            Platform.runLater(newStage::show);
+            return (GUIController) loader.getController();
+        } catch (IOException ignore) {
+            // Ignore errors
+            return null;
+        }
+    }
 
     /* ===== LOBBY ===== */
+
     @Override
     public void showLobby() {
         Platform.runLater(() -> showScene("/fxml/lobby.fxml"));
@@ -94,32 +125,9 @@ public class GUIRenderer extends Application implements UIRenderer {
             }
         });
     }
+
     /* ================== */
 
-
-    /**
-     * Spawns a new windows with the provided title and showing the provided FXML file
-     *
-     * @param resource The path of the FXML file
-     * @param title    The title of the window
-     * @return The controller associated to the newly created window
-     */
-    private GUIController showNewWindow(String resource, String title) {
-        try {
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource(resource));
-            Stage newStage = new Stage();
-            newStage.setTitle(title);
-            Scene newScene = new Scene(loader.load());
-            Platform.runLater(() -> newStage.setScene(newScene));
-            ((GUIController) loader.getController()).setClientView(clientView);
-            Platform.runLater(newStage::show);
-            return (GUIController) loader.getController();
-        } catch (IOException ignore) {
-            // Ignore errors
-            return null;
-        }
-    }
 
     /**
      * Prepare the client for the game
@@ -155,9 +163,9 @@ public class GUIRenderer extends Application implements UIRenderer {
     @Override
     public void handle(BoardRequest request) {
         try {
-            BoardConfigController boardConfigController = (BoardConfigController) showNewWindow("/fxml/BoardConfig.fxml", "Board configuration");
-            if (boardConfigController != null) {
-                boardConfigController.setBoards(request.getChoices());
+            BoardRequestController boardRequestController = (BoardRequestController) showNewWindow("/fxml/BoardConfig.fxml", "Board configuration");
+            if (boardRequestController != null) {
+                boardRequestController.setup(request);
             }
         } catch (Exception ignore) {
             // Errors are ignores
@@ -176,15 +184,22 @@ public class GUIRenderer extends Application implements UIRenderer {
 
     @Override
     public void handle(PowerupCardRequest request) {
-        //TODO: Implement this method
+        try {
+            PowerupRequestController powerupRequestController = (PowerupRequestController) showNewWindow("/fxml/powerupSelectionWindow.fxml", "Select powerup");
+            if (powerupRequestController != null) {
+                powerupRequestController.setup(request);
+            }
+        } catch (Exception ignore) {
+            // We ignore this error
+        }
     }
 
     @Override
     public void handle(SkullCountRequest request) {
         try {
-            SkullsConfigController skullsConfigController = (SkullsConfigController) showNewWindow("/fxml/skullsConfig.fxml", "Skulls config");
-            if (skullsConfigController != null) {
-                skullsConfigController.setSkullsCount(request.getChoices().size());
+            SkullsRequestController skullsRequestController = (SkullsRequestController) showNewWindow("/fxml/skullsConfig.fxml", "Skulls config");
+            if (skullsRequestController != null) {
+                skullsRequestController.setup(request);
             }
         } catch (Exception ignore) {
             // We ignore this error

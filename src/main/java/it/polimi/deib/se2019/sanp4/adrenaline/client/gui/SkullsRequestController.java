@@ -3,6 +3,7 @@ package it.polimi.deib.se2019.sanp4.adrenaline.client.gui;
 import it.polimi.deib.se2019.sanp4.adrenaline.client.gui.controls.ObservableOverlay;
 import it.polimi.deib.se2019.sanp4.adrenaline.client.gui.controls.SkullSelectionOverlay;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.events.ChoiceResponse;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.ChoiceRequest;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.fxml.FXML;
@@ -12,7 +13,7 @@ import javafx.scene.layout.HBox;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SkullsConfigController extends GUIController {
+public class SkullsRequestController extends GUIController implements RequestController<Integer> {
 
     private List<SkullSelectionOverlay> skulls;
 
@@ -40,9 +41,16 @@ public class SkullsConfigController extends GUIController {
         }
     }
 
-    void setSkullsCount(int count) {
+    /**
+     * Prepares the window to perform the provided request
+     * and populates the message and available choices
+     *
+     * @param request The object representing the request
+     */
+    @Override
+    public void setup(ChoiceRequest<Integer> request) {
         skulls.clear();
-        for (int i = 0; i < count; i++) {
+        for (int i = 0; i < request.getChoices().size(); i++) {
             skulls.add(new SkullSelectionOverlay(i + 1));
         }
         skullsContainer.getChildren().clear();

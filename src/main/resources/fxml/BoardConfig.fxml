@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
-      fx:controller="it.polimi.deib.se2019.sanp4.adrenaline.client.gui.BoardConfigController"
+      fx:controller="it.polimi.deib.se2019.sanp4.adrenaline.client.gui.BoardRequestController"
       prefHeight="200.0" prefWidth="600.0"
       stylesheets="@style.css"
       spacing="12">

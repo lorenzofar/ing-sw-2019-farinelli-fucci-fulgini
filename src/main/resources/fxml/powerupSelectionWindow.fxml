@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.*?>
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="it.polimi.deib.se2019.sanp4.adrenaline.client.gui.PowerupRequestController"
+      prefHeight="350.0" prefWidth="500.0"
+      stylesheets="@style.css"
+      spacing="24">
+
+    <padding>
+        <Insets top="25" right="25" bottom="10" left="25"/>
+    </padding>
+
+    <Label fx:id="message" styleClass="subtitle-text"/>
+
+    <GridPane fx:id="powerupsContainer" hgap="8" vgap="8">
+        <columnConstraints>
+            <ColumnConstraints/>
+            <ColumnConstraints/>
+            <ColumnConstraints/>
+        </columnConstraints>
+    </GridPane>
+
+</VBox>
