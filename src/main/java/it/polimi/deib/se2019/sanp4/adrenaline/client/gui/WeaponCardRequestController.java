@@ -1,10 +1,11 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.client.gui;
 
-import it.polimi.deib.se2019.sanp4.adrenaline.client.gui.controls.BoardSelectionOverlay;
+import it.polimi.deib.se2019.sanp4.adrenaline.client.gui.controls.WeaponCardOverlay;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.ChoiceRequest;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.WeaponCard;
 import javafx.scene.layout.GridPane;
 
-public class BoardRequestController extends RequestController<Integer> {
+public class WeaponCardRequestController extends RequestController<WeaponCard> {
 
     /**
      * Retrieves the number of columns the grid is divided into
@@ -13,7 +14,7 @@ public class BoardRequestController extends RequestController<Integer> {
      */
     @Override
     public int getColumnsCount() {
-        return 2;
+        return 4;
     }
 
     /**
@@ -22,14 +23,16 @@ public class BoardRequestController extends RequestController<Integer> {
      * @param request The object representing the request
      */
     @Override
-    public void createOverlays(ChoiceRequest<Integer> request) {
-        request.getChoices().forEach(i -> {
-            BoardSelectionOverlay overlay = new BoardSelectionOverlay();
-            overlay.setBoardId(i);
+    public void createOverlays(ChoiceRequest<WeaponCard> request) {
+        int i = 0;
+        for (WeaponCard weapon : request.getChoices()) {
+            WeaponCardOverlay overlay = new WeaponCardOverlay();
+            overlay.setWeaponCard(weapon);
             overlay.enable();
-            overlays.add(overlay);
             GridPane.setColumnIndex(overlay, i % getColumnsCount());
             GridPane.setRowIndex(overlay, i / getColumnsCount());
-        });
+            overlays.add(overlay);
+            i++;
+        }
     }
 }

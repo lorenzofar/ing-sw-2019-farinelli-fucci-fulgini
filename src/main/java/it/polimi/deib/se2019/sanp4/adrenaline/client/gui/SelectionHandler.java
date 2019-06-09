@@ -2,6 +2,7 @@ package it.polimi.deib.se2019.sanp4.adrenaline.client.gui;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.client.ClientView;
 import it.polimi.deib.se2019.sanp4.adrenaline.client.gui.controls.ObservableOverlay;
+import it.polimi.deib.se2019.sanp4.adrenaline.client.gui.controls.SelectableOverlay;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.events.ChoiceResponse;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.ChoiceRequest;
 import javafx.stage.Stage;
@@ -10,14 +11,13 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 /**
  * A class describing an object handling the selection of a certain object to reply to choice requests
  *
  * @param <T> The type of choice to retrieve
  */
-public class SelectionHandler<T extends Serializable> implements Consumer<ObservableOverlay> {
+public class SelectionHandler<T extends Serializable> implements Consumer<ObservableOverlay<T>> {
 
     /**
      * The client view to act on
@@ -27,16 +27,11 @@ public class SelectionHandler<T extends Serializable> implements Consumer<Observ
      * The stage the request has been performed into, to close once it's completed
      */
     private Stage stage;
-    /**
-     * Function to retrieve data from the selected overlay
-     */
-    private Function<ObservableOverlay, T> dataExtractor;
 
     private Collection<ObservableOverlay> observedPool;
 
-    SelectionHandler(ClientView clientView, Collection<ObservableOverlay> observedPool, Function<ObservableOverlay, T> dataExtractor, Stage stage) {
+    SelectionHandler(ClientView clientView, Collection<SelectableOverlay<T>> observedPool, Stage stage) {
         this.clientView = clientView;
-        this.dataExtractor = dataExtractor;
         this.stage = stage;
         this.observedPool = new ArrayList<>(observedPool);
         observedPool.forEach(overlay -> {
@@ -58,7 +53,7 @@ public class SelectionHandler<T extends Serializable> implements Consumer<Observ
     }
 
     @Override
-    public void accept(ObservableOverlay selectedOverlay) {
+    public void accept(ObservableOverlay<T> selectedOverlay) {
         observedPool.forEach(ObservableOverlay::reset);
         ChoiceRequest request = clientView.getCurrentRequest();
         if (request == null) {
@@ -66,15 +61,15 @@ public class SelectionHandler<T extends Serializable> implements Consumer<Observ
             endSelection();
             return;
         }
-        T choice = dataExtractor.apply(selectedOverlay);
+        T choice = selectedOverlay.getData();
         ChoiceResponse<T> choiceResponse = new ChoiceResponse<>(clientView.getUsername(), clientView.getCurrentRequest().getUuid(), choice);
         clientView.notifyObservers(choiceResponse);
         endSelection();
     }
 
     @Override
-    public Consumer<ObservableOverlay> andThen(Consumer<? super ObservableOverlay> consumer) {
-        return (ObservableOverlay t) -> {
+    public Consumer<ObservableOverlay<T>> andThen(Consumer<? super ObservableOverlay<T>> consumer) {
+        return (ObservableOverlay<T> t) -> {
             accept(t);
             consumer.accept(t);
         };

@@ -11,7 +11,7 @@ import java.io.IOException;
  * A class describing an overlay that can be selected (e.g. by clicking on it)
  * It extends the ObservableOverlay to notify listeners that it has been selected
  */
-public abstract class SelectableOverlay extends ObservableOverlay {
+public abstract class SelectableOverlay<T> extends ObservableOverlay<T> {
 
     private static final String SELECTABLE_CLASS = "selectable";
 
@@ -48,7 +48,7 @@ public abstract class SelectableOverlay extends ObservableOverlay {
         });
         control.setOnMouseClicked(event -> this.notifyListeners());
     }
-    
+
     /**
      * Enables the overlay to fire observable events
      */

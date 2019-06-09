@@ -9,7 +9,7 @@ import javafx.scene.image.ImageView;
  * A class describing an overlay used to select the initial count of skulls
  * It is based on HoverableOverlay to fire events when it is hovered
  */
-public class SkullSelectionOverlay extends HoverableOverlay {
+public class SkullSelectionOverlay extends HoverableOverlay<Integer> {
 
     private int count;
 

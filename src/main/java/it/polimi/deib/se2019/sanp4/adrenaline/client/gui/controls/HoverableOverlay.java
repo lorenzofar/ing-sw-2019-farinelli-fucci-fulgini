@@ -4,11 +4,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Control;
 
 import java.io.IOException;
+import java.io.Serializable;
 
 /**
  * A class describing an overlay that reacts when it's being hovered
  */
-public class HoverableOverlay extends ObservableOverlay {
+public class HoverableOverlay<T extends Serializable> extends ObservableOverlay<T> {
 
     private boolean hovered = false;
 

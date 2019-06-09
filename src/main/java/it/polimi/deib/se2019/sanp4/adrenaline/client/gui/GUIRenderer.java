@@ -2,10 +2,7 @@ package it.polimi.deib.se2019.sanp4.adrenaline.client.gui;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.client.ClientView;
 import it.polimi.deib.se2019.sanp4.adrenaline.client.UIRenderer;
-import it.polimi.deib.se2019.sanp4.adrenaline.common.ResourcesLoader;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.*;
-import it.polimi.deib.se2019.sanp4.adrenaline.model.items.powerup.PowerupCard;
-import it.polimi.deib.se2019.sanp4.adrenaline.model.items.powerup.PowerupCreator;
 import it.polimi.deib.se2019.sanp4.adrenaline.view.MessageType;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -17,9 +14,7 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 public class GUIRenderer extends Application implements UIRenderer {
 
@@ -213,6 +208,13 @@ public class GUIRenderer extends Application implements UIRenderer {
 
     @Override
     public void handle(WeaponCardRequest request) {
-        //TODO: Implement this method
+        try {
+            WeaponCardRequestController weaponCardRequestController = (WeaponCardRequestController) showNewWindow("/fxml/weaponCardSelectionWindow.fxml", "Select Weapon");
+            if (weaponCardRequestController != null) {
+                weaponCardRequestController.setup(request);
+            }
+        } catch (Exception ignore) {
+            // We ignore this error
+        }
     }
 }

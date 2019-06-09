@@ -8,15 +8,13 @@ import javafx.scene.image.ImageView;
 /**
  * A class describing an overlay used to select the board configuration
  */
-public class BoardSelectionOverlay extends SelectableOverlay {
-
-    private int boardId;
+public class BoardSelectionOverlay extends SelectableOverlay<Integer> {
 
     @FXML
     private Button overlayRoot;
 
     public BoardSelectionOverlay() {
-        super("/fxml/controls/BoardSelectionOverlay.fxml");
+        super("/fxml/controls/cardOverlay.fxml");
     }
 
     @FXML
@@ -25,15 +23,9 @@ public class BoardSelectionOverlay extends SelectableOverlay {
     }
 
     public void setBoardId(int boardId) {
-        this.boardId = boardId;
+        this.setData(boardId);
         // Set the board image as the graphic of the button
         Image boardImage = new Image(String.format("/assets/boards/board_%d.png", boardId), 200, 200, true, true);
         overlayRoot.setGraphic(new ImageView(boardImage));
     }
-
-    public int getBoardId() {
-        return boardId;
-    }
-
-
 }

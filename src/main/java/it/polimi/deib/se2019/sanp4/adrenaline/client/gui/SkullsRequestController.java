@@ -13,7 +13,7 @@ import javafx.scene.layout.HBox;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SkullsRequestController extends GUIController implements RequestController<Integer> {
+public class SkullsRequestController extends GUIController implements RequestControllerInterface<Integer> {
 
     private List<SkullSelectionOverlay> skulls;
 
@@ -32,7 +32,7 @@ public class SkullsRequestController extends GUIController implements RequestCon
         submitBtn.disableProperty().bind(selectedSkulls.isEqualTo(0));
     }
 
-    private void onSkullHovered(ObservableOverlay overlay) {
+    private void onSkullHovered(ObservableOverlay<Integer> overlay) {
         if (overlay.isHover()) {
             int i = ((SkullSelectionOverlay) overlay).getCount();
             selectedSkulls.setValue(i);

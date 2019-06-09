@@ -20,7 +20,7 @@
 
     <Label text="Choose the board configuration to be used for the game"/>
 
-    <GridPane fx:id="boardsContainer" hgap="8" vgap="8">
+    <GridPane fx:id="overlaysContainer" hgap="8" vgap="8">
         <columnConstraints>
             <ColumnConstraints percentWidth="50"/>
             <ColumnConstraints percentWidth="50"/>
