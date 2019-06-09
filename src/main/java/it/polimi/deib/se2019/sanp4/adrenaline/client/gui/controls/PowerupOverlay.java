@@ -22,9 +22,11 @@ public class PowerupOverlay extends SelectableOverlay<PowerupCard> {
 
     public void setPowerupCard(PowerupCard powerupCard) {
         this.setData(powerupCard);
-        String filePath = String.format("/assets/powerups/%s_%s.png",
-                powerupCard.getType().name().toLowerCase(),
-                powerupCard.getCubeColor().name().substring(0, 1).toLowerCase());
+        String filePath = String.format("/assets/powerups/%s", powerupCard == null ?
+                "null_powerup.png" :
+                String.format("%s_%s.png",
+                        powerupCard.getType().name().toLowerCase(),
+                        powerupCard.getCubeColor().name().substring(0, 1).toLowerCase()));
         Image powerupImage = new javafx.scene.image.Image(filePath, 200, 200, true, true);
         overlayRoot.setGraphic(new ImageView(powerupImage));
     }

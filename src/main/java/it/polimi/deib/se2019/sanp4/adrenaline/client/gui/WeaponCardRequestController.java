@@ -5,6 +5,8 @@ import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.ChoiceRequest;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.WeaponCard;
 import javafx.scene.layout.GridPane;
 
+import java.util.List;
+
 public class WeaponCardRequestController extends RequestController<WeaponCard> {
 
     /**
@@ -25,7 +27,12 @@ public class WeaponCardRequestController extends RequestController<WeaponCard> {
     @Override
     public void createOverlays(ChoiceRequest<WeaponCard> request) {
         int i = 0;
-        for (WeaponCard weapon : request.getChoices()) {
+        // If the request is optional we add a null choice
+        List<WeaponCard> choices = request.getChoices();
+        if (request.isOptional()) {
+            choices.add(null);
+        }
+        for (WeaponCard weapon : choices) {
             WeaponCardOverlay overlay = new WeaponCardOverlay();
             overlay.setWeaponCard(weapon);
             overlay.enable();

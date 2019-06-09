@@ -5,6 +5,8 @@ import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.ChoiceRequest;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.powerup.PowerupCard;
 import javafx.scene.layout.GridPane;
 
+import java.util.List;
+
 public class PowerupRequestController extends RequestController<PowerupCard> {
 
     /**
@@ -25,7 +27,12 @@ public class PowerupRequestController extends RequestController<PowerupCard> {
     @Override
     public void createOverlays(ChoiceRequest<PowerupCard> request) {
         int i = 0;
-        for (PowerupCard powerup : request.getChoices()) {
+        // If the request is optional, we add a null choice
+        List<PowerupCard> choices = request.getChoices();
+        if (request.isOptional()) {
+            choices.add(null);
+        }
+        for (PowerupCard powerup : choices) {
             PowerupOverlay overlay = new PowerupOverlay();
             overlay.setPowerupCard(powerup);
             overlay.enable();
