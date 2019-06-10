@@ -372,6 +372,54 @@ public class BoardTest {
     }
 
     @Test
+    public void calculateAlignedDirection_sameLocation_shouldReturnNull() {
+        CoordPair a = new CoordPair(0,0);
+        CoordPair b = new CoordPair(0,0);
+
+        assertNull(Board.calculateAlignedDirection(a,b));
+    }
+
+    @Test
+    public void calculateAlignedDirection_notAligned_shouldReturnNull() {
+        CoordPair a = new CoordPair(0,0);
+        CoordPair b = new CoordPair(1,1);
+
+        assertNull(Board.calculateAlignedDirection(a,b));
+    }
+
+    @Test
+    public void calculateAlignedDirection_BtoTheNorth_shouldReturnN() {
+        CoordPair a = new CoordPair(1,1);
+        CoordPair b = new CoordPair(1,0);
+
+        assertEquals(N, Board.calculateAlignedDirection(a,b));
+    }
+
+    @Test
+    public void calculateAlignedDirection_BtoTheSouth_shouldReturnS() {
+        CoordPair a = new CoordPair(1,0);
+        CoordPair b = new CoordPair(1,1);
+
+        assertEquals(S, Board.calculateAlignedDirection(a,b));
+    }
+
+    @Test
+    public void calculateAlignedDirection_BtoTheWest_shouldReturnW() {
+        CoordPair a = new CoordPair(1,1);
+        CoordPair b = new CoordPair(2,1);
+
+        assertEquals(E, Board.calculateAlignedDirection(a,b));
+    }
+
+    @Test
+    public void calculateAlignedDirection_BtoTheEast_shouldReturnE() {
+        CoordPair a = new CoordPair(1,1);
+        CoordPair b = new CoordPair(0,1);
+
+        assertEquals(W, Board.calculateAlignedDirection(a,b));
+    }
+
+    @Test
     public void generateView_ShouldSucceed() {
         BoardView boardView = testBoard.generateView();
         for (int x = 0; x < boardView.getColumnsCount(); x++) {

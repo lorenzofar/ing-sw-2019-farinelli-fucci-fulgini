@@ -15,6 +15,8 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static it.polimi.deib.se2019.sanp4.adrenaline.model.board.CardinalDirection.*;
+
 /**
  * This class represents the game board.
  * It holds the squares and the rooms in which the squares are organised.
@@ -335,5 +337,28 @@ public class Board extends Observable<ModelUpdate> {
                     .stream()
                     .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().getLocation())));
         return view;
+    }
+
+    /**
+     * Given two locations, determines if they are aligned and returns the cardinal
+     * direction of {@code b} from {@code a}.
+     * If the locations coincide or if they are not aligned returns {@code null}.
+     * @param a The starting location, not null
+     * @param b The end location, not null
+     * @return The cardinal direction from {@code a} to {@code b}, null if it can't be determined
+     */
+    public static CardinalDirection calculateAlignedDirection(CoordPair a, CoordPair b) {
+        if (a.equals(b)) return null; /* Same location */
+
+        int xa = a.getX();
+        int ya = a.getY();
+        int xb = b.getX();
+        int yb = b.getY();
+
+        if (xa == xb) return yb < ya ? N : S; /* Same horizontal */
+        if (ya == yb) return xb > xa ? E : W; /* Same vertical */
+
+        /* No common x or y */
+        return null;
     }
 }
