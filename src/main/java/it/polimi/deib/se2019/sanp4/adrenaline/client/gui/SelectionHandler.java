@@ -30,14 +30,30 @@ public class SelectionHandler<T extends Serializable> implements Consumer<Observ
 
     private Collection<ObservableOverlay> observedPool;
 
-    SelectionHandler(ClientView clientView, Collection<SelectableOverlay<T>> observedPool, Stage stage) {
-        this.clientView = clientView;
+    SelectionHandler(Collection<SelectableOverlay<T>> observedPool, Stage stage) {
         this.stage = stage;
         this.observedPool = new ArrayList<>(observedPool);
         observedPool.forEach(overlay -> {
             overlay.addListener(this);
             overlay.enable();
         });
+    }
+
+    SelectionHandler(Collection<SelectableOverlay<T>> observedPool) {
+        this.observedPool = new ArrayList<>(observedPool);
+        observedPool.forEach(overlay -> {
+            overlay.addListener(this);
+            overlay.enable();
+        });
+    }
+
+    /**
+     * Sets the client view to act upon
+     *
+     * @param clientView The object representing the client view
+     */
+    public void setClientView(ClientView clientView) {
+        this.clientView = clientView;
     }
 
     /**

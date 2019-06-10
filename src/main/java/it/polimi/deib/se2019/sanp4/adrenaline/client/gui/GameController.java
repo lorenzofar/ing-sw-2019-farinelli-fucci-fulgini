@@ -2,13 +2,20 @@ package it.polimi.deib.se2019.sanp4.adrenaline.client.gui;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.client.ModelManager;
 import it.polimi.deib.se2019.sanp4.adrenaline.client.gui.controls.OverlaysFactory;
+import it.polimi.deib.se2019.sanp4.adrenaline.client.gui.controls.SelectableOverlay;
 import it.polimi.deib.se2019.sanp4.adrenaline.client.gui.controls.SquareOverlay;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.BoardView;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.SquareView;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.SquareRequest;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.board.CoordPair;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
+
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.stream.Collectors;
 
 public class GameController extends GUIController {
 
@@ -140,5 +147,17 @@ public class GameController extends GUIController {
         BackgroundImage boardBackground = new BackgroundImage(boardImage, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, boardSize);
         // Set the background of the board container
         gameContainer.setBackground(new Background(boardBackground));
+    }
+
+    /**
+     * Asks the user to select a square of the game board to reply to the provided request
+     *
+     * @param request The object representing the square request
+     */
+    void askSquareSelection(SquareRequest request) {
+        // First retrieve all the squares the user can select among and create a pool of observable overlays
+        Collection<SelectableOverlay<CoordPair>> selectableSquares = Arrays.stream(squareOverlays).flatMap(Arrays::stream).filter(overlay -> request.getChoices().contains(overlay.getData())).collect(Collectors.toList());
+        // Then create a selection handler to handle the request and set it as the current one in the view
+        clientView.setSelectionHandler(new SelectionHandler<CoordPair>(selectableSquares));
     }
 }

@@ -203,7 +203,12 @@ public class GUIRenderer extends Application implements UIRenderer {
 
     @Override
     public void handle(SquareRequest request) {
-        //TODO: Implement this method
+        try {
+            GameController gameController = (GameController) currentController;
+            gameController.askSquareSelection(request);
+        } catch (Exception ignore) {
+            // We ignore errors when the request is received when the match screen is not yet shown
+        }
     }
 
     @Override

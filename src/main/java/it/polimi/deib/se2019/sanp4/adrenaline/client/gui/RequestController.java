@@ -60,10 +60,7 @@ public abstract class RequestController<T extends Serializable> extends GUIContr
         createOverlays(request);
 
         overlaysContainer.getChildren().addAll(overlays);
-        clientView.setSelectionHandler(new SelectionHandler<T>(
-                clientView,
-                overlays,
-                stage)
+        clientView.setSelectionHandler(new SelectionHandler<T>(overlays, stage)
         );
     }
 

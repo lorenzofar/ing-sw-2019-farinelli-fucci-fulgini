@@ -176,11 +176,10 @@ public class ClientView extends RemoteObservable<ViewEvent> implements RemoteVie
      * Method to be called when a request is handled,
      * in order to consider the next pending request (if present)
      */
-    public void onRequestCompleted(){
+    public void onRequestCompleted() {
         try {
             performRequest(pendingRequests.pop());
-        }
-        catch (NoSuchElementException e){
+        } catch (NoSuchElementException e) {
             currentRequest = null;
         }
     }
@@ -229,5 +228,6 @@ public class ClientView extends RemoteObservable<ViewEvent> implements RemoteVie
 
     public void setSelectionHandler(SelectionHandler selectionHandler) {
         this.selectionHandler = selectionHandler;
+        this.selectionHandler.setClientView(this);
     }
 }
