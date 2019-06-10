@@ -163,7 +163,7 @@ public class GUIRenderer extends Application implements UIRenderer {
                 boardRequestController.setup(request);
             }
         } catch (Exception ignore) {
-            // Errors are ignores
+            // Errors are ignored
         }
     }
 
@@ -174,7 +174,14 @@ public class GUIRenderer extends Application implements UIRenderer {
 
     @Override
     public void handle(PlayerRequest request) {
-        //TODO: Implement this method
+        try {
+            PlayerRequestController playerRequestController = (PlayerRequestController) showNewWindow("/fxml/playerSelectionWindow.fxml", "Select player");
+            if (playerRequestController != null) {
+                playerRequestController.setup(request);
+            }
+        } catch (Exception ignore) {
+            // We ignore this error
+        }
     }
 
     @Override

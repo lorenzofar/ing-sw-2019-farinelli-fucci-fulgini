@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
+<fx:root xmlns="http://javafx.com/javafx"
+         xmlns:fx="http://javafx.com/fxml"
+         fx:id="overlayRoot"
+         stylesheets="@../style.css"
+         type="javafx.scene.control.Button">
+
+    <VBox fx:id="buttonGraphics" spacing="8" alignment="BASELINE_CENTER">
+        <Circle fx:id="playerPic" styleClass="player-avatar" radius="64"/>
+        <Label fx:id="playerName" styleClass="title-text"/>
+    </VBox>
+</fx:root>
