@@ -10,6 +10,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.SquareRequest;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.CoordPair;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 
@@ -19,13 +20,16 @@ import java.util.stream.Collectors;
 
 public class GameController extends GUIController {
 
-    private static final double[] GAME_CONTAINER_ROWS = {20.77, 68, 11.23};
+    private static final double[] GAME_CONTAINER_ROWS = {20.77, 68 + 11.23};
     private static final double[] TOP_ROW_COLUMNS = {51.4, 48.6};
     private static final double[] MIDDLE_ROW_COLUMNS = {16, 68, 16};
-    private static final double[] BOTTOM_ROW_COLUMNS = {50, 50}; // TODO: Set real values
     /* ===== BOARD ROWS AND COLUMNS ===== */
-    private static final double[] BOARD_CONTAINER_ROWS = {32.2, 36.3, 31.5};
+    private static final double[] BOARD_CONTAINER_ROWS = {27.67, 31.14, 27.02, 14.18};
     private static final double[] BOARD_CONTAINER_COLUMNS = {22.5, 27, 28, 22.5};
+    /* ===== TOP ROW WEAPONS ===== */
+    private static final double[] TOP_ROW_SPAWN_WEAPONS_COLUMNS = {2.3, 21, 1.6, 20.6, 1.8, 21, 31.7};
+    private static final double[] SX_COL_SPAWN_WEAPONS_ROWS = {19.14, 17.12, 1.24, 17.06, 0.96, 17.09, 27.40};
+    private static final double[] DX_COL_SPAWN_WEAPONS_ROWS = {45.06, 16.57, 1.56, 16.47, 1.78, 16.48, 2.08};
 
     @FXML
     private VBox gameScene;
@@ -36,9 +40,15 @@ public class GameController extends GUIController {
     @FXML
     private GridPane topRow;
     @FXML
+    private GridPane killshotsTrackContainer;
+    @FXML
+    private GridPane topWeaponsContainer;
+    @FXML
     private GridPane middleRow;
     @FXML
-    private GridPane bottomRow;
+    private GridPane middleSxContainer;
+    @FXML
+    private GridPane middleDxContainer;
 
     /**
      * The matrix of overlays above the square composing the game board
@@ -78,10 +88,12 @@ public class GameController extends GUIController {
         // Set row and column constraints for the grid pane
         setRowConstraints(gameContainer, GAME_CONTAINER_ROWS);
         setColumnConstraints(topRow, TOP_ROW_COLUMNS);
+        setColumnConstraints(topWeaponsContainer, TOP_ROW_SPAWN_WEAPONS_COLUMNS);
         setColumnConstraints(middleRow, MIDDLE_ROW_COLUMNS);
-        setColumnConstraints(bottomRow, BOTTOM_ROW_COLUMNS);
         setRowConstraints(boardContainer, BOARD_CONTAINER_ROWS);
         setColumnConstraints(boardContainer, BOARD_CONTAINER_COLUMNS);
+        setRowConstraints(middleSxContainer, SX_COL_SPAWN_WEAPONS_ROWS);
+        setRowConstraints(middleDxContainer, DX_COL_SPAWN_WEAPONS_ROWS);
 
         gameContainer.prefHeightProperty().bind(gameScene.heightProperty());
         gameContainer.prefWidthProperty().bind(gameScene.widthProperty());
@@ -89,8 +101,21 @@ public class GameController extends GUIController {
         middleRow.prefWidthProperty().bind(gameContainer.widthProperty());
         middleRow.prefHeightProperty().bind(gameContainer.heightProperty().multiply(GAME_CONTAINER_ROWS[1] / 100));
 
+        killshotsTrackContainer.prefWidthProperty().bind(topRow.widthProperty().multiply(TOP_ROW_COLUMNS[0] / 100));
+        killshotsTrackContainer.prefHeightProperty().bind(topRow.heightProperty());
+        topWeaponsContainer.prefWidthProperty().bind(topRow.widthProperty().multiply(TOP_ROW_COLUMNS[1] / 100));
+        topWeaponsContainer.prefHeightProperty().bind(topRow.heightProperty());
+
         boardContainer.prefWidthProperty().bind(middleRow.widthProperty().multiply(MIDDLE_ROW_COLUMNS[1] / 100));
         boardContainer.prefHeightProperty().bind(middleRow.heightProperty());
+        middleSxContainer.prefWidthProperty().bind(middleRow.widthProperty().multiply(MIDDLE_ROW_COLUMNS[0] / 100));
+        middleSxContainer.prefHeightProperty().bind(middleRow.heightProperty());
+        middleDxContainer.prefWidthProperty().bind(middleRow.widthProperty().multiply(MIDDLE_ROW_COLUMNS[2] / 100));
+        middleDxContainer.prefHeightProperty().bind(middleRow.heightProperty());
+
+        topWeaponsContainer.setPadding(new Insets(0,0,8,0));
+        middleSxContainer.setPadding(new Insets(0,8,0,0));
+        middleDxContainer.setPadding(new Insets(0,0,0,8));
     }
 
     /**

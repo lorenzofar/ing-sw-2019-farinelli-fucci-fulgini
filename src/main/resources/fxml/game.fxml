@@ -10,28 +10,16 @@
 
     <GridPane gridLinesVisible="true" fx:id="gameContainer" prefWidth="100" prefHeight="100">
 
-        <GridPane fx:id="topRow" GridPane.rowIndex="0">
-            <!-- TODO: Add killshots track container and cards container-->
+        <GridPane fx:id="topRow" gridLinesVisible="true" GridPane.rowIndex="0">
+            <GridPane fx:id="killshotsTrackContainer" GridPane.columnIndex="0" gridLinesVisible="true"/>
+            <GridPane fx:id="topWeaponsContainer" GridPane.columnIndex="1" gridLinesVisible="true"/>
         </GridPane>
 
         <GridPane gridLinesVisible="true" fx:id="middleRow" GridPane.rowIndex="1">
             <!-- Here we put the container of the board -->
-            <GridPane fx:id="middleSxContainer" GridPane.columnIndex="0">
-                <!-- TODO: Add content -->
-            </GridPane>
-
-            <GridPane fx:id="boardContainer" gridLinesVisible="true" GridPane.columnIndex="1">
-                <!-- Square overlays are added programmatically according to the board matrix -->
-            </GridPane>
-
-            <GridPane fx:id="middleDxContainer" GridPane.columnIndex="2">
-                <!-- TODO: Add content -->
-            </GridPane>
-
-        </GridPane>
-
-        <GridPane fx:id="bottomRow" GridPane.rowIndex="2">
-            <!-- TODO: Add content -->
+            <GridPane fx:id="middleSxContainer" gridLinesVisible="true" GridPane.columnIndex="0"/>
+            <GridPane fx:id="boardContainer" gridLinesVisible="true" GridPane.columnIndex="1"/>
+            <GridPane fx:id="middleDxContainer" gridLinesVisible="true" GridPane.columnIndex="2"/>
         </GridPane>
     </GridPane>
     <!-- TODO: Add player boards and fix bindings after addition -->
