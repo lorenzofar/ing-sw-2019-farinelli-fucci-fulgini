@@ -12,14 +12,20 @@ import javafx.scene.paint.Color;
  */
 public class OrientableImage extends Pane {
 
-    /**
-     * Create a new OrientableImage with the provided image having the provided orientation
-     *
-     * @param image       The object representing the image
-     * @param orientation The object representing the orientation
-     */
-    public OrientableImage(Image image, OrientationEnum orientation) {
+    private OrientationEnum orientation;
+
+    OrientableImage() {
         super();
+        this.orientation = OrientationEnum.UP;
+    }
+
+    /**
+     * Sets the provided image as the background of the pane
+     *
+     * @param imagePath The path of the image
+     */
+    void setImage(String imagePath) {
+        Image image = new Image(imagePath);
         // Create a new temporary imageview container
         ImageView imageView = new ImageView(image);
         // Rotate the image inside it
@@ -34,4 +40,12 @@ public class OrientableImage extends Pane {
         super.backgroundProperty().set(new Background(new BackgroundImage(rotatedImage, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, imageSize)));
     }
 
+    /**
+     * Sets the orientation of the image
+     *
+     * @param orientation The object representing the orientation
+     */
+    public void setOrientation(OrientationEnum orientation) {
+        this.orientation = orientation;
+    }
 }

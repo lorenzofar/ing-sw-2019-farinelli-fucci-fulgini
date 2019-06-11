@@ -4,18 +4,19 @@ import it.polimi.deib.se2019.sanp4.adrenaline.client.ModelManager;
 import it.polimi.deib.se2019.sanp4.adrenaline.client.gui.controls.OverlaysFactory;
 import it.polimi.deib.se2019.sanp4.adrenaline.client.gui.controls.SelectableOverlay;
 import it.polimi.deib.se2019.sanp4.adrenaline.client.gui.controls.SquareOverlay;
+import it.polimi.deib.se2019.sanp4.adrenaline.client.gui.controls.WeaponImage;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.BoardView;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.SquareView;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.SquareRequest;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.CoordPair;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCube;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 
-import java.util.Arrays;
-import java.util.Collection;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class GameController extends GUIController {
@@ -30,6 +31,8 @@ public class GameController extends GUIController {
     private static final double[] TOP_ROW_SPAWN_WEAPONS_COLUMNS = {2.3, 21, 1.6, 20.6, 1.8, 21, 31.7};
     private static final double[] SX_COL_SPAWN_WEAPONS_ROWS = {19.14, 17.12, 1.24, 17.06, 0.96, 17.09, 27.40};
     private static final double[] DX_COL_SPAWN_WEAPONS_ROWS = {45.06, 16.57, 1.56, 16.47, 1.78, 16.48, 2.08};
+
+    private static final int SPAWN_WEAPONS_COUNT = 3;
 
     @FXML
     private VBox gameScene;
@@ -54,6 +57,11 @@ public class GameController extends GUIController {
      * The matrix of overlays above the square composing the game board
      */
     private SquareOverlay[][] squareOverlays;
+
+    /**
+     * The map associating each spawn color to the list of weapon images sockets
+     */
+    private Map<AmmoCube, List<WeaponImage>> spawnWeaponsImages;
 
     /**
      * Creates row constraints for the provided grid pane according to the provided heights
@@ -113,9 +121,46 @@ public class GameController extends GUIController {
         middleDxContainer.prefWidthProperty().bind(middleRow.widthProperty().multiply(MIDDLE_ROW_COLUMNS[2] / 100));
         middleDxContainer.prefHeightProperty().bind(middleRow.heightProperty());
 
-        topWeaponsContainer.setPadding(new Insets(0,0,8,0));
-        middleSxContainer.setPadding(new Insets(0,8,0,0));
-        middleDxContainer.setPadding(new Insets(0,0,0,8));
+        topWeaponsContainer.setPadding(new Insets(0, 0, 12, 0));
+        middleSxContainer.setPadding(new Insets(0, 12, 0, 0));
+        middleDxContainer.setPadding(new Insets(0, 0, 0, 12));
+
+        // Initialize the map of spawn weapons containers
+        Map<AmmoCube, GridPane> spawnWeaponsContainers = new EnumMap<>(AmmoCube.class);
+        spawnWeaponsImages = new EnumMap<>(AmmoCube.class);
+        spawnWeaponsContainers.put(AmmoCube.BLUE, topWeaponsContainer);
+        spawnWeaponsContainers.put(AmmoCube.RED, middleSxContainer);
+        spawnWeaponsContainers.put(AmmoCube.YELLOW, middleDxContainer);
+
+        // Create the containers for weapons in the three tracks
+        for (AmmoCube color : AmmoCube.values()) {
+            // Create an empty list of images
+            List<WeaponImage> weaponImages = new ArrayList<>();
+            // Get the container in which to put the images
+            GridPane container = spawnWeaponsContainers.get(color);
+            // Then create as many images to host all the weapons in the square
+            for (int i = 0; i < SPAWN_WEAPONS_COUNT; i++) {
+                WeaponImage weaponImage = new WeaponImage();
+                // Change orientation and position according to the color of their container
+                if (color == AmmoCube.BLUE) {
+                    GridPane.setColumnIndex(weaponImage, 2 * i + 1);
+                    weaponImage.prefHeightProperty().bind(container.heightProperty());
+                    weaponImage.prefWidthProperty().bind(container.widthProperty().multiply(container.getColumnConstraints().get(2 * i + 1).getPercentWidth() / 100));
+                    weaponImage.setOrientation(OrientationEnum.UP);
+                } else {
+                    GridPane.setRowIndex(weaponImage, 2 * i + 1);
+                    weaponImage.prefWidthProperty().bind(container.widthProperty());
+                    weaponImage.prefHeightProperty().bind(container.heightProperty().multiply(container.getRowConstraints().get(2 * i + 1).getPercentHeight() / 100));
+                    weaponImage.setOrientation(color == AmmoCube.RED ? OrientationEnum.LEFT : OrientationEnum.RIGHT);
+                }
+                weaponImages.add(weaponImage);
+            }
+            // Populate the container with the newly created images
+            container.getChildren().clear();
+            container.getChildren().addAll(weaponImages);
+            // And eventually update the map
+            spawnWeaponsImages.put(color, weaponImages);
+        }
     }
 
     /**
