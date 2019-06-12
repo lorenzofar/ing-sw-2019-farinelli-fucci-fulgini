@@ -230,6 +230,27 @@ public abstract class AbstractTarget {
         return set;
     }
 
+
+
+    /**
+     * Applies the damages and marks to the selected target
+     * and saves it among damaged players in the weapon.
+     * Does not check if the target is targetable or not.
+     *
+     * @param target  The target player, not null
+     * @param shooter The player using the weapon, not null
+     */
+    protected void applyDamageAndMarks(Player target, Player shooter) {
+        /* Apply damage and marks */
+        target.getPlayerBoard().addDamage(shooter, damage);
+        target.getPlayerBoard().addMark(shooter, marks);
+
+        /* Save in the weapon for later use */
+        if (damage > 0) {
+            weapon.addDamagedPlayer(target);
+        }
+    }
+
     /* ====================== EXECUTE ========================= */
 
     /**
