@@ -19,6 +19,9 @@ import javafx.scene.layout.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static it.polimi.deib.se2019.sanp4.adrenaline.client.gui.GUIRenderer.setColumnConstraints;
+import static it.polimi.deib.se2019.sanp4.adrenaline.client.gui.GUIRenderer.setRowConstraints;
+
 public class GameController extends GUIController {
 
     private static final double[] GAME_CONTAINER_ROWS = {20.77, 68 + 11.23};
@@ -62,34 +65,6 @@ public class GameController extends GUIController {
      * The map associating each spawn color to the list of weapon images sockets
      */
     private Map<AmmoCube, List<WeaponImage>> spawnWeaponsImages;
-
-    /**
-     * Creates row constraints for the provided grid pane according to the provided heights
-     *
-     * @param targetPane  The pane to create the constraints into
-     * @param rowsHeights The array containing the percentage height for each row
-     */
-    private void setRowConstraints(GridPane targetPane, double[] rowsHeights) {
-        for (double rowHeight : rowsHeights) {
-            RowConstraints rowConstraints = new RowConstraints();
-            rowConstraints.setPercentHeight(rowHeight);
-            targetPane.getRowConstraints().add(rowConstraints);
-        }
-    }
-
-    /**
-     * Creates column constraints for the provided grid pane according to the provided widths
-     *
-     * @param targetPane    The pane to create the constraints into
-     * @param columnsWidths The array containing the percentage width for each column
-     */
-    private void setColumnConstraints(GridPane targetPane, double[] columnsWidths) {
-        for (double columnWidth : columnsWidths) {
-            ColumnConstraints columnConstraints = new ColumnConstraints();
-            columnConstraints.setPercentWidth(columnWidth);
-            targetPane.getColumnConstraints().add(columnConstraints);
-        }
-    }
 
     @FXML
     public void initialize() {

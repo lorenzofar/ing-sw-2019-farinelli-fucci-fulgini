@@ -10,6 +10,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.RowConstraints;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
@@ -227,6 +230,35 @@ public class GUIRenderer extends Application implements UIRenderer {
             }
         } catch (Exception ignore) {
             // We ignore this error
+        }
+    }
+
+    /* ===== STATIC HELPER METHODS ===== */
+    /**
+     * Creates row constraints for the provided grid pane according to the provided heights
+     *
+     * @param targetPane  The pane to create the constraints into
+     * @param rowsHeights The array containing the percentage height for each row
+     */
+    public static void setRowConstraints(GridPane targetPane, double[] rowsHeights) {
+        for (double rowHeight : rowsHeights) {
+            RowConstraints rowConstraints = new RowConstraints();
+            rowConstraints.setPercentHeight(rowHeight);
+            targetPane.getRowConstraints().add(rowConstraints);
+        }
+    }
+
+    /**
+     * Creates column constraints for the provided grid pane according to the provided widths
+     *
+     * @param targetPane    The pane to create the constraints into
+     * @param columnsWidths The array containing the percentage width for each column
+     */
+    public static void setColumnConstraints(GridPane targetPane, double[] columnsWidths) {
+        for (double columnWidth : columnsWidths) {
+            ColumnConstraints columnConstraints = new ColumnConstraints();
+            columnConstraints.setPercentWidth(columnWidth);
+            targetPane.getColumnConstraints().add(columnConstraints);
         }
     }
 }

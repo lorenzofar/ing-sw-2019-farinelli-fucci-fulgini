@@ -1,5 +1,6 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.client.gui.controls;
 
+import it.polimi.deib.se2019.sanp4.adrenaline.client.gui.GUIRenderer;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
@@ -12,7 +13,6 @@ public class KillshotsTrack extends GridPane {
 
     private static final double[] COLUMNS = {/*TODO: Add columns percentages*/};
 
-
     private int totalSkulls;
 
     public KillshotsTrack(int totalSkulls) {
@@ -20,12 +20,8 @@ public class KillshotsTrack extends GridPane {
         super.setGridLinesVisible(true);
         this.totalSkulls = totalSkulls;
 
-        // Create all the columns
-        for (double column : COLUMNS) {
-            ColumnConstraints columnConstraints = new ColumnConstraints();
-            columnConstraints.setPercentWidth(column);
-            super.getColumnConstraints().add(columnConstraints);
-        }
+        GUIRenderer.setColumnConstraints(this, COLUMNS);
+
         // And then fill unavailable cells
         fillCells(0);
     }
