@@ -177,7 +177,6 @@ public abstract class AbstractEffect {
      * <ul>
      * <li>The player has been able to pay the additional cost to use it</li>
      * <li>The player has been able to execute all the mandatory actions in the effect (e.g. shooting targets)</li>
-     * <li>If an effect is <i>optional</i> even a partial execution will return {@code true}</li>
      * </ul>
      *
      * @param view The view of the player who wants to use this weapon, not null

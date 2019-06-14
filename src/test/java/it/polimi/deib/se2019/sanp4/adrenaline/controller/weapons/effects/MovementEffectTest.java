@@ -22,7 +22,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.lang.reflect.Array;
 import java.util.*;
 
 import static org.junit.Assert.*;
@@ -41,7 +40,7 @@ public class MovementEffectTest {
     private static ControllerFactory factory;
 
     @BeforeClass
-    public static void classSetup() throws Exception {
+    public static void classSetup() {
         /* Disable logging */
         ModelTestUtil.disableLogging();
 
