@@ -24,6 +24,7 @@ import static it.polimi.deib.se2019.sanp4.adrenaline.model.board.VisibilityEnum.
  * The vortex square is saved in the weapon under a special name (i.e. "vortex").
  * If this square is not found when the target is executed, then the shooter is asked to select it.
  * Then the shooter is asked to select a player to be taken into the vortex.
+ * The selected player is then saved to the weapon with the id of this target.
  * </p>
  */
 public class VortexTarget extends AbstractTarget {
@@ -215,6 +216,9 @@ public class VortexTarget extends AbstractTarget {
 
         /* Apply damage and marks */
         applyDamageAndMarks(selectedPlayer, shooter);
+
+        /* Save the targeted player */
+        weapon.savePlayer(id, selectedPlayer);
 
         return true;
     }

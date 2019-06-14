@@ -167,6 +167,7 @@ public class VortexTargetTest {
 
         /* Check that the vortex has been saved */
         assertThat(weapon.getSavedSquare("vortex"), is(vortex));
+        assertThat(weapon.getSavedPlayer("v"), is(t2));
     }
 
     /* =============== PLAYER SELECTION ================== */
@@ -211,6 +212,7 @@ public class VortexTargetTest {
 
         /* Check that the vortex has been saved */
         assertThat(weapon.getSavedSquare("vortex"), is(vortex));
+        assertThat(weapon.getSavedPlayer("v"), is(t2));
     }
 
     @Test
@@ -294,6 +296,7 @@ public class VortexTargetTest {
 
         /* Check that the vortex has been saved */
         assertThat(weapon.getSavedSquare("vortex"), is(vortex));
+        assertThat(weapon.getSavedPlayer("v"), is(t2));
     }
 
     @Test
