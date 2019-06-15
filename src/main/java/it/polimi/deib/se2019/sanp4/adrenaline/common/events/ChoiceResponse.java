@@ -2,6 +2,7 @@ package it.polimi.deib.se2019.sanp4.adrenaline.common.events;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 import java.io.Serializable;
 
@@ -16,6 +17,7 @@ public class ChoiceResponse<T extends Serializable> extends ViewEvent {
     private String uuid;
 
     /** The choice made by the player */
+    @JsonTypeInfo(use=JsonTypeInfo.Id.CLASS, property="@class")
     private T choice;
 
     /**
