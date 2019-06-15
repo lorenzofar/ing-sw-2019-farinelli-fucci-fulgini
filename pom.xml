@@ -80,10 +80,17 @@
             <!-- Compile for Java 8 -->
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
                 <configuration>
                     <source>8</source>
                     <target>8</target>
                 </configuration>
+            </plugin>
+
+            <!-- Generate API documentation -->
+            <plugin>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.1.0</version>
             </plugin>
 
             <!-- Package different JARs for the client and the server -->
