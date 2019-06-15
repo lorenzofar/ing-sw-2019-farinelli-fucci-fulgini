@@ -5,6 +5,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.client.ModelManager;
 import it.polimi.deib.se2019.sanp4.adrenaline.client.UIRenderer;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.events.ChoiceResponse;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.LoginException;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.PlayerView;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.*;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.BoardCreator;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.powerup.PowerupCard;
@@ -13,10 +14,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.view.MessageType;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Function;
@@ -141,13 +139,12 @@ public class CLIRenderer implements UIRenderer {
 
     @Override
     public void showLobby() {
-        showMatchScreen();
-        //printLobbyScreen(Collections.emptyList(), false);
+        printLobbyScreen(Collections.emptyList(), false);
     }
 
     @Override
     public void updateLobby(Collection<String> connectedPlayers, boolean matchStarting) {
-        //printLobbyScreen(connectedPlayers, matchStarting);
+        printLobbyScreen(connectedPlayers, matchStarting);
     }
 
     /**
@@ -234,6 +231,29 @@ public class CLIRenderer implements UIRenderer {
         // And finally print the match screen
         CLIHelper.printRenderedGameElement(matchScreen);
 
+    }
+
+    /**
+     * Shows the weapons held by the user
+     */
+    public void showUserWeapons() {
+        PlayerView user = clientView.getModelManager().getPlayers().getOrDefault(clientView.getUsername(), null);
+        if (user == null) {
+            // This should never happen, since the user is a player
+            return;
+        }
+        List<List<List<String>>> userWeapons = user.getWeapons().stream().map(CLIHelper::renderWeaponCard).collect(Collectors.toList());
+        CLIHelper.printFullScreenRenderedGameElement(CLIHelper.concatRenderedElements(userWeapons, 2), "Weapons");
+    }
+
+    public void showUserPowerups(){
+        PlayerView user = clientView.getModelManager().getPlayers().getOrDefault(clientView.getUsername(), null);
+        if (user == null) {
+            // This should never happen, since the user is a player
+            return;
+        }
+        List<List<List<String>>> userPowerups = user.getPowerups().stream().map(CLIHelper::renderPowerupCard).collect(Collectors.toList());
+        CLIHelper.printFullScreenRenderedGameElement(CLIHelper.concatRenderedElements(userPowerups, 2), "Powerups");
     }
 
     /**

@@ -188,7 +188,7 @@ class CLIHelper {
      * @param title       The title of the screen
      * @param description The description of the screen
      */
-    private static void printFullScreenRenderedGameElement(List<List<String>> gameElement, String title, String description) {
+    public static void printFullScreenRenderedGameElement(List<List<String>> gameElement, String title, String description) {
         if (gameElement == null || gameElement.isEmpty()) {
             return;
         }
@@ -256,7 +256,7 @@ class CLIHelper {
      * @param gameElement The textual representation of the element
      * @param title       The title of the screen
      */
-    private static void printFullScreenRenderedGameElement(List<List<String>> gameElement, String title) {
+    public static void printFullScreenRenderedGameElement(List<List<String>> gameElement, String title) {
         printFullScreenRenderedGameElement(gameElement, title, "");
     }
 
@@ -266,7 +266,7 @@ class CLIHelper {
      *
      * @param gameElement The textual representation of the element
      */
-    private static void printFullScreenRenderedGameElement(List<List<String>> gameElement) {
+    public static void printFullScreenRenderedGameElement(List<List<String>> gameElement) {
         printFullScreenRenderedGameElement(gameElement, "", "");
     }
 

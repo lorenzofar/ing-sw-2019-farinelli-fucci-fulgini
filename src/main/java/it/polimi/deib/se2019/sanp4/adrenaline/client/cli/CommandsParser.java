@@ -32,11 +32,11 @@ public class CommandsParser implements Runnable {
                         break;
                     case ":showweapons":
                         // Show the weapons the user is holding
-                        //TODO: Implement this method
+                        renderer.showUserWeapons();
                         break;
                     case ":showpowerups":
                         // Show the powerups the user is holding
-                        //TODO: Implement this method
+                        renderer.showUserPowerups();
                         break;
                     default:
                         renderer.showMessage("Command not found", MessageType.ERROR);
