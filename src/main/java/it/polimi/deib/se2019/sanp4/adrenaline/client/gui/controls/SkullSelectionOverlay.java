@@ -25,7 +25,7 @@ public class SkullSelectionOverlay extends HoverableOverlay<Integer> {
     public void initialize() {
         super.setHoverableRoot(overlayRoot);
         // Set the skull image as the graphic of the button
-        Image skullImage = new Image("/assets/items/skull.jpg");
+        Image skullImage = new Image("/images/items/skull.jpg");
         overlayRoot.setGraphic(new ImageView(skullImage));
         //TODO: Add listener for when the style class property changes to change image
     }

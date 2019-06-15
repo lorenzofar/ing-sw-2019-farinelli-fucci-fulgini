@@ -22,7 +22,7 @@ public class WeaponCardOverlay extends SelectableOverlay<WeaponCard> {
 
     public void setWeaponCard(WeaponCard weaponCard) {
         this.setData(weaponCard);
-        String filePath = String.format("/assets/weapons/%s", weaponCard == null ? "null_weapon.png" : String.format("%s.png", weaponCard.getId().toLowerCase()));
+        String filePath = String.format("/images/weapons/%s", weaponCard == null ? "null_weapon.png" : String.format("%s.png", weaponCard.getId().toLowerCase()));
         Image powerupImage = new javafx.scene.image.Image(filePath, 200, 200, true, true);
         overlayRoot.setGraphic(new ImageView(powerupImage));
     }

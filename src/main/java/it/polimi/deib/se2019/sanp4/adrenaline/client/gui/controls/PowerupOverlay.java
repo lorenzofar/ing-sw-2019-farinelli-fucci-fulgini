@@ -22,7 +22,7 @@ public class PowerupOverlay extends SelectableOverlay<PowerupCard> {
 
     public void setPowerupCard(PowerupCard powerupCard) {
         this.setData(powerupCard);
-        String filePath = String.format("/assets/powerups/%s", powerupCard == null ?
+        String filePath = String.format("/images/powerups/%s", powerupCard == null ?
                 "null_powerup.png" :
                 String.format("%s_%s.png",
                         powerupCard.getType().name().toLowerCase(),

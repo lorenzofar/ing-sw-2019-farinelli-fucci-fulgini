@@ -25,7 +25,7 @@ public class BoardSelectionOverlay extends SelectableOverlay<Integer> {
     public void setBoardId(int boardId) {
         this.setData(boardId);
         // Set the board image as the graphic of the button
-        Image boardImage = new Image(String.format("/assets/boards/board_%d.png", boardId), 200, 200, true, true);
+        Image boardImage = new Image(String.format("/images/boards/board_%d.png", boardId), 200, 200, true, true);
         overlayRoot.setGraphic(new ImageView(boardImage));
     }
 }

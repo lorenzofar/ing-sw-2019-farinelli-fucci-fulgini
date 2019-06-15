@@ -188,7 +188,7 @@ public class GameController extends GUIController {
         // Compute the needed background size for the board asset
         BackgroundSize boardSize = new BackgroundSize(100, 100, true, true, true, false);
         // Create a new background image from the provided board
-        Image boardImage = new Image(String.format("/assets/boards/board_%d.png", boardId));
+        Image boardImage = new Image(String.format("/images/boards/board_%d.png", boardId));
         BackgroundImage boardBackground = new BackgroundImage(boardImage, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, boardSize);
         // Set the background of the board container
         gameContainer.setBackground(new Background(boardBackground));

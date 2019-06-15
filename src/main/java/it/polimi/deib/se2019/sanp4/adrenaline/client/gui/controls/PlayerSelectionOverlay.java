@@ -39,7 +39,7 @@ public class PlayerSelectionOverlay extends SelectableOverlay<String> {
         // Load the asset and set as image source
         // TODO: Handle null player for optional requests
         Image characterImage = new Image(
-                String.format("/assets/players/%s.png", playerColor.name().toLowerCase()),
+                String.format("/images/players/%s.png", playerColor.name().toLowerCase()),
                 150, 150, true, true);
         playerPic.setFill(new ImagePattern(characterImage));
         overlayRoot.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
