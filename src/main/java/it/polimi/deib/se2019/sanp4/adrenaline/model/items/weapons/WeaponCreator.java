@@ -89,11 +89,23 @@ public class WeaponCreator {
      * @throws CardNotFoundException if the required weapon has not been loaded
      * @throws IOException if anything goes wrong while parsing the JSON
      */
-    public static WeaponCard createWeaponCard(String weaponId) throws CardNotFoundException, IOException {
+    public static WeaponCard createWeaponCard(String weaponId) throws IOException {
         if (!isWeaponAvailable(weaponId)) throw new CardNotFoundException("Card \"%s\" has not been loaded");
 
         InputStream input = JSONUtils.class.getResourceAsStream(weaponConfigMap.get(weaponId));
         return objectMapper.readValue(input, WeaponCard.class);
+    }
+
+    /**
+     * Returns the configuration of a weapon as a JSON tree.
+     * @param weaponId identifier of the weapon, not null
+     * @return a JSON tree with the configuration of the weapon, as read from file
+     * @throws CardNotFoundException if the weapon with given id has not been loaded
+     */
+    public static JSONObject getWeaponConfiguration(String weaponId) {
+        if (!isWeaponAvailable(weaponId)) throw new CardNotFoundException("Card \"%s\" has not been loaded");
+
+        return JSONUtils.loadJSONResource(weaponConfigMap.get(weaponId));
     }
 
     /**

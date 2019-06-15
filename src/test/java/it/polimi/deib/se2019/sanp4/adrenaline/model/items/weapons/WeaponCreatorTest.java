@@ -5,6 +5,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCubeCost;
 import it.polimi.deib.se2019.sanp4.adrenaline.utils.JSONUtils;
 import org.everit.json.schema.ValidationException;
+import org.json.JSONObject;
 import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -95,6 +96,20 @@ public class WeaponCreatorTest {
     }
 
     @Test(expected = CardNotFoundException.class)
+    public void getWeaponConfiguration_notLoaded_shouldThrow() {
+        WeaponCreator.getWeaponConfiguration("cyberblade");
+    }
+
+    @Test
+    public void getWeaponConfiguration_loaded_shouldReturn() {
+        WeaponCreator.loadWeapon("/assets/test_weapons/validweapon.json");
+
+        JSONObject config = WeaponCreator.getWeaponConfiguration("cyberblade");
+
+        assertEquals("cyberblade", config.getString("id"));
+    }
+
+    @Test(expected = CardNotFoundException.class)
     public void createWeaponCard_notLoaded_shouldThrow() throws CardNotFoundException, IOException {
         WeaponCreator.createWeaponCard("cyberblade");
     }
@@ -109,6 +124,5 @@ public class WeaponCreatorTest {
 
         /* Check the number of cards */
         assertEquals(21, cards.size());
-        /* TODO: Check the card ids */
     }
 }
