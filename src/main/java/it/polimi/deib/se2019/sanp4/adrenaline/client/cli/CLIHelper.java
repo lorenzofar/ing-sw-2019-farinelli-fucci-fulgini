@@ -361,18 +361,27 @@ class CLIHelper {
 
     /**
      * Retrieves a string entered in the console
-     * If the user enters an invalid input, it asks for it again until a valid one is provided
      *
-     * @param message An optional message to show to the user
+     * @param message A message to show to the user
      * @return The string entered by the user
      */
     static String parseString(String message) {
         print(ANSI_CYAN);
         println(message);
         resetColor();
-        print(PROMPT_TEMPLATE);
+        if (!message.equals("")) {
+            print(PROMPT_TEMPLATE);
+        }
         return input.readLine();
+    }
 
+    /**
+     * Retrieves a string entered in the console
+     *
+     * @return The string entered by the user
+     */
+    static String parseString() {
+        return parseString("");
     }
 
     /**
@@ -506,6 +515,9 @@ class CLIHelper {
      * @param color     The ANSI color code to use
      */
     private static void fillLineWithText(List<String> line, String text, int hPadding, String formatter, String color) {
+        if (text.length() > line.size() - hPadding) {
+            text = truncateString(text, line.size() - hPadding * 2);
+        }
         for (int i = 0; i < text.length(); i++) {
             line.set(i + hPadding, String.format(QUADSTRING_TEMPLATE, formatter, color, text.substring(i, i + 1), ANSI_RESET));
         }

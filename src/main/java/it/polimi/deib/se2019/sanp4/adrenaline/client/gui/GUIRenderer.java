@@ -154,6 +154,11 @@ public class GUIRenderer extends Application implements UIRenderer {
     }
 
     @Override
+    public void cancelSelection() {
+        //TODO: Implement this method
+    }
+
+    @Override
     public void handle(ActionRequest request) {
         //TODO: Implement this method
     }

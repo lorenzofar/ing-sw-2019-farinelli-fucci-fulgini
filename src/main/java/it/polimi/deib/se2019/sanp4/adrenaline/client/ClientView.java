@@ -165,6 +165,8 @@ public class ClientView extends RemoteObservable<ViewEvent> implements RemoteVie
             return;
         }
         if (currentRequest == null) {
+            // Cancel the current selection if a new request arrives and has to be handled immediately
+            renderer.cancelSelection();
             this.currentRequest = request;
             request.accept(renderer);
         } else {
@@ -200,6 +202,7 @@ public class ClientView extends RemoteObservable<ViewEvent> implements RemoteVie
 
     @Override
     public void selectScene(ViewScene scene) {
+        renderer.cancelSelection();
         if (scene == ViewScene.LOBBY) {
             renderer.showLobby();
         }

@@ -31,10 +31,16 @@ public interface UIRenderer extends ChoiceRequestVisitor {
 
     /**
      * Shows a message to the user
+     *
      * @param text The text of the message
      * @param type The type of the message
      */
     void showMessage(String text, MessageType type);
+
+    /**
+     * Cancels the current selection request (if present)
+     */
+    void cancelSelection();
 
     //TODO: Add more methods
 }

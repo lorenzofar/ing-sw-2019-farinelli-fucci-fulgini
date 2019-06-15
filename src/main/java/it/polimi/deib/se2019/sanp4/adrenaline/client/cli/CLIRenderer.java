@@ -13,7 +13,12 @@ import it.polimi.deib.se2019.sanp4.adrenaline.view.MessageType;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -23,6 +28,9 @@ public class CLIRenderer implements UIRenderer {
     private static final String LOBBY_MATCH_STARTING = "The match is starting soon with these players";
 
     private ClientView clientView;
+
+    private CommandsParser commandsParser;
+    private ExecutorService commandsParserExecutor;
 
     /* ASCII-art version of the game title */
     private static final String ADRENALINE_TITLE =
@@ -35,6 +43,11 @@ public class CLIRenderer implements UIRenderer {
 
     @Override
     public void initialize() {
+
+        // Create the executor for the commands parser
+        commandsParserExecutor = Executors.newSingleThreadExecutor();
+        commandsParser = new CommandsParser(this);
+
         // Create a new client view
         clientView = new ClientView();
 
@@ -60,6 +73,16 @@ public class CLIRenderer implements UIRenderer {
         setUpNetworkConnection();
         //  Then make it log in to the server
         performLogin();
+    }
+
+    /**
+     * Start the command parser and submit to executor if it's not alive
+     */
+    private void startCommandsParser() {
+        if (!commandsParser.isAlive()) {
+            commandsParser.setAlive(true);
+            commandsParserExecutor.submit(commandsParser);
+        }
     }
 
     /**
@@ -118,12 +141,13 @@ public class CLIRenderer implements UIRenderer {
 
     @Override
     public void showLobby() {
-        printLobbyScreen(Collections.emptyList(), false);
+        showMatchScreen();
+        //printLobbyScreen(Collections.emptyList(), false);
     }
 
     @Override
     public void updateLobby(Collection<String> connectedPlayers, boolean matchStarting) {
-        printLobbyScreen(connectedPlayers, matchStarting);
+        //printLobbyScreen(connectedPlayers, matchStarting);
     }
 
     /**
@@ -132,6 +156,8 @@ public class CLIRenderer implements UIRenderer {
      */
     @Override
     public void showMatchScreen() {
+        // If the commands parser does not exist, we initialize it
+        startCommandsParser();
         CLIHelper.stopSpinner();
         CLIHelper.clearScreen();
 
@@ -154,8 +180,8 @@ public class CLIRenderer implements UIRenderer {
         ModelManager modelManager = clientView.getModelManager();
         // We first render the killshots track
         List<List<String>> renderedKillshotsTrack = CLIHelper.renderKillshotsTrack(
-                modelManager.getMatch().getKillshotsCount(),
-                modelManager.getMatch().getTotalSkulls());
+                modelManager.getMatch() != null ? modelManager.getMatch().getKillshotsCount() : 0,
+                modelManager.getMatch() != null ? modelManager.getMatch().getTotalSkulls() : 0);
         // Then the table showing information about spawn points
         List<List<String>> renderedSpawnTable = CLIHelper.renderSpawnWeaponsTable(modelManager.getBoard());
         // Then we build the first row
@@ -207,6 +233,7 @@ public class CLIRenderer implements UIRenderer {
 
         // And finally print the match screen
         CLIHelper.printRenderedGameElement(matchScreen);
+
     }
 
     /**
@@ -218,6 +245,11 @@ public class CLIRenderer implements UIRenderer {
     @Override
     public void showMessage(String text, MessageType type) {
         CLIHelper.printlnColored(text, type.getAnsiCode());
+    }
+
+    @Override
+    public void cancelSelection() {
+        CLIHelper.cancelInput();
     }
 
     @Override
@@ -278,7 +310,9 @@ public class CLIRenderer implements UIRenderer {
      * @param <T>             The type of the choices
      */
     private <T extends Serializable> void requestRoutine(String title, ChoiceRequest<T> request, Function<T, String> stringConverter) {
+        CLIHelper.cancelInput();
         CLIHelper.printTitle(title);
+        commandsParser.setAlive(false);
         // Ask the user to select a choice
         T selectedObject = CLIHelper.askOptionFromList(
                 request.getMessage(),
@@ -290,10 +324,12 @@ public class CLIRenderer implements UIRenderer {
             // The request has been cancelled, hence we stop here
             // We also check whether the current request has been deleted, in order to avoid issues when the
             // request allows an optional choice
+            startCommandsParser();
             return;
         }
         // Then create a response accordingly and reply to server
         ChoiceResponse<T> response = new ChoiceResponse<>(clientView.getUsername(), request.getUuid(), selectedObject);
+        startCommandsParser();
         clientView.notifyObservers(response);
         clientView.onRequestCompleted();
     }
