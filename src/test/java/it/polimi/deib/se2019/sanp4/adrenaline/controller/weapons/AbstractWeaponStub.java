@@ -5,7 +5,6 @@ import it.polimi.deib.se2019.sanp4.adrenaline.controller.PersistentView;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.WeaponCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.match.Match;
 
-import java.util.Map;
 import java.util.concurrent.CancellationException;
 
 /**
@@ -14,9 +13,8 @@ import java.util.concurrent.CancellationException;
  */
 public class AbstractWeaponStub extends AbstractWeapon {
 
-    public AbstractWeaponStub(WeaponCard weaponCard,
-                              Match match, Map<String, PersistentView> views, ControllerFactory factory) {
-        super(weaponCard, match, views, factory);
+    public AbstractWeaponStub(WeaponCard weaponCard, Match match, ControllerFactory factory) {
+        super(weaponCard, match, factory);
     }
 
     /**

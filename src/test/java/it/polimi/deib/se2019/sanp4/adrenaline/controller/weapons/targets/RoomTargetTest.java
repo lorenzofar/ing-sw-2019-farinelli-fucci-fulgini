@@ -82,7 +82,7 @@ public class RoomTargetTest {
         factory = mock(ControllerFactory.class);
 
         /* Create a stub of the abstract weapon */
-        weapon = new AbstractWeaponStub(weaponCard, match, views, factory);
+        weapon = new AbstractWeaponStub(weaponCard, match, factory);
     }
 
     /* ========== SELECTION CASES: NONE, ONE, MULTIPLE, AUTOMATIC ================ */

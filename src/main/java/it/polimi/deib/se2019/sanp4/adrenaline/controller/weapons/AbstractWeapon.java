@@ -2,6 +2,7 @@ package it.polimi.deib.se2019.sanp4.adrenaline.controller.weapons;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.ControllerFactory;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.PersistentView;
+import it.polimi.deib.se2019.sanp4.adrenaline.controller.weapons.effects.AbstractEffect;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.CardinalDirection;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.Square;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.WeaponCard;
@@ -12,6 +13,19 @@ import java.util.*;
 import java.util.concurrent.CancellationException;
 import java.util.stream.Collectors;
 
+/**
+ * The controller for using a weapon.
+ * <p>
+ * A weapon is made up of effects that can be used in different orders depending on the implementation.
+ * </p>
+ * <p>
+ * {@code AbstractWeapon} provides methods to add controllers for effects, which are stored in a {@code Map}.
+ * </p>
+ * <p>
+ * It also provides methods to save {@link Player}s and {@link Square}s.
+ * These can be saved/accessed by the users of the weapon as a temporary state.
+ * </p>
+ */
 public abstract class AbstractWeapon {
 
     protected final WeaponCard weaponCard;
@@ -30,24 +44,18 @@ public abstract class AbstractWeapon {
 
     protected final Match match;
 
-    protected final Map<String, PersistentView> views;
-
-    /* TODO: Add effects */
+    protected final Map<String, AbstractEffect> effects;
 
     /**
      * Creates a new weapon controller, with no effects.
-     *
-     * @param weaponCard The weapon card associated to this weapon, not null
+     *  @param weaponCard The weapon card associated to this weapon, not null
      * @param match      The match which has to be controlled, not null
-     * @param views      The views of the players in the match, not null
      * @param factory    The factory needed to create other controllers, not null
      */
-    public AbstractWeapon(WeaponCard weaponCard,
-                          Match match, Map<String, PersistentView> views, ControllerFactory factory) {
+    public AbstractWeapon(WeaponCard weaponCard, Match match, ControllerFactory factory) {
         /* Initialise with provided values */
         this.weaponCard = weaponCard;
         this.match = match;
-        this.views = views;
         this.factory = factory;
 
         /* Default value */
@@ -57,6 +65,7 @@ public abstract class AbstractWeapon {
         this.savedPlayers = new HashMap<>();
         this.savedSquares = new HashMap<>();
         this.damagedPlayers = new HashSet<>();
+        this.effects = new HashMap<>();
     }
 
     /**
@@ -190,6 +199,25 @@ public abstract class AbstractWeapon {
      */
     public void addDamagedPlayer(Player player) {
         damagedPlayers.add(player);
+    }
+
+    /**
+     * Returns the effects of this weapon.
+     *
+     * @return A map where the key is the effect id and the value is the effect
+     */
+    public Map<String, AbstractEffect> getEffects() {
+        return effects;
+    }
+
+    /**
+     * Adds given effect to this weapon, if an effect with the same id is already
+     * present, it will be overwritten.
+     *
+     * @param effect The effect to be added, not null
+     */
+    public void addEffect(AbstractEffect effect) {
+        effects.put(effect.getId(), effect);
     }
 
     /**

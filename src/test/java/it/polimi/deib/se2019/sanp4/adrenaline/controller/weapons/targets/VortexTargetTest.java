@@ -27,9 +27,7 @@ import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.*;
-import java.util.concurrent.CancellationException;
 
-import static it.polimi.deib.se2019.sanp4.adrenaline.model.board.CardinalDirection.*;
 import static it.polimi.deib.se2019.sanp4.adrenaline.model.board.VisibilityEnum.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -84,7 +82,7 @@ public class VortexTargetTest {
         factory = mock(ControllerFactory.class);
 
         /* Create a stub of the abstract weapon */
-        weapon = new AbstractWeaponStub(weaponCard, match, views, factory);
+        weapon = new AbstractWeaponStub(weaponCard, match, factory);
     }
 
     /* =============== VORTEX SELECTION ================== */

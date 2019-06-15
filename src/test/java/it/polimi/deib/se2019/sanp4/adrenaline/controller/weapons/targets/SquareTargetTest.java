@@ -85,7 +85,7 @@ public class SquareTargetTest {
         factory = mock(ControllerFactory.class);
 
         /* Create a stub of the abstract weapon */
-        weapon = new AbstractWeaponStub(weaponCard, match, views, factory);
+        weapon = new AbstractWeaponStub(weaponCard, match, factory);
     }
 
     /* ======== DETERMINE SELECTABLE SQUARES ======== */
