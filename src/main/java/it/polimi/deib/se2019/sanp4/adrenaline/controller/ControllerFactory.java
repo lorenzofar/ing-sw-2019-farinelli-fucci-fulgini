@@ -25,6 +25,7 @@ public interface ControllerFactory {
     /**
      * Creates a new controller for the current turn of the match.
      * @param turn The turn to be controlled, not null
+     * @return The controller for the current turn
      * @throws NullPointerException If the turn is null
      */
     TurnController createTurnController(PlayerTurn turn);

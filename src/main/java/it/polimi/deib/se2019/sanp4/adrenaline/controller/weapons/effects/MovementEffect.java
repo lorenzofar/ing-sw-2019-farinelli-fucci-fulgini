@@ -62,6 +62,7 @@ public class MovementEffect extends AbstractEffect {
      * the cost, staying in position can be treated as a movement of zero squares.
      *
      * @param view The view of the player who wants to use this weapon, not null
+     * @return Whether the effect completed successfully or not
      * @throws CancellationException if a request to the user gets cancelled
      * @throws InterruptedException  if the thread gets interrupted
      */

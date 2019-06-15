@@ -89,6 +89,7 @@ public class TargetingEffect extends AbstractEffect {
      * </p>
      *
      * @param view The view of the player who wants to use this weapon, not null
+     * @return Whether the effect completed successfully or not
      * @throws CancellationException if a request to the user gets cancelled
      * @throws InterruptedException  if the thread gets interrupted
      */

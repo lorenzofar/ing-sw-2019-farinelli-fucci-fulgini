@@ -27,27 +27,23 @@ import java.util.concurrent.TimeUnit;
  *     will return a pre-cancelled {@link CompletableChoice}
  * </p>
  * <b>Timer</b>
- * <p>
- *     This also has the ability to keep a timer for the player to respond to requests.
- *     When this timer expires, the following things will happen:
- *     <ol>
- *         <li>All the pending {@link CompletableChoice}s are cancelled.</li>
- *         <li>The provided callback is called</li>
- *     </ol>
- * </p>
+ * This also has the ability to keep a timer for the player to respond to requests.
+ * When this timer expires, the following things will happen:
+ * <ol>
+ *     <li>All the pending {@link CompletableChoice}s are cancelled.</li>
+ *     <li>The provided callback is called</li>
+ * </ol>
  * <b>Network faults</b>
- * <p>
- *     The methods exposed by this interface do not throw {@link IOException}: if a remote call fails,
- *     the caller of the method (a controller class) doesn't need to be notified about that.
- *     But if a network fault is detected, i.e. if an {@code IOException} is thrown
- *     when calling a method on the remote view, the following will happen:
- *     <ol>
- *         <li>All the pending {@link CompletableChoice}s are cancelled.</li>
- *         <li>If the timer is running, it gets stopped</li>
- *         <li>If a callback has been provided with {@link #setNetworkFaultCallback(Callable)} (Callable)},
- *         it gets called</li>
- *     </ol>
- * </p>
+ * The methods exposed by this interface do not throw {@link IOException}: if a remote call fails,
+ * the caller of the method (a controller class) doesn't need to be notified about that.
+ * But if a network fault is detected, i.e. if an {@code IOException} is thrown
+ * when calling a method on the remote view, the following will happen:
+ * <ol>
+ *     <li>All the pending {@link CompletableChoice}s are cancelled.</li>
+ *     <li>If the timer is running, it gets stopped</li>
+ *     <li>If a callback has been provided with {@link #setNetworkFaultCallback(Callable)} (Callable)},
+ *     it gets called</li>
+ * </ol>
  * <b>Persistence</b>
  * <p>
  *     This view is associated to the player from the beginning till the end of the match, even if he disconnects.

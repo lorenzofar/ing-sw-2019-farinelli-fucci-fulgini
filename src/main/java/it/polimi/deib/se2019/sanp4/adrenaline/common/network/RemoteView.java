@@ -26,6 +26,7 @@ public interface RemoteView extends RemoteObserver<ModelUpdate>, Remote {
     /**
      * Performs the provided request on the view
      * @param request The object representing the request, not null
+     * @param <T> The type of choice
      * @throws IOException if the remote call fails
      */
     <T extends Serializable> void performRequest(ChoiceRequest<T> request) throws IOException;

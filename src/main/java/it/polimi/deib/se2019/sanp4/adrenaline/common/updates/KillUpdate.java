@@ -22,6 +22,7 @@ public class KillUpdate extends ModelUpdate {
      *
      * @param killer the player who performed the kill.
      * @param killed the killed player.
+     * @param deaths the number of deaths of the killed player.
      */
     @JsonCreator
     public KillUpdate(

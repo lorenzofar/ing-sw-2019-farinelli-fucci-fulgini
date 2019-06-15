@@ -18,6 +18,7 @@ public class ActionCardUpdate extends ModelUpdate {
      * Creates an action card update that will be sent in broadcast.
      *
      * @param actionCard the action card to send as update.
+     * @param player the username of the player who owns the action card
      */
     @JsonCreator
     public ActionCardUpdate(

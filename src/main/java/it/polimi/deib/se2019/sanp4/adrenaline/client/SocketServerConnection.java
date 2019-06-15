@@ -25,36 +25,46 @@ import java.util.logging.Logger;
 /**
  * Represents a connection to the server implemented by using TCP sockets.
  * <p>
- *     The socket stream is used in a line-based fashion.
- *     The data transmitted via the socket is serialized in JSON format (by Jackson).
+ * The socket stream is used in a line-based fashion.
+ * The data transmitted via the socket is serialized in JSON format (by Jackson).
  * </p>
- * <p>
- *     This connection executes in two threads:
- *     <ul>
- *         <li>A thread that listens for incoming commands for the client</li>
- *         <li>A thread that executes the command</li>
- *     </ul>
- * </p>
+ * This connection executes in two threads:
+ * <ul>
+ * <li>A thread that listens for incoming commands for the client</li>
+ * <li>A thread that executes the command</li>
+ * </ul>
  */
 public class SocketServerConnection extends RemoteObservable<ModelUpdate>
         implements ServerConnection, SocketClientCommandTarget {
 
-    /** The client view which uses this connection */
+    /**
+     * The client view which uses this connection
+     */
     private final ClientView view;
 
-    /** The socket to communicate to the server */
+    /**
+     * The socket to communicate to the server
+     */
     private Socket socket;
 
-    /** Socket output stream */
+    /**
+     * Socket output stream
+     */
     private OutputStream out;
 
-    /** Scanner for reading from input stream */
+    /**
+     * Scanner for reading from input stream
+     */
     private Scanner scanner;
 
-    /** Executor for incoming commands */
+    /**
+     * Executor for incoming commands
+     */
     private ExecutorService commandExecutor = Executors.newSingleThreadExecutor();
 
-    /** Future task representing the listener of incoming commands */
+    /**
+     * Future task representing the listener of incoming commands
+     */
     private Thread listener;
 
     /* Commodities */
@@ -65,6 +75,7 @@ public class SocketServerConnection extends RemoteObservable<ModelUpdate>
      * Creates a new SocketServerConnection bound to the given view.
      * This means that commands coming from the server will be applied
      * to this view
+     *
      * @param view the view which uses this connection
      */
     public SocketServerConnection(ClientView view) {
@@ -99,6 +110,7 @@ public class SocketServerConnection extends RemoteObservable<ModelUpdate>
      * Checks if the socket is null or closed.
      * Note that if this methods returns {@code false} it does not mean that
      * the connection is active (calling {@link #isActive()} may return {@code false}, too)
+     *
      * @return {@code true} if the socket is null or closed
      */
     private boolean isClosed() {
@@ -113,7 +125,7 @@ public class SocketServerConnection extends RemoteObservable<ModelUpdate>
      */
     @Override
     public void connect(String hostname) throws IOException {
-        int port = Integer.parseInt((String)AdrenalineProperties.getProperties()
+        int port = Integer.parseInt((String) AdrenalineProperties.getProperties()
                 .getOrDefault("adrenaline.socketport", "3000"));
         connect(hostname, port);
     }
@@ -159,7 +171,7 @@ public class SocketServerConnection extends RemoteObservable<ModelUpdate>
      * if it was already inactive or closed, nothing will happen.
      * Subsequent calls to {@link #isActive()} will return {@code false}
      * and calls to {@link #isClosed()} will return {@code true}
-     *
+     * <p>
      * It both closes the socket and stops the listener for incoming commands
      */
     @Override
@@ -193,7 +205,7 @@ public class SocketServerConnection extends RemoteObservable<ModelUpdate>
                 /* Try to send the command */
                 out.write(line.getBytes());
                 out.flush();
-            } catch (JsonGenerationException | JsonMappingException e){
+            } catch (JsonGenerationException | JsonMappingException e) {
                 /* This is just a problem with Jackson, not with the connection */
                 logger.log(Level.SEVERE, "Could not serialize command: ", e);
             } catch (IOException e) {
@@ -211,6 +223,7 @@ public class SocketServerConnection extends RemoteObservable<ModelUpdate>
      * Note that this call is blocking.
      * As a side effect, this method also closes the connection if it detects
      * network problems while reading from the network stream
+     *
      * @return the command from the server or {@code null} if the connection failed
      */
     private SocketClientCommand receiveCommand() {
@@ -232,6 +245,7 @@ public class SocketServerConnection extends RemoteObservable<ModelUpdate>
 
     /**
      * Executes given command in a separate thread
+     *
      * @param command the command to be executed
      */
     private void executeAsync(SocketClientCommand command) {
@@ -312,6 +326,6 @@ public class SocketServerConnection extends RemoteObservable<ModelUpdate>
     @Override
     public void update(ViewEvent event) throws IOException {
         /* Notify the event received from the ClientView to the observers of the RemoteView */
-       sendCommand(new NotifyEventCommand(event));
+        sendCommand(new NotifyEventCommand(event));
     }
 }

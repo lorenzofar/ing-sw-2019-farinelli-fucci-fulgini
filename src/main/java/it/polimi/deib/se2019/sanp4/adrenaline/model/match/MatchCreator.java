@@ -40,7 +40,6 @@ public class MatchCreator {
 
     /**
      * Creates a new match in its initial state, according to provided configuration
-     * <p>
      * This method uses the following creators to get needed resources
      * <ul>
      *     <li>{@link BoardCreator}</li>
@@ -51,7 +50,6 @@ public class MatchCreator {
      * </ul>
      * Make sure they have loaded their data from file before calling this method,
      * because it may lead to unexpected behavior, such as empty card stacks.
-     * </p>
      * <p>
      *     This method does not select the first player and does not fill
      *     the board with ammo and weapons, this has to be done later

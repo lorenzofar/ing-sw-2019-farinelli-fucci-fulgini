@@ -36,7 +36,10 @@ public class ServerImpl implements SocketServer, RemoteServer, Runnable {
     /** Single instance */
     private static ServerImpl ourInstance = new ServerImpl();
 
-    /** Return the instance of the server */
+    /**
+     * Returns the instance of the server
+     * @return The instance of the server
+     */
     public static ServerImpl getInstance() {
         return ourInstance;
     }

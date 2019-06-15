@@ -2,7 +2,7 @@ package it.polimi.deib.se2019.sanp4.adrenaline.controller.weapons;
 
 /**
  * Specifies if a weapon can only shoot in a constrained direction or not.
- * {@see AbstractWeapon}
+ * @see AbstractWeapon
  */
 public enum ShootingDirectionEnum {
     /**

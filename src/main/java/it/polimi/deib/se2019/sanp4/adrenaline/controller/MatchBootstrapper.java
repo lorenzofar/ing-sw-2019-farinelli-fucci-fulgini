@@ -35,6 +35,7 @@ public class MatchBootstrapper {
      * If the request expires a random board and a default number of skulls is chosen
      * @param view view of the player
      * @return the match configuration, not null
+     * @throws InterruptedException if the thread gets interrupted
      */
     public MatchConfiguration askForMatchConfiguration(PersistentView view) throws InterruptedException {
         int boardId;

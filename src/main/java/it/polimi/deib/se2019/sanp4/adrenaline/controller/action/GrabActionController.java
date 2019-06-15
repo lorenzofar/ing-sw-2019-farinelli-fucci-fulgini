@@ -59,8 +59,8 @@ public class GrabActionController implements SquareVisitor {
      * Creates a new instance of GrabActionController that can be used to execute a single
      * "grab" action performed by given player
      *
-     * @param match The match where the player resides, not null
-     * @param view  The view of the player who is executing the action, not null
+     * @param match   The match where the player resides, not null
+     * @param view    The view of the player who is executing the action, not null
      * @param factory The controller factory to create other controllers
      */
     public GrabActionController(Match match, PersistentView view, ControllerFactory factory) {
@@ -182,29 +182,26 @@ public class GrabActionController implements SquareVisitor {
      * Executes the Grab action on {@link SpawnSquare}.
      * The action takes place as follows:
      * <ol>
-     *     <li>If there are no weapons on the square the user gets notified and the action ends</li>
-     *     <li>The user is asked to select a weapon and to pay for its cost, if he can't pay he gets notified
-     *     and asked to select a weapon from the remaining ones. If the player cannot pay for any of the weapons
-     *     in the square, the action ends</li>
-     *     <li>If the player has selected a weapon and can pay for it (has already converted the necessary powerups),
-     *     then the methods checks if he has reached the maximum number of weapons in his hand and asks him to
-     *     discard one. The discarded card is unloaded and put into the square</li>
-     *     <li>If the player has been able to pick a weapon, pay for its cost and made space for another weapon,
-     *     then the new weapon gets loaded and added to his cards</li>
+     * <li>If there are no weapons on the square the user gets notified and the action ends</li>
+     * <li>The user is asked to select a weapon and to pay for its cost, if he can't pay he gets notified
+     * and asked to select a weapon from the remaining ones. If the player cannot pay for any of the weapons
+     * in the square, the action ends</li>
+     * <li>If the player has selected a weapon and can pay for it (has already converted the necessary powerups),
+     * then the methods checks if he has reached the maximum number of weapons in his hand and asks him to
+     * discard one. The discarded card is unloaded and put into the square</li>
+     * <li>If the player has been able to pick a weapon, pay for its cost and made space for another weapon,
+     * then the new weapon gets loaded and added to his cards</li>
      * </ol>
-     *
-     * <p>
-     *     A {@link CancellationException} may occur in three cases:
-     *     <ul>
-     *         <li>When the user is asked to select a card to grab, in this case the action ends and no card
-     *         is grabbed</li>
-     *         <li>When the user is paying, also here the action ends and no cards is grabbed</li>
-     *         <li>When the user is selecting a card to discard, in this case no card is discarded and the card
-     *         the user chose to pick is left in the square.
-     *         The player does not lose any ammo or weapons, but any powerups that have been chosen to pay
-     *         will have been converted to ammo cubes</li>
-     *     </ul>
-     * </p>
+     * A {@link CancellationException} may occur in three cases:
+     * <ul>
+     * <li>When the user is asked to select a card to grab, in this case the action ends and no card
+     * is grabbed</li>
+     * <li>When the user is paying, also here the action ends and no cards is grabbed</li>
+     * <li>When the user is selecting a card to discard, in this case no card is discarded and the card
+     * the user chose to pick is left in the square.
+     * The player does not lose any ammo or weapons, but any powerups that have been chosen to pay
+     * will have been converted to ammo cubes</li>
+     * </ul>
      *
      * @param square The square to be visited
      * @throws CancellationException If a request to the user gets cancelled
@@ -270,10 +267,11 @@ public class GrabActionController implements SquareVisitor {
 
     /**
      * Asks the user to choose one or no card to pick up among the given choices.
+     *
      * @param choices The cards from which the user can choose
      * @return The card that the user chose, or null if he did not choose, not null
      * @throws CancellationException If the request to the user gets cancelled
-     * @throws InterruptedException If the thread is interrupted while waiting for user's response
+     * @throws InterruptedException  If the thread is interrupted while waiting for user's response
      */
     private WeaponCard askToPickUpWeapon(List<WeaponCard> choices) throws InterruptedException {
         WeaponCardRequest req = new WeaponCardRequest(MESSAGE_PICKUP_WEAPON, choices, true);
@@ -283,9 +281,10 @@ public class GrabActionController implements SquareVisitor {
     /**
      * Asks the player to discard a weapon among the ones he has.
      * The selected weapon is removed from the player's hands.
-     * @throws CancellationException If the request to the user gets cancelled, in this case no weapon is discarded
-     * @throws InterruptedException If the thread is interrupted while waiting for user's response
+     *
      * @return The card the user chose to discard
+     * @throws CancellationException If the request to the user gets cancelled, in this case no weapon is discarded
+     * @throws InterruptedException  If the thread is interrupted while waiting for user's response
      */
     private WeaponCard askToDiscardWeapon() throws InterruptedException {
         /* Prepare the request and send it */
@@ -304,7 +303,7 @@ public class GrabActionController implements SquareVisitor {
      * @param weapon The weapon that has to be reloaded, not null and in the {@link PickupState}
      * @return {@code true} if the user has been able to pay the cost, {@code false} if he hasn't
      * @throws CancellationException If a request to the user gets cancelled
-     * @throws InterruptedException If the thread gets interrupted while waiting for user's response
+     * @throws InterruptedException  If the thread gets interrupted while waiting for user's response
      */
     private boolean askToPayLoadCost(WeaponCard weapon) throws InterruptedException {
         /* Determine the load cost */
