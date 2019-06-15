@@ -212,12 +212,15 @@ public abstract class AbstractWeapon {
 
     /**
      * Adds given effect to this weapon, if an effect with the same id is already
-     * present, it will be overwritten.
+     * present, the given effect is not added.
+     * If the given effect cannot be added because of restrictions,
+     * the implementation should throw {@link IllegalArgumentException}
      *
      * @param effect The effect to be added, not null
+     * @throws IllegalArgumentException if the effect cannot be added due to restrictions
      */
     public void addEffect(AbstractEffect effect) {
-        effects.put(effect.getId(), effect);
+        effects.putIfAbsent(effect.getId(), effect);
     }
 
     /**
