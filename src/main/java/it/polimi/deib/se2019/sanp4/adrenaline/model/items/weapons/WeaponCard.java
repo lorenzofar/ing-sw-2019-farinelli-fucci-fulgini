@@ -48,7 +48,7 @@ public class WeaponCard extends Observable<ModelUpdate> implements Serializable 
      * Creates a new weapon card
      * @param id The identifier of the weapon
      * @param name The name of the weapon, not null and not an empty string
-     * @param cost The list of objects representing the cost of the weapon, not null and not empty
+     * @param cost The list of objects representing the cost of the weapon, not null
      * @param effects The list of objects representing description of the effects in this weapon, not null
      */
     public WeaponCard(String id, String name, List<AmmoCubeCost> cost, List<EffectDescription> effects){
@@ -60,9 +60,6 @@ public class WeaponCard extends Observable<ModelUpdate> implements Serializable 
         }
         if(name.isEmpty()){
             throw new IllegalArgumentException("Weapon name cannot be empty");
-        }
-        if(cost.isEmpty()){
-            throw new IllegalArgumentException("Cost list cannot be empty");
         }
         this.id = id;
         this.name = name;

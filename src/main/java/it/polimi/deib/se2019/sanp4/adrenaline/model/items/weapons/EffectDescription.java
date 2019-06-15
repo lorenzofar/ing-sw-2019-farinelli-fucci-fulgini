@@ -34,7 +34,7 @@ public class EffectDescription implements Serializable {
      * @param id The id of the effect
      * @param name The name of the effect, not null and not an empty string
      * @param description The description of the effect, not null and not an empty string
-     * @param cost The list of objects representing the cost of the effect, not null and not empty
+     * @param cost The list of objects representing the cost of the effect, not null
      */
     public EffectDescription(String id, String name, String description, List<AmmoCubeCost> cost){
         if(name == null || description == null || cost == null){
@@ -42,9 +42,6 @@ public class EffectDescription implements Serializable {
         }
         if(id.isEmpty() || name.isEmpty() || description.isEmpty()){
             throw new IllegalArgumentException("Effect descriptions cannot be empty");
-        }
-        if(cost.isEmpty()){
-            throw new IllegalArgumentException("Cost list cannot be empty");
         }
         if(cost.contains(null)){
             throw new NullPointerException("Cost list cannot contain null objects");

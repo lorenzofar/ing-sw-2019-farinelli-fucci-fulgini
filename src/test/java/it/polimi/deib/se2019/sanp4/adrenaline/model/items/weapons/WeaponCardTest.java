@@ -65,9 +65,10 @@ public class WeaponCardTest {
         new WeaponCard(validId, "", validCost, validEffects);
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void createCard_emptyCostListProvided_shouldThrowIllegalArgumentException(){
-        new WeaponCard(validId, validName, Collections.emptyList(), validEffects);
+    @Test
+    public void createCard_emptyCostListProvided_shouldAcceptIt(){
+        WeaponCard w = new WeaponCard(validId, validName, Collections.emptyList(), validEffects);
+        assertTrue(w.getCost().isEmpty());
     }
 
     @Test

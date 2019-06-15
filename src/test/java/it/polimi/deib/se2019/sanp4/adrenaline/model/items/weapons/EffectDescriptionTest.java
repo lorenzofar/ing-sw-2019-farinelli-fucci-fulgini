@@ -75,9 +75,10 @@ public class EffectDescriptionTest {
         new EffectDescription(validId, validName, "", validCost);
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void createEffect_emptyCostListProvided_shouldThrowIllegalArgumentException(){
-        new EffectDescription(validId, validName, validDescription, emptyList());
+    @Test
+    public void createEffect_emptyCostListProvided_shouldAcceptIt(){
+        EffectDescription ed = new EffectDescription(validId, validName, validDescription, emptyList());
+        assertTrue(ed.getCost().isEmpty());
     }
 
     @Test
