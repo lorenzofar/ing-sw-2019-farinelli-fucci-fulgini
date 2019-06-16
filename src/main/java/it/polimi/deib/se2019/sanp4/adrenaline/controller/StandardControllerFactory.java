@@ -387,7 +387,7 @@ public class StandardControllerFactory implements ControllerFactory {
                 setupAbstractTarget(vortexTarget, config);
                 return vortexTarget;
             default:
-                throw new JSONException(String.format("Weapon type %s does not exist", targetMode));
+                throw new JSONException(String.format("Target type %s does not exist", targetMode));
         }
     }
 
