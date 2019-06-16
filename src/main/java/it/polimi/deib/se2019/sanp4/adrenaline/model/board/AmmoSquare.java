@@ -119,6 +119,7 @@ public class AmmoSquare extends Square {
                         .stream()
                         .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().getConnectionType()));
         view.setAdjacentMap(adjacentMap);
+        view.setAmmoCard(ammoCard);
         return view;
     }
 }

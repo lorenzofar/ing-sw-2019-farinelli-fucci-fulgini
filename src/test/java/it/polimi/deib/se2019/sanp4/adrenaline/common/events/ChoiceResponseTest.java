@@ -56,7 +56,6 @@ public class ChoiceResponseTest {
         ChoiceResponse<String> response = new ChoiceResponse<>(sender, uuid, choice);
         try {
             String serializedRes = mapper.writeValueAsString(response);
-            System.out.println(serializedRes);
             ChoiceResponse deserializedResponse = mapper.readValue(serializedRes, ChoiceResponse.class);
             assertEquals(sender, deserializedResponse.getSender());
             assertEquals(uuid, deserializedResponse.getUuid());
