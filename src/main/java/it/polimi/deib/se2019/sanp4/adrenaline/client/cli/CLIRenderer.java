@@ -9,6 +9,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.PlayerView;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.*;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.BoardCreator;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.powerup.PowerupCard;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.EffectDescription;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.WeaponCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.view.MessageType;
 
@@ -324,7 +325,9 @@ public class CLIRenderer implements UIRenderer {
 
     @Override
     public void handle(EffectRequest request) {
-        //TODO: Implement this method
+        List<List<List<String>>> renderedEffects = request.getChoices().stream().map(effect -> CLIHelper.renderEffectDescription(effect, true)).collect(Collectors.toList());
+        CLIHelper.printRenderedGameElement(CLIHelper.concatRenderedElements(renderedEffects, 1));
+        requestRoutine("Effect selection", request, EffectDescription::getName);
     }
 
     /**

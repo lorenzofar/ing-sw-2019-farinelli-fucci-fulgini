@@ -9,6 +9,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.model.board.CardinalDirection;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.CoordPair;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCubeCost;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.powerup.PowerupCard;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.EffectDescription;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.WeaponCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.PlayerColor;
 
@@ -731,6 +732,50 @@ class CLIHelper {
 
     /* ===== WEAPON CARDS ===== */
 
+
+    /**
+     * Render the provided effect description to be printable in a CLI environment
+     *
+     * @param effect The object representing the effect
+     * @param closed {@code true} if the resulting text box has to be closed, {@code false} otherwise
+     * @return The textual representation of the effect
+     */
+    public static List<List<String>> renderEffectDescription(EffectDescription effect, boolean closed) {
+        List<List<String>> renderedEffect = new ArrayList<>();
+        List<String> effectNameChunks = splitString(effect.getName(), CARD_WIDTH - 4);
+        List<String> effectDescriptionChunks = splitString(effect.getDescription(), CARD_WIDTH - 4);
+        List<List<AmmoCubeCost>> effectCostChunks = splitList(effect.getCost(), CARD_WIDTH - 4);
+
+        if(closed){
+            expandStringRendering(renderedEffect, generateLine(HORIZONTAL_BORDER, CARD_WIDTH, LEFT_TOP_CORNER, RIGHT_TOP_CORNER));
+        }
+
+        effectNameChunks.forEach(effectNameChunk -> {
+            expandStringRendering(renderedEffect, generateLine(BLANK, CARD_WIDTH, VERTICAL_BORDER, VERTICAL_BORDER));
+            fillLineWithText(renderedEffect.get(renderedEffect.size() - 1), effectNameChunk, 2);
+        });
+        expandStringRendering(renderedEffect, generateLine(LIGHT_HORIZONTAL_BORDER, CARD_WIDTH, LIGHT_LEFT_VERTICAL_SEPARATOR, LIGHT_RIGHT_VERTICAL_SEPARATOR));
+        effectDescriptionChunks.forEach(effectDescriptionChunk -> {
+            expandStringRendering(renderedEffect, generateLine(BLANK, CARD_WIDTH, VERTICAL_BORDER, VERTICAL_BORDER));
+            fillLineWithText(renderedEffect.get(renderedEffect.size() - 1), effectDescriptionChunk, 2, ANSI_ITALIC);
+        });
+        effectCostChunks.forEach(effectCostChunk -> {
+            expandStringRendering(renderedEffect, generateLine(BLANK, CARD_WIDTH, VERTICAL_BORDER, VERTICAL_BORDER));
+            fillLineWithObjects(
+                    renderedEffect.get(renderedEffect.size() - 1),
+                    effectCostChunk,
+                    AmmoCubeCost::getAnsiCode,
+                    cube -> ANSI_DOT,
+                    2,
+                    2
+            );
+        });
+        if(closed){
+            expandStringRendering(renderedEffect, generateLine(HORIZONTAL_BORDER, CARD_WIDTH, LEFT_BOTTOM_CORNER, RIGHT_BOTTOM_CORNER));
+        }
+        return renderedEffect;
+    }
+
     /**
      * Render the provided weapon card to be printable in a CLI environment
      *
@@ -776,34 +821,8 @@ class CLIHelper {
         expandStringRendering(renderedWeapon, generateLine(HORIZONTAL_BORDER, CARD_WIDTH, LEFT_VERTICAL_SEPARATOR, RIGHT_VERTICAL_SEPARATOR));
 
         // Add description of effects
-        weaponCard.getEffects().forEach(effect -> {
-            // We add the name of the effect
-            List<String> effectNameChunks = splitString(effect.getName(), CARD_WIDTH - 4);
-            List<String> effectDescriptionChunks = splitString(effect.getDescription(), CARD_WIDTH - 4);
-            List<List<AmmoCubeCost>> effectCostChunks = splitList(effect.getCost(), CARD_WIDTH - 4);
-
-            effectNameChunks.forEach(effectNameChunk -> {
-                expandStringRendering(renderedWeapon, generateLine(BLANK, CARD_WIDTH, VERTICAL_BORDER, VERTICAL_BORDER));
-                fillLineWithText(renderedWeapon.get(renderedWeapon.size() - 1), effectNameChunk, 2);
-            });
-            expandStringRendering(renderedWeapon, generateLine(LIGHT_HORIZONTAL_BORDER, CARD_WIDTH, LIGHT_LEFT_VERTICAL_SEPARATOR, LIGHT_RIGHT_VERTICAL_SEPARATOR));
-            effectDescriptionChunks.forEach(effectDescriptionChunk -> {
-                expandStringRendering(renderedWeapon, generateLine(BLANK, CARD_WIDTH, VERTICAL_BORDER, VERTICAL_BORDER));
-                fillLineWithText(renderedWeapon.get(renderedWeapon.size() - 1), effectDescriptionChunk, 2, ANSI_ITALIC);
-            });
-            effectCostChunks.forEach(effectCostChunk -> {
-                expandStringRendering(renderedWeapon, generateLine(BLANK, CARD_WIDTH, VERTICAL_BORDER, VERTICAL_BORDER));
-                fillLineWithObjects(
-                        renderedWeapon.get(renderedWeapon.size() - 1),
-                        effectCostChunk,
-                        AmmoCubeCost::getAnsiCode,
-                        cube -> ANSI_DOT,
-                        2,
-                        2
-                );
-            });
-            expandStringRendering(renderedWeapon, generateLine(HORIZONTAL_BORDER, CARD_WIDTH, LEFT_VERTICAL_SEPARATOR, RIGHT_VERTICAL_SEPARATOR));
-        });
+        weaponCard.getEffects().forEach(effect ->
+                renderedWeapon.addAll(renderEffectDescription(effect, false)));
 
         // Then remove the last inserted line, since is a middle separator
         renderedWeapon.remove(renderedWeapon.size() - 1);

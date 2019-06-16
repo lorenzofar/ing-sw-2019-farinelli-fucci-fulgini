@@ -50,6 +50,8 @@ public class CancellableInput extends BufferedReader {
      * Cancels the current input request
      */
     public void cancel() {
-        future.cancel(true);
+        if (future != null) {
+            future.cancel(true);
+        }
     }
 }
