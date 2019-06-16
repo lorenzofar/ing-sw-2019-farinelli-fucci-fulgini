@@ -12,9 +12,7 @@ import org.json.JSONTokener;
 import org.json.JSONException;
 
 import java.io.InputStream;
-import java.util.HashSet;
-import java.util.MissingResourceException;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Provides useful methods to load and validate JSON objects.
@@ -231,6 +229,22 @@ public class JSONUtils {
             set.add(array.getString(i));
         }
         return set;
+    }
+
+    /**
+     * Converts the given array of strings to a list of enumerator values of given type
+     * @param clazz the type of enum to retrieve, not null
+     * @param array array of strings, not null
+     * @param <E> the type of enum
+     * @return list of enum from array
+     * @throws JSONException if the array does not contain valid names of enum values
+     */
+    public static <E extends Enum<E>> List<E> arrayToEnumList(Class<E> clazz, JSONArray array) {
+        List<E> list = new ArrayList<>(array.length());
+        for (int i = 0; i < array.length(); i++) {
+            list.add(array.getEnum(clazz, i));
+        }
+        return list;
     }
 
     /**

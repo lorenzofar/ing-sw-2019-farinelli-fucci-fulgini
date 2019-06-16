@@ -7,10 +7,16 @@ import org.junit.After;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
+import java.util.List;
 import java.util.MissingResourceException;
 import java.util.Set;
 
 public class JSONUtilsTest {
+
+    enum TestEnum {
+        ONE, TWO, THREE
+    }
+
     @After
     public void tearDown() throws Exception {
         /* Always bring it back to its original state */
@@ -112,5 +118,32 @@ public class JSONUtilsTest {
         /* Build mixed array */
         JSONArray array = new JSONArray("[ \"string\", false, {}, 1.0 ]");
         JSONUtils.arrayToStringSet(array);
+    }
+
+    @Test
+    public void arrayToEnumList_validNames_shouldSucceed() {
+        /* Build array of valid names */
+        JSONArray array = new JSONArray("[ \"ONE\", \"TWO\", \"THREE\" ]");
+        List<TestEnum> list = JSONUtils.arrayToEnumList(TestEnum.class, array);
+
+        /* Check items */
+        assertEquals(3, list.size());
+        assertEquals(TestEnum.ONE, list.get(0));
+        assertEquals(TestEnum.TWO, list.get(1));
+        assertEquals(TestEnum.THREE, list.get(2));
+    }
+
+    @Test(expected = JSONException.class)
+    public void arrayToEnumList_mixedTypes_shouldThrow() {
+        /* Build array of valid names */
+        JSONArray array = new JSONArray("[ \"string\", false, {}, 1.0 ]");
+        JSONUtils.arrayToEnumList(TestEnum.class, array);
+    }
+
+    @Test(expected = JSONException.class)
+    public void arrayToEnumList_invalidName_shouldThrow() {
+        /* Build array of valid names */
+        JSONArray array = new JSONArray("[ \"ONE\", \"FOUR\", \"THREE\" ]");
+        JSONUtils.arrayToEnumList(TestEnum.class, array);
     }
 }
