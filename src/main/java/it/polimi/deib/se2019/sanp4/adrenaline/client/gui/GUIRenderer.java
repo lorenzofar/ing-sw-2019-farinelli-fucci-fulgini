@@ -238,7 +238,20 @@ public class GUIRenderer extends Application implements UIRenderer {
         }
     }
 
+    @Override
+    public void handle(EffectRequest request) {
+        try {
+            EffectRequestController effectRequestController = (EffectRequestController) showNewWindow("/fxml/effectSelectionWindow.fxml", "Select effect");
+            if (effectRequestController != null) {
+                effectRequestController.setup(request);
+            }
+        } catch (Exception ignore) {
+            // We ignore this error
+        }
+    }
+
     /* ===== STATIC HELPER METHODS ===== */
+
     /**
      * Creates row constraints for the provided grid pane according to the provided heights
      *

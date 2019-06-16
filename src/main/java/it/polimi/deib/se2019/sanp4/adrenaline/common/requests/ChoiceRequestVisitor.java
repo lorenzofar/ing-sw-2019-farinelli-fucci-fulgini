@@ -14,5 +14,6 @@ public interface ChoiceRequestVisitor {
     void handle(SkullCountRequest request);
     void handle(SquareRequest request);
     void handle(WeaponCardRequest request);
+    void handle(EffectRequest request);
 
 }

@@ -246,7 +246,7 @@ public class CLIRenderer implements UIRenderer {
         CLIHelper.printFullScreenRenderedGameElement(CLIHelper.concatRenderedElements(userWeapons, 2), "Weapons");
     }
 
-    public void showUserPowerups(){
+    public void showUserPowerups() {
         PlayerView user = clientView.getModelManager().getPlayers().getOrDefault(clientView.getUsername(), null);
         if (user == null) {
             // This should never happen, since the user is a player
@@ -320,6 +320,11 @@ public class CLIRenderer implements UIRenderer {
         // Then show them to the user by concatenating them
         CLIHelper.printRenderedGameElement(CLIHelper.concatRenderedElements(renderedWeaponCards, 1));
         requestRoutine("Weapon card selection", request, WeaponCard::getName);
+    }
+
+    @Override
+    public void handle(EffectRequest request) {
+        //TODO: Implement this method
     }
 
     /**

@@ -2,7 +2,8 @@
     -fx-font-weight: bold;
     -fx-font-size: 12pt;
 }
-.subtitle-text{
+
+.subtitle-text {
     -fx-font-size: 11pt;
 }
 
@@ -25,48 +26,53 @@
     -fx-opacity: 1;
 }
 
-.transparent-overlay{
+.transparent-overlay {
     -fx-border-color: transparent;
     -fx-border-width: 2;
     -fx-background-radius: 0;
     -fx-background-color: transparent;
 }
 
-.selectable{
+.selectable {
     -fx-border-width: 2;
     -fx-background-color: transparent;
     -fx-border-color: transparent;
 }
-.selectable:hover{
+
+.selectable:hover {
     -fx-border-width: 2;
     -fx-border-color: #F8B73C;
 }
 
 /* ===== BOARD CONFIGURATION ===== */
 
-.board-selection-overlay{
+.board-selection-overlay {
     -fx-max-width: 100;
     -fx-max-height: 100;
 }
 
 /* ===== SKULLS ===== */
 
-.skull-selection-overlay{
+.skull-selection-overlay {
     -fx-opacity: 0.4;
     -fx-border-width: 2;
     -fx-border-color: #F8B73C;
     -fx-background-color: black;
 }
 
-.skull-selection-overlay.focused{
+.skull-selection-overlay.focused {
     -fx-opacity: 1;
 }
 
-/* ===== PLAYERS ===== */
-.player-avatar{
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);
+.effect-overlay {
+    -fx-background-color: #DFDFDF;
 }
 
-GridPane Line{
+/* ===== PLAYERS ===== */
+.player-avatar {
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);
+}
+
+GridPane Line {
     -fx-stroke: yellow;
 }
