@@ -23,6 +23,7 @@
         {
           "id" : "blue",
           "targetMode" : "PLAYER",
+          "optional": true,
           "visibility" : "ANY",
           "minDist": 1,
           "maxDist": 1,
@@ -33,6 +34,7 @@
         {
           "id" : "green",
           "targetMode" : "PLAYER",
+          "optional": true,
           "visibility" : "ANY",
           "minDist": 1,
           "maxDist": 1,
