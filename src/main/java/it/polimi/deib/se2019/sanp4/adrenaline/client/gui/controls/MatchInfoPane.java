@@ -1,8 +1,11 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.client.gui.controls;
 
+import it.polimi.deib.se2019.sanp4.adrenaline.client.gui.GUIRenderer;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.PlayerColor;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
@@ -15,7 +18,8 @@ import java.util.Map;
 /**
  * A custom control based on a VBox showing information about the match, namely:
  * <ul>
- * <li>Score of the current player</li>
+ * <li>Name of the player that is playing in the current turn</li>
+ * <li>Score of the user</li>
  * <li>List of participating players along with their character color</li>
  * </ul>
  */
@@ -25,6 +29,10 @@ public class MatchInfoPane extends VBox {
      */
     private IntegerProperty scoreProperty;
     /**
+     * A property to store the name of the player owning the current turn
+     */
+    private StringProperty currentPlayerProperty;
+    /**
      * Box containing the list of players
      */
     private VBox playersContainer;
@@ -33,15 +41,25 @@ public class MatchInfoPane extends VBox {
         super();
         this.getStylesheets().add("/fxml/style.css");
         scoreProperty = new SimpleIntegerProperty(0);
+        currentPlayerProperty = new SimpleStringProperty("");
 
         /* ===== LAYOUT BUILDING ===== */
 
         // First set the spacing
         this.setSpacing(8);
 
+        // Then create the header for the current player
+        Label currentPlayerHeader = new Label("Current player");
+        currentPlayerHeader.getStyleClass().add(GUIRenderer.CSS_BOLD_TITLE);
+        this.getChildren().add(currentPlayerHeader);
+
+        Label currentPlayerLabel = new Label();
+        currentPlayerHeader.textProperty().bind(currentPlayerProperty);
+        this.getChildren().add(currentPlayerLabel);
+
         // Then create the score header
         Label scoreHeader = new Label("Your score");
-        scoreHeader.getStyleClass().add("title-text");
+        scoreHeader.getStyleClass().add(GUIRenderer.CSS_BOLD_TITLE);
         this.getChildren().add(scoreHeader);
 
         // Then the label holding the score count
@@ -51,7 +69,7 @@ public class MatchInfoPane extends VBox {
 
         // Then the header for the players list
         Label playersHeader = new Label("Players");
-        playersHeader.getStyleClass().add("title-text");
+        playersHeader.getStyleClass().add(GUIRenderer.CSS_BOLD_TITLE);
         this.getChildren().add(playersHeader);
 
         // Then create the container for the list of players
@@ -90,5 +108,14 @@ public class MatchInfoPane extends VBox {
                     playersContainer.getChildren().add(playerItem);
                 }
         );
+    }
+
+    /**
+     * Sets the player that is currently playing
+     *
+     * @param player The username of the player
+     */
+    public void setCurrentPlayer(String player) {
+        currentPlayerProperty.setValue(player);
     }
 }

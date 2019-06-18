@@ -21,6 +21,8 @@ import java.util.Collection;
 
 public class GUIRenderer extends Application implements UIRenderer {
 
+    public static final String CSS_BOLD_TITLE = "title-text";
+
     private ClientView clientView;
     /**
      * The stage of the app to update scenes
