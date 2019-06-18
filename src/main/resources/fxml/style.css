@@ -76,3 +76,20 @@
 GridPane Line {
     -fx-stroke: yellow;
 }
+
+/* ===== PLAYER OPERATIONS ===== */
+.player-operation-overlay{
+    -fx-background-color: lightgray;
+    -fx-border-width: 2;
+    -fx-border-color: lightgray;
+}
+.player-operation-overlay.selectable{
+    -fx-background-color: rgba(148, 125, 146, 0.8);
+    -fx-border-color: rgba(148, 125, 146, 1);
+}
+.player-operation-overlay > Label{
+    -fx-font-size: 12pt;
+}
+.player-operation-overlay.selectable > Label{
+    -fx-text-fill: #F8B73C;
+}
