@@ -5,6 +5,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.WeaponCardRequest;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.ControllerFactory;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.PaymentHandler;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.PersistentView;
+import it.polimi.deib.se2019.sanp4.adrenaline.controller.answerers.ChooseNoneAnswer;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.answerers.FirstChoiceAnswer;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.answerers.SendChoiceRequestAnswer;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.requests.CompletableChoice;
@@ -26,11 +27,12 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Optional;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ReloadActionControllerTest {
@@ -101,6 +103,39 @@ public class ReloadActionControllerTest {
         /* Check no interaction with the user */
         verify(view, never()).sendChoiceRequest(any());
         verify(view, never()).showMessage(anyString(), any());
+    }
+
+    @Test
+    public void execute_selectsNone_shouldNotReload() throws Exception {
+        /* Add an unloaded weapon to the player */
+        String[] wIds = {"thor"};
+        for (String id : wIds) {
+            WeaponCard w = WeaponCreator.createWeaponCard(id);
+            w.setState(new UnloadedState());
+            player.addWeapon(w);
+        }
+
+        /* Give ammo to pay the reload cost */
+        player.addAmmo(AmmoCube.RED);
+        player.addAmmo(AmmoCube.BLUE);
+        player.addAmmo(AmmoCube.YELLOW);
+
+        /* Set up the user's answer: choose no card */
+        when(view.sendChoiceRequest(any(WeaponCardRequest.class))).thenAnswer(new ChooseNoneAnswer<>());
+
+        /* Execute the reload action */
+        ReloadActionController controller = new ReloadActionController(match, factory);
+        controller.execute(view);
+
+        /* Check that the weapon has not been reloaded */
+        Optional<WeaponCard> w = player.getWeapons().stream()
+                .filter(c -> c.getId().equals("thor")).findFirst();
+        assertTrue(w.isPresent());
+        assertFalse(w.get().isUsable());
+
+        /* Check that the player did not pay the cost */
+        Map<AmmoCube, Integer> playerAmmo = player.getAmmo();
+        playerAmmo.forEach((cube, count) -> assertEquals(1, (int) count));
     }
 
     @Test
