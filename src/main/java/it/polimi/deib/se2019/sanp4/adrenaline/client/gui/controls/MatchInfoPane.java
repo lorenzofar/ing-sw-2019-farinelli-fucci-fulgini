@@ -2,9 +2,8 @@ package it.polimi.deib.se2019.sanp4.adrenaline.client.gui.controls;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.PlayerColor;
 import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.MapProperty;
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleMapProperty;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -26,18 +25,14 @@ public class MatchInfoPane extends VBox {
      */
     private IntegerProperty scoreProperty;
     /**
-     * A property to store the username of connected players along with their color
-     */
-    private MapProperty<String, PlayerColor> playersMapProperty;
-    /**
      * Box containing the list of players
      */
     private VBox playersContainer;
 
     public MatchInfoPane() {
         super();
+        this.getStylesheets().add("/fxml/style.css");
         scoreProperty = new SimpleIntegerProperty(0);
-        playersMapProperty = new SimpleMapProperty<>();
 
         /* ===== LAYOUT BUILDING ===== */
 
@@ -52,6 +47,7 @@ public class MatchInfoPane extends VBox {
         // Then the label holding the score count
         Label scoreLabel = new Label();
         scoreLabel.textProperty().bind(scoreProperty.asString());
+        this.getChildren().add(scoreLabel);
 
         // Then the header for the players list
         Label playersHeader = new Label("Players");
@@ -65,16 +61,6 @@ public class MatchInfoPane extends VBox {
         // * a circle filled with his color
         playersContainer = new VBox();
         this.getChildren().add(playersContainer);
-        playersMapProperty.addListener((observableValue, map, t1) -> {
-            playersContainer.getChildren().clear();
-            map.forEach((name, color) -> {
-                HBox playerItem = new HBox();
-                playerItem.setSpacing(8);
-                playerItem.getChildren().add(new Circle(4, Color.web(color.getHexCode())));
-                playerItem.getChildren().add(new Label(name));
-                playersContainer.getChildren().add(playerItem);
-            });
-        });
     }
 
     /**
@@ -92,9 +78,17 @@ public class MatchInfoPane extends VBox {
      * @param players The map containing the username of players and the associated character color
      */
     public void setPlayers(Map<String, PlayerColor> players) {
-        // First try to add all the new players
-        players.forEach(playersMapProperty::putIfAbsent);
-        // Then remove those not contained in the map
-        players.keySet().stream().filter(playersMapProperty::containsKey).forEach(k -> playersMapProperty.remove(k));
+        playersContainer.getChildren().clear();
+        players.forEach((name, color) ->
+                {
+                    HBox playerItem = new HBox(
+                            8,
+                            new Circle(4, Color.web(color.getHexCode())),
+                            new Label(name)
+                    );
+                    playerItem.setAlignment(Pos.CENTER_LEFT);
+                    playersContainer.getChildren().add(playerItem);
+                }
+        );
     }
 }
