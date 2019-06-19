@@ -165,104 +165,122 @@ public class GUIRenderer extends Application implements UIRenderer {
 
     @Override
     public void handle(ActionRequest request) {
-        try {
-            GameController gameController = (GameController) currentController;
-            gameController.askActionSelection(request);
-        } catch (Exception ignore) {
-            // If this request is received when when are not in the game screen, we ignore it
-        }
+        Platform.runLater(() -> {
+            try {
+                GameController gameController = (GameController) currentController;
+                gameController.askActionSelection(request);
+            } catch (Exception ignore) {
+                // If this request is received when when are not in the game screen, we ignore it
+            }
+        });
     }
 
     @Override
     public void handle(BoardRequest request) {
-        try {
-            BoardRequestController boardRequestController = (BoardRequestController) showNewWindow("/fxml/BoardConfig.fxml", "Board configuration");
-            if (boardRequestController != null) {
-                boardRequestController.setup(request);
+        Platform.runLater(() -> {
+            try {
+                BoardRequestController boardRequestController = (BoardRequestController) showNewWindow("/fxml/BoardConfig.fxml", "Board configuration");
+                if (boardRequestController != null) {
+                    boardRequestController.setup(request);
+                }
+            } catch (Exception ignore) {
+                // Errors are ignored
             }
-        } catch (Exception ignore) {
-            // Errors are ignored
-        }
+        });
     }
 
     @Override
     public void handle(PlayerOperationRequest request) {
-        try {
-            GameController gameController = (GameController) currentController;
-            gameController.askOperationSelection(request);
-        } catch (Exception ignore) {
-            // If this request is received when when are not in the game screen, we ignore it
-        }
+        Platform.runLater(() -> {
+            try {
+                GameController gameController = (GameController) currentController;
+                gameController.askOperationSelection(request);
+            } catch (Exception ignore) {
+                // If this request is received when when are not in the game screen, we ignore it
+            }
+        });
     }
 
     @Override
     public void handle(PlayerRequest request) {
-        try {
-            PlayerRequestController playerRequestController = (PlayerRequestController) showNewWindow("/fxml/playerSelectionWindow.fxml", "Select player");
-            if (playerRequestController != null) {
-                playerRequestController.setup(request);
+        Platform.runLater(() -> {
+            try {
+                PlayerRequestController playerRequestController = (PlayerRequestController) showNewWindow("/fxml/playerSelectionWindow.fxml", "Select player");
+                if (playerRequestController != null) {
+                    playerRequestController.setup(request);
+                }
+            } catch (Exception ignore) {
+                // We ignore this error
             }
-        } catch (Exception ignore) {
-            // We ignore this error
-        }
+        });
     }
 
     @Override
     public void handle(PowerupCardRequest request) {
-        try {
-            PowerupRequestController powerupRequestController = (PowerupRequestController) showNewWindow("/fxml/powerupSelectionWindow.fxml", "Select powerup");
-            if (powerupRequestController != null) {
-                powerupRequestController.setup(request);
+        Platform.runLater(() -> {
+            try {
+                PowerupRequestController powerupRequestController = (PowerupRequestController) showNewWindow("/fxml/powerupSelectionWindow.fxml", "Select powerup");
+                if (powerupRequestController != null) {
+                    powerupRequestController.setup(request);
+                }
+            } catch (Exception ignore) {
+                // We ignore this error
             }
-        } catch (Exception ignore) {
-            // We ignore this error
-        }
+        });
     }
 
     @Override
     public void handle(SkullCountRequest request) {
-        try {
-            SkullsRequestController skullsRequestController = (SkullsRequestController) showNewWindow("/fxml/skullsConfig.fxml", "Skulls config");
-            if (skullsRequestController != null) {
-                skullsRequestController.setup(request);
+        Platform.runLater(() -> {
+            try {
+                SkullsRequestController skullsRequestController = (SkullsRequestController) showNewWindow("/fxml/skullsConfig.fxml", "Skulls config");
+                if (skullsRequestController != null) {
+                    skullsRequestController.setup(request);
+                }
+            } catch (Exception ignore) {
+                // We ignore this error
             }
-        } catch (Exception ignore) {
-            // We ignore this error
-        }
+        });
     }
 
     @Override
     public void handle(SquareRequest request) {
-        try {
-            GameController gameController = (GameController) currentController;
-            gameController.askSquareSelection(request);
-        } catch (Exception ignore) {
-            // We ignore errors when the request is received when the match screen is not yet shown
-        }
+        Platform.runLater(() -> {
+            try {
+                GameController gameController = (GameController) currentController;
+                gameController.askSquareSelection(request);
+            } catch (Exception ignore) {
+                // We ignore errors when the request is received when the match screen is not yet shown
+            }
+        });
     }
 
     @Override
     public void handle(WeaponCardRequest request) {
-        try {
-            WeaponCardRequestController weaponCardRequestController = (WeaponCardRequestController) showNewWindow("/fxml/weaponCardSelectionWindow.fxml", "Select Weapon");
-            if (weaponCardRequestController != null) {
-                weaponCardRequestController.setup(request);
+        Platform.runLater(() -> {
+            try {
+                WeaponCardRequestController weaponCardRequestController = (WeaponCardRequestController) showNewWindow("/fxml/weaponCardSelectionWindow.fxml", "Select Weapon");
+                if (weaponCardRequestController != null) {
+                    weaponCardRequestController.setup(request);
+                }
+            } catch (Exception ignore) {
+                // We ignore this error
             }
-        } catch (Exception ignore) {
-            // We ignore this error
-        }
+        });
     }
 
     @Override
     public void handle(EffectRequest request) {
-        try {
-            EffectRequestController effectRequestController = (EffectRequestController) showNewWindow("/fxml/effectSelectionWindow.fxml", "Select effect");
-            if (effectRequestController != null) {
-                effectRequestController.setup(request);
+        Platform.runLater(() -> {
+            try {
+                EffectRequestController effectRequestController = (EffectRequestController) showNewWindow("/fxml/effectSelectionWindow.fxml", "Select effect");
+                if (effectRequestController != null) {
+                    effectRequestController.setup(request);
+                }
+            } catch (Exception ignore) {
+                // We ignore this error
             }
-        } catch (Exception ignore) {
-            // We ignore this error
-        }
+        });
     }
 
     /* ===== STATIC HELPER METHODS ===== */
