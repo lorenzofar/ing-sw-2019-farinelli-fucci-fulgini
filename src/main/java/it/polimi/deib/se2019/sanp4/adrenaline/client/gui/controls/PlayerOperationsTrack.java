@@ -3,9 +3,7 @@ package it.polimi.deib.se2019.sanp4.adrenaline.client.gui.controls;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.match.PlayerOperationEnum;
 import javafx.scene.layout.VBox;
 
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -17,16 +15,16 @@ public class PlayerOperationsTrack extends VBox {
         this.setSpacing(8);
         this.getStylesheets().add("/fxml/style.css");
 
-        // We retrieve all the supported operations
-        List<PlayerOperationEnum> operations = Arrays.asList(PlayerOperationEnum.values());
-        // We add the null one, that lets the player do nothing (when enabled)
-        operations.add(null);
-        // And we create overlays for them, adding eventually to the container
-        operations.forEach(operation -> {
+        // We retrieve all the supported operations and create overlays for them, adding eventually to the container
+        for(PlayerOperationEnum operation : PlayerOperationEnum.values()){
             PlayerOperationOverlay overlay = new PlayerOperationOverlay();
             overlay.setOperation(operation);
             this.getChildren().add(overlay);
-        });
+        }
+        // At last we create an overlay to host the null action
+        PlayerOperationOverlay noopOverlay = new PlayerOperationOverlay();
+        noopOverlay.setOperation(null);
+        this.getChildren().add(noopOverlay);
     }
 
     /**
