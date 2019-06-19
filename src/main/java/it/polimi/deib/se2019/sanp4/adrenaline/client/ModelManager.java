@@ -3,9 +3,12 @@ package it.polimi.deib.se2019.sanp4.adrenaline.client;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.ColoredObject;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.*;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.*;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.WeaponCard;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -59,7 +62,7 @@ public class ModelManager implements ModelUpdateVisitor {
         this.board = board;
     }
 
-    public Map<String, PlayerBoardView> getPlayerBoards(){
+    public Map<String, PlayerBoardView> getPlayerBoards() {
         return playerBoards;
     }
 
@@ -225,7 +228,18 @@ public class ModelManager implements ModelUpdateVisitor {
     }
 
     @Override
-    public void handle(WeaponCardUpdate update){
-        //TODO: Implement this method
+    public void handle(WeaponCardUpdate update) {
+        // First determine who is the owner of the weapon card
+        Optional<String> weaponCardOwner = players.entrySet().stream().filter(entry ->
+                entry.getValue().getWeapons().contains(update.getWeaponCard())
+        ).map(Map.Entry::getKey).findFirst();
+        if (!weaponCardOwner.isPresent()) {
+            // The weapon card does not belong to anyone
+            return;
+        }
+        // We then retrieve the object representing the card and update its state according to the received update
+        List<WeaponCard> ownerWeapons = players.get(weaponCardOwner.get()).getWeapons();
+        WeaponCard weaponCard = ownerWeapons.get(ownerWeapons.indexOf(update.getWeaponCard()));
+        weaponCard.setState(update.getWeaponCard().getState());
     }
 }
