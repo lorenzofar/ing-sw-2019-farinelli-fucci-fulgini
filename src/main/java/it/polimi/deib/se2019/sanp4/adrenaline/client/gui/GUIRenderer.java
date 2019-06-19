@@ -157,7 +157,10 @@ public class GUIRenderer extends Application implements UIRenderer {
 
     @Override
     public void cancelSelection() {
-        //TODO: Implement this method
+        // We set a null selection handler and, incidentally, we cancel the existing one (if present)
+        clientView.setSelectionHandler(null);
+        //TODO: Maybe notify the user?
+
     }
 
     @Override
@@ -179,7 +182,12 @@ public class GUIRenderer extends Application implements UIRenderer {
 
     @Override
     public void handle(PlayerOperationRequest request) {
-        //TODO: Implement this method
+        try {
+            GameController gameController = (GameController) currentController;
+            gameController.askOperationSelection(request);
+        } catch (Exception ignore) {
+            // If this request is received when when are not in the game screen, we ignore it
+        }
     }
 
     @Override

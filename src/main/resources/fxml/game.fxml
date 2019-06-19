@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.layout.*?>
+<?import it.polimi.deib.se2019.sanp4.adrenaline.client.gui.controls.PlayerOperationsTrack?>
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       stylesheets="@style.css"
@@ -22,5 +23,8 @@
             <GridPane fx:id="middleDxContainer" gridLinesVisible="true" GridPane.columnIndex="2"/>
         </GridPane>
     </GridPane>
+
+    <PlayerOperationsTrack fx:id="playerOperationsTrack"/>
     <!-- TODO: Add player boards and fix bindings after addition -->
+    <!-- TODO: Fix position and layout pf operations track, after having added all the remaining controls -->
 </VBox>

@@ -225,12 +225,30 @@ public class ClientView extends RemoteObservable<ViewEvent> implements RemoteVie
         super.notifyObservers(event);
     }
 
+    /**
+     * Retrieves the selection handler that is currently being used to reply to a request
+     *
+     * @return The object representing the selection handler
+     */
     public SelectionHandler getSelectionHandler() {
         return selectionHandler;
     }
 
+    /**
+     * Sets the selection handler that is currently being used to reply to a request
+     * If a selection handler is already set, it is cancelled and replaced with the provided one
+     *
+     * @param selectionHandler The object representing the selection handler
+     */
     public void setSelectionHandler(SelectionHandler selectionHandler) {
+        // Check whether there is already a selection handler before setting the new one
+        if (this.selectionHandler != null) {
+            // If yes, cancel the pending selection prior to asking the new one
+            this.selectionHandler.cancel();
+        }
         this.selectionHandler = selectionHandler;
-        this.selectionHandler.setClientView(this);
+        if (this.selectionHandler != null) {
+            this.selectionHandler.setClientView(this);
+        }
     }
 }

@@ -1,15 +1,14 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.client.gui;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.client.ModelManager;
-import it.polimi.deib.se2019.sanp4.adrenaline.client.gui.controls.OverlaysFactory;
-import it.polimi.deib.se2019.sanp4.adrenaline.client.gui.controls.SelectableOverlay;
-import it.polimi.deib.se2019.sanp4.adrenaline.client.gui.controls.SquareOverlay;
-import it.polimi.deib.se2019.sanp4.adrenaline.client.gui.controls.WeaponImage;
+import it.polimi.deib.se2019.sanp4.adrenaline.client.gui.controls.*;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.BoardView;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.SquareView;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.PlayerOperationRequest;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.SquareRequest;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.CoordPair;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCube;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.match.PlayerOperationEnum;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -60,6 +59,13 @@ public class GameController extends GUIController {
      * The matrix of overlays above the square composing the game board
      */
     private SquareOverlay[][] squareOverlays;
+
+    /**
+     * The container for all the supported players operations
+     * It references the control defined in the FXML file
+     */
+    @FXML
+    private PlayerOperationsTrack playerOperationsTrack;
 
     /**
      * The map associating each spawn color to the list of weapon images sockets
@@ -204,5 +210,17 @@ public class GameController extends GUIController {
         Collection<SelectableOverlay<CoordPair>> selectableSquares = Arrays.stream(squareOverlays).flatMap(Arrays::stream).filter(overlay -> request.getChoices().contains(overlay.getData())).collect(Collectors.toList());
         // Then create a selection handler to handle the request and set it as the current one in the view
         clientView.setSelectionHandler(new SelectionHandler<CoordPair>(selectableSquares));
+    }
+
+    /**
+     * Asks the user to select an operation to perform in the current turn, replying to the related server request
+     *
+     * @param request The object representing the operation request
+     */
+    void askOperationSelection(PlayerOperationRequest request) {
+        // First retrieve all the selectable overlays in the operations track
+        Collection<SelectableOverlay<PlayerOperationEnum>> selectableOperations = playerOperationsTrack.getSelectableOverlays(request.getChoices());
+        // Then create a new selection handler and set it in the client view
+        clientView.setSelectionHandler(new SelectionHandler<PlayerOperationEnum>(selectableOperations));
     }
 }
