@@ -8,6 +8,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.LoginException;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.PlayerView;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.*;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.BoardCreator;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.board.CoordPair;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.powerup.PowerupCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.EffectDescription;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.WeaponCard;
@@ -273,6 +274,58 @@ public class CLIRenderer implements UIRenderer {
         CLIHelper.cancelInput();
     }
 
+    /**
+     * Refreshes the rendered killshots track
+     */
+    @Override
+    public void refreshKillshotsTrack() {
+        //TODO: Implement this method
+    }
+
+    /**
+     * Refreshes a rendered player board
+     *
+     * @param boardOwner The player owning the board to refresh
+     */
+    @Override
+    public void refreshPlayerBoard(String boardOwner) {
+        //TODO: Implement this method
+    }
+
+    /**
+     * Refreshes the rendered actions track of the user
+     */
+    @Override
+    public void refreshActionsTrack() {
+        //TODO: Implement this method
+    }
+
+    /**
+     * Refreshes the whole rendered game board
+     */
+    @Override
+    public void refreshGameBoard() {
+        //TODO: Implement this method
+    }
+
+    /**
+     * Refreshes the rendered game board by updating the provided squares
+     *
+     * @param squares The collection of squares to refresh
+     */
+    @Override
+    public void refreshGameBoard(CoordPair... squares) {
+        //TODO: Implement this method
+    }
+
+    /**
+     * Refreshes the rendered information about the match
+     */
+    @Override
+    public void refreshMatchInfo() {
+        //TODO: Implement this method
+    }
+
     @Override
     public void handle(ActionRequest request) {
         requestRoutine("Action selection", request, actionEnum -> String.format("%s : %s", actionEnum.name(), actionEnum.toString()));
@@ -339,6 +392,7 @@ public class CLIRenderer implements UIRenderer {
      */
     private <T extends Serializable> void requestRoutine(String title, ChoiceRequest<T> request, Function<T, String> stringConverter) {
         CLIHelper.cancelInput();
+        CLIHelper.stopSpinner();
         CLIHelper.printTitle(title);
         commandsParser.setAlive(false);
         // Ask the user to select a choice

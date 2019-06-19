@@ -1,6 +1,7 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.client;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.ChoiceRequestVisitor;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.board.CoordPair;
 import it.polimi.deib.se2019.sanp4.adrenaline.view.MessageType;
 
 import java.util.Collection;
@@ -41,6 +42,42 @@ public interface UIRenderer extends ChoiceRequestVisitor {
      * Cancels the current selection request (if present)
      */
     void cancelSelection();
+
+    /* ====== REFRESH ENDPOINTS ===== */
+
+    /**
+     * Refreshes the rendered killshots track
+     */
+    public void refreshKillshotsTrack();
+
+    /**
+     * Refreshes a rendered player board
+     *
+     * @param boardOwner The player owning the board to refresh
+     */
+    public void refreshPlayerBoard(String boardOwner);
+
+    /**
+     * Refreshes the rendered actions track of the user
+     */
+    public void refreshActionsTrack();
+
+    /**
+     * Refreshes the whole rendered game board
+     */
+    public void refreshGameBoard();
+
+    /**
+     * Refreshes the rendered game board by updating the provided squares
+     *
+     * @param squares The collection of squares to refresh
+     */
+    public void refreshGameBoard(CoordPair... squares);
+
+    /**
+     * Refreshes the rendered information about the match
+     */
+    public void refreshMatchInfo();
 
     //TODO: Add more methods
 }

@@ -16,8 +16,6 @@ import java.util.stream.Collectors;
  */
 public class ModelManager implements ModelUpdateVisitor {
 
-    private ClientView clientView;
-
     private Map<String, PlayerView> players;
     private Map<String, PlayerBoardView> playerBoards;
     private Map<String, ActionCardView> actionCards;
@@ -25,8 +23,7 @@ public class ModelManager implements ModelUpdateVisitor {
     private BoardView board;
     private PlayerTurnView currentTurn;
 
-    public ModelManager(ClientView clientView) {
-        this.clientView = clientView;
+    ModelManager() {
         players = new HashMap<>();
         playerBoards = new HashMap<>();
         actionCards = new HashMap<>();
@@ -74,6 +71,10 @@ public class ModelManager implements ModelUpdateVisitor {
         this.currentTurn = currentTurn;
     }
 
+    public ActionCardView getActionCard(String player) {
+        return actionCards.getOrDefault(player, null);
+    }
+
     @Override
     public void handle(AddedWeaponUpdate update) {
         //TODO: Implement this method
@@ -91,12 +92,11 @@ public class ModelManager implements ModelUpdateVisitor {
             return;
         }
         playerBoardView.setDeaths(update.getDeaths());
-        //TODO: Notify players about killing
     }
 
     @Override
     public void handle(LobbyUpdate update) {
-        clientView.getRenderer().updateLobby(update.getWaitingPlayers(), update.isStarting());
+        // Do nothing, since this update is only used to render the list of connected players
     }
 
     @Override
@@ -118,7 +118,6 @@ public class ModelManager implements ModelUpdateVisitor {
             return;
         }
         end.addPlayer(update.getPlayer());
-        //TODO: Check whether to refresh something
     }
 
     @Override
@@ -144,7 +143,6 @@ public class ModelManager implements ModelUpdateVisitor {
         playerView.setWeapons(update.getPlayer().getWeapons());
         playerView.setState(update.getPlayer().getState());
         playerView.setScore(update.getPlayer().getScore());
-        //TODO: Check whether to refresh something
     }
 
     @Override
@@ -156,7 +154,6 @@ public class ModelManager implements ModelUpdateVisitor {
         actionCardView.setActions(update.getActionCard().getActions());
         actionCardView.setFinalAction(update.getActionCard().getFinalAction());
         actionCardView.setType(update.getActionCard().getType());
-        //TODO: Check whether to refresh something
     }
 
     @Override
@@ -167,14 +164,12 @@ public class ModelManager implements ModelUpdateVisitor {
         }
         square.setAdjacentMap(update.getSquare().getAdjacentMap());
         square.setPlayers(update.getSquare().getPlayers());
-        //TODO: Refresh the board
     }
 
     @Override
     public void handle(BoardUpdate update) {
         board.setSquares(update.getBoard().getSquares());
         board.setSpawnPoints(update.getBoard().getSpawnPoints());
-        //TODO: Refresh the displayed board
     }
 
     @Override
@@ -182,7 +177,6 @@ public class ModelManager implements ModelUpdateVisitor {
         match.setFrenzy(update.getMatch().isFrenzy());
         match.setKillshotsCount(update.getMatch().getKillshotsCount());
         match.setTotalSkulls(update.getMatch().getTotalSkulls());
-        //TODO Refresh the match screen
     }
 
     @Override
@@ -195,7 +189,6 @@ public class ModelManager implements ModelUpdateVisitor {
         playerBoardView.setDamages(update.getPlayerBoard().getDamages());
         playerBoardView.setMarks(update.getPlayerBoard().getMarks());
         playerBoardView.setState(update.getPlayerBoard().getState());
-        //TODO: Refresh the player board
     }
 
     @Override
@@ -216,7 +209,6 @@ public class ModelManager implements ModelUpdateVisitor {
         this.match = update.getMatch();
         this.players = update.getPlayers();
         this.playerBoards = update.getPlayerBoards();
-        //TODO: Refresh the match screen
     }
 
     @Override
@@ -224,7 +216,6 @@ public class ModelManager implements ModelUpdateVisitor {
         currentTurn.setRemainingActions(update.getPlayerTurn().getRemainingActions());
         currentTurn.setPlayer(update.getPlayerTurn().getPlayer());
         currentTurn.setState(update.getPlayerTurn().getState());
-        //TODO: Refresh the match screen
     }
 
     @Override

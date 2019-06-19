@@ -3,6 +3,7 @@ package it.polimi.deib.se2019.sanp4.adrenaline.client.gui;
 import it.polimi.deib.se2019.sanp4.adrenaline.client.ClientView;
 import it.polimi.deib.se2019.sanp4.adrenaline.client.UIRenderer;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.*;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.board.CoordPair;
 import it.polimi.deib.se2019.sanp4.adrenaline.view.MessageType;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -161,6 +162,58 @@ public class GUIRenderer extends Application implements UIRenderer {
         clientView.setSelectionHandler(null);
         //TODO: Maybe notify the user?
 
+    }
+
+    /**
+     * Refreshes the rendered killshots track
+     */
+    @Override
+    public void refreshKillshotsTrack() {
+        //TODO: Implement this method
+    }
+
+    /**
+     * Refreshes a rendered player board
+     *
+     * @param boardOwner The player owning the board to refresh
+     */
+    @Override
+    public void refreshPlayerBoard(String boardOwner) {
+        //TODO: Implement this method
+    }
+
+    /**
+     * Refreshes the rendered actions track of the user
+     */
+    @Override
+    public void refreshActionsTrack() {
+        //TODO: Implement this method
+    }
+
+    /**
+     * Refreshes the whole rendered game board
+     */
+    @Override
+    public void refreshGameBoard() {
+        //TODO: Implement this method
+    }
+
+    /**
+     * Refreshes the rendered game board by updating the provided squares
+     *
+     * @param squares The collection of squares to refresh
+     */
+    @Override
+    public void refreshGameBoard(CoordPair... squares) {
+        //TODO: Implement this method
+    }
+
+    /**
+     * Refreshes the rendered information about the match
+     */
+    @Override
+    public void refreshMatchInfo() {
+        //TODO: Implement this method
     }
 
     @Override
