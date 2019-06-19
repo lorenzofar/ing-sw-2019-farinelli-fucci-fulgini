@@ -165,7 +165,12 @@ public class GUIRenderer extends Application implements UIRenderer {
 
     @Override
     public void handle(ActionRequest request) {
-        //TODO: Implement this method
+        try {
+            GameController gameController = (GameController) currentController;
+            gameController.askActionSelection(request);
+        } catch (Exception ignore) {
+            // If this request is received when when are not in the game screen, we ignore it
+        }
     }
 
     @Override

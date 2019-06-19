@@ -1,7 +1,7 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.client.gui.controls;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.model.match.PlayerOperationEnum;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.HBox;
 
 import java.util.Collection;
 import java.util.stream.Collectors;
@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 /**
  * A custom control extending an HBox to represent a track containing available player operations
  */
-public class PlayerOperationsTrack extends VBox {
+public class PlayerOperationsTrack extends HBox {
     public PlayerOperationsTrack() {
         super();
         this.setSpacing(8);

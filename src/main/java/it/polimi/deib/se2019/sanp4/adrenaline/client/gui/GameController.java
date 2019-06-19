@@ -4,8 +4,10 @@ import it.polimi.deib.se2019.sanp4.adrenaline.client.ModelManager;
 import it.polimi.deib.se2019.sanp4.adrenaline.client.gui.controls.*;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.BoardView;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.SquareView;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.ActionRequest;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.PlayerOperationRequest;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.SquareRequest;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionEnum;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.CoordPair;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCube;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.match.PlayerOperationEnum;
@@ -66,6 +68,8 @@ public class GameController extends GUIController {
      */
     @FXML
     private PlayerOperationsTrack playerOperationsTrack;
+    @FXML
+    private ActionsTrack actionsTrack;
 
     /**
      * The map associating each spawn color to the list of weapon images sockets
@@ -222,5 +226,17 @@ public class GameController extends GUIController {
         Collection<SelectableOverlay<PlayerOperationEnum>> selectableOperations = playerOperationsTrack.getSelectableOverlays(request.getChoices());
         // Then create a new selection handler and set it in the client view
         clientView.setSelectionHandler(new SelectionHandler<PlayerOperationEnum>(selectableOperations));
+    }
+
+    /**
+     * Asks the user to select an action to perform, replying to the related server request
+     *
+     * @param request The object representing the request
+     */
+    void askActionSelection(ActionRequest request) {
+        // First retrieve all the selectable overlays in the actions track
+        Collection<SelectableOverlay<ActionEnum>> selectableActions = actionsTrack.getSelectableOverlays(request.getChoices());
+        // Then create a new selection handler and set it in the client view
+        clientView.setSelectionHandler(new SelectionHandler<ActionEnum>(selectableActions));
     }
 }
