@@ -2,6 +2,7 @@ package it.polimi.deib.se2019.sanp4.adrenaline.common.events;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 import java.io.Serializable;
 
@@ -9,6 +10,7 @@ import java.io.Serializable;
  * An abstract class representing a generic event the controller can handle.
  * It holds information about the player who has generated it.
  */
+@JsonTypeInfo(use=JsonTypeInfo.Id.CLASS, property="@class")
 public abstract class ViewEvent implements Serializable {
 
     private static final long serialVersionUID = 7324130186876242534L;
