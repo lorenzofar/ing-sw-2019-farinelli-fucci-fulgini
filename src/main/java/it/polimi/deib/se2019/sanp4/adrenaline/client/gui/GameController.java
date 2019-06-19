@@ -2,6 +2,7 @@ package it.polimi.deib.se2019.sanp4.adrenaline.client.gui;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.client.ModelManager;
 import it.polimi.deib.se2019.sanp4.adrenaline.client.gui.controls.*;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.ActionCardView;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.BoardView;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.SquareView;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.ActionRequest;
@@ -182,6 +183,10 @@ public class GameController extends GUIController {
                 squareOverlays[i][j] = overlay;
             }
         }
+
+        // Then load the action card of the user into the actions track
+        ActionCardView userActionCard = modelManager.getActionCard(clientView.getUsername());
+        actionsTrack.setActionCard(userActionCard);
 
         // Then load the background
         Platform.runLater(() -> setBoard(boardView.getId()));
