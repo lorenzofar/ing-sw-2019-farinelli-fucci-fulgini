@@ -73,9 +73,8 @@ public class MatchBootstrapper {
 
     private CompletableChoice<Integer> requestWithTimer(PersistentView view, ChoiceRequest<Integer> req) {
         /* Send the request and start the timer */
-        CompletableChoice<Integer> pendingChoice =  view.sendChoiceRequest(req);
         view.startTimer(() -> null, timeout, TimeUnit.SECONDS); /* If it expires the request gets cancelled */
-        return pendingChoice;
+        return view.sendChoiceRequest(req);
     }
 
     private List<Integer> integerRange(int min, int max) {
