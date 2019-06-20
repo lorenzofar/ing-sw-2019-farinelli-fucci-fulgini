@@ -218,7 +218,7 @@ public class GameController extends GUIController {
      */
     void askSquareSelection(SquareRequest request) {
         // First retrieve all the squares the user can select among and create a pool of observable overlays
-        Collection<SelectableOverlay<CoordPair>> selectableSquares = Arrays.stream(squareOverlays).flatMap(Arrays::stream).filter(overlay -> request.getChoices().contains(overlay.getData())).collect(Collectors.toList());
+        Collection<SelectableOverlay<CoordPair>> selectableSquares = Arrays.stream(squareOverlays).flatMap(Arrays::stream).filter(Objects::nonNull).filter(overlay -> request.getChoices().contains(overlay.getData())).collect(Collectors.toList());
         // Then create a selection handler to handle the request and set it as the current one in the view
         clientView.setSelectionHandler(new SelectionHandler<CoordPair>(selectableSquares));
     }
