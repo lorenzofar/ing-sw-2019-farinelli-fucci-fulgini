@@ -51,6 +51,13 @@
     -fx-max-height: 100;
 }
 
+/* ===== INTEGER SELECTION ===== */
+.integer-selection-overlay{
+    -fx-pref-width: 24;
+    -fx-pref-height: 24;
+    -fx-border-color: black;
+}
+
 /* ===== SKULLS ===== */
 
 .skull-selection-overlay {

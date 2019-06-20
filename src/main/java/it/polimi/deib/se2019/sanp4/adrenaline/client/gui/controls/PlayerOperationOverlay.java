@@ -15,22 +15,23 @@ public class PlayerOperationOverlay extends SelectableOverlay<PlayerOperationEnu
     private Button overlayRoot;
 
     @FXML
-    private Label operationLabel;
+    private Label label;
 
     PlayerOperationOverlay() {
-        super("/fxml/controls/playerOperationOverlay.fxml");
+        super("/fxml/controls/labelSelectionOverlay.fxml");
     }
 
     @FXML
     public void initialize() {
         super.setSelectableRoot(overlayRoot);
+        overlayRoot.getStyleClass().add("player-operation-overlay");
     }
 
     public void setOperation(PlayerOperationEnum operation) {
         setData(operation);
         // If a null operation is provided, it means the user can choose to do nothing
-        operationLabel.setText(operation != null ? operation.getMessage() : "Do nothing");
+        label.setText(operation != null ? operation.getMessage() : "Do nothing");
         overlayRoot.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-        overlayRoot.setGraphic(operationLabel);
+        overlayRoot.setGraphic(label);
     }
 }

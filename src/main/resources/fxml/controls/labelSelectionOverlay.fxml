@@ -6,9 +6,8 @@
          xmlns:fx="http://javafx.com/fxml"
          fx:id="overlayRoot"
          type="javafx.scene.control.Button"
-         styleClass="player-operation-overlay"
          stylesheets="@../style.css">
 
-    <Label fx:id="actionLabel"/>
+    <Label fx:id="label"/>
 
 </fx:root>

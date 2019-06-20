@@ -303,12 +303,12 @@ public class GUIRenderer extends Application implements UIRenderer {
     public void handle(SkullCountRequest request) {
         Platform.runLater(() -> {
             try {
-                SkullsRequestController skullsRequestController = (SkullsRequestController) showNewWindow("/fxml/skullsConfig.fxml", "Skulls config");
+                SkullsRequestController skullsRequestController = (SkullsRequestController) showNewWindow("/fxml/skullsSelectionWindow.fxml", "Skulls configuration");
                 if (skullsRequestController != null) {
                     skullsRequestController.setup(request);
                 }
             } catch (Exception ignore) {
-                // We ignore this error
+                // Errors are ignored
             }
         });
     }
