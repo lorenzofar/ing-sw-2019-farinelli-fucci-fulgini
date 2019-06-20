@@ -275,6 +275,14 @@ public class CLIRenderer implements UIRenderer {
     }
 
     /**
+     * Shows a screen to tell the user that he is disconnected, letting him to reconnect
+     */
+    @Override
+    public void showDisconnectedScreen() {
+        //TODO: Implement this method
+    }
+
+    /**
      * Refreshes the rendered killshots track
      */
     @Override

@@ -211,6 +211,9 @@ public class ClientView extends RemoteObservable<ViewEvent> implements RemoteVie
         renderer.cancelSelection();
         if (scene == ViewScene.LOBBY) {
             renderer.showLobby();
+        } else if (scene == ViewScene.DISCONNECTED) {
+            // TODO: Check how the scene is set from the server connection
+            renderer.showDisconnectedScreen();
         }
         //TODO: Implement more scenes
     }

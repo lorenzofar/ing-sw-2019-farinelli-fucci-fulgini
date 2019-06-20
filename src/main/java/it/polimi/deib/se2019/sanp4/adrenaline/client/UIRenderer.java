@@ -43,6 +43,11 @@ public interface UIRenderer extends ChoiceRequestVisitor {
      */
     void cancelSelection();
 
+    /**
+     * Shows a screen to tell the user that he is disconnected, letting him to reconnect
+     */
+    void showDisconnectedScreen();
+
     /* ====== REFRESH ENDPOINTS ===== */
 
     /**

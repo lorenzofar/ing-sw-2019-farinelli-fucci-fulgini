@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.VBox?>
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="it.polimi.deib.se2019.sanp4.adrenaline.client.gui.DisconnectedController"
+      stylesheets="@style.css"
+      spacing="8"
+      prefHeight="400.0" prefWidth="600.0">
+
+    <Label styleClass="title-text" text="You are disconnected"/>
+    <Label text="Please reconnect to continue playing"/>
+
+    <TextField fx:id="serverHostnameField" promptText="Enter the server hostname"/>
+    <Button fx:id="reconnectBtn" onAction="#reconnect" text="Reconnect"/>
+
+</VBox>

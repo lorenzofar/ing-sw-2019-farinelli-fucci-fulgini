@@ -87,7 +87,7 @@ public class LoginController extends GUIController {
                 clientView.getServerConnection().connect(serverHostname.get());
                 serverConnected.set(true);
             } catch (IOException e) {
-                new Alert(Alert.AlertType.ERROR, "Error establishing connection to server").showAndWait();
+                new Alert(Alert.AlertType.ERROR, "Error establishing connection to server").show();
                 return;
             }
         }
@@ -102,7 +102,7 @@ public class LoginController extends GUIController {
             new Alert(Alert.AlertType.ERROR, "A network error occurred").showAndWait();
             // A network error occurred
         } catch (LoginException e) {
-            new Alert(Alert.AlertType.WARNING, "The username is already taken, choose another one").showAndWait();
+            new Alert(Alert.AlertType.WARNING, "The username is already taken, choose another one").show();
         } finally {
             serverHostname.set("");
             username.set("");
