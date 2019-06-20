@@ -33,6 +33,10 @@ public class ClientView extends RemoteObservable<ViewEvent> implements RemoteVie
      */
     private ModelManager modelManager;
     /**
+     * The class responsible of refreshing the game screen according to received updates
+     */
+    private RenderingManager renderingManager;
+    /**
      * The choice request that is currently being handled
      */
     private ChoiceRequest currentRequest;
@@ -50,7 +54,7 @@ public class ClientView extends RemoteObservable<ViewEvent> implements RemoteVie
     public ClientView() {
         this.modelManager = new ModelManager();
         // Create a new model
-        new RenderingManager(this);
+        this.renderingManager = new RenderingManager(this);
         this.currentRequest = null;
         pendingRequests = new ArrayDeque<>();
     }
@@ -214,6 +218,7 @@ public class ClientView extends RemoteObservable<ViewEvent> implements RemoteVie
     @Override
     public void update(ModelUpdate event) {
         event.accept(modelManager);
+        event.accept(renderingManager);
     }
 
     /**
