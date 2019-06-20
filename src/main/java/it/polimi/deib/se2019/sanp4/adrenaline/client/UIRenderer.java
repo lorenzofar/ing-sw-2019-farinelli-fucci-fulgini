@@ -80,6 +80,11 @@ public interface UIRenderer extends ChoiceRequestVisitor {
     public void refreshGameBoard(CoordPair... squares);
 
     /**
+     * Refreshes the rendered information about owned ammo
+     */
+    public void refreshAmmoInfo();
+
+    /**
      * Refreshes the rendered information about the match
      */
     public void refreshMatchInfo();

@@ -71,6 +71,8 @@ public class GameController extends GUIController {
     private PlayerOperationsTrack playerOperationsTrack;
     @FXML
     private ActionsTrack actionsTrack;
+    @FXML
+    private AmmoPane ammoPane;
 
     /**
      * The map associating each spawn color to the list of weapon images sockets
@@ -243,5 +245,12 @@ public class GameController extends GUIController {
         Collection<SelectableOverlay<ActionEnum>> selectableActions = actionsTrack.getSelectableOverlays(request.getChoices());
         // Then create a new selection handler and set it in the client view
         clientView.setSelectionHandler(new SelectionHandler<ActionEnum>(selectableActions));
+    }
+
+    /**
+     * Update the ammo information shown in the ammo pane with the most recent one
+     */
+    void updateAmmoAmount() {
+        ammoPane.setAmmo(clientView.getModelManager().getPlayers().get(clientView.getUsername()).getAmmo());
     }
 }

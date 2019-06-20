@@ -216,6 +216,15 @@ public class GUIRenderer extends Application implements UIRenderer {
         //TODO: Implement this method
     }
 
+    @Override
+    public void refreshAmmoInfo() {
+        try {
+            ((GameController) currentController).updateAmmoAmount();
+        } catch (Exception e) {
+            // The game screen is not shown, hence we ignore the error
+        }
+    }
+
     /**
      * Refreshes the rendered information about the match
      */

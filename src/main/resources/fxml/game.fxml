@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.*?>
-<?import it.polimi.deib.se2019.sanp4.adrenaline.client.gui.controls.PlayerOperationsTrack?>
 <?import it.polimi.deib.se2019.sanp4.adrenaline.client.gui.controls.ActionsTrack?>
+<?import it.polimi.deib.se2019.sanp4.adrenaline.client.gui.controls.AmmoPane?>
+<?import it.polimi.deib.se2019.sanp4.adrenaline.client.gui.controls.PlayerOperationsTrack?>
+<?import javafx.scene.layout.*?>
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       stylesheets="@style.css"
@@ -27,6 +28,7 @@
 
     <PlayerOperationsTrack fx:id="playerOperationsTrack"/>
     <ActionsTrack fx:id="actionsTrack"/>
+    <AmmoPane fx:id="ammoPane"/>
     <!-- TODO: Add player boards and fix bindings after addition -->
     <!-- TODO: Fix position and layout pf operations track, after having added all the remaining controls -->
 </VBox>

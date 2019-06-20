@@ -326,6 +326,11 @@ public class CLIRenderer implements UIRenderer {
         //TODO: Implement this method
     }
 
+    @Override
+    public void refreshAmmoInfo() {
+        //TODO: Implement this method
+    }
+
     /**
      * Refreshes the rendered information about the match
      */

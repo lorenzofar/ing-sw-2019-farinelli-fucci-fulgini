@@ -64,6 +64,7 @@ public class RenderingManager implements ModelUpdateVisitor {
         // Then if the updated player is our user, we refresh the match info pane to update its score
         if (update.getPlayer().getName().equals(clientView.getUsername())) {
             clientView.getRenderer().refreshMatchInfo();
+            clientView.getRenderer().refreshAmmoInfo();
         }
     }
 
