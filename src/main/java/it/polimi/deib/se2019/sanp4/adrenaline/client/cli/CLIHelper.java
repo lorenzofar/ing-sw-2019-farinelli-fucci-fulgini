@@ -7,6 +7,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.SpawnSquareView;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.SquareView;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.CardinalDirection;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.CoordPair;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCube;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCubeCost;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.powerup.PowerupCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.EffectDescription;
@@ -100,6 +101,7 @@ class CLIHelper {
     private static final int FULLSCREEN_TITLE_WIDTH = 40;
     private static final int SPAWN_WEAPONS_CELL_DIM = 40;
     private static final int PLAYERS_OVERVIEW_DIM = 25;
+    private static final int AMMO_TABLE_DIM = 8;
 
     /* ===== TEMPLATES ====== */
     private static final String TRISTRING_TEMPLATE = "%s%s%s";
@@ -289,7 +291,7 @@ class CLIHelper {
 
         options.forEach(option -> println("%d.\t%s", options.indexOf(option), stringConverter.apply(option)));
         if (allowNull) {
-            print("%d. None", options.size());
+            println("%d. None", options.size());
         }
 
         int maxN = options.size() - (allowNull ? 0 : 1);
@@ -746,7 +748,7 @@ class CLIHelper {
         List<String> effectDescriptionChunks = splitString(effect.getDescription(), CARD_WIDTH - 4);
         List<List<AmmoCubeCost>> effectCostChunks = splitList(effect.getCost(), CARD_WIDTH - 4);
 
-        if(closed){
+        if (closed) {
             expandStringRendering(renderedEffect, generateLine(HORIZONTAL_BORDER, CARD_WIDTH, LEFT_TOP_CORNER, RIGHT_TOP_CORNER));
         }
 
@@ -770,7 +772,7 @@ class CLIHelper {
                     2
             );
         });
-        if(closed){
+        if (closed) {
             expandStringRendering(renderedEffect, generateLine(HORIZONTAL_BORDER, CARD_WIDTH, LEFT_BOTTOM_CORNER, RIGHT_BOTTOM_CORNER));
         }
         return renderedEffect;
@@ -1010,6 +1012,26 @@ class CLIHelper {
         renderedOverview.remove(renderedOverview.size() - 1);
         expandStringRendering(renderedOverview, generateLine(HORIZONTAL_BORDER, PLAYERS_OVERVIEW_DIM, LEFT_BOTTOM_CORNER, RIGHT_BOTTOM_CORNER));
         return renderedOverview;
+    }
+
+    /**
+     * Renders a table showing the amount of each ammo cube color owned by the player
+     *
+     * @param ammo A map containing the owned amount for each color
+     * @return The textual representation of the table
+     */
+    public static List<List<String>> renderAmmoOverview(Map<AmmoCube, Integer> ammo) {
+        List<List<String>> renderedTable = new ArrayList<>();
+        expandStringRendering(renderedTable, generateLine(HORIZONTAL_BORDER, AMMO_TABLE_DIM, LEFT_TOP_CORNER, RIGHT_TOP_CORNER));
+        expandStringRendering(renderedTable, generateLine(BLANK, AMMO_TABLE_DIM, VERTICAL_BORDER, VERTICAL_BORDER));
+        fillLineWithText(renderedTable.get(renderedTable.size() - 1), "Ammo", 2, ANSI_BOLD);
+        expandStringRendering(renderedTable, generateLine(LIGHT_HORIZONTAL_BORDER, AMMO_TABLE_DIM, LIGHT_LEFT_VERTICAL_SEPARATOR, LIGHT_RIGHT_VERTICAL_SEPARATOR));
+        ammo.forEach((cube, amount) -> {
+            expandStringRendering(renderedTable, generateLine(BLANK, AMMO_TABLE_DIM, VERTICAL_BORDER, VERTICAL_BORDER));
+            fillLineWithText(renderedTable.get(renderedTable.size() - 1), String.format("%s %2d", cube.name().substring(0, 1), amount), 2, cube.getAnsiCode());
+        });
+        expandStringRendering(renderedTable, generateLine(HORIZONTAL_BORDER, AMMO_TABLE_DIM, LEFT_BOTTOM_CORNER, RIGHT_BOTTOM_CORNER));
+        return renderedTable;
     }
 
     /* ===== RENDERINGS MANIPULATION ===== */
