@@ -69,7 +69,9 @@ public class PlayerTurn extends Observable{
         if (state == OVER) {
             return Collections.emptyList(); /* No actions to perform */
         } else if(remainingActions > 0) {
-            return actionCard.getActions(); /* Main + Final actions */
+            List<ActionEnum> actions = new ArrayList<>(actionCard.getActions());
+            if (actionCard.hasFinalAction()) actions.add(actionCard.getFinalAction());
+            return actions; /* Main + Final actions */
         } else if (actionCard.hasFinalAction()) {
             return Collections.singletonList(actionCard.getFinalAction()); /* Only final action */
         } else {
