@@ -11,7 +11,7 @@ import javafx.scene.paint.Color;
  */
 public class KillshotsTrack extends GridPane {
 
-    private static final double[] COLUMNS = {13.73, 8.12, 8.23, 8.18, 8.10, 8.26, 8.18, 8.13, 8.55, 20.52};
+    private static final double[] COLUMNS = {12.5, 12.5, 12.5, 12.5, 12.5, 12.5, 12.5, 12.5};
 
     private int totalSkulls;
 
@@ -30,8 +30,7 @@ public class KillshotsTrack extends GridPane {
     private void fillCells(int takenSkulls) {
         this.getChildren().clear();
         // We first consider the difference between the number of total skulls and the number of cells
-        // We subtract 2 not to consider the left and right padding
-        int delta = COLUMNS.length - 2 - totalSkulls;
+        int delta = COLUMNS.length - totalSkulls;
         // Then for each of the skulls to cover:
         for (int i = 0; i < takenSkulls + delta; i++) {
             Pane skullOverlay = new Pane();
@@ -39,6 +38,7 @@ public class KillshotsTrack extends GridPane {
             skullOverlay.prefHeightProperty().bind(this.heightProperty());
             GridPane.setColumnIndex(skullOverlay, i);
             skullOverlay.setBackground(new Background(new BackgroundFill(Color.BLACK, null, null)));
+            skullOverlay.setOpacity(0.75);
             this.getChildren().add(skullOverlay);
         }
     }
@@ -46,7 +46,7 @@ public class KillshotsTrack extends GridPane {
     /**
      * Sets the skulls present in the killshots track
      *
-     * @param totalSkulls The inital count of skulls
+     * @param totalSkulls The initial count of skulls
      * @param takenSkulls The amount of skulls taken from the track
      */
     public void setSkulls(int totalSkulls, int takenSkulls) {
