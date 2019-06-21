@@ -2,10 +2,7 @@ package it.polimi.deib.se2019.sanp4.adrenaline.client.gui;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.client.ModelManager;
 import it.polimi.deib.se2019.sanp4.adrenaline.client.gui.controls.*;
-import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.ActionCardView;
-import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.BoardView;
-import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.SpawnSquareView;
-import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.SquareView;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.*;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.ActionRequest;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.PlayerOperationRequest;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.SquareRequest;
@@ -56,7 +53,7 @@ public class GameController extends GUIController {
     @FXML
     private GridPane topRow;
     @FXML
-    private GridPane killshotsTrackContainer;
+    private KillshotsTrack killshotsTrack;
     @FXML
     private GridPane topWeaponsContainer;
     @FXML
@@ -118,8 +115,8 @@ public class GameController extends GUIController {
         /* ===== BOARD LAYOUT ===== */
         middleRow.prefWidthProperty().bind(gameContainer.widthProperty());
         middleRow.prefHeightProperty().bind(gameContainer.heightProperty().multiply(GAME_CONTAINER_ROWS[1] / 100));
-        killshotsTrackContainer.prefWidthProperty().bind(topRow.widthProperty().multiply(TOP_ROW_COLUMNS[0] / 100));
-        killshotsTrackContainer.prefHeightProperty().bind(topRow.heightProperty());
+        killshotsTrack.prefWidthProperty().bind(topRow.widthProperty().multiply(TOP_ROW_COLUMNS[0] / 100));
+        killshotsTrack.prefHeightProperty().bind(topRow.heightProperty());
         topWeaponsContainer.prefWidthProperty().bind(topRow.widthProperty().multiply(TOP_ROW_COLUMNS[1] / 100));
         topWeaponsContainer.prefHeightProperty().bind(topRow.heightProperty());
         boardContainer.prefWidthProperty().bind(middleRow.widthProperty().multiply(MIDDLE_ROW_COLUMNS[1] / 100));
@@ -207,10 +204,6 @@ public class GameController extends GUIController {
             }
         }
 
-        // Then load the action card of the user into the actions track
-        ActionCardView userActionCard = modelManager.getActionCard(clientView.getUsername());
-        actionsTrack.setActionCard(userActionCard);
-
         // Then load the background
         Platform.runLater(() -> setBoard(boardView.getId()));
 
@@ -220,6 +213,8 @@ public class GameController extends GUIController {
         updateMatchInfo();
         updateAmmoAmount();
         updateSpawnWeapons();
+        updateKillshotsTrack();
+        updateActionTrack();
     }
 
     /**
@@ -309,5 +304,23 @@ public class GameController extends GUIController {
                 images.get(i).setWeapon(weaponCards.get(i));
             }
         });
+    }
+
+    /**
+     * Update the indicator of available skulls in the killshots track
+     */
+    void updateKillshotsTrack() {
+        MatchView match = clientView.getModelManager().getMatch();
+        if (match == null) {
+            return;
+        }
+        killshotsTrack.setSkulls(match.getTotalSkulls(), match.getKillshotsCount());
+    }
+
+    /**
+     * Update the track showing the supported actions, according to the owned action card   
+     */
+    void updateActionTrack() {
+        actionsTrack.setActionCard(clientView.getModelManager().getActionCard(clientView.getUsername()));
     }
 }

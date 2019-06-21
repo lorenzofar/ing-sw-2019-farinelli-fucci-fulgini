@@ -6,6 +6,7 @@
 <?import javafx.scene.layout.*?>
 <?import it.polimi.deib.se2019.sanp4.adrenaline.client.gui.controls.MatchInfoPane?>
 <?import javafx.scene.control.Label?>
+<?import it.polimi.deib.se2019.sanp4.adrenaline.client.gui.controls.KillshotsTrack?>
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       stylesheets="@style.css"
@@ -25,7 +26,21 @@
         <GridPane fx:id="gameContainer" styleClass="shadowed" GridPane.rowIndex="0" GridPane.columnIndex="0">
 
             <GridPane fx:id="topRow" GridPane.rowIndex="0">
-                <GridPane fx:id="killshotsTrackContainer" GridPane.columnIndex="0"/>
+                <GridPane GridPane.columnIndex="0">
+                    <rowConstraints>
+                        <RowConstraints percentHeight="22.95"/>
+                        <RowConstraints percentHeight="37.15"/>
+                        <RowConstraints percentHeight="39.9"/>
+                    </rowConstraints>
+                    <GridPane GridPane.rowIndex="1">
+                        <columnConstraints>
+                            <ColumnConstraints percentWidth="13.42"/>
+                            <ColumnConstraints percentWidth="66.20"/>
+                            <ColumnConstraints percentWidth="20.38"/>
+                        </columnConstraints>
+                        <KillshotsTrack fx:id="killshotsTrack" GridPane.columnIndex="1"/>
+                    </GridPane>
+                </GridPane>
                 <GridPane fx:id="topWeaponsContainer" GridPane.columnIndex="1"/>
             </GridPane>
 
