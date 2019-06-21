@@ -2,6 +2,7 @@ package it.polimi.deib.se2019.sanp4.adrenaline.model.match;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.*;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.Observable;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.Observer;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.*;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.Board;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.Square;
@@ -30,7 +31,7 @@ import java.util.*;
  *     <li>Whether the match is in frenzy mode or not</li>
  * </ul>
  */
-public class Match extends Observable<ModelUpdate> {
+public class Match extends Observable<ModelUpdate> implements Observer<ModelUpdate> {
 
     private static final String NULL_PLAYER_ERROR = "Player cannot be null";
     private static final String NULL_CARD_STACK = "Cannot set card stack to null";
@@ -366,5 +367,10 @@ public class Match extends Observable<ModelUpdate> {
     public void setKillshotsTrack(List<Player> killshotsTrack) {
         if (killshotsTrack == null) throw new NullPointerException();
         this.killshotsTrack = killshotsTrack;
+    }
+
+    @Override
+    public void update(ModelUpdate event) {
+        notifyObservers(event);
     }
 }

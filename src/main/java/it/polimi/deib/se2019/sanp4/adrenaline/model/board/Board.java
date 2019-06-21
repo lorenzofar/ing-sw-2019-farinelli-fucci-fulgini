@@ -23,7 +23,7 @@ import static it.polimi.deib.se2019.sanp4.adrenaline.model.board.CardinalDirecti
  * By convention the square with coordinate (0,0) is in the upper-left corner; square (1,0) is immediately at its right,
  * while square (0,1) is immediately beneath it.
  */
-public class Board extends Observable<ModelUpdate> {
+public class Board extends Observable<ModelUpdate> implements Observer<ModelUpdate> {
 
     /** The unique identifier of this board configuration */
     private int id;
@@ -360,5 +360,10 @@ public class Board extends Observable<ModelUpdate> {
 
         /* No common x or y */
         return null;
+    }
+
+    @Override
+    public void update(ModelUpdate event) {
+        notifyObservers(event);
     }
 }
