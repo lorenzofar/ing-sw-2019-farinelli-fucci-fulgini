@@ -1,3 +1,24 @@
+* {
+    -fx-dark-back-gray: #333;
+    -fx-light-text-gray: #D7D7D7;
+    -fx-disabled-text: #838487;
+    -fx-light-button-gray: #676767;
+    -fx-ligh-buttontext-gray: #FEFEFE;
+    -fx-enabled-text: #EDEFEF;
+    -fx-accent-color: #F8B73C;
+    -fx-accent-color-translucent: rgba(248, 183, 60, 0.3);
+}
+
+/* ===== GAME SCREEN GLOBAL ===== */
+#gameScene {
+    -fx-background-color: -fx-dark-back-gray;
+    -fx-text-fill: -fx-light-text-gray;
+}
+
+#gameScene * {
+    -fx-text-fill: -fx-light-text-gray;
+}
+
 .title-text {
     -fx-font-weight: bold;
     -fx-font-size: 12pt;
@@ -7,6 +28,7 @@
     -fx-font-size: 11pt;
 }
 
+/* ===== GAME BOARD ===== */
 #gameBoard {
     -fx-background-size: contain;
     -fx-background-position: left top, center;
@@ -14,23 +36,18 @@
 }
 
 .square-overlay {
-    -fx-background-color: green;
+    -fx-background-color: transparent;
     -fx-border-width: 0;
     -fx-opacity: 0.3;
 }
 
-.selectable {
-    -fx-border-color: red;
-    -fx-border-width: 5;
-    -fx-border-radius: 5px;
-    -fx-opacity: 1;
+.square-overlay.selectable {
+    -fx-background-color: -fx-accent-color;
+    -fx-opacity: 0.5;
 }
 
-.transparent-overlay {
-    -fx-border-color: transparent;
-    -fx-border-width: 2;
-    -fx-background-radius: 0;
-    -fx-background-color: transparent;
+.square-overlay.selectable:hover {
+    -fx-opacity: 0.75;
 }
 
 .selectable {
@@ -41,62 +58,52 @@
 
 .selectable:hover {
     -fx-border-width: 2;
-    -fx-border-color: #F8B73C;
+    -fx-border-color: -fx-accent-color;
 }
 
 /* ===== BOARD CONFIGURATION ===== */
-
 .board-selection-overlay {
     -fx-max-width: 100;
     -fx-max-height: 100;
 }
 
 /* ===== INTEGER SELECTION ===== */
-.integer-selection-overlay{
-    -fx-pref-width: 24;
-    -fx-pref-height: 24;
-    -fx-border-color: black;
+.integer-selection-overlay {
+    -fx-pref-width: 48;
+    -fx-pref-height: 48;
+    -fx-border-color: -fx-dark-back-gray;
+    -fx-border-radius: 5;
 }
 
-/* ===== SKULLS ===== */
-
-.skull-selection-overlay {
-    -fx-opacity: 0.4;
-    -fx-border-width: 2;
-    -fx-border-color: #F8B73C;
-    -fx-background-color: black;
+.integer-selection-overlay.selectable:hover {
+    -fx-background-color: lightgray;
 }
 
-.skull-selection-overlay.focused {
-    -fx-opacity: 1;
-}
-
+/* ===== EFFECT SELECTION ===== */
 .effect-overlay {
     -fx-background-color: #DFDFDF;
 }
 
-/* ===== PLAYERS ===== */
-.player-avatar {
+/* Shadowed effect, applies a shadow behind the element */
+.player-avatar, #gameContainer {
     -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);
 }
 
-GridPane Line {
-    -fx-stroke: yellow;
-}
-
 /* ===== PLAYER OPERATIONS ===== */
-.player-operation-overlay{
-    -fx-background-color: lightgray;
+.player-operation-overlay {
+    -fx-background-color: -fx-light-button-gray;
     -fx-border-width: 2;
-    -fx-border-color: lightgray;
+    -fx-border-color: -fx-light-button-gray;
+    -fx-text-fill: -fx-disabled-text;
+    -fx-border-radius: 5;
 }
-.player-operation-overlay.selectable{
-    -fx-background-color: rgba(148, 125, 146, 0.8);
-    -fx-border-color: rgba(148, 125, 146, 1);
-}
-.player-operation-overlay > Label{
+.player-operation-overlay *{
+    -fx-fill: -fx-disabled-text;
     -fx-font-size: 12pt;
 }
-.player-operation-overlay.selectable > Label{
-    -fx-text-fill: #F8B73C;
+.player-operation-overlay.selectable:hover {
+    -fx-background-color: -fx-accent-color-translucent;
+}
+.player-operation-overlay.selectable *{
+    -fx-fill: -fx-enabled-text;
 }

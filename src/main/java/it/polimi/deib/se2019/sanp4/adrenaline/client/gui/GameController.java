@@ -37,10 +37,17 @@ public class GameController extends GUIController {
     private static final double[] SX_COL_SPAWN_WEAPONS_ROWS = {19.14, 17.12, 1.24, 17.06, 0.96, 17.09, 27.40};
     private static final double[] DX_COL_SPAWN_WEAPONS_ROWS = {45.06, 16.57, 1.56, 16.47, 1.78, 16.48, 2.08};
 
+    private static final double BOARD_RATIO = 1389.6 / 1836.72;
+    /**
+     * The percentage width of the screen the board occupies
+     */
+    private static final double BOARD_COL_RATIO = 0.75;
     private static final int SPAWN_WEAPONS_COUNT = 3;
 
     @FXML
     private VBox gameScene;
+    @FXML
+    private GridPane topGameRow;
     @FXML
     private GridPane gameContainer;
     @FXML
@@ -73,11 +80,24 @@ public class GameController extends GUIController {
     private ActionsTrack actionsTrack;
     @FXML
     private AmmoPane ammoPane;
+    @FXML
+    private MatchInfoPane matchInfoPane;
 
     /**
      * The map associating each spawn color to the list of weapon images sockets
      */
     private Map<AmmoCube, List<WeaponImage>> spawnWeaponsImages;
+
+    /**
+     * Compute the size of the board to keep the ratio and update it accordingly
+     */
+    private void computeBoardSize(double sceneWidth) {
+        gameContainer.setMinWidth(sceneWidth * BOARD_COL_RATIO);
+        gameContainer.setMaxWidth(sceneWidth * BOARD_COL_RATIO);
+        gameContainer.setMinHeight(gameContainer.getWidth() * BOARD_RATIO);
+        gameContainer.setMaxHeight(gameContainer.getWidth() * BOARD_RATIO);
+    }
+
 
     @FXML
     public void initialize() {
@@ -91,27 +111,26 @@ public class GameController extends GUIController {
         setRowConstraints(middleSxContainer, SX_COL_SPAWN_WEAPONS_ROWS);
         setRowConstraints(middleDxContainer, DX_COL_SPAWN_WEAPONS_ROWS);
 
-        gameContainer.prefHeightProperty().bind(gameScene.heightProperty());
-        gameContainer.prefWidthProperty().bind(gameScene.widthProperty());
+        topGameRow.prefWidthProperty().bind(gameScene.widthProperty());
+        gameScene.widthProperty().addListener((v, oldVal, newVal) -> computeBoardSize(newVal.doubleValue()));
 
+        /* ===== BOARD LAYOUT ===== */
         middleRow.prefWidthProperty().bind(gameContainer.widthProperty());
         middleRow.prefHeightProperty().bind(gameContainer.heightProperty().multiply(GAME_CONTAINER_ROWS[1] / 100));
-
         killshotsTrackContainer.prefWidthProperty().bind(topRow.widthProperty().multiply(TOP_ROW_COLUMNS[0] / 100));
         killshotsTrackContainer.prefHeightProperty().bind(topRow.heightProperty());
         topWeaponsContainer.prefWidthProperty().bind(topRow.widthProperty().multiply(TOP_ROW_COLUMNS[1] / 100));
         topWeaponsContainer.prefHeightProperty().bind(topRow.heightProperty());
-
         boardContainer.prefWidthProperty().bind(middleRow.widthProperty().multiply(MIDDLE_ROW_COLUMNS[1] / 100));
         boardContainer.prefHeightProperty().bind(middleRow.heightProperty());
         middleSxContainer.prefWidthProperty().bind(middleRow.widthProperty().multiply(MIDDLE_ROW_COLUMNS[0] / 100));
         middleSxContainer.prefHeightProperty().bind(middleRow.heightProperty());
         middleDxContainer.prefWidthProperty().bind(middleRow.widthProperty().multiply(MIDDLE_ROW_COLUMNS[2] / 100));
         middleDxContainer.prefHeightProperty().bind(middleRow.heightProperty());
-
         topWeaponsContainer.setPadding(new Insets(0, 0, 12, 0));
         middleSxContainer.setPadding(new Insets(0, 12, 0, 0));
         middleDxContainer.setPadding(new Insets(0, 0, 0, 12));
+        /* ======================== */
 
         // Initialize the map of spawn weapons containers
         Map<AmmoCube, GridPane> spawnWeaponsContainers = new EnumMap<>(AmmoCube.class);
@@ -155,6 +174,7 @@ public class GameController extends GUIController {
      * Set up the layout of the game screen by creating overlays and binding dimensions
      */
     void buildMatchScreen() {
+        computeBoardSize(gameScene.getWidth());
         // Get the model manager
         ModelManager modelManager = clientView.getModelManager();
 
@@ -194,6 +214,10 @@ public class GameController extends GUIController {
         Platform.runLater(() -> setBoard(boardView.getId()));
 
         //TODO: Finish implementing this method
+
+        // Then populate everything
+        updateMatchInfo();
+        updateAmmoAmount();
     }
 
     /**
@@ -252,5 +276,19 @@ public class GameController extends GUIController {
      */
     void updateAmmoAmount() {
         ammoPane.setAmmo(clientView.getModelManager().getPlayers().get(clientView.getUsername()).getAmmo());
+    }
+
+    /**
+     * Update the match information shown in the corresponding pane
+     */
+    void updateMatchInfo() {
+        // Set the list of players
+        matchInfoPane.setPlayers(clientView.getModelManager().getPlayersColors());
+        // Set the score of the player
+        matchInfoPane.setScore(clientView.getModelManager().getPlayers().get(clientView.getUsername()).getScore());
+        // Set the currently playing player
+        if (clientView.getModelManager().getCurrentTurn() != null) {
+            matchInfoPane.setCurrentPlayer(clientView.getModelManager().getCurrentTurn().getPlayer());
+        }
     }
 }

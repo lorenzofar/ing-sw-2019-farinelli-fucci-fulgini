@@ -15,7 +15,7 @@ public class SkullsRequestController extends RequestController<Integer> {
      */
     @Override
     public int getColumnsCount() {
-        return 4;
+        return 8;
     }
 
     /**

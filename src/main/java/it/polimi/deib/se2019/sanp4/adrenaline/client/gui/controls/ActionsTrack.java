@@ -24,6 +24,9 @@ public class ActionsTrack extends HBox {
      * @param actionCard The object representing the action card
      */
     public void setActionCard(ActionCardView actionCard) {
+        if (actionCard == null) {
+            return;
+        }
         // First remove previous children
         this.getChildren().clear();
         // Then for each of the available actions, create an overlay and append to the container

@@ -1,7 +1,7 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.client.gui.controls;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.client.gui.GUIRenderer;
-import it.polimi.deib.se2019.sanp4.adrenaline.model.player.PlayerColor;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.ColoredObject;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -95,7 +95,7 @@ public class MatchInfoPane extends VBox {
      *
      * @param players The map containing the username of players and the associated character color
      */
-    public void setPlayers(Map<String, PlayerColor> players) {
+    public void setPlayers(Map<String, ColoredObject> players) {
         playersContainer.getChildren().clear();
         players.forEach((name, color) ->
                 {

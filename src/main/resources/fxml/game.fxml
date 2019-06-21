@@ -4,31 +4,64 @@
 <?import it.polimi.deib.se2019.sanp4.adrenaline.client.gui.controls.AmmoPane?>
 <?import it.polimi.deib.se2019.sanp4.adrenaline.client.gui.controls.PlayerOperationsTrack?>
 <?import javafx.scene.layout.*?>
+<?import it.polimi.deib.se2019.sanp4.adrenaline.client.gui.controls.MatchInfoPane?>
+<?import javafx.scene.control.Label?>
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       stylesheets="@style.css"
       fx:id="gameScene"
+      spacing="12"
       fx:controller="it.polimi.deib.se2019.sanp4.adrenaline.client.gui.GameController"
-      prefHeight="400.0" prefWidth="600.0">
+      prefWidth="1000" prefHeight="600">
 
-    <GridPane gridLinesVisible="true" fx:id="gameContainer" prefWidth="100" prefHeight="100">
+    <!-- TOP ROW -->
+    <GridPane fx:id="topGameRow" GridPane.rowIndex="0" hgap="12">
+        <columnConstraints>
+            <ColumnConstraints/> <!-- Column containing board -->
+            <ColumnConstraints/> <!-- Column containing match info and player boards -->
+        </columnConstraints>
+        <!-- GAME BOARD -->
+        <GridPane fx:id="gameContainer" GridPane.rowIndex="0" GridPane.columnIndex="0">
 
-        <GridPane fx:id="topRow" gridLinesVisible="true" GridPane.rowIndex="0">
-            <GridPane fx:id="killshotsTrackContainer" GridPane.columnIndex="0" gridLinesVisible="true"/>
-            <GridPane fx:id="topWeaponsContainer" GridPane.columnIndex="1" gridLinesVisible="true"/>
+            <GridPane fx:id="topRow" GridPane.rowIndex="0">
+                <GridPane fx:id="killshotsTrackContainer" GridPane.columnIndex="0"/>
+                <GridPane fx:id="topWeaponsContainer" GridPane.columnIndex="1"/>
+            </GridPane>
+
+            <GridPane fx:id="middleRow" GridPane.rowIndex="1">
+                <!-- Here we put the container of the board -->
+                <GridPane fx:id="middleSxContainer" GridPane.columnIndex="0"/>
+                <GridPane fx:id="boardContainer" GridPane.columnIndex="1"/>
+                <GridPane fx:id="middleDxContainer" GridPane.columnIndex="2"/>
+            </GridPane>
         </GridPane>
 
-        <GridPane gridLinesVisible="true" fx:id="middleRow" GridPane.rowIndex="1">
-            <!-- Here we put the container of the board -->
-            <GridPane fx:id="middleSxContainer" gridLinesVisible="true" GridPane.columnIndex="0"/>
-            <GridPane fx:id="boardContainer" gridLinesVisible="true" GridPane.columnIndex="1"/>
-            <GridPane fx:id="middleDxContainer" gridLinesVisible="true" GridPane.columnIndex="2"/>
+        <!-- RIGHT PANE -->
+        <GridPane GridPane.columnIndex="1" GridPane.rowIndex="0" vgap="12">
+            <rowConstraints>
+                <RowConstraints/>
+                <RowConstraints/>
+                <RowConstraints/>
+            </rowConstraints>
+            <!-- Here we place:
+            * in the first row the pane with info about the match
+            * in the second row the ammo counter
+            * int the remaining room the scrollable list of player boards -->
+            <MatchInfoPane fx:id="matchInfoPane" GridPane.rowIndex="0"/>
+            <AmmoPane fx:id="ammoPane" GridPane.rowIndex="1"/>
+            <VBox fx:id="playerBoardsContainer" GridPane.rowIndex="2"/>
         </GridPane>
     </GridPane>
 
-    <PlayerOperationsTrack fx:id="playerOperationsTrack"/>
-    <ActionsTrack fx:id="actionsTrack"/>
-    <AmmoPane fx:id="ammoPane"/>
+    <!-- BOTTOM ROW -->
+    <HBox fx:id="bottomRow" GridPane.rowIndex="1" spacing="8">
+        <VBox fx:id="buttonsRoom" spacing="8">
+            <Label styleClass="title-text" text="Operations"/>
+            <PlayerOperationsTrack fx:id="playerOperationsTrack"/>
+            <Label styleClass="title-text" text="Actions"/>
+            <ActionsTrack fx:id="actionsTrack"/>
+        </VBox>
+    </HBox>
     <!-- TODO: Add player boards and fix bindings after addition -->
     <!-- TODO: Fix position and layout pf operations track, after having added all the remaining controls -->
 </VBox>

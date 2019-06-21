@@ -230,7 +230,11 @@ public class GUIRenderer extends Application implements UIRenderer {
      */
     @Override
     public void refreshMatchInfo() {
-        //TODO: Implement this method
+        try {
+            ((GameController) currentController).updateMatchInfo();
+        } catch (Exception e) {
+            // The game screen is not shown, hence we ignore the error
+        }
     }
 
     @Override

@@ -26,6 +26,10 @@
             <ColumnConstraints/>
             <ColumnConstraints/>
             <ColumnConstraints/>
+            <ColumnConstraints/>
+            <ColumnConstraints/>
+            <ColumnConstraints/>
+            <ColumnConstraints/>
         </columnConstraints>
     </GridPane>
 
