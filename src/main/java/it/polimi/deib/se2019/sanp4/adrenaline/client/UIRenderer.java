@@ -89,6 +89,11 @@ public interface UIRenderer extends ChoiceRequestVisitor {
      */
     public void refreshMatchInfo();
 
+    /**
+     * Refreshes the rendered list of weapon cards contained in each spawn square
+     */
+    public void refreshSpawnWeapons();
+
     // TODO: add endpoint to refresh the list of weapons
 
     //TODO: Add more methods

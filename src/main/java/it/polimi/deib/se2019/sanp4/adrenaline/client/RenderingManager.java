@@ -80,7 +80,12 @@ public class RenderingManager implements ModelUpdateVisitor {
 
     @Override
     public void handle(SquareUpdate update) {
+        // First refresh the game board
         clientView.getRenderer().refreshGameBoard(update.getSquare().getLocation());
+        // Then check whether the square is a spawn square and if yes refresh the spawn weapons
+        if (clientView.getModelManager().getBoard().getSpawnPoints().containsValue(update.getSquare().getLocation())) {
+            clientView.getRenderer().refreshSpawnWeapons();
+        }
     }
 
     @Override

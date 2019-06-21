@@ -102,6 +102,7 @@ public class GUIRenderer extends Application implements UIRenderer {
             return (GUIController) loader.getController();
         } catch (IOException ignore) {
             // Ignore errors
+            ignore.printStackTrace();
             return null;
         }
     }
@@ -161,7 +162,6 @@ public class GUIRenderer extends Application implements UIRenderer {
         // We set a null selection handler and, incidentally, we cancel the existing one (if present)
         clientView.setSelectionHandler(null);
         //TODO: Maybe notify the user?
-
     }
 
     /**
@@ -177,7 +177,11 @@ public class GUIRenderer extends Application implements UIRenderer {
      */
     @Override
     public void refreshKillshotsTrack() {
-        //TODO: Implement this method
+        try {
+            ((GameController) currentController).updateKillshotsTrack();
+        } catch (Exception ignore) {
+            // The game screen is not shown, hence we ignore the error
+        }
     }
 
     /**
@@ -195,7 +199,11 @@ public class GUIRenderer extends Application implements UIRenderer {
      */
     @Override
     public void refreshActionsTrack() {
-        //TODO: Implement this method
+        try {
+            ((GameController) currentController).updateActionTrack();
+        } catch (Exception ignore) {
+            // The game screen is not shown, hence we ignore the error
+        }
     }
 
     /**
@@ -232,7 +240,16 @@ public class GUIRenderer extends Application implements UIRenderer {
     public void refreshMatchInfo() {
         try {
             ((GameController) currentController).updateMatchInfo();
-        } catch (Exception e) {
+        } catch (Exception ignore) {
+            // The game screen is not shown, hence we ignore the error
+        }
+    }
+
+    @Override
+    public void refreshSpawnWeapons() {
+        try {
+            ((GameController) currentController).updateSpawnWeapons();
+        } catch (Exception ignore) {
             // The game screen is not shown, hence we ignore the error
         }
     }

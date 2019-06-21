@@ -1,10 +1,7 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.client.cli;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.common.ColoredObject;
-import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.BoardView;
-import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.PlayerBoardView;
-import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.SpawnSquareView;
-import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.SquareView;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.*;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.CardinalDirection;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.CoordPair;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCube;
@@ -102,6 +99,7 @@ class CLIHelper {
     private static final int SPAWN_WEAPONS_CELL_DIM = 40;
     private static final int PLAYERS_OVERVIEW_DIM = 25;
     private static final int AMMO_TABLE_DIM = 8;
+    private static final int TURN_TABLE_DIM = 25;
 
     /* ===== TEMPLATES ====== */
     private static final String TRISTRING_TEMPLATE = "%s%s%s";
@@ -729,6 +727,8 @@ class CLIHelper {
         for (int col = 0; col < width; col++) {
             renderedBoard.get(0).set(3 + col * SQUARE_DIM + SQUARE_DIM / 2, String.format("%d", col));
         }
+        // Add two additional blank characters to match the size of the lines below
+        renderedBoard.get(0).addAll(Arrays.asList(BLANK, BLANK));
         return renderedBoard;
     }
 
@@ -923,8 +923,9 @@ class CLIHelper {
      * @return A list of all the lines composing the rendered track
      */
     public static List<List<String>> renderKillshotsTrack(int takenSkulls, int totalSkulls) {
+        final String header = "Killshots";
         List<List<String>> renderedTrack = new ArrayList<>();
-        int trackWidth = totalSkulls * 2 + 4; // add gap between two consecutive skulls and external padding
+        int trackWidth = Math.max(header.length() + 4, totalSkulls * 2 + 4); // add gap between two consecutive skulls and external padding
         // Generate a list of integers to represent skulls and determine their color later
         List<Integer> skulls = new ArrayList<>();
         for (int i = 0; i < totalSkulls; i++) {
@@ -932,7 +933,7 @@ class CLIHelper {
         }
         expandStringRendering(renderedTrack, generateLine(HORIZONTAL_BORDER, trackWidth, LEFT_TOP_CORNER, RIGHT_TOP_CORNER));
         expandStringRendering(renderedTrack, generateLine(BLANK, trackWidth, VERTICAL_BORDER, VERTICAL_BORDER));
-        fillLineWithText(renderedTrack.get(renderedTrack.size() - 1), "Killshots", 2, ANSI_BOLD);
+        fillLineWithText(renderedTrack.get(renderedTrack.size() - 1), header, 2, ANSI_BOLD);
         expandStringRendering(renderedTrack, generateLine(LIGHT_HORIZONTAL_BORDER, trackWidth, LIGHT_LEFT_VERTICAL_SEPARATOR, LIGHT_RIGHT_VERTICAL_SEPARATOR));
         expandStringRendering(renderedTrack, generateLine(BLANK, trackWidth, VERTICAL_BORDER, VERTICAL_BORDER));
         fillLineWithObjects(
@@ -988,17 +989,39 @@ class CLIHelper {
     /* ===== PLAYERS OVERVIEW ===== */
 
     /**
-     * Renders a table showing the list of players along with their color id
+     * Renders a table showing the current state of the match, providing information about:
+     * <ul>
+     * <li>The player that is currently playing</li>
+     * <li>The current score of the user</li>
+     * <li>The list of players participating in the match, along with their color id</li>
+     * <li>Whether the match is in frenzy mode or not</li>
      *
      * @param players The map storing the color for each player
+     * @param frenzy  {@code true} if the match is in frenzy mode, {@code false} otherwise
+     * @param turn    The object representing the turn
+     * @param score   The score of the user
      * @return The textual representation of the table
      */
-    public static List<List<String>> renderPlayersOverview(Map<String, PlayerColor> players) {
+    public static List<List<String>> renderMatchOverview(Map<String, PlayerColor> players, boolean frenzy, PlayerTurnView turn, int score) {
+
+        String currentPlayer = turn != null ? turn.getPlayer() : "---";
+
         List<List<String>> renderedOverview = new ArrayList<>();
         expandStringRendering(renderedOverview, generateLine(HORIZONTAL_BORDER, PLAYERS_OVERVIEW_DIM, LEFT_TOP_CORNER, RIGHT_TOP_CORNER));
         expandStringRendering(renderedOverview, generateLine(BLANK, PLAYERS_OVERVIEW_DIM, VERTICAL_BORDER, VERTICAL_BORDER));
-        fillLineWithText(renderedOverview.get(renderedOverview.size() - 1), "Players", 2, ANSI_BOLD);
+        fillLineWithText(renderedOverview.get(renderedOverview.size() - 1), "Turn of", 2, ANSI_BOLD);
+        expandStringRendering(renderedOverview, generateLine(BLANK, PLAYERS_OVERVIEW_DIM, VERTICAL_BORDER, VERTICAL_BORDER));
+        fillLineWithText(renderedOverview.get(renderedOverview.size() - 1), currentPlayer, 2);
+        expandStringRendering(renderedOverview, generateLine(BLANK, PLAYERS_OVERVIEW_DIM, VERTICAL_BORDER, VERTICAL_BORDER));
+        fillLineWithText(renderedOverview.get(renderedOverview.size() - 1), "Score", 2, ANSI_BOLD);
+        expandStringRendering(renderedOverview, generateLine(BLANK, PLAYERS_OVERVIEW_DIM, VERTICAL_BORDER, VERTICAL_BORDER));
+        fillLineWithText(renderedOverview.get(renderedOverview.size() - 1), String.valueOf(score), 2);
+        expandStringRendering(renderedOverview, generateLine(BLANK, PLAYERS_OVERVIEW_DIM, VERTICAL_BORDER, VERTICAL_BORDER));
+        expandStringRendering(renderedOverview, generateLine(BLANK, PLAYERS_OVERVIEW_DIM, VERTICAL_BORDER, VERTICAL_BORDER));
+        fillLineWithText(renderedOverview.get(renderedOverview.size() - 1), ANSI_DOT + " frenzy", 2, ANSI_BOLD, frenzy ? ANSI_GREEN : ANSI_RED);
         expandStringRendering(renderedOverview, generateLine(LIGHT_HORIZONTAL_BORDER, PLAYERS_OVERVIEW_DIM, LIGHT_LEFT_VERTICAL_SEPARATOR, LIGHT_RIGHT_VERTICAL_SEPARATOR));
+        expandStringRendering(renderedOverview, generateLine(BLANK, PLAYERS_OVERVIEW_DIM, VERTICAL_BORDER, VERTICAL_BORDER));
+        fillLineWithText(renderedOverview.get(renderedOverview.size() - 1), "Players", 2, ANSI_BOLD);
         players.forEach((player, color) -> {
             expandStringRendering(renderedOverview, generateLine(BLANK, PLAYERS_OVERVIEW_DIM, VERTICAL_BORDER, VERTICAL_BORDER));
             fillLineWithText(

@@ -155,11 +155,19 @@ public class CLIRenderer implements UIRenderer {
      */
     @Override
     public void showMatchScreen() {
-        // If the commands parser does not exist, we initialize it
-        startCommandsParser();
+        // If a request is currently being handled, do not print the match screen
+        if (clientView.getCurrentRequest() != null) {
+            return;
+        }
         CLIHelper.stopSpinner();
         CLIHelper.clearScreen();
+        printMatchScreen();
+    }
 
+    /**
+     * Generates and prints a textual representation of the game dashboard
+     */
+    private void printMatchScreen() {
         /*  The match screen is divided into two main panes,
             that correspond to two different contexts
             - LEFT PANE : game information
@@ -175,8 +183,8 @@ public class CLIRenderer implements UIRenderer {
             - players table
             - stacked players board
         */
-
         ModelManager modelManager = clientView.getModelManager();
+
         // We first render the killshots track
         List<List<String>> renderedKillshotsTrack = CLIHelper.renderKillshotsTrack(
                 modelManager.getMatch() != null ? modelManager.getMatch().getKillshotsCount() : 0,
@@ -191,25 +199,40 @@ public class CLIRenderer implements UIRenderer {
         List<List<String>> renderedBoard = CLIHelper.renderBoard(
                 modelManager.getBoard(),
                 modelManager.getPlayersColors());
+        // We then render the match overview
+        List<List<String>> renderedPlayersList = CLIHelper.renderMatchOverview(
+                modelManager.getPlayers().entrySet().stream().collect(Collectors.toMap(
+                        Map.Entry::getKey, e -> e.getValue().getColor()
+                )),
+                modelManager.getMatch().isFrenzy(),
+                modelManager.getCurrentTurn(),
+                modelManager.getPlayers().get(clientView.getUsername()).getScore()
+        );
+
+        // And concatenate them
+        List<List<String>> leftMiddleRow = CLIHelper.concatRenderedElements(
+                Arrays.asList(renderedBoard, renderedPlayersList),
+                4
+        );
+
         // Then the player board of the user
         List<List<String>> renderedUserPlayerBoard = CLIHelper.renderPlayerBoard(
                 modelManager.getPlayerBoards().get(clientView.getUsername()),
                 clientView.getUsername(),
                 modelManager.getPlayersColors()
         );
+        // Then the table showing the owned ammo
+        List<List<String>> renderedAmmoTable = CLIHelper.renderAmmoOverview(modelManager.getPlayers().get(clientView.getUsername()).getAmmo());
+        List<List<String>> leftBottomRow = CLIHelper.concatRenderedElements(
+                Arrays.asList(renderedUserPlayerBoard, renderedAmmoTable),
+                2
+        );
         // And eventually build the left pane
         List<List<String>> leftPane = CLIHelper.stackRenderedElements(
-                Arrays.asList(leftTopRow, renderedBoard, renderedUserPlayerBoard),
+                Arrays.asList(leftTopRow, leftMiddleRow, leftBottomRow),
                 2
         );
 
-        // Then we consider the right pane
-        // We first render the players overview
-        List<List<String>> renderedPlayersList = CLIHelper.renderPlayersOverview(
-                modelManager.getPlayers().entrySet().stream().collect(Collectors.toMap(
-                        Map.Entry::getKey, e -> e.getValue().getColor()
-                ))
-        );
         // Then we generate all the player boards, removing the one of the current player
         List<List<List<String>>> renderedPlayerBoards = modelManager.getPlayerBoards().entrySet().stream()
                 .filter(e -> !e.getKey().equals(clientView.getUsername()))
@@ -220,10 +243,12 @@ public class CLIRenderer implements UIRenderer {
         //TODO: Show score of the user
         //TODO: Show ammo of the user
 
+        List<List<String>> renderedTurnInformation = new ArrayList<>();
+
         // Then we stack each board on top of the other
         List<List<String>> stackedPlayerBoards = CLIHelper.stackRenderedElements(renderedPlayerBoards, 1);
         List<List<String>> rightPane = CLIHelper.stackRenderedElements(
-                Arrays.asList(renderedPlayersList, stackedPlayerBoards),
+                Arrays.asList(renderedTurnInformation, stackedPlayerBoards),
                 2
         );
 
@@ -232,7 +257,6 @@ public class CLIRenderer implements UIRenderer {
 
         // And finally print the match screen
         CLIHelper.printRenderedGameElement(matchScreen);
-
     }
 
     /**
@@ -287,7 +311,7 @@ public class CLIRenderer implements UIRenderer {
      */
     @Override
     public void refreshKillshotsTrack() {
-        //TODO: Implement this method
+        printMatchScreen();
     }
 
     /**
@@ -297,7 +321,7 @@ public class CLIRenderer implements UIRenderer {
      */
     @Override
     public void refreshPlayerBoard(String boardOwner) {
-        //TODO: Implement this method
+        printMatchScreen();
     }
 
     /**
@@ -305,7 +329,7 @@ public class CLIRenderer implements UIRenderer {
      */
     @Override
     public void refreshActionsTrack() {
-        //TODO: Implement this method
+        // Do nothing, since the action track is not explicitly shown
     }
 
     /**
@@ -313,7 +337,7 @@ public class CLIRenderer implements UIRenderer {
      */
     @Override
     public void refreshGameBoard() {
-        //TODO: Implement this method
+        printMatchScreen();
     }
 
     /**
@@ -323,12 +347,12 @@ public class CLIRenderer implements UIRenderer {
      */
     @Override
     public void refreshGameBoard(CoordPair... squares) {
-        //TODO: Implement this method
+        printMatchScreen();
     }
 
     @Override
     public void refreshAmmoInfo() {
-        //TODO: Implement this method
+        printMatchScreen();
     }
 
     /**
@@ -336,7 +360,12 @@ public class CLIRenderer implements UIRenderer {
      */
     @Override
     public void refreshMatchInfo() {
-        //TODO: Implement this method
+        printMatchScreen();
+    }
+
+    @Override
+    public void refreshSpawnWeapons() {
+        printMatchScreen();
     }
 
     @Override
@@ -399,7 +428,8 @@ public class CLIRenderer implements UIRenderer {
     /**
      * Performs the provided request on the user, replying to the server with the selected object
      *
-     * @param request         The oject representing the request
+     * @param title           The title of the screen shown to the user
+     * @param request         The object representing the request
      * @param stringConverter The conversion function to print the available choices
      * @param <T>             The type of the choices
      */
@@ -432,7 +462,7 @@ public class CLIRenderer implements UIRenderer {
     /**
      * Performs the provided request on the user, replying to the server with the selected object
      *
-     * @param request The oject representing the request
+     * @param request The object representing the request
      * @param <T>     The type of the choices
      */
     private <T extends Serializable> void requestRoutine(String title, ChoiceRequest<T> request) {
