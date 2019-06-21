@@ -5,6 +5,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.FullCapacityExce
 import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.NotEnoughAmmoException;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.PlayerView;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.Observable;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.Observer;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.AddedWeaponUpdate;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.ModelUpdate;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.PlayerUpdate;
@@ -22,7 +23,7 @@ import java.util.*;
 /**
  * Represents a player of the match.
  */
-public class Player extends Observable<ModelUpdate> {
+public class Player extends Observable<ModelUpdate> implements Observer<ModelUpdate> {
 
     /**
      * Load the initial cubes of each color a player has at the beginning of a match
@@ -534,5 +535,10 @@ public class Player extends Observable<ModelUpdate> {
         view.setWeapons(weapons);
         view.setPowerups(powerups);
         return view;
+    }
+
+    @Override
+    public void update(ModelUpdate event) {
+        notifyObservers(event);
     }
 }

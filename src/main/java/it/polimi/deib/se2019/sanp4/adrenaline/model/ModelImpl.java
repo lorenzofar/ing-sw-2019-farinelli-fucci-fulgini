@@ -1,6 +1,7 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.model;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.Observable;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.Observer;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.RemoteRoutingObservable;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.InitialUpdate;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.match.Match;
@@ -11,7 +12,7 @@ import java.util.Set;
 /**
  * Concrete implementation of {@link Model}.
  */
-public class ModelImpl extends RemoteRoutingObservable<ModelUpdate> implements Model {
+public class ModelImpl extends RemoteRoutingObservable<ModelUpdate> implements Model, Observer<ModelUpdate> {
 
     /** The match associated to the model */
     private Match match;
