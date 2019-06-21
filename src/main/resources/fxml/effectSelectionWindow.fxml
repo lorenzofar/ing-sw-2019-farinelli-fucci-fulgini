@@ -8,6 +8,7 @@
       fx:controller="it.polimi.deib.se2019.sanp4.adrenaline.client.gui.EffectRequestController"
       prefHeight="400.0" prefWidth="600.0"
       stylesheets="@style.css"
+      styleClass="dark-background"
       spacing="24">
 
     <padding>

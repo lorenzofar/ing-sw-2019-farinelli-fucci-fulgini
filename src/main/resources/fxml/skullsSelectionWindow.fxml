@@ -10,6 +10,7 @@
       fx:controller="it.polimi.deib.se2019.sanp4.adrenaline.client.gui.SkullsRequestController"
       prefHeight="200.0" prefWidth="600.0"
       stylesheets="@style.css"
+      styleClass="dark-background"
       spacing="12">
 
     <padding>

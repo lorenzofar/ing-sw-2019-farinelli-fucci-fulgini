@@ -10,9 +10,10 @@
       xmlns:fx="http://javafx.com/fxml"
       stylesheets="@style.css"
       fx:id="gameScene"
+      styleClass="dark-background"
       spacing="12"
       fx:controller="it.polimi.deib.se2019.sanp4.adrenaline.client.gui.GameController"
-      prefWidth="1000" prefHeight="600">
+      prefWidth="1000" prefHeight="800">
 
     <!-- TOP ROW -->
     <GridPane fx:id="topGameRow" GridPane.rowIndex="0" hgap="12">
@@ -21,7 +22,7 @@
             <ColumnConstraints/> <!-- Column containing match info and player boards -->
         </columnConstraints>
         <!-- GAME BOARD -->
-        <GridPane fx:id="gameContainer" GridPane.rowIndex="0" GridPane.columnIndex="0">
+        <GridPane fx:id="gameContainer" styleClass="shadowed" GridPane.rowIndex="0" GridPane.columnIndex="0">
 
             <GridPane fx:id="topRow" GridPane.rowIndex="0">
                 <GridPane fx:id="killshotsTrackContainer" GridPane.columnIndex="0"/>

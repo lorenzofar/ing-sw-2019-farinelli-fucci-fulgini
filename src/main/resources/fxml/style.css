@@ -3,20 +3,34 @@
     -fx-light-text-gray: #D7D7D7;
     -fx-disabled-text: #838487;
     -fx-light-button-gray: #676767;
-    -fx-ligh-buttontext-gray: #FEFEFE;
+    -fx-light-buttontext-gray: #FEFEFE;
+    -fx-dark-textfield-gray: #3D3E41;
     -fx-enabled-text: #EDEFEF;
     -fx-accent-color: #F8B73C;
     -fx-accent-color-translucent: rgba(248, 183, 60, 0.3);
 }
 
-/* ===== GAME SCREEN GLOBAL ===== */
-#gameScene {
+.dark-background {
     -fx-background-color: -fx-dark-back-gray;
     -fx-text-fill: -fx-light-text-gray;
 }
 
-#gameScene * {
+.dark-background * {
     -fx-text-fill: -fx-light-text-gray;
+}
+
+Button {
+    -fx-background-color: -fx-light-button-gray;
+    -fx-border-color: -fx-light-button-gray;
+    -fx-text-fill: -fx-light-buttontext-gray;
+    -fx-border-width: 2;
+    -fx-border-radius: 5;
+}
+
+TextField {
+    -fx-background-color: -fx-dark-textfield-gray;
+    -fx-text-fill: -fx-light-buttontext-gray;
+    -fx-border-radius: 5;
 }
 
 .title-text {
@@ -26,6 +40,34 @@
 
 .subtitle-text {
     -fx-font-size: 11pt;
+}
+
+.accent-text {
+    -fx-text-fill: -fx-accent-color;
+}
+
+/* ===== LIST VIEWS ===== */
+.list-view {
+    -fx-background-color: -fx-dark-back-gray;
+}
+
+.list-view .list-cell:hover {
+    -fx-background-color: -fx-accent-color-translucent;
+}
+
+.list-view .list-cell:selected {
+    -fx-background-color: -fx-dark-back-gray;
+}
+
+.list-view .list-cell {
+    -fx-background-color: -fx-dark-back-gray;
+    -fx-text-fill: -fx-light-buttontext-gray;
+}
+
+.list-view .label {
+    -fx-text-fill: -fx-light-buttontext-gray;
+    -fx-font-size: 12pt;
+    -fx-font-weight: bold;
 }
 
 /* ===== GAME BOARD ===== */
@@ -69,14 +111,17 @@
 
 /* ===== INTEGER SELECTION ===== */
 .integer-selection-overlay {
+    -fx-background-color: -fx-light-button-gray;
     -fx-pref-width: 48;
     -fx-pref-height: 48;
-    -fx-border-color: -fx-dark-back-gray;
+    -fx-border-color: -fx-light-button-gray;
     -fx-border-radius: 5;
 }
 
 .integer-selection-overlay.selectable:hover {
-    -fx-background-color: lightgray;
+    -fx-background-color: -fx-accent-color-translucent;
+    -fx-border-color: -fx-accent-color;
+    -fx-fill: -fx-light-button-gray;
 }
 
 /* ===== EFFECT SELECTION ===== */
@@ -85,7 +130,7 @@
 }
 
 /* Shadowed effect, applies a shadow behind the element */
-.player-avatar, #gameContainer {
+.shadowed {
     -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);
 }
 
@@ -97,13 +142,15 @@
     -fx-text-fill: -fx-disabled-text;
     -fx-border-radius: 5;
 }
-.player-operation-overlay *{
+
+.player-operation-overlay * {
     -fx-fill: -fx-disabled-text;
-    -fx-font-size: 12pt;
 }
+
 .player-operation-overlay.selectable:hover {
     -fx-background-color: -fx-accent-color-translucent;
 }
-.player-operation-overlay.selectable *{
+
+.player-operation-overlay.selectable * {
     -fx-fill: -fx-enabled-text;
 }

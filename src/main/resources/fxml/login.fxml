@@ -9,6 +9,7 @@
         xmlns:fx="http://javafx.com/fxml"
         fx:controller="it.polimi.deib.se2019.sanp4.adrenaline.client.gui.LoginController"
         stylesheets="@style.css"
+        styleClass="dark-background"
         hgap="10"
         vgap="10"
         prefHeight="400.0" prefWidth="300.0">
@@ -23,7 +24,7 @@
 
     <Label
             text="Adrenaline"
-            styleClass="title-text"
+            styleClass="title-text, accent-text"
             GridPane.rowIndex="0"/>
     <Label
             text="Choose the network connection mode"

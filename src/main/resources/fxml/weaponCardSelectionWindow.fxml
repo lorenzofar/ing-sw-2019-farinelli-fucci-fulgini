@@ -8,6 +8,7 @@
       fx:controller="it.polimi.deib.se2019.sanp4.adrenaline.client.gui.WeaponCardRequestController"
       prefHeight="350.0" prefWidth="500.0"
       stylesheets="@style.css"
+      styleClass="dark-background"
       spacing="24">
 
     <padding>

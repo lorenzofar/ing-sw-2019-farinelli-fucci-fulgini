@@ -4,7 +4,7 @@
 <fx:root xmlns="http://javafx.com/javafx"
          xmlns:fx="http://javafx.com/fxml"
          fx:id="overlayRoot"
-         styleClass="transparent-overlay"
+         styleClass="shadowed"
          type="javafx.scene.control.Button">
 
 </fx:root>

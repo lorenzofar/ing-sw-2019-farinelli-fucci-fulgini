@@ -11,7 +11,7 @@
          type="javafx.scene.control.Button">
 
     <VBox fx:id="buttonGraphics" spacing="8" alignment="BASELINE_CENTER">
-        <Circle fx:id="playerPic" styleClass="player-avatar" radius="64"/>
+        <Circle fx:id="playerPic" styleClass="shadowed" radius="64"/>
         <Label fx:id="playerName" styleClass="title-text"/>
     </VBox>
 </fx:root>
