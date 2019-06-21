@@ -3,6 +3,7 @@ package it.polimi.deib.se2019.sanp4.adrenaline.controller;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.action.GrabActionController;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.action.MoveActionController;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.action.ReloadActionController;
+import it.polimi.deib.se2019.sanp4.adrenaline.controller.action.ShootActionController;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.match.MatchController;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.match.SpawnController;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.match.TurnController;
@@ -55,6 +56,8 @@ public class StandardControllerFactory implements ControllerFactory {
 
     private final ReloadActionController reloadActionController;
 
+    private final ShootActionController shootActionController;
+
     /**
      * Creates a factory associated to the given match and views of the players,
      * which will be injected as dependencies where needed.
@@ -75,6 +78,7 @@ public class StandardControllerFactory implements ControllerFactory {
         paymentHandler = new PaymentHandler(match);
         moveActionController = new MoveActionController(match);
         reloadActionController = new ReloadActionController(match, this);
+        shootActionController = new ShootActionController(match, views, this);
     }
 
     /**
@@ -159,6 +163,16 @@ public class StandardControllerFactory implements ControllerFactory {
     @Override
     public ReloadActionController createReloadActionController() {
         return reloadActionController;
+    }
+
+    /**
+     * Creates the controller for the Shoot basic action
+     *
+     * @return The controller for the Reload basic action
+     */
+    @Override
+    public ShootActionController createShootActionController() {
+        return shootActionController;
     }
 
     /* =================== WEAPONS ===================== */

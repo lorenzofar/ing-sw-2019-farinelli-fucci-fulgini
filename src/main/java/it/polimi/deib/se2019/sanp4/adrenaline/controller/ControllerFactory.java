@@ -3,6 +3,7 @@ package it.polimi.deib.se2019.sanp4.adrenaline.controller;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.action.GrabActionController;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.action.MoveActionController;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.action.ReloadActionController;
+import it.polimi.deib.se2019.sanp4.adrenaline.controller.action.ShootActionController;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.match.MatchController;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.match.SpawnController;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.match.TurnController;
@@ -81,7 +82,12 @@ public interface ControllerFactory {
      */
     ReloadActionController createReloadActionController();
 
-    /* TODO: ShootActionController */
+    /**
+     * Creates the controller for the Shoot basic action
+     *
+     * @return The controller for the Reload basic action
+     */
+    ShootActionController createShootActionController();
 
     /**
      * Creates the controller for a specific weapon

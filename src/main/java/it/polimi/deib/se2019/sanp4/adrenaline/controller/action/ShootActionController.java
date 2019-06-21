@@ -1,5 +1,6 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.controller.action;
 
+import it.polimi.deib.se2019.sanp4.adrenaline.common.AdrenalineProperties;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.PowerupCardRequest;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.WeaponCardRequest;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.ControllerFactory;
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CancellationException;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -33,6 +35,8 @@ public class ShootActionController {
 
     private static final String MESSAGE_OFFER_TAGBACK = "You received damage from %s, use one of these powerups" +
             " to give him a mark";
+
+    private final int revengeTimeout;
 
     private final Match match;
 
@@ -51,6 +55,9 @@ public class ShootActionController {
         this.match = match;
         this.views = views;
         this.factory = factory;
+
+        revengeTimeout = Integer.parseInt((String) AdrenalineProperties.getProperties()
+                .getOrDefault("adrenaline.timeout.revenge", "30"));
     }
 
     /**
@@ -71,8 +78,9 @@ public class ShootActionController {
             return; /* Can't revenge */
         }
 
-        /* Ask the player user to choose one or no powerup */
+        /* Ask the user to choose one or no powerup */
         PersistentView damagedView = views.get(victim.getName());
+        damagedView.startTimer(() -> null, revengeTimeout, TimeUnit.SECONDS);
         PowerupCardRequest req = new PowerupCardRequest(MESSAGE_OFFER_TAGBACK, powerups, true);
         PowerupCard selected = damagedView.sendChoiceRequest(req).get();
 
@@ -85,6 +93,9 @@ public class ShootActionController {
         /* Discard the powerup card */
         victim.removePowerup(selected);
         match.getPowerupStack().discard(selected);
+
+        /* Stop the timer */
+        damagedView.stopTimer();
     }
 
     /**

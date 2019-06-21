@@ -275,7 +275,6 @@ public class TurnController {
      * @throws InterruptedException If the thread gets interrupted
      */
     void runAction(ActionEnum action) throws InterruptedException {
-        /* TODO: Implement actions */
         switch (action) {
             case RUN:
                 factory.createMoveActionController()
@@ -288,6 +287,8 @@ public class TurnController {
                         .execute(); /* Grab */
                 break;
             case SHOOT:
+                factory.createShootActionController()
+                        .execute(currentView); /* Shoot */
                 break;
             case RELOAD:
                 factory.createReloadActionController()
@@ -301,15 +302,28 @@ public class TurnController {
                         .execute(); /* Grab */
                 break;
             case ADRENALINE_SHOOT:
+                factory.createMoveActionController()
+                        .execute(currentView, 1); /* Move max. 1 step */
+                factory.createShootActionController()
+                        .execute(currentView); /* Shoot */
                 break;
             case FRENZY2_SHOOT:
+                factory.createMoveActionController()
+                        .execute(currentView, 1); /* Move max. 1 step */
+                factory.createReloadActionController()
+                        .execute(currentView); /* Reload any number of weapons */
+                factory.createShootActionController()
+                        .execute(currentView); /* Shoot */
                 break;
             case FRENZY2_RUN:
-                /* The player can move for max. 4 steps */
                 factory.createMoveActionController()
-                        .execute(currentView, 4);
+                        .execute(currentView, 4); /* Move max. 4 steps */
                 break;
             case FRENZY1_SHOOT:
+                factory.createMoveActionController()
+                        .execute(currentView, 2); /* Move max. 2 steps */
+                factory.createShootActionController()
+                        .execute(currentView); /* Shoot */
                 break;
             case FRENZY1_GRAB:
                 factory.createMoveActionController()
