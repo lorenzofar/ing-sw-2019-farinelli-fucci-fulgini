@@ -4,6 +4,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.client.ModelManager;
 import it.polimi.deib.se2019.sanp4.adrenaline.client.gui.controls.*;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.ActionCardView;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.BoardView;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.SpawnSquareView;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.SquareView;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.ActionRequest;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.PlayerOperationRequest;
@@ -218,6 +219,7 @@ public class GameController extends GUIController {
         // Then populate everything
         updateMatchInfo();
         updateAmmoAmount();
+        updateSpawnWeapons();
     }
 
     /**
@@ -290,5 +292,22 @@ public class GameController extends GUIController {
         if (clientView.getModelManager().getCurrentTurn() != null) {
             matchInfoPane.setCurrentPlayer(clientView.getModelManager().getCurrentTurn().getPlayer());
         }
+    }
+
+    /**
+     * Updates the weapon cards contained in each spawn square
+     */
+    void updateSpawnWeapons() {
+        spawnWeaponsImages.forEach((cube, images) -> {
+            // We get the corresponding spawn square for the cube
+            CoordPair location = clientView.getModelManager().getBoard().getSpawnPoints().get(cube);
+            SpawnSquareView spawnSquare = (SpawnSquareView) clientView.getModelManager().getBoard().getSquare(location);
+            List<String> weaponCards = spawnSquare.getWeapons();
+            // Compute the length of the shortest list
+            int limit = Math.min(weaponCards.size(), images.size());
+            for (int i = 0; i < limit; i++) {
+                images.get(i).setWeapon(weaponCards.get(i));
+            }
+        });
     }
 }

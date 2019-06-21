@@ -89,5 +89,7 @@ public interface UIRenderer extends ChoiceRequestVisitor {
      */
     public void refreshMatchInfo();
 
+    // TODO: add endpoint to refresh the list of weapons
+
     //TODO: Add more methods
 }

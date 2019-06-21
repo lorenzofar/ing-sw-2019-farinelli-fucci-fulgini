@@ -1,10 +1,8 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.client.gui.controls;
 
-import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.WeaponCard;
-
 public class WeaponImage extends OrientableImage {
 
-    public void setWeapon(WeaponCard weaponCard) {
-        super.setImage(String.format("/images/weapons/%s.png", weaponCard.getId()));
+    public void setWeapon(String weaponId) {
+        super.setImage(String.format("/images/weapons/%s.png", weaponId));
     }
 }
