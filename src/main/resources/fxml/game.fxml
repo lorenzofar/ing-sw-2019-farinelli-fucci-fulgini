@@ -7,6 +7,7 @@
 <?import it.polimi.deib.se2019.sanp4.adrenaline.client.gui.controls.MatchInfoPane?>
 <?import javafx.scene.control.Label?>
 <?import it.polimi.deib.se2019.sanp4.adrenaline.client.gui.controls.KillshotsTrack?>
+<?import it.polimi.deib.se2019.sanp4.adrenaline.client.gui.controls.PlayerBoardControl?>
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       stylesheets="@style.css"
@@ -71,6 +72,7 @@
 
     <!-- BOTTOM ROW -->
     <HBox fx:id="bottomRow" GridPane.rowIndex="1" spacing="8">
+        <PlayerBoardControl fx:id="userBoard" styleClass="shadowed" prefWidth="400"/>
         <VBox fx:id="buttonsRoom" spacing="8">
             <Label styleClass="title-text" text="Operations"/>
             <PlayerOperationsTrack fx:id="playerOperationsTrack"/>
