@@ -6,12 +6,10 @@ import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.NotEnoughAmmoExc
 import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.PlayerView;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.Observable;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.Observer;
-import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.AddedWeaponUpdate;
-import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.ModelUpdate;
-import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.PlayerUpdate;
-import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.RemovedWeaponUpdate;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.*;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionCardCreator;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionCardEnum;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.Square;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCube;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCubeCost;
@@ -250,6 +248,7 @@ public class Player extends Observable<ModelUpdate> implements Observer<ModelUpd
             throw new NullPointerException("ActionCard cannot be null for player");
         }
         this.actionCard = card;
+        this.notifyObservers(new ActionCardUpdate(actionCard.generateView(), name));
     }
 
     /**
@@ -258,8 +257,13 @@ public class Player extends Observable<ModelUpdate> implements Observer<ModelUpd
      * Note: needs {@link ActionCardCreator} to be properly set up
      */
     public void updateActionCard() {
+        ActionCardEnum actionCardEnum = actionCard.getType();
         int damage = playerBoard.getDamageCount();
         setActionCard(actionCard.next(damage));
+        // If the type has changed, notify the observers
+        if (actionCardEnum != actionCard.getType()) {
+            notifyObservers(new ActionCardUpdate(actionCard.generateView(), name));
+        }
     }
 
     /**
@@ -307,6 +311,7 @@ public class Player extends Observable<ModelUpdate> implements Observer<ModelUpd
             throw new FullCapacityException(MAX_WEAPONS);
         }
         weapons.add(weapon);
+        weapon.addObserver(this);
         notifyObservers(new AddedWeaponUpdate(this.getName(), weapon.getName()));
     }
 
@@ -325,9 +330,10 @@ public class Player extends Observable<ModelUpdate> implements Observer<ModelUpd
         if(!weaponCard.isPresent()){
             throw new CardNotFoundException(String.format("The weapon \"%s\" does not belong to the user", weaponId));
         }
-
         weapons.remove(weaponCard.get());
         notifyObservers(new RemovedWeaponUpdate(this.getName(), weaponId));
+        weaponCard.get().removeObserver(this);
+
         weaponCard.get().getState().reset(weaponCard.get()); // Resets the weapon card
         return weaponCard.get();
     }
@@ -349,6 +355,7 @@ public class Player extends Observable<ModelUpdate> implements Observer<ModelUpd
 
         weapons.remove(weapon);
         notifyObservers(new RemovedWeaponUpdate(this.getName(), weapon.getId()));
+        weapon.removeObserver(this);
         weapon.getState().reset(weapon);
         return weapon;
     }
@@ -376,6 +383,7 @@ public class Player extends Observable<ModelUpdate> implements Observer<ModelUpd
             throw new FullCapacityException(MAX_POWERUPS);
         }
         powerups.add(powerup);
+        notifyObservers(new DrawnPowerupUpdate(name, powerup));
     }
 
     /**

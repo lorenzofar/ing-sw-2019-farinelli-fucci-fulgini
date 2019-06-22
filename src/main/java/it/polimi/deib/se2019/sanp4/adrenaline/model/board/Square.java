@@ -62,7 +62,7 @@ public abstract class Square extends Observable<ModelUpdate> {
      * Puts a player inside the square
      * @param player The object representing the player, not null
      */
-    public void addPlayer(Player player){
+    void addPlayer(Player player){
         if(player == null){
             throw new NullPointerException("Player cannot be null");
         }
@@ -75,7 +75,7 @@ public abstract class Square extends Observable<ModelUpdate> {
      * @param player The object representing the player, not null
      * @throws PlayerNotFoundException If the player is not present in the square
      */
-    public void removePlayer(Player player) throws PlayerNotFoundException {
+    void removePlayer(Player player) {
         if(player == null){
             throw new NullPointerException("Player cannot be null");
         }

@@ -50,7 +50,6 @@ public class DrawnWeaponUpdateTest {
         update.setPlayer(player);
         update.setWeaponCard(weaponCard);
 
-
         s = objectMapper.writeValueAsString(update);
         drawnWeaponUpdate = objectMapper.readValue(s, DrawnWeaponUpdate.class);
 

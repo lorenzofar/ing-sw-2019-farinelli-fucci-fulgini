@@ -46,6 +46,8 @@ public class ModelImpl extends RemoteRoutingObservable<ModelUpdate> implements M
     @Override
     public void setMatch(Match match) {
         this.match = match;
+        match.addObserver(this);
+        //TODO: notify?
     }
 
     /**

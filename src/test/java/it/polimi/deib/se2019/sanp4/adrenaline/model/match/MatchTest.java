@@ -15,13 +15,15 @@ import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.PlayerState;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.io.IOException;
 import java.util.*;
 
 import static org.junit.Assert.*;
-import static org.hamcrest.CoreMatchers.*;
 
+@RunWith(MockitoJUnitRunner.class)
 public class MatchTest {
 
     private static Match mockMatch;

@@ -115,7 +115,6 @@ public class ObservableObserverTest {
         routingObservable.addObserver("Giammarco", observer);
         routingObservable.addObserver("Stefano", anotherObserver);
         routingObservable.notifyObservers(Arrays.asList("Stefano", "Giammarco", "German"), message);
-
         verify(observer).update(message);
         verify(anotherObserver).update(message);
     }

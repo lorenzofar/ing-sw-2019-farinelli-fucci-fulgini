@@ -10,6 +10,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionEnum;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.CoordPair;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCube;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.match.PlayerOperationEnum;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.player.PlayerColor;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -80,6 +81,13 @@ public class GameController extends GUIController {
     private AmmoPane ammoPane;
     @FXML
     private MatchInfoPane matchInfoPane;
+    @FXML
+    private PlayerBoardControl userBoard;
+
+    /**
+     * A map describing the player board control associated to each player
+     */
+    Map<String, PlayerBoardControl> playerBoards;
 
     /**
      * The map associating each spawn color to the list of weapon images sockets
@@ -136,6 +144,8 @@ public class GameController extends GUIController {
         spawnWeaponsContainers.put(AmmoCube.BLUE, topWeaponsContainer);
         spawnWeaponsContainers.put(AmmoCube.RED, middleSxContainer);
         spawnWeaponsContainers.put(AmmoCube.YELLOW, middleDxContainer);
+
+        // TODO: Initialize player boards of the other players
 
         // Create the containers for weapons in the three tracks
         for (AmmoCube color : AmmoCube.values()) {
@@ -204,6 +214,11 @@ public class GameController extends GUIController {
             }
         }
 
+        // Initialize the map storing the player boards for each player
+        playerBoards = new HashMap<>();
+        // And put inside it the player board of the user
+        playerBoards.put(clientView.getUsername(), userBoard);
+
         // Then load the background
         Platform.runLater(() -> setBoard(boardView.getId()));
 
@@ -215,6 +230,8 @@ public class GameController extends GUIController {
         updateSpawnWeapons();
         updateKillshotsTrack();
         updateActionTrack();
+        // For each player, update its player board
+        clientView.getModelManager().getPlayers().keySet().forEach(this::updatePlayerBoard);
     }
 
     /**
@@ -318,9 +335,35 @@ public class GameController extends GUIController {
     }
 
     /**
-     * Update the track showing the supported actions, according to the owned action card   
+     * Update the track showing the supported actions, according to the owned action card
      */
     void updateActionTrack() {
         actionsTrack.setActionCard(clientView.getModelManager().getActionCard(clientView.getUsername()));
+    }
+
+    /**
+     * Update the displayed information on the player board of the provided player
+     *
+     * @param player The username of the player
+     */
+    void updatePlayerBoard(String player) {
+        // First load the view of the player board
+        PlayerBoardView playerBoardView = clientView.getModelManager().getPlayerBoards().get(player);
+        if (playerBoardView == null) {
+            // The provided player does not exist
+            return;
+        }
+        // Then load the corresponding UI control
+        PlayerBoardControl playerBoardControl = playerBoards.get(player);
+        if (playerBoardControl == null) {
+            // The provided player has no associated board controls
+            // TODO: Create a board control for the player?
+            return;
+        }
+        // Eventually update the information
+        playerBoardControl.setBoardColor((PlayerColor) clientView.getModelManager().getPlayersColors().get(player));
+        playerBoardControl.setBoardState(playerBoardView.getState());
+        playerBoardControl.setDamageTokens(
+                playerBoardView.getDamages().stream().map(shooter -> clientView.getModelManager().getPlayersColors().get(shooter)).collect(Collectors.toList()));
     }
 }

@@ -154,7 +154,9 @@ public class GUIRenderer extends Application implements UIRenderer {
      */
     @Override
     public void showMessage(String text, MessageType type) {
-        new Alert(type.getAlertType(), text, ButtonType.OK).showAndWait();
+        Platform.runLater(() ->
+                new Alert(type.getAlertType(), text, ButtonType.OK).showAndWait()
+        );
     }
 
     @Override
@@ -191,7 +193,11 @@ public class GUIRenderer extends Application implements UIRenderer {
      */
     @Override
     public void refreshPlayerBoard(String boardOwner) {
-        //TODO: Implement this method
+        try {
+            ((GameController) currentController).updatePlayerBoard(boardOwner);
+        } catch (Exception ignore) {
+            // The game screen is not shown, hence we ignore the error
+        }
     }
 
     /**
