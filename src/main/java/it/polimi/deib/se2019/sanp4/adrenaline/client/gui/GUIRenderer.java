@@ -154,7 +154,9 @@ public class GUIRenderer extends Application implements UIRenderer {
      */
     @Override
     public void showMessage(String text, MessageType type) {
-        new Alert(type.getAlertType(), text, ButtonType.OK).showAndWait();
+        Platform.runLater(() ->
+                new Alert(type.getAlertType(), text, ButtonType.OK).showAndWait()
+        );
     }
 
     @Override
