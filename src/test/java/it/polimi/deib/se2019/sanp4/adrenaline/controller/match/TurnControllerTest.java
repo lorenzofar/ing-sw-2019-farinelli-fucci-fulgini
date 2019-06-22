@@ -1,36 +1,60 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.controller.match;
 
+import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.ActionRequest;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.PlayerOperationRequest;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.*;
+import it.polimi.deib.se2019.sanp4.adrenaline.controller.action.GrabActionController;
+import it.polimi.deib.se2019.sanp4.adrenaline.controller.action.MoveActionController;
+import it.polimi.deib.se2019.sanp4.adrenaline.controller.action.ReloadActionController;
+import it.polimi.deib.se2019.sanp4.adrenaline.controller.action.ShootActionController;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.answerers.CancelRequestAnswer;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.answerers.SendChoiceRequestAnswer;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.requests.CompletableChoice;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.ModelTestUtil;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionCardEnum;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionEnum;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.Square;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.match.*;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InOrder;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.*;
 
 import static it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionEnum.*;
+import static it.polimi.deib.se2019.sanp4.adrenaline.model.match.PlayerOperationEnum.*;
 import static it.polimi.deib.se2019.sanp4.adrenaline.model.match.PlayerTurnState.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
+@RunWith(MockitoJUnitRunner.class)
 public class TurnControllerTest {
 
     private static Match match;
     private static MatchConfiguration validConfig;
     private static Set<String> validNames;
     private static Map<String, PersistentView> views;
+
+    @Mock
     private static ControllerFactory factory;
+    @Mock
     private static SpawnController spawnController;
+    @Mock
+    private static MoveActionController moveActionController;
+    @Mock
+    private static GrabActionController grabActionController;
+    @Mock
+    private static ShootActionController shootActionController;
+    @Mock
+    private static ReloadActionController reloadActionController;
 
     @BeforeClass
     public static void classSetup() {
@@ -63,9 +87,15 @@ public class TurnControllerTest {
         });
 
         /* Create a stub of the controller factory (only stub relevant methods) */
-        factory = mock(ControllerFactory.class);
-        spawnController = mock(SpawnController.class);
         when(factory.createSpawnController()).thenReturn(spawnController);
+        when(factory.createMoveActionController()).thenReturn(moveActionController);
+        when(factory.createGrabActionController(any())).thenReturn(grabActionController);
+        when(factory.createShootActionController()).thenReturn(shootActionController);
+        when(factory.createReloadActionController()).thenReturn(reloadActionController);
+    }
+
+    private static SendChoiceRequestAnswer<PlayerOperationRequest> chooseOperation(PlayerOperationEnum choice) {
+        return req -> new CompletableChoice<>(req).complete(choice);
     }
 
     private static ActionCard actionCardWithFinalAction() {
@@ -88,7 +118,7 @@ public class TurnControllerTest {
         /* Setup the mock of the user */
         /* When it gets the request to select the operation, just end the turn */
         doAnswer((SendChoiceRequestAnswer<PlayerOperationEnum>) req ->
-                new CompletableChoice<>(req).complete(PlayerOperationEnum.END_TURN)
+                new CompletableChoice<>(req).complete(END_TURN)
         ).when(view).sendChoiceRequest(any(PlayerOperationRequest.class));
 
         /* Run the turn */
@@ -105,6 +135,7 @@ public class TurnControllerTest {
     public void runTurn_playerIsSpawned_shouldNotAskToSpawn() throws InterruptedException {
         Player p = match.getPlayerByName("bzoto");
         PersistentView view = views.get("bzoto");
+        assertEquals("bzoto", view.getUsername());
 
         /* Spawn the player somewhere */
         Square s = match.getBoard().getSquare(0,0);
@@ -117,7 +148,7 @@ public class TurnControllerTest {
         /* Setup the mock of the user */
         /* When it gets the request to select the operation, just end the turn */
         doAnswer((SendChoiceRequestAnswer<PlayerOperationEnum>) req ->
-                new CompletableChoice<>(req).complete(PlayerOperationEnum.END_TURN)
+                new CompletableChoice<>(req).complete(END_TURN)
         ).when(view).sendChoiceRequest(any(PlayerOperationRequest.class));
 
         /* Run the turn */
@@ -145,6 +176,277 @@ public class TurnControllerTest {
         /* Run the turn and check that it ends with no exceptions */
         controller.runTurn();
 
+        assertThat(turn.getTurnState(), is(OVER));
+    }
+
+    /* ======= PERFORM ACTION ======= */
+
+    @Test
+    public void runTurn_action_regularActionCard_useAllActions_shouldComplete() throws InterruptedException {
+        List<ActionEnum> mainActions = Arrays.asList(RUN, GRAB, SHOOT);
+        ActionEnum finalAction = RELOAD;
+        ActionCard regular = new ActionCard(3, ActionCardEnum.REGULAR, mainActions, finalAction);
+
+        /* Set up the player */
+        Player p = match.getPlayerByName("bzoto");
+        p.setActionCard(regular);
+        PersistentView view = views.get("bzoto");
+
+        /* Create the turn controller */
+        PlayerTurn turn = new PlayerTurn(p);
+        match.setCurrentTurn(turn);
+        TurnController controller = new TurnController(turn, match, views, factory);
+
+        /* Set up the user's responses */
+        when(view.sendChoiceRequest(any(PlayerOperationRequest.class)))
+                .thenAnswer(chooseOperation(PERFORM_ACTION)); /* Always perform actions */
+        /* NOTE: Actions are not really executed, but only the controllers are called */
+        List<ActionRequest> capturedRequests = new ArrayList<>();
+        when(view.sendChoiceRequest(any(ActionRequest.class)))
+                /* First execute shoot */
+                .thenAnswer((SendChoiceRequestAnswer<ActionEnum>) req -> {
+                    capturedRequests.add((ActionRequest) req);
+                    return new CompletableChoice<>(req).complete(SHOOT);
+                })
+                /* Then grab something */
+                .thenAnswer((SendChoiceRequestAnswer<ActionEnum>) req -> {
+                    capturedRequests.add((ActionRequest) req);
+                    return new CompletableChoice<>(req).complete(GRAB);
+                })
+                /* Run somewhere */
+                .thenAnswer((SendChoiceRequestAnswer<ActionEnum>) req -> {
+                    capturedRequests.add((ActionRequest) req);
+                    return new CompletableChoice<>(req).complete(RUN);
+                })
+                /* And reload in the end */
+                .thenAnswer((SendChoiceRequestAnswer<ActionEnum>) req -> {
+                    capturedRequests.add((ActionRequest) req);
+                    return new CompletableChoice<>(req).complete(RELOAD);
+                });
+
+        /* Run the turn */
+        controller.runTurn();
+
+        /* Check the number of interactions with the user */
+        verify(view, times(4)).sendChoiceRequest(any(PlayerOperationRequest.class));
+        verify(view, times(4)).sendChoiceRequest(any(ActionRequest.class));
+
+        /* Check that the expected choices have been proposed */
+        for (ActionRequest req : capturedRequests.subList(0,2)) {
+            /* Check choices for the first three requests */
+            List<ActionEnum> choices = req.getChoices();
+            assertEquals(4, choices.size());
+            assertTrue(choices.containsAll(mainActions));
+            assertTrue(choices.contains(finalAction));
+        }
+        /* Check the last request */
+        assertEquals(1, capturedRequests.get(3).getChoices().size());
+        assertTrue(capturedRequests.get(2).getChoices().contains(RELOAD)); /* Only final action */
+
+        /* Check that the action controllers have been called in the right order */
+        InOrder inOrder = Mockito.inOrder(moveActionController, grabActionController,
+                reloadActionController, shootActionController);
+        inOrder.verify(shootActionController).execute(view);
+        inOrder.verify(moveActionController).execute(view, 1);
+        inOrder.verify(grabActionController).execute();
+        inOrder.verify(moveActionController).execute(view, 3);
+        inOrder.verify(reloadActionController).execute(view);
+
+        /* Check that the turn is OVER */
+        assertThat(turn.getTurnState(), is(OVER));
+    }
+
+    @Test
+    public void runTurn_action_adrenalineActionCard_doNotReload_shouldComplete() throws InterruptedException {
+        List<ActionEnum> mainActions = Arrays.asList(RUN, ADRENALINE_GRAB, ADRENALINE_SHOOT);
+        ActionEnum finalAction = RELOAD;
+        ActionCard regular = new ActionCard(2, ActionCardEnum.FRENZY2, mainActions, finalAction);
+
+        /* Set up the player */
+        Player p = match.getPlayerByName("bzoto");
+        p.setActionCard(regular);
+        PersistentView view = views.get("bzoto");
+
+        /* Create the turn controller */
+        PlayerTurn turn = new PlayerTurn(p);
+        match.setCurrentTurn(turn);
+        TurnController controller = new TurnController(turn, match, views, factory);
+
+        /* Set up the user's responses */
+        when(view.sendChoiceRequest(any(PlayerOperationRequest.class)))
+                .thenAnswer(chooseOperation(PERFORM_ACTION)); /* Always perform actions */
+        /* NOTE: Actions are not really executed, but only the controllers are called */
+        List<ActionRequest> capturedRequests = new ArrayList<>();
+        when(view.sendChoiceRequest(any(ActionRequest.class)))
+                /* First execute grab */
+                .thenAnswer((SendChoiceRequestAnswer<ActionEnum>) req -> {
+                    capturedRequests.add((ActionRequest) req);
+                    return new CompletableChoice<>(req).complete(ADRENALINE_GRAB);
+                })
+                /* Then shoot */
+                .thenAnswer((SendChoiceRequestAnswer<ActionEnum>) req -> {
+                    capturedRequests.add((ActionRequest) req);
+                    return new CompletableChoice<>(req).complete(ADRENALINE_SHOOT);
+                })
+                /* And choose not to reload */
+                .thenAnswer((SendChoiceRequestAnswer<ActionEnum>) req -> {
+                    capturedRequests.add((ActionRequest) req);
+                    return new CompletableChoice<>(req).complete(null);
+                });
+
+        /* Run the turn */
+        controller.runTurn();
+
+        /* Check the number of interactions with the user */
+        verify(view, times(3)).sendChoiceRequest(any(PlayerOperationRequest.class));
+        verify(view, times(3)).sendChoiceRequest(any(ActionRequest.class));
+
+        /* Check that the expected choices have been proposed */
+        for (ActionRequest req : capturedRequests.subList(0,1)) {
+            /* Check choices for the first two requests */
+            List<ActionEnum> choices = req.getChoices();
+            assertEquals(4, choices.size());
+            assertTrue(choices.containsAll(mainActions));
+            assertTrue(choices.contains(finalAction));
+        }
+        /* Check the last request */
+        assertEquals(1, capturedRequests.get(2).getChoices().size());
+        assertTrue(capturedRequests.get(2).getChoices().contains(RELOAD)); /* Only final action */
+
+        /* Check that the action controllers have been called in the right order */
+        InOrder inOrder = Mockito.inOrder(moveActionController, grabActionController,
+                reloadActionController, shootActionController);
+        inOrder.verify(moveActionController).execute(view, 2);
+        inOrder.verify(grabActionController).execute();
+        inOrder.verify(moveActionController).execute(view, 1);
+        inOrder.verify(shootActionController).execute(view);
+        inOrder.verify(reloadActionController, never()).execute(view);
+
+        /* Check that the turn is OVER */
+        assertThat(turn.getTurnState(), is(OVER));
+    }
+
+    @Test
+    public void runTurn_action_frenzy1Actions_useAll_shouldComplete() throws InterruptedException {
+        List<ActionEnum> mainActions = Arrays.asList(FRENZY1_GRAB, FRENZY1_SHOOT);
+        ActionCard regular = new ActionCard(2, ActionCardEnum.FRENZY2, mainActions, null);
+
+        /* Set up the player */
+        Player p = match.getPlayerByName("bzoto");
+        p.setActionCard(regular);
+        PersistentView view = views.get("bzoto");
+
+        /* Create the turn controller */
+        PlayerTurn turn = new PlayerTurn(p);
+        match.setCurrentTurn(turn);
+        TurnController controller = new TurnController(turn, match, views, factory);
+
+        /* Set up the user's responses */
+        when(view.sendChoiceRequest(any(PlayerOperationRequest.class)))
+                .thenAnswer(chooseOperation(PERFORM_ACTION)); /* Always perform actions */
+        /* NOTE: Actions are not really executed, but only the controllers are called */
+        List<ActionRequest> capturedRequests = new ArrayList<>();
+        when(view.sendChoiceRequest(any(ActionRequest.class)))
+                /* Execute both actions */
+                .thenAnswer((SendChoiceRequestAnswer<ActionEnum>) req -> {
+                    capturedRequests.add((ActionRequest) req);
+                    return new CompletableChoice<>(req).complete(FRENZY1_SHOOT);
+                })
+                .thenAnswer((SendChoiceRequestAnswer<ActionEnum>) req -> {
+                    capturedRequests.add((ActionRequest) req);
+                    return new CompletableChoice<>(req).complete(FRENZY1_GRAB);
+                });
+
+        /* Run the turn */
+        controller.runTurn();
+
+        /* Check the number of interactions with the user */
+        verify(view, times(2)).sendChoiceRequest(any(PlayerOperationRequest.class));
+        verify(view, times(2)).sendChoiceRequest(any(ActionRequest.class));
+
+        /* Check that the expected choices have been proposed */
+        for (ActionRequest req : capturedRequests.subList(0,1)) {
+            /* Check choices for the two requests */
+            List<ActionEnum> choices = req.getChoices();
+            assertEquals(2, choices.size());
+            assertTrue(choices.containsAll(mainActions));
+        }
+
+        /* Check that the action controllers have been called in the right order */
+        InOrder inOrder = Mockito.inOrder(moveActionController, grabActionController,
+                reloadActionController, shootActionController);
+        inOrder.verify(moveActionController).execute(view, 2);
+        inOrder.verify(shootActionController).execute(view);
+        inOrder.verify(moveActionController).execute(view, 3);
+        inOrder.verify(grabActionController).execute();
+        verify(reloadActionController, never()).execute(view);
+
+        /* Check that the turn is OVER */
+        assertThat(turn.getTurnState(), is(OVER));
+    }
+
+    @Test
+    public void runTurn_action_frenzy2Actions_sameActionTwice_shouldComplete() throws InterruptedException {
+        List<ActionEnum> mainActions = Arrays.asList(FRENZY2_GRAB, FRENZY2_RUN, FRENZY2_SHOOT);
+        ActionCard regular = new ActionCard(3, ActionCardEnum.FRENZY2, mainActions, null);
+
+        /* Set up the player */
+        Player p = match.getPlayerByName("bzoto");
+        p.setActionCard(regular);
+        PersistentView view = views.get("bzoto");
+
+        /* Create the turn controller */
+        PlayerTurn turn = new PlayerTurn(p);
+        match.setCurrentTurn(turn);
+        TurnController controller = new TurnController(turn, match, views, factory);
+
+        /* Set up the user's responses */
+        when(view.sendChoiceRequest(any(PlayerOperationRequest.class)))
+                .thenAnswer(chooseOperation(PERFORM_ACTION)); /* Always perform actions */
+        /* NOTE: Actions are not really executed, but only the controllers are called */
+        List<ActionRequest> capturedRequests = new ArrayList<>();
+        when(view.sendChoiceRequest(any(ActionRequest.class)))
+                /* Execute shoot twice, then run */
+                .thenAnswer((SendChoiceRequestAnswer<ActionEnum>) req -> {
+                    capturedRequests.add((ActionRequest) req);
+                    return new CompletableChoice<>(req).complete(FRENZY2_SHOOT);
+                })
+                .thenAnswer((SendChoiceRequestAnswer<ActionEnum>) req -> {
+                    capturedRequests.add((ActionRequest) req);
+                    return new CompletableChoice<>(req).complete(FRENZY2_SHOOT);
+                })
+                .thenAnswer((SendChoiceRequestAnswer<ActionEnum>) req -> {
+                    capturedRequests.add((ActionRequest) req);
+                    return new CompletableChoice<>(req).complete(FRENZY2_RUN);
+                });
+
+        /* Run the turn */
+        controller.runTurn();
+
+        /* Check the number of interactions with the user */
+        verify(view, times(3)).sendChoiceRequest(any(PlayerOperationRequest.class));
+        verify(view, times(3)).sendChoiceRequest(any(ActionRequest.class));
+
+        /* Check that the expected choices have been proposed */
+        for (ActionRequest req : capturedRequests.subList(0,1)) {
+            /* Check choices for the two requests */
+            List<ActionEnum> choices = req.getChoices();
+            assertEquals(3, choices.size());
+            assertTrue(choices.containsAll(mainActions));
+        }
+
+        /* Check that the action controllers have been called in the right order */
+        InOrder inOrder = Mockito.inOrder(moveActionController, grabActionController,
+                reloadActionController, shootActionController);
+        inOrder.verify(moveActionController).execute(view, 1);
+        inOrder.verify(reloadActionController).execute(view);
+        inOrder.verify(shootActionController).execute(view);
+        inOrder.verify(moveActionController).execute(view, 1);
+        inOrder.verify(reloadActionController).execute(view);
+        inOrder.verify(shootActionController).execute(view);
+        inOrder.verify(moveActionController).execute(view, 4);
+
+        /* Check that the turn is OVER */
         assertThat(turn.getTurnState(), is(OVER));
     }
 
