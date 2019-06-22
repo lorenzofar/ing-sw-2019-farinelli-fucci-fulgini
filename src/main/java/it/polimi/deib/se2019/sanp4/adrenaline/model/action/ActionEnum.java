@@ -42,7 +42,7 @@ public enum ActionEnum {
     FRENZY2_GRAB("Grab (max 2 moves before)"),
     /** Move (max 2), Reload and Shoot */
     FRENZY1_SHOOT("Move (max 2), Reload and Shoot"),
-    /** Grab (max 2 moves before) */
+    /** Grab (max 3 moves before) */
     FRENZY1_GRAB("Grab (max 3 moves before)");
 
     private final String message;
