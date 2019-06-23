@@ -152,6 +152,7 @@ public class WeaponCard extends Observable<ModelUpdate> implements Serializable 
      */
     public WeaponCardState setState(WeaponCardState state){
         this.state = state;
+        this.notifyObservers(new WeaponCardUpdate(this));
         return this.state;
     }
 

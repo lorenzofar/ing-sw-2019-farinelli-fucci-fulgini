@@ -368,8 +368,8 @@ public class Match extends Observable<ModelUpdate> implements Observer<ModelUpda
      */
     public void setCurrentTurn(PlayerTurn currentTurn) {
         if (this.currentTurn != currentTurn) {
-            this.notifyObservers(new PlayerTurnUpdate(currentTurn.generateView()));
             this.currentTurn = currentTurn;
+            this.notifyObservers(new PlayerTurnUpdate(currentTurn.generateView()));
         }
     }
 
@@ -381,7 +381,7 @@ public class Match extends Observable<ModelUpdate> implements Observer<ModelUpda
             this.board.removeObserver(this);
         }
         this.board = board;
-        this.board.addObserver(this);
+        board.addObserver(this);
     }
 
     void setAmmoStack(CardStack<AmmoCard> ammoStack) {

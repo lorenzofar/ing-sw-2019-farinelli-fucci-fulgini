@@ -495,10 +495,14 @@ public class Player extends Observable<ModelUpdate> implements Observer<ModelUpd
      * @param currentSquare square where to set the player
      */
     public void setCurrentSquare(Square currentSquare) {
+        Square start = this.currentSquare;
         if(currentSquare == null){
             throw new NullPointerException("Square cannot be null");
         }
         this.currentSquare = currentSquare;
+        if (start.getLocation() != currentSquare.getLocation()) {
+            this.notifyObservers(new PlayerUpdate(this.generateView()));
+        }
     }
 
     /**

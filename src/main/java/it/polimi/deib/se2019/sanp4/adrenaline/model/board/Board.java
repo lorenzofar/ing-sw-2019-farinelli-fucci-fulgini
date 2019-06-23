@@ -100,13 +100,6 @@ public class Board extends Observable<ModelUpdate> implements Observer<ModelUpda
         }
         end.addPlayer(player);
         player.setCurrentSquare(end);
-        if(start != null) {
-            if(start.getLocation() != end.getLocation()) {
-                player.notifyObservers(new PlayerMoveUpdate(player.getName(), start.getLocation(), end.getLocation()));
-            }
-        } else {
-            player.notifyObservers(new PlayerMoveUpdate(player.getName(), null, end.getLocation()));
-        }
     }
 
     /**
