@@ -189,6 +189,8 @@ public class ClientView extends RemoteObservable<ViewEvent> implements RemoteVie
             performRequest(pendingRequests.pop());
         } catch (NoSuchElementException e) {
             currentRequest = null;
+        } finally {
+            //TODO: Refresh the rendered match screen
         }
     }
 
@@ -214,6 +216,10 @@ public class ClientView extends RemoteObservable<ViewEvent> implements RemoteVie
         } else if (scene == ViewScene.DISCONNECTED) {
             // TODO: Check how the scene is set from the server connection
             renderer.showDisconnectedScreen();
+        } else if (scene == ViewScene.TURN_IDLE) {
+            renderer.setIdleScreen();
+        } else if (scene == ViewScene.TURN_PLAYING) {
+            renderer.setActiveScreen();
         }
         //TODO: Implement more scenes
     }

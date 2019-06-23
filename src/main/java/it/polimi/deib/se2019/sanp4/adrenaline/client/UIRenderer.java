@@ -48,6 +48,16 @@ public interface UIRenderer extends ChoiceRequestVisitor {
      */
     void showDisconnectedScreen();
 
+    /**
+     * Updates the screen when the player is in IDLE mode
+     */
+    void setIdleScreen();
+
+    /**
+     * Updates the screen when the player is playing the current turn
+     */
+    void setActiveScreen();
+
     /* ====== REFRESH ENDPOINTS ===== */
 
     /**

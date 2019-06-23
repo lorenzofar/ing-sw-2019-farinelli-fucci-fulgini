@@ -173,6 +173,16 @@ public class GUIRenderer extends Application implements UIRenderer {
         Platform.runLater(() -> showScene("/fxml/disconnected.fxml"));
     }
 
+    @Override
+    public void setIdleScreen() {
+        //TODO: Implement this method
+    }
+
+    @Override
+    public void setActiveScreen() {
+        //TODO: Implement this method
+    }
+
     /**
      * Refreshes the rendered killshots track
      */

@@ -79,16 +79,6 @@ public class CLIRenderer implements UIRenderer {
     }
 
     /**
-     * Start the command parser and submit to executor if it's not alive
-     */
-    private void startCommandsParser() {
-        if (!commandsParser.isAlive()) {
-            commandsParser.setAlive(true);
-            commandsParserExecutor.submit(commandsParser);
-        }
-    }
-
-    /**
      * Prompts the user to enter the hostname of the server
      * and tries to connect to it using the selected network connection
      */
@@ -296,6 +286,23 @@ public class CLIRenderer implements UIRenderer {
         //TODO: Implement this method
     }
 
+    @Override
+    public void setIdleScreen() {
+        // We start the command parser
+        commandsParser.setAlive(true);
+        commandsParserExecutor.submit(commandsParser);
+    }
+
+    /**
+     * Updates the screen when the player is playing the current turn
+     */
+    @Override
+    public void setActiveScreen() {
+        // We kill the command parser and cancel input
+        CLIHelper.cancelInput();
+        commandsParser.setAlive(false);
+    }
+
     /**
      * Refreshes the rendered killshots track
      */
@@ -461,7 +468,6 @@ public class CLIRenderer implements UIRenderer {
         CLIHelper.cancelInput();
         CLIHelper.stopSpinner();
         CLIHelper.printTitle(title);
-        commandsParser.setAlive(false);
         // Ask the user to select a choice
         T selectedObject = CLIHelper.askOptionFromList(
                 request.getMessage(),
@@ -473,12 +479,10 @@ public class CLIRenderer implements UIRenderer {
             // The request has been cancelled, hence we stop here
             // We also check whether the current request has been deleted, in order to avoid issues when the
             // request allows an optional choice
-            startCommandsParser();
             return;
         }
         // Then create a response accordingly and reply to server
         ChoiceResponse<T> response = new ChoiceResponse<>(clientView.getUsername(), request.getUuid(), selectedObject);
-        startCommandsParser();
         clientView.notifyObservers(response);
         clientView.onRequestCompleted();
         showMatchScreen();
