@@ -5,10 +5,13 @@ import it.polimi.deib.se2019.sanp4.adrenaline.client.ModelManager;
 import it.polimi.deib.se2019.sanp4.adrenaline.client.UIRenderer;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.events.ChoiceResponse;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.LoginException;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.AmmoSquareView;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.PlayerView;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.*;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.BoardCreator;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.CoordPair;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCard;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCube;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.powerup.PowerupCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.EffectDescription;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.WeaponCard;
@@ -208,10 +211,17 @@ public class CLIRenderer implements UIRenderer {
                 modelManager.getCurrentTurn(),
                 modelManager.getPlayers().get(clientView.getUsername()).getScore()
         );
+        // Then we generate all the player boards, removing the one of the current player
+        List<List<List<String>>> renderedPlayerBoards = modelManager.getPlayerBoards().entrySet().stream()
+                .filter(e -> !e.getKey().equals(clientView.getUsername()))
+                .map(e -> CLIHelper.renderPlayerBoard(e.getValue(), e.getKey(), modelManager.getPlayersColors()))
+                .collect(Collectors.toList());
+        // Then we stack each board on top of the other
+        List<List<String>> stackedPlayerBoards = CLIHelper.stackRenderedElements(renderedPlayerBoards, 1);
 
-        // And concatenate them
+        // And concatenate elements in the middle row
         List<List<String>> leftMiddleRow = CLIHelper.concatRenderedElements(
-                Arrays.asList(renderedBoard, renderedPlayersList),
+                Arrays.asList(renderedBoard, renderedPlayersList, stackedPlayerBoards),
                 4
         );
 
@@ -223,8 +233,10 @@ public class CLIRenderer implements UIRenderer {
         );
         // Then the table showing the owned ammo
         List<List<String>> renderedAmmoTable = CLIHelper.renderAmmoOverview(modelManager.getPlayers().get(clientView.getUsername()).getAmmo());
+        // Then the table showing the owned weapons
+        List<List<String>> renderedWeaponsTable = CLIHelper.renderWeaponsTable(modelManager.getPlayers().get(clientView.getUsername()).getWeapons());
         List<List<String>> leftBottomRow = CLIHelper.concatRenderedElements(
-                Arrays.asList(renderedUserPlayerBoard, renderedAmmoTable),
+                Arrays.asList(renderedUserPlayerBoard, renderedAmmoTable, renderedWeaponsTable),
                 2
         );
         // And eventually build the left pane
@@ -233,30 +245,8 @@ public class CLIRenderer implements UIRenderer {
                 2
         );
 
-        // Then we generate all the player boards, removing the one of the current player
-        List<List<List<String>>> renderedPlayerBoards = modelManager.getPlayerBoards().entrySet().stream()
-                .filter(e -> !e.getKey().equals(clientView.getUsername()))
-                .map(e -> CLIHelper.renderPlayerBoard(e.getValue(), e.getKey(), modelManager.getPlayersColors()))
-                .collect(Collectors.toList());
-
-        //TODO: Generate turn rendering and show information about frenzy mode
-        //TODO: Show score of the user
-        //TODO: Show ammo of the user
-
-        List<List<String>> renderedTurnInformation = new ArrayList<>();
-
-        // Then we stack each board on top of the other
-        List<List<String>> stackedPlayerBoards = CLIHelper.stackRenderedElements(renderedPlayerBoards, 1);
-        List<List<String>> rightPane = CLIHelper.stackRenderedElements(
-                Arrays.asList(renderedTurnInformation, stackedPlayerBoards),
-                2
-        );
-
-        // Then we place the two panes one after the other
-        List<List<String>> matchScreen = CLIHelper.concatRenderedElements(Arrays.asList(leftPane, rightPane), 2);
-
         // And finally print the match screen
-        CLIHelper.printRenderedGameElement(matchScreen);
+        CLIHelper.printRenderedGameElement(leftPane);
     }
 
     /**
@@ -406,7 +396,41 @@ public class CLIRenderer implements UIRenderer {
     public void handle(SquareRequest request) {
         // First make sure the board is shown to the user, hence refresh the match screen
         showMatchScreen();
-        requestRoutine("Square selection", request, coordPair -> String.format("(%d:%d)", coordPair.getX(), coordPair.getY()));
+        requestRoutine("Square selection", request,
+                coordPair -> {
+                    // We show information about:
+                    // * how many players are there
+                    // * the type of square
+                    // * what is contained in the square
+                    // First get the current count of players inside the square
+                    int playersCount = clientView.getModelManager().getBoard().getSquare(coordPair).getPlayers().size();
+                    StringBuilder ammoOverview = new StringBuilder();
+                    // Then check whether the square is a spawn point
+                    // If the square is a spawn point we do not show the content, since it's already shown in the spawn table
+                    if (!clientView.getModelManager().getBoard().getSpawnPoints().containsValue(coordPair)) {
+                        ammoOverview.append("- ammo:");
+                        // The square is an ammo square
+                        AmmoCard ammoCard = ((AmmoSquareView) clientView.getModelManager().getBoard().getSquare(coordPair)).getAmmoCard();
+                        if (ammoCard != null) {
+                            for (Map.Entry<AmmoCube, Integer> entry : ammoCard.getCubes().entrySet()) {
+                                ammoOverview.append(String.format(" %d%s", entry.getValue(), entry.getKey().name().substring(0, 1)));
+                            }
+                            if (ammoCard.isHoldingPowerup()) {
+                                ammoOverview.append(" P");
+                            }
+                        } else {
+                            ammoOverview.append(" none");
+                        }
+                    }
+                    String template = "(%d:%d) - %s - players: %d %s";
+                    return String.format(template,
+                            coordPair.getX(),
+                            coordPair.getY(),
+                            clientView.getModelManager().getBoard().getSquare(coordPair).printTypeMarker(),
+                            playersCount,
+                            ammoOverview.toString());
+                }
+        );
     }
 
     @Override
@@ -457,6 +481,7 @@ public class CLIRenderer implements UIRenderer {
         startCommandsParser();
         clientView.notifyObservers(response);
         clientView.onRequestCompleted();
+        showMatchScreen();
     }
 
     /**
