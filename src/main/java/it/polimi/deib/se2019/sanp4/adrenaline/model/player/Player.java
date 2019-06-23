@@ -500,7 +500,7 @@ public class Player extends Observable<ModelUpdate> implements Observer<ModelUpd
             throw new NullPointerException("Square cannot be null");
         }
         this.currentSquare = currentSquare;
-        if (start.getLocation() != currentSquare.getLocation()) {
+        if (start != null && (start.getLocation() != currentSquare.getLocation())) {
             this.notifyObservers(new PlayerUpdate(this.generateView()));
         }
     }
