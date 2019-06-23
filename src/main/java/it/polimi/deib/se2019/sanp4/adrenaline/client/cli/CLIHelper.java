@@ -99,7 +99,7 @@ class CLIHelper {
     private static final int SPAWN_WEAPONS_CELL_DIM = 40;
     private static final int PLAYERS_OVERVIEW_DIM = 25;
     private static final int AMMO_TABLE_DIM = 8;
-    private static final int TURN_TABLE_DIM = 25;
+    private static final int WEAPONS_TABLE_DIM = 25;
 
     /* ===== TEMPLATES ====== */
     private static final String TRISTRING_TEMPLATE = "%s%s%s";
@@ -626,6 +626,16 @@ class CLIHelper {
     }
     /* =================== */
 
+    /**
+     * Determines the color associated to the provided boolean value
+     *
+     * @param val The boolean value to evaluate
+     * @return The ANSI code for green if the value is {@code true}, red otherwise
+     */
+    private static String parseBooleanColor(boolean val) {
+        return val ? ANSI_GREEN : ANSI_RED;
+    }
+
     /* ===== SQUARES ===== */
 
     /**
@@ -1054,6 +1064,37 @@ class CLIHelper {
             fillLineWithText(renderedTable.get(renderedTable.size() - 1), String.format("%s %2d", cube.name().substring(0, 1), amount), 2, cube.getAnsiCode());
         });
         expandStringRendering(renderedTable, generateLine(HORIZONTAL_BORDER, AMMO_TABLE_DIM, LEFT_BOTTOM_CORNER, RIGHT_BOTTOM_CORNER));
+        return renderedTable;
+    }
+
+    /**
+     * Renders a table showing the owned weapons, with information about:
+     * <ul>
+     * <li>Their name</li>
+     * <li>Their usability state</li>
+     * <li>Their cost</li>
+     * </ul>
+     *
+     * @param weaponCards The list of objects representing the weapon cards
+     * @return The textual representation of the table
+     */
+    public static List<List<String>> renderWeaponsTable(List<WeaponCard> weaponCards) {
+        List<List<String>> renderedTable = new ArrayList<>();
+        expandStringRendering(renderedTable, generateLine(HORIZONTAL_BORDER, WEAPONS_TABLE_DIM, LEFT_TOP_CORNER, RIGHT_TOP_CORNER));
+        expandStringRendering(renderedTable, generateLine(BLANK, WEAPONS_TABLE_DIM, VERTICAL_BORDER, VERTICAL_BORDER));
+        fillLineWithText(renderedTable.get(renderedTable.size() - 1), "Weapons", 2, ANSI_BOLD);
+        weaponCards.forEach(weaponCard -> {
+            expandStringRendering(renderedTable, generateLine(LIGHT_HORIZONTAL_BORDER, WEAPONS_TABLE_DIM, LIGHT_LEFT_VERTICAL_SEPARATOR, LIGHT_RIGHT_VERTICAL_SEPARATOR));
+            expandStringRendering(renderedTable, generateLine(BLANK, WEAPONS_TABLE_DIM, VERTICAL_BORDER, VERTICAL_BORDER));
+            // Add the name and usability of weapon
+            fillLineWithText(renderedTable.get(renderedTable.size() - 1), String.format("%s %s", ANSI_DOT, truncateString(weaponCard.getName(), WEAPONS_TABLE_DIM - 6)), 2, "", parseBooleanColor(weaponCard.getState().isUsable()));
+            // Then expand the table
+            expandStringRendering(renderedTable, generateLine(BLANK, WEAPONS_TABLE_DIM, VERTICAL_BORDER, VERTICAL_BORDER));
+            // And on the new row put the cost of the weapon
+            fillLineWithObjects(renderedTable.get(renderedTable.size() - 1), weaponCard.getCost(), AmmoCubeCost::getAnsiCode, cube -> ANSI_DOT, 4, 2);
+        });
+        // Then add the table bottom
+        expandStringRendering(renderedTable, generateLine(HORIZONTAL_BORDER, WEAPONS_TABLE_DIM, LEFT_BOTTOM_CORNER, RIGHT_BOTTOM_CORNER));
         return renderedTable;
     }
 
