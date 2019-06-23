@@ -14,17 +14,21 @@ import java.util.Set;
  */
 public class ModelImpl extends RemoteRoutingObservable<ModelUpdate> implements Model, Observer<ModelUpdate> {
 
-    /** The match associated to the model */
+    /**
+     * The match associated to the model
+     */
     private Match match;
 
-    /** The operational state of the match */
+    /**
+     * The operational state of the match
+     */
     private MatchOperationalState operationalState;
 
     /**
      * Creates an empty model.
      * The initial operational state is {@link MatchOperationalState#WAITING_PLAYERS}
      */
-    public ModelImpl(){
+    public ModelImpl() {
         operationalState = MatchOperationalState.WAITING_PLAYERS;
     }
 
@@ -45,8 +49,11 @@ public class ModelImpl extends RemoteRoutingObservable<ModelUpdate> implements M
      */
     @Override
     public void setMatch(Match match) {
+        if (this.match != null) {
+            this.match.removeObserver(this);
+        }
         this.match = match;
-        match.addObserver(this);
+        this.match.addObserver(this);
         //TODO: notify?
     }
 

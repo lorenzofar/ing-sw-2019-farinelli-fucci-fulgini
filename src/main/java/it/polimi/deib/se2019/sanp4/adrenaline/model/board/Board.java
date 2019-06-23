@@ -78,8 +78,14 @@ public class Board extends Observable<ModelUpdate> implements Observer<ModelUpda
                     String.format("Cannot add a square at coords (%d, %d) because it's outside the board", x, y));
         }
 
+        // We check whether the place was occupied by another square, and in case we remove us from the observers
+        if(squares[x][y] != null){
+            squares[x][y].removeObserver(this);
+        }
+
         /* Eventually we put it into the board matrix */
         squares[x][y] = square;
+        squares[x][y].addObserver(this);
     }
 
     /**

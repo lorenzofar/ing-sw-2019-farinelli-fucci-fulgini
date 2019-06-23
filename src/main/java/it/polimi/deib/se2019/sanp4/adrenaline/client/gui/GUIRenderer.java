@@ -102,7 +102,6 @@ public class GUIRenderer extends Application implements UIRenderer {
             return (GUIController) loader.getController();
         } catch (IOException ignore) {
             // Ignore errors
-            ignore.printStackTrace();
             return null;
         }
     }

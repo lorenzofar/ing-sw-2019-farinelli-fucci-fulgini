@@ -106,6 +106,8 @@ public class Player extends Observable<ModelUpdate> implements Observer<ModelUpd
 
         /* Create empty player board */
         playerBoard = new PlayerBoard(this);
+        // And add the player as one of its observers
+        playerBoard.addObserver(this);
 
         /* Item lists */
         weapons = new ArrayList<>();
