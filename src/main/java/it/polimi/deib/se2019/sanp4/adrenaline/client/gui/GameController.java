@@ -83,6 +83,8 @@ public class GameController extends GUIController {
     private MatchInfoPane matchInfoPane;
     @FXML
     private PlayerBoardControl userBoard;
+    @FXML
+    private VBox playerBoardsContainer;
 
     /**
      * A map describing the player board control associated to each player
@@ -218,6 +220,13 @@ public class GameController extends GUIController {
         playerBoards = new HashMap<>();
         // And put inside it the player board of the user
         playerBoards.put(clientView.getUsername(), userBoard);
+
+        // Then create the player boards for the other players
+        clientView.getModelManager().getPlayers().keySet().stream().filter(player -> !player.equals(clientView.getUsername())).forEach(player -> {
+            PlayerBoardControl playerBoardControl = new PlayerBoardControl();
+            playerBoardsContainer.getChildren().add(playerBoardControl);
+            playerBoards.put(player, playerBoardControl);
+        });
 
         // Then load the background
         Platform.runLater(() -> setBoard(boardView.getId()));

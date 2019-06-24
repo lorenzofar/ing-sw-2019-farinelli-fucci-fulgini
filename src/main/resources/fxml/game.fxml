@@ -66,7 +66,7 @@
             * int the remaining room the scrollable list of player boards -->
             <MatchInfoPane fx:id="matchInfoPane" GridPane.rowIndex="0"/>
             <AmmoPane fx:id="ammoPane" GridPane.rowIndex="1"/>
-            <VBox fx:id="playerBoardsContainer" GridPane.rowIndex="2"/>
+            <VBox fx:id="playerBoardsContainer" GridPane.rowIndex="2" spacing="12"/>
         </GridPane>
     </GridPane>
 
