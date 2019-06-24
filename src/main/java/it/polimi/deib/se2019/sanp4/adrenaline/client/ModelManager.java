@@ -164,6 +164,12 @@ public class ModelManager implements ModelUpdateVisitor {
         }
         square.setAdjacentMap(update.getSquare().getAdjacentMap());
         square.setPlayers(update.getSquare().getPlayers());
+        // Check whether the square is a spawn or ammo square
+        if (square.printTypeMarker().equals("S")) {
+            ((SpawnSquareView) square).setWeapons(((SpawnSquareView) update.getSquare()).getWeapons());
+        } else {
+            ((AmmoSquareView) square).setAmmoCard(((AmmoSquareView) update.getSquare()).getAmmoCard());
+        }
     }
 
     @Override

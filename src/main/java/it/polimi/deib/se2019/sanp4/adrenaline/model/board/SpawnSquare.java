@@ -149,6 +149,8 @@ public class SpawnSquare extends Square {
                         .stream()
                         .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().getConnectionType()));
         view.setAdjacentMap(adjacentMap);
+        /* Create a list of ids of the weapon cards contained in it */
+        view.setWeapons(weaponCards.stream().map(WeaponCard::getId).collect(Collectors.toList()));
         return view;
     }
 }
