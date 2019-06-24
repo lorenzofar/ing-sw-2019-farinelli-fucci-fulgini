@@ -300,6 +300,8 @@ public class GameController extends GUIController {
         matchInfoPane.setPlayers(clientView.getModelManager().getPlayersColors());
         // Set the score of the player
         matchInfoPane.setScore(clientView.getModelManager().getPlayers().get(clientView.getUsername()).getScore());
+        // Set the frenzy mode indicator
+        matchInfoPane.setFrenzyModeIndicator(clientView.getModelManager().getMatch().isFrenzy());
         // Set the currently playing player
         if (clientView.getModelManager().getCurrentTurn() != null) {
             matchInfoPane.setCurrentPlayer(clientView.getModelManager().getCurrentTurn().getPlayer());

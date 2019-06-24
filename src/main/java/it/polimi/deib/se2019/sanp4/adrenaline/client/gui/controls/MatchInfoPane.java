@@ -11,6 +11,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 
 import java.util.Map;
@@ -36,12 +37,17 @@ public class MatchInfoPane extends VBox {
      * Box containing the list of players
      */
     private VBox playersContainer;
+    /**
+     * A circle that acts as an indicator for the status of frenzy mode
+     */
+    private Circle frenzyModeIndicator;
+    private Label frenzyModeLabel;
 
     public MatchInfoPane() {
         super();
         this.getStylesheets().add("/fxml/style.css");
         scoreProperty = new SimpleIntegerProperty(0);
-        currentPlayerProperty = new SimpleStringProperty("");
+        currentPlayerProperty = new SimpleStringProperty("---");
 
         /* ===== LAYOUT BUILDING ===== */
 
@@ -54,7 +60,7 @@ public class MatchInfoPane extends VBox {
         this.getChildren().add(currentPlayerHeader);
 
         Label currentPlayerLabel = new Label();
-        currentPlayerHeader.textProperty().bind(currentPlayerProperty);
+        currentPlayerLabel.textProperty().bind(currentPlayerProperty);
         this.getChildren().add(currentPlayerLabel);
 
         // Then create the score header
@@ -66,6 +72,20 @@ public class MatchInfoPane extends VBox {
         Label scoreLabel = new Label();
         scoreLabel.textProperty().bind(scoreProperty.asString());
         this.getChildren().add(scoreLabel);
+
+        // Then the header for frenzy mode
+        Label frenzyHeader = new Label("Frenzy mode");
+        frenzyHeader.getStyleClass().add(GUIRenderer.CSS_BOLD_TITLE);
+        this.getChildren().add(frenzyHeader);
+
+        // And the indicator
+        HBox frenzyContainer = new HBox(8);
+        frenzyContainer.setAlignment(Pos.CENTER_LEFT);
+        frenzyModeIndicator = new Circle(5, Color.TRANSPARENT);
+        frenzyModeLabel = new Label();
+        frenzyContainer.getChildren().add(frenzyModeIndicator);
+        frenzyContainer.getChildren().add(frenzyModeLabel);
+        this.getChildren().add(frenzyContainer);
 
         // Then the header for the players list
         Label playersHeader = new Label("Players");
@@ -117,5 +137,17 @@ public class MatchInfoPane extends VBox {
      */
     public void setCurrentPlayer(String player) {
         currentPlayerProperty.setValue(player);
+    }
+
+    /**
+     * Sets the indicator showing the state of frenzy mode
+     *
+     * @param isFrenzy {@code true} if frenzy mode is active, {@code false} otherwise
+     */
+    public void setFrenzyModeIndicator(boolean isFrenzy) {
+        Paint fill = isFrenzy ? Color.web(GUIRenderer.HEX_GREEN) : Color.web(GUIRenderer.HEX_RED);
+        frenzyModeIndicator.setFill(fill);
+        frenzyModeLabel.setText(isFrenzy ? "on" : "off");
+        frenzyModeLabel.setTextFill(fill);
     }
 }

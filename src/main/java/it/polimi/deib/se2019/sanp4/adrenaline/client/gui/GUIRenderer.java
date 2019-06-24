@@ -24,6 +24,10 @@ public class GUIRenderer extends Application implements UIRenderer {
 
     public static final String CSS_BOLD_TITLE = "title-text";
 
+    /* ===== HEX CODES ===== */
+    public static final String HEX_RED = "#f6453a";
+    public static final String HEX_GREEN = "#38d257";
+
     private ClientView clientView;
     /**
      * The stage of the app to update scenes
