@@ -3,6 +3,12 @@ package it.polimi.deib.se2019.sanp4.adrenaline.client.gui.controls;
 import it.polimi.deib.se2019.sanp4.adrenaline.client.gui.GUIRenderer;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.ColoredObject;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.PlayerColor;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.geometry.Pos;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -12,9 +18,15 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * A custom control representing the player board, showing the damages track and the count of marks
+ * A custom control representing the player board, showing information about:
+ * <ul>
+ * <li>Player name</li>
+ * <li>Count of deaths</li>
+ * <li>Count of marks</li>
+ * <li>Received damages</li>
+ * </ul>
  */
-public class PlayerBoardControl extends GridPane {
+public class PlayerBoardControl extends VBox {
 
     private static final double[] FRENZY_CELLS = {8.27, 8.23, 25, 8.25, 8.21, 8.23, 8.23, 8.36, 8.20, 8.26, 9.18, 8.30};
     private static final double[] REGULAR_CELLS = {8.02, 8.75, 8.48, 8.08, 8.72, 8.51, 8.08, 8.14, 8.05, 8.69, 8.57, 7.90};
@@ -29,33 +41,64 @@ public class PlayerBoardControl extends GridPane {
     private String boardState = "regular";
     private PlayerColor boardColor;
 
-    // TODO: Show count of deaths
-
     /**
      * The grid-pane containing the damage tokens of the player board
      */
     private GridPane damageTokensContainer;
+    /**
+     * The actual player board, with the corresponding graphic
+     */
+    private GridPane playerBoardGrid;
+
+    private StringProperty playerName;
+    private IntegerProperty playerDeaths;
+    private IntegerProperty playerMarks;
 
     public PlayerBoardControl() {
         super();
-        super.setGridLinesVisible(true);
+        this.setSpacing(8);
+        // Initialize the grid pane for the player board
+        playerBoardGrid = new GridPane();
 
         stateCellsMap = new HashMap<>();
         stateCellsMap.put("regular", REGULAR_CELLS);
         stateCellsMap.put("frenzy", FRENZY_CELLS);
 
-        // First create the layout adding the three rows
-        GUIRenderer.setRowConstraints(this, ROWS);
+        // Initialize properties
+        playerName = new SimpleStringProperty("---");
+        playerMarks = new SimpleIntegerProperty(0);
+        playerDeaths = new SimpleIntegerProperty(0);
+
+        // First create an horizontal container to host information and stats
+        HBox playerInfoContainer = new HBox(8);
+        playerInfoContainer.setAlignment(Pos.CENTER_LEFT);
+        // Create a label for the player name
+        Label playerNameLabel = new Label();
+        playerNameLabel.textProperty().bind(playerName);
+        playerNameLabel.getStyleClass().add(GUIRenderer.CSS_BOLD_TITLE);
+        playerInfoContainer.getChildren().add(playerNameLabel);
+        // One for the count of deaths
+        Label playerDeathsLabel = new Label();
+        playerDeathsLabel.textProperty().bind(playerDeaths.asString("%d deaths"));
+        playerInfoContainer.getChildren().add(playerDeathsLabel);
+        // And one for the count of marks
+        Label playerMarksLabel = new Label();
+        playerMarksLabel.textProperty().bind(playerMarks.asString("%d marks"));
+        playerInfoContainer.getChildren().add(playerMarksLabel);
+        this.getChildren().add(playerInfoContainer);
+
+        // Then create the board layout adding the three rows
+        GUIRenderer.setRowConstraints(playerBoardGrid, ROWS);
         int i = 0;
         for (double rowHeight : ROWS) {
             GridPane row = new GridPane();
-            row.prefHeightProperty().bind(this.heightProperty().multiply(rowHeight / 100));
-            row.prefWidthProperty().bind(this.widthProperty());
+            row.prefHeightProperty().bind(playerBoardGrid.heightProperty().multiply(rowHeight / 100));
+            row.prefWidthProperty().bind(playerBoardGrid.widthProperty());
             GridPane.setRowIndex(row, i);
-            this.getChildren().add(row);
+            playerBoardGrid.getChildren().add(row);
             i++;
         }
-        GridPane middleRow = (GridPane) this.getChildren().get(2);
+        GridPane middleRow = (GridPane) playerBoardGrid.getChildren().get(1);
 
         damageTokensContainer = new GridPane();
         GridPane.setColumnIndex(damageTokensContainer, 1);
@@ -67,10 +110,13 @@ public class PlayerBoardControl extends GridPane {
         GUIRenderer.setColumnConstraints(middleRow, MIDDLE_ROW_COLUMNS);
         GUIRenderer.setColumnConstraints(damageTokensContainer, stateCellsMap.get(boardState));
 
-        this.widthProperty().addListener((ob, oldval, newVal) -> {
-            this.setMinHeight(newVal.doubleValue() / BOARD_RATIO);
-            this.setMaxHeight(newVal.doubleValue() / BOARD_RATIO);
+        // Then bind the width of the board to that of the container
+        playerBoardGrid.prefWidthProperty().bind(this.widthProperty());
+        playerBoardGrid.widthProperty().addListener((ob, oldval, newVal) -> {
+            playerBoardGrid.setMinHeight(newVal.doubleValue() / BOARD_RATIO);
+            playerBoardGrid.setMaxHeight(newVal.doubleValue() / BOARD_RATIO);
         });
+        this.getChildren().add(playerBoardGrid);
     }
 
     /**
@@ -102,7 +148,7 @@ public class PlayerBoardControl extends GridPane {
         Image boardImage = new Image(String.format("/images/playerboards/%s_%s.png", boardColor.name().toLowerCase(), boardState));
         BackgroundImage boardBackground = new BackgroundImage(boardImage, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, boardSize);
         // Set the background of the board container
-        this.setBackground(new Background(boardBackground));
+        playerBoardGrid.setBackground(new Background(boardBackground));
     }
 
     /**
@@ -145,5 +191,32 @@ public class PlayerBoardControl extends GridPane {
             damageTokensContainer.getChildren().add(tokenOverlay);
             i++;
         }
+    }
+
+    /**
+     * Sets the name of the player owning the player board
+     *
+     * @param name The name of the player
+     */
+    public void setPlayerName(String name) {
+        playerName.setValue(name);
+    }
+
+    /**
+     * Set the amount of deaths the player already experienced
+     *
+     * @param deaths The number of deaths
+     */
+    public void setPlayerDeaths(int deaths) {
+        playerDeaths.setValue(deaths);
+    }
+
+    /**
+     * Sets the amount of marks present on the player board
+     *
+     * @param marks The number of marks
+     */
+    public void setPlayerMarks(int marks) {
+        playerMarks.setValue(marks);
     }
 }

@@ -363,9 +363,13 @@ public class GameController extends GUIController {
             return;
         }
         // Eventually update the information
+        playerBoardControl.setPlayerName(player);
         playerBoardControl.setBoardColor((PlayerColor) clientView.getModelManager().getPlayersColors().get(player));
         playerBoardControl.setBoardState(playerBoardView.getState());
         playerBoardControl.setDamageTokens(
                 playerBoardView.getDamages().stream().map(shooter -> clientView.getModelManager().getPlayersColors().get(shooter)).collect(Collectors.toList()));
+        playerBoardControl.setPlayerDeaths(clientView.getModelManager().getPlayerBoards().get(player).getDeaths());
+        playerBoardControl.setPlayerMarks(clientView.getModelManager().getPlayerBoards().get(player).getMarks());
+
     }
 }
