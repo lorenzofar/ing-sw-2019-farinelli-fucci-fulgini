@@ -5,6 +5,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.client.gui.controls.ObservableOver
 import it.polimi.deib.se2019.sanp4.adrenaline.client.gui.controls.SelectableOverlay;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.events.ChoiceResponse;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.ChoiceRequest;
+import javafx.application.Platform;
 import javafx.stage.Stage;
 
 import java.io.Serializable;
@@ -100,5 +101,9 @@ public class SelectionHandler<T extends Serializable> implements Consumer<Observ
             overlay.removeListener(this);
             overlay.reset();
         });
+        // Close the stage
+        if (stage != null) {
+            Platform.runLater(() -> stage.close());
+        }
     }
 }
