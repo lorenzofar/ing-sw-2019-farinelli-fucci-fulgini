@@ -154,3 +154,7 @@ TextField {
 .player-operation-overlay.selectable * {
     -fx-fill: -fx-enabled-text;
 }
+
+.glossy-pane {
+    -fx-effect: innershadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 5, 5);
+}
