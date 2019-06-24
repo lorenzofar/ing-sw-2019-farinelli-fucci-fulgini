@@ -12,13 +12,16 @@ public class WeaponImage extends OrientableImage {
         Platform.runLater(() -> {
             super.setImage(String.format("/images/weapons/%s.png", weaponId == null ? "null_weapon" : weaponId));
             // Then create a tooltip to show the name of the card when hovering
-            try {
-                Tooltip weaponIdTooltip = new Tooltip(WeaponCreator.createWeaponCard(weaponId).getName());
-                Tooltip.install(this, weaponIdTooltip);
-            } catch (
-                    IOException ignore) {
-                // If the card does not exist we ignore errors and not attach a tooltip
+            String tooltipContent = "";
+            if (weaponId != null) {
+                try {
+                    tooltipContent = WeaponCreator.createWeaponCard(weaponId).getName();
+                } catch (IOException ignore) {
+                    // If the card does not exist we ignore errors and attach an empty tooltip
+                }
             }
+            Tooltip weaponIdTooltip = new Tooltip(tooltipContent);
+            Tooltip.install(this, weaponIdTooltip);
         });
     }
 }
