@@ -328,8 +328,15 @@ public class GameController extends GUIController {
             List<String> weaponCards = spawnSquare.getWeapons();
             // Compute the length of the shortest list
             int limit = Math.min(weaponCards.size(), images.size());
-            for (int i = 0; i < limit; i++) {
+            int i = 0;
+            while (i < limit) {
                 images.get(i).setWeapon(weaponCards.get(i));
+                i++;
+            }
+            while(i < images.size()){
+                // If there are remaining places we fill them with null values
+                images.get(i).setWeapon(null);
+                i++;
             }
         });
     }

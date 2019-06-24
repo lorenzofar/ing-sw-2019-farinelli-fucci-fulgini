@@ -58,7 +58,8 @@ public class SpawnSquareView extends SquareView {
      */
     public void setWeapons(List<String> weapons) {
         if (weapons != null && !weapons.contains(null)) {
-            this.weapons = weapons;
+            this.weapons.clear();
+            this.weapons.addAll(weapons);
         }
     }
 }
