@@ -3,7 +3,6 @@ package it.polimi.deib.se2019.sanp4.adrenaline.model.player;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.PlayerBoardView;
-import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.PlayerView;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.Observable;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.DamageUpdate;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.ModelUpdate;

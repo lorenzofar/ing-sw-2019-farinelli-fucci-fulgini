@@ -3,7 +3,6 @@ package it.polimi.deib.se2019.sanp4.adrenaline.model.match;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.BoardNotFoundException;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionCardCreator;
-import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionCardEnum;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.Board;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.BoardCreator;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCard;

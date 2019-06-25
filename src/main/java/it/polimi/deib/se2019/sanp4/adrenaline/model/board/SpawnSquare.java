@@ -9,7 +9,10 @@ import it.polimi.deib.se2019.sanp4.adrenaline.model.match.CardStack;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.match.Match;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /** A specialized class representing a square available as spawn points and that contain weapon cards*/
@@ -53,7 +56,7 @@ public class SpawnSquare extends Square {
      * @return The object representing the weapon
      * @throws CardNotFoundException if the requested card is not in available in this square
      */
-    public WeaponCard grabWeaponCard(String weaponId) throws CardNotFoundException {
+    public WeaponCard grabWeaponCard(String weaponId) {
         if (weaponId == null) {
             throw new NullPointerException("Weapon id cannot be null");
         }

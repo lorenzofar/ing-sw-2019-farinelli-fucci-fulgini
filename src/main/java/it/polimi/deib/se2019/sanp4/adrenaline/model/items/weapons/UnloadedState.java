@@ -2,7 +2,6 @@ package it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.CardNotFoundException;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.NotEnoughAmmoException;
-import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.ReloadUpdate;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
 
 public class UnloadedState extends WeaponCardState {

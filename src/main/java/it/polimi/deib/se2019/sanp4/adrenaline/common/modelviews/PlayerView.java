@@ -1,6 +1,5 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCube;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.powerup.PowerupCard;

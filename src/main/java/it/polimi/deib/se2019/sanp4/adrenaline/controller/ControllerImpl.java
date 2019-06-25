@@ -11,7 +11,6 @@ import it.polimi.deib.se2019.sanp4.adrenaline.model.match.Match;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.match.MatchConfiguration;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.match.MatchCreator;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;

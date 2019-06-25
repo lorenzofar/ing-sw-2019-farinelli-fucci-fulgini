@@ -10,6 +10,8 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Static resource class which loads ammo cards from a JSON file and
@@ -25,6 +27,8 @@ public class AmmoCardCreator {
 
     /* Commodity */
     private static ObjectMapper objectMapper = JSONUtils.getObjectMapper();
+
+    private static Logger logger = Logger.getLogger(AmmoCardCreator.class.getName());
 
     /** This class is static and it should be impossible to instantiate it */
     private AmmoCardCreator(){}
@@ -72,7 +76,8 @@ public class AmmoCardCreator {
                 /* This exception never happens because we are not loading from file */
             }
         } else {
-            /* TODO: Log that we found a duplicate */
+            logger.log(Level.SEVERE, "Cannot load weapon ammo with id {0} because a card with the" +
+                    "same id already exists", card.getInt("id"));
         }
     }
 
@@ -82,7 +87,7 @@ public class AmmoCardCreator {
      * @return AmmoCard instance
      * @throws CardNotFoundException if the index is not associated with a card
      */
-    public static AmmoCard getAmmoCard(int id) throws CardNotFoundException {
+    public static AmmoCard getAmmoCard(int id) {
         Optional<AmmoCard> card = ammoCards.stream().filter(c -> c.getId() == id).findFirst();
         if (!card.isPresent()) throw new CardNotFoundException("Cannot create AmmoCard with inexistent id " + id);
         return card.get();
