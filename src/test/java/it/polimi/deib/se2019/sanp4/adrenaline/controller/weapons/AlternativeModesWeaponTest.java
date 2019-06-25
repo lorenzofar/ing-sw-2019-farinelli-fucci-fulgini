@@ -142,6 +142,9 @@ public class AlternativeModesWeaponTest {
         AbstractEffect e1 = generateEffectController(ed1);
         weapon.addEffect(e1);
 
+        /* Set up the mode not to fail */
+        when(e1.use(view)).thenReturn(true);
+
         /* Use it */
         weapon.use(view);
 
@@ -168,6 +171,9 @@ public class AlternativeModesWeaponTest {
         weapon.addEffect(e1);
         weapon.addEffect(e2);
 
+        /* Set up the used mode not to fail */
+        when(e2.use(view)).thenReturn(true);
+
         /* Set up user's answer: choose the second mode */
         when(view.sendChoiceRequest(effectRequestCaptor.capture()))
                 .thenAnswer((SendChoiceRequestAnswer<EffectDescription>) req ->
@@ -190,5 +196,31 @@ public class AlternativeModesWeaponTest {
         /* Check that only the second effect has been used */
         verify(e1, never()).use(view);
         verify(e2).use(view);
+    }
+
+    @Test
+    public void use_modeFails_shouldNotifyPlayer() throws Exception {
+        /* Set up a weapon card with only one mode */
+        EffectDescription ed1 = generateEffectDescription("e1");
+        WeaponCard weaponCard =
+                new WeaponCard("weapon", "Weapon", Collections.emptyList(), Collections.singletonList(ed1));
+
+        /* Set up a controller for that weapon, with the respective mode */
+        AlternativeModesWeapon weapon = new AlternativeModesWeapon(weaponCard, match, factory);
+        AbstractEffect e1 = generateEffectController(ed1);
+        weapon.addEffect(e1);
+
+        /* Set up e1 to fail */
+        when(e1.use(view)).thenReturn(false);
+
+        /* Use it */
+        weapon.use(view);
+
+        /* Check that the user gets notified */
+        verify(view, never()).sendChoiceRequest(any());
+        verify(view).showMessage(anyString(), any());
+
+        /* Check that effect has been used */
+        verify(e1).use(view);
     }
 }

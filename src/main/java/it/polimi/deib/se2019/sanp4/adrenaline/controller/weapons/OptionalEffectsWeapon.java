@@ -37,6 +37,8 @@ public class OptionalEffectsWeapon extends AbstractWeapon {
     private static final String MESSAGE_BASE_NOT_COMPLETED = "You could not complete the base effect. " +
             "The weapon will terminate";
 
+    private static final String MESSAGE_OPTIONAL_NOT_COMPLETED = "You could not complete the optional effect";
+
     private Set<String> completedEffects;
 
     /**
@@ -59,10 +61,9 @@ public class OptionalEffectsWeapon extends AbstractWeapon {
      * an {@link IllegalArgumentException} is thrown.
      * If an effect with the same id is already present, the given effect is not added.
      *
-     *
      * @param effect The effect to be added, not null
      * @throws IllegalArgumentException if the effect is mandatory and it depends on other effects
-     * and if the effect is mandatory and there is already a mandatory effect
+     *                                  and if the effect is mandatory and there is already a mandatory effect
      */
     @Override
     public void addEffect(AbstractEffect effect) {
@@ -90,10 +91,10 @@ public class OptionalEffectsWeapon extends AbstractWeapon {
     /**
      * Handles the selection of the effect to be used.
      * <ul>
-     *     <li>If the base effect is among the choices, a selection will be made for sure</li>
-     *     <li>If the base effect is the only choice, it is chose automatically</li>
-     *     <li>If there are more choices or the base effect is not among the choices, the user is
-     *     required to select one (or no) effect</li>
+     * <li>If the base effect is among the choices, a selection will be made for sure</li>
+     * <li>If the base effect is the only choice, it is chose automatically</li>
+     * <li>If there are more choices or the base effect is not among the choices, the user is
+     * required to select one (or no) effect</li>
      * </ul>
      *
      * @param view    The view of the player using the weapon, not null
@@ -118,8 +119,8 @@ public class OptionalEffectsWeapon extends AbstractWeapon {
     /**
      * Asks the user to select one or no effect to use between the ones given
      *
-     * @param view    The view of the player using the weapon, not null
-     * @param choices The available choices, not null
+     * @param view     The view of the player using the weapon, not null
+     * @param choices  The available choices, not null
      * @param optional Whether the user can select to use no effect or not
      * @return The selected choice, {@code null} if no selection
      * @throws CancellationException if a request to the user gets cancelled
@@ -144,11 +145,11 @@ public class OptionalEffectsWeapon extends AbstractWeapon {
     /**
      * Makes the user with given view use this weapon in the current state of the match.
      * <p>
-     *     The player can first execute effects that don't depend on the basic effect, if any.
-     *     Then the basic effect executes automatically. If that fails, the weapon terminates.
-     *     If it completes successfully, the player can execute the remaining effects based on their dependencies.
-     *     The weapon terminates when there are no more effects to execute or the player chooses to execute no
-     *     optional effect when asked.
+     * The player can first execute effects that don't depend on the basic effect, if any.
+     * Then the basic effect executes automatically. If that fails, the weapon terminates.
+     * If it completes successfully, the player can execute the remaining effects based on their dependencies.
+     * The weapon terminates when there are no more effects to execute or the player chooses to execute no
+     * optional effect when asked.
      * </p>
      *
      * @param view The view of the player who wants to use this weapon, not null
@@ -178,7 +179,10 @@ public class OptionalEffectsWeapon extends AbstractWeapon {
                 /* Check whether to add it to the collection of successfully completed effects */
                 if (completed) {
                     completedEffects.add(selectedEffect.getId());
-                } else if(!selectedEffect.isOptional()) {
+                } else if (selectedEffect.isOptional()) {
+                    /* If an optional effect did not complete successfully, just notify the player */
+                    view.showMessage(MESSAGE_OPTIONAL_NOT_COMPLETED, MessageType.WARNING);
+                } else {
                     /* If the base effect did not complete successfully, the weapon terminates */
                     view.showMessage(MESSAGE_BASE_NOT_COMPLETED, MessageType.WARNING);
                     break;

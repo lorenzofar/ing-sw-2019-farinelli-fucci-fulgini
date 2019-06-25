@@ -7,6 +7,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.controller.weapons.effects.Abstrac
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.EffectDescription;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.WeaponCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.match.Match;
+import it.polimi.deib.se2019.sanp4.adrenaline.view.MessageType;
 
 import java.util.List;
 import java.util.concurrent.CancellationException;
@@ -20,9 +21,12 @@ public class AlternativeModesWeapon extends AbstractWeapon {
 
     private static final String MESSAGE_SELECT_MODE = "Select the mode of the weapon";
 
+    private static final String MESSAGE_MODE_NOT_COMPLETED = "You could not complete the selected mode";
+
     /**
      * Creates a new weapon controller, with no effects.
-     *  @param weaponCard The weapon card associated to this weapon, not null
+     *
+     * @param weaponCard The weapon card associated to this weapon, not null
      * @param match      The match which has to be controlled, not null
      * @param factory    The factory needed to create other controllers, not null
      */
@@ -33,7 +37,7 @@ public class AlternativeModesWeapon extends AbstractWeapon {
     /**
      * Asks the user to select a mode to use between the ones available
      *
-     * @param view    The view of the player using the weapon, not null
+     * @param view The view of the player using the weapon, not null
      * @return The selected choice
      * @throws CancellationException if a request to the user gets cancelled
      * @throws InterruptedException  if the thread gets interrupted
@@ -72,6 +76,11 @@ public class AlternativeModesWeapon extends AbstractWeapon {
         }
 
         /* Use it */
-        selectedMode.use(view);
+        boolean completed = selectedMode.use(view);
+
+        if (!completed) {
+            /* Notify the user */
+            view.showMessage(MESSAGE_MODE_NOT_COMPLETED, MessageType.WARNING);
+        }
     }
 }

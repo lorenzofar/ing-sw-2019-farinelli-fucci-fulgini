@@ -353,9 +353,9 @@ public class OptionalEffectsWeaponTest {
         /* Use the weapon */
         weapon.use(view);
 
-        /* Check exactly three interactions and no warnings */
+        /* Check exactly three interactions and a warning */
         verify(view, times(3)).sendChoiceRequest(any());
-        verify(view, never()).showMessage(anyString(), eq(MessageType.WARNING));
+        verify(view).showMessage(anyString(), eq(MessageType.WARNING));
 
         /* Check that the choices in the requests were as expected */
         assertTrue(choices1.containsAll(Arrays.asList(ed2, ed3))); /* Right after base */
