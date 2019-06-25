@@ -43,6 +43,6 @@ public class EffectRequest extends ChoiceRequest<EffectDescription> {
 
     @Override
     public void accept(ChoiceRequestVisitor visitor) {
-        /* TODO: Accept visitor */
+        visitor.handle(this);
     }
 }
