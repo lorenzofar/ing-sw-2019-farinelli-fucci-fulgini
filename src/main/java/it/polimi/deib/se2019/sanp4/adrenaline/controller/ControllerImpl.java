@@ -129,10 +129,9 @@ public class ControllerImpl implements Controller {
      * Send an update/event from a {@link RemoteObservable} object.
      *
      * @param event event/update to be sent
-     * @throws IOException if the remote call fails
      */
     @Override
-    public void update(ViewEvent event) throws IOException {
+    public void update(ViewEvent event) {
         /* This implementation does not receive events from the remote views, it uses the persistent views to do that */
     }
 

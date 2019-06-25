@@ -525,10 +525,18 @@ public class StandardControllerFactory implements ControllerFactory {
 
     /* =================== GETTERS ===================== */
 
+    /**
+     * Returns the match associated to this factory
+     * @return The match associated to this factory
+     */
     Match getMatch() {
         return match;
     }
 
+    /**
+     * Returns the persistent views associated to this factory
+     * @return The persistent views associated to this factory
+     */
     Map<String, PersistentView> getViews() {
         return views;
     }

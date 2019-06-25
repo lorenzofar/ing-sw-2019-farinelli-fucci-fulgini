@@ -24,6 +24,9 @@ public class MatchBootstrapper {
 
     private int timeout;
 
+    /**
+     * Creates a new match bootstrapper
+     */
     public MatchBootstrapper() {
         /* Get the value of the timeout */
         timeout = Integer.parseInt((String) AdrenalineProperties.getProperties()
@@ -33,6 +36,7 @@ public class MatchBootstrapper {
     /**
      * Asks give player for the match configuration with a timeout.
      * If the request expires a random board and a default number of skulls is chosen
+     *
      * @param view view of the player
      * @return the match configuration, not null
      * @throws InterruptedException if the thread gets interrupted

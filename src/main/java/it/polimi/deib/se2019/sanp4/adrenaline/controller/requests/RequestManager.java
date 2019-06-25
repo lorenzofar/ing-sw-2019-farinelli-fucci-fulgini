@@ -8,7 +8,6 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CancellationException;
-import java.util.logging.Logger;
 
 /**
  * Responsible for managing the {@link ChoiceRequest} sent to the view
@@ -21,8 +20,6 @@ import java.util.logging.Logger;
  * </p>
  */
 public class RequestManager {
-
-    private static Logger logger = Logger.getLogger(RequestManager.class.getName());
 
     /**
      * A map with all the uncompleted choices.

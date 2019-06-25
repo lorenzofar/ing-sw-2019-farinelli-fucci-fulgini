@@ -235,6 +235,10 @@ public class PersistentViewImpl extends RemoteObservable<ViewEvent> implements P
         reconnectionCallback = callback;
     }
 
+    /**
+     * Returns the callback called on reconnection
+     * @return The callback called on reconnection
+     */
     Callable getReconnectionCallback() {
         return reconnectionCallback;
     }
@@ -249,10 +253,18 @@ public class PersistentViewImpl extends RemoteObservable<ViewEvent> implements P
         networkFaultCallback = callback;
     }
 
+    /**
+     * Returns the callback called when a network fault is detected
+     * @return The callback called when a network fault is detected
+     */
     Callable getNetworkFaultCallback() {
         return networkFaultCallback;
     }
 
+    /**
+     * Returns the remote view used by this PersistentView
+     * @return the remote view used by this PersistentView
+     */
     public RemoteView getRemote() {
         return remote;
     }
@@ -323,7 +335,10 @@ public class PersistentViewImpl extends RemoteObservable<ViewEvent> implements P
         requestManager.cancelPendingRequests();
     }
 
-
+    /**
+     * Returns the request manager used by this PersistentView
+     * @return the request manager used by this PersistentView
+     */
     RequestManager getRequestManager() {
         return requestManager;
     }

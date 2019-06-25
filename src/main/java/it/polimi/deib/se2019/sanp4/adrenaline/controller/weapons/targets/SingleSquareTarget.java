@@ -3,6 +3,7 @@ package it.polimi.deib.se2019.sanp4.adrenaline.controller.weapons.targets;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.ControllerFactory;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.PersistentView;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.weapons.AbstractWeapon;
+import it.polimi.deib.se2019.sanp4.adrenaline.controller.weapons.effects.TargetingEffect;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.Board;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.CardinalDirection;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.Square;
@@ -15,6 +16,26 @@ import java.util.concurrent.CancellationException;
 
 import static it.polimi.deib.se2019.sanp4.adrenaline.controller.weapons.ShootingDirectionEnum.CARDINAL;
 
+/**
+ * Represents a target of {@link TargetingEffect} which stays on a single square.
+ * <p>
+ *     Provides filters and commands to restrict selection of the square where the actual target resides.
+ * </p>
+ * These are:
+ * <ul>
+ *     <li><b>visibility</b>: the visibility constraint of the targeted square from the shooter</li>
+ *     <li><b>visibleFromPlayer</b>: the target square must be visible from the player,
+ *     saved in the weapon, with specified id</li>
+ *     <li><b>minDist</b> and <b>maxDist</b>: minimum and maximum distance (inclusive) of the target square
+ *     from the shooter</li>
+ *     <li><b>excludePlayers:</b>: players (represented by target ids) that will be excluded from
+ *     the targeting scope</li>
+ *     <li><b>excludePlayers</b>: squares (represented by their target ids) that will be excluded from the
+ *     targeting scope</li>
+ *     <li><b>moveShooterHere</b>: will move the shooter in the target square after shooting</li>
+ *     <li><b>squareRef</b>: saves the targeted square in the weapon, with the given id</li>
+ * </ul>
+ */
 public abstract class SingleSquareTarget extends AbstractTarget {
 
     protected Set<String> chooseBetweenTargets;

@@ -5,6 +5,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.SquareRequest;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.ControllerFactory;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.PersistentView;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.weapons.AbstractWeapon;
+import it.polimi.deib.se2019.sanp4.adrenaline.controller.weapons.effects.TargetingEffect;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.*;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.match.Match;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
@@ -18,6 +19,26 @@ import java.util.stream.Stream;
 import static it.polimi.deib.se2019.sanp4.adrenaline.controller.weapons.ShootingDirectionEnum.CARDINAL;
 import static it.polimi.deib.se2019.sanp4.adrenaline.model.board.VisibilityEnum.ANY;
 
+/**
+ * Represents a single player target in a {@link TargetingEffect}.
+ * <p>
+ * When this target has been executed, the targeted player is saved in the weapon with the target's id.
+ * If a player with the same target id is already saved in the weapon, this gets automatically selected
+ * as a target.
+ * </p>
+ * <p>
+ * This type of targets provides all the commands and filters of {@link SingleSquareTarget},
+ * which are applied to the square where the player actually gets shot, plus two other commands.
+ * </p>
+ * <p>
+ * The additional commands are {@code movePlayerBefore} and {@code movePlayerAfter}.
+ * These specify the amount of steps that the targeted player can be moved before/after getting damaged.
+ * In case of {@code movePlayerBefore}, the selected target must land on a targetable square, according
+ * to the filters of {@link SingleSquareTarget}, and the movement is free (i.e. not constrained to the
+ * shooting direction.
+ * In case of {@code movePlayerAfter}, the movement is constrained to the shooting direction.
+ * </p>
+ */
 public class PlayerTarget extends SingleSquareTarget {
 
     private static final String MESSAGE_SELECT_PLAYER_TARGET = "Select the player you want to target" +

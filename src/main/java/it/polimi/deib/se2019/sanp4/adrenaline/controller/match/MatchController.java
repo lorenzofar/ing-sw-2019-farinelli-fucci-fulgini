@@ -40,8 +40,8 @@ public class MatchController {
     /**
      * Creates the controller for given match
      *
-     * @param match the match to be controller, in its initial phase, not null
-     * @param views the persistent views of the players, not null
+     * @param match   the match to be controller, in its initial phase, not null
+     * @param views   the persistent views of the players, not null
      * @param factory the factory to be used for creating sub-controllers
      */
     public MatchController(Match match, Map<String, PersistentView> views, ControllerFactory factory) {
@@ -90,6 +90,8 @@ public class MatchController {
     /**
      * Given that match.currentTurn is set, gets the player and
      * asks the {@link TurnController} to actually run the turn
+     *
+     * @throws InterruptedException If the thread gets interrupted
      */
     void runCurrentTurn() throws InterruptedException {
         /* Select the current turn */

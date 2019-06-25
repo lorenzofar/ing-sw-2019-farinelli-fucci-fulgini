@@ -4,6 +4,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.SquareRequest;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.ControllerFactory;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.PersistentView;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.weapons.AbstractWeapon;
+import it.polimi.deib.se2019.sanp4.adrenaline.controller.weapons.effects.TargetingEffect;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.Board;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.CardinalDirection;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.CoordPair;
@@ -18,6 +19,16 @@ import java.util.stream.Collectors;
 
 import static it.polimi.deib.se2019.sanp4.adrenaline.controller.weapons.ShootingDirectionEnum.CARDINAL;
 
+/**
+ * Represents a target of {@link TargetingEffect} where all the players in a square get the same damage and marks.
+ * <p>
+ *     The square must meet all the requirements of {@link SingleSquareTarget}, players that are excluded from
+ *     the targeting scope will not get damage/marks.
+ * </p>
+ * <p>
+ *     After execution, the targeted square is saved in the weapon with the target's id.
+ * </p>
+ */
 public class SquareTarget extends SingleSquareTarget {
 
     private static final String MESSAGE_SELECT_SQUARE_TARGET = "Select the square you want to target" +
