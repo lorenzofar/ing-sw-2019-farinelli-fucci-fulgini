@@ -16,7 +16,7 @@ public class PlayerOperationsTrack extends HBox {
         this.getStylesheets().add("/fxml/style.css");
 
         // We retrieve all the supported operations and create overlays for them, adding eventually to the container
-        for(PlayerOperationEnum operation : PlayerOperationEnum.values()){
+        for (PlayerOperationEnum operation : PlayerOperationEnum.values()) {
             PlayerOperationOverlay overlay = new PlayerOperationOverlay();
             overlay.setOperation(operation);
             this.getChildren().add(overlay);
@@ -31,6 +31,7 @@ public class PlayerOperationsTrack extends HBox {
      * Retrieves the overlays that can be selected according to the provided list of available operations
      *
      * @param operations The list of objects representing the operations
+     * @return The collection of selectable overlays that correspond to the provided operations
      */
     public Collection<SelectableOverlay<PlayerOperationEnum>> getSelectableOverlays(Collection<PlayerOperationEnum> operations) {
         // We iterate over our children and retrieve only those overlays whose data are among the available operations

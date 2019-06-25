@@ -23,6 +23,9 @@ public interface UIRenderer extends ChoiceRequestVisitor {
 
     /**
      * Updates the lobby with current information about connected players
+     *
+     * @param waitingPlayers The list of names of the connected players
+     * @param matchStarting  {@code true} if the match is about to start with the connected players, {@code false} otherwise
      */
     void updateLobby(Collection<String> waitingPlayers, boolean matchStarting);
 
@@ -34,11 +37,15 @@ public interface UIRenderer extends ChoiceRequestVisitor {
 
     /**
      * Shows the user the weapon card he has just drawn
+     *
+     * @param weapon The object representing the drawn weapon card
      */
     void showDrawnWeapon(WeaponCard weapon);
 
     /**
      * Shows the user the powerup he has just drawn
+     *
+     * @param powerup The object representing the drawn powerup card
      */
     void showDrawnPowerup(PowerupCard powerup);
 

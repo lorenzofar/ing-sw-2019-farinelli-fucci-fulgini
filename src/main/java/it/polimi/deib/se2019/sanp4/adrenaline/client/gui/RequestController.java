@@ -14,6 +14,11 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * An abstract class representing a GUIController that is responsible of managing windows used to select something when performing a request
+ *
+ * @param <T> The type of the data involved in the request
+ */
 public abstract class RequestController<T extends Serializable> extends GUIController implements RequestControllerInterface<T> {
 
     @FXML
@@ -73,6 +78,8 @@ public abstract class RequestController<T extends Serializable> extends GUIContr
 
     /**
      * Create the overlays of the needed type according the list of choices provided by the request
+     *
+     * @param request The object representing the request
      */
     public abstract void createOverlays(ChoiceRequest<T> request);
 }

@@ -47,6 +47,7 @@ public class ActionsTrack extends HBox {
      * Retrieves the overlays that can be selected according to the provided list of available actions
      *
      * @param actions The list of objects representing the actions
+     * @return The collection of selectable overlays that correspond to the provided actions
      */
     public Collection<SelectableOverlay<ActionEnum>> getSelectableOverlays(Collection<ActionEnum> actions) {
         return this.getChildren()
