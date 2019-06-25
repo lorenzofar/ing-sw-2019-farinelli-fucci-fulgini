@@ -39,6 +39,7 @@ import static it.polimi.deib.se2019.sanp4.adrenaline.view.ViewScene.*;
  * <li>Initial spawn of the player</li>
  * <li>Operation selection</li>
  * <li>Action selection</li>
+ * <li>Powerup selection and removal of the cards</li>
  * </ul>
  */
 public class TurnController {
@@ -152,7 +153,7 @@ public class TurnController {
      * <li>The other players get {@link ViewScene#TURN_IDLE}</li>
      * </ul>
      */
-    void setViewScenes() {
+    private void setViewScenes() {
         for (PersistentView v : views.values()) {
             v.selectScene(v == currentView ? TURN_PLAYING : TURN_IDLE);
         }
@@ -162,7 +163,7 @@ public class TurnController {
      * Selects the scenes of the player views at the end of the turn:
      * All the players get {@link ViewScene#TURN_IDLE}
      */
-    void resetViewScenes() {
+    private void resetViewScenes() {
         for (PersistentView v : views.values()) {
             v.selectScene(TURN_IDLE);
         }
@@ -176,7 +177,7 @@ public class TurnController {
      * @throws CancellationException If the request to the view is cancelled
      * @throws InterruptedException  If the thread gets interrupted
      */
-    PlayerOperationEnum askToSelectOperation(PersistentView view) throws InterruptedException {
+    private PlayerOperationEnum askToSelectOperation(PersistentView view) throws InterruptedException {
         /* The player can choose any of the available operations */
         PlayerOperationRequest req = new PlayerOperationRequest(Arrays.asList(PlayerOperationEnum.values()));
         return view.sendChoiceRequest(req).get();
@@ -191,7 +192,7 @@ public class TurnController {
      * @throws CancellationException If any request to the view is cancelled while performing the operation
      * @throws InterruptedException  If the thread gets interrupted
      */
-    void performOperation(PlayerOperationEnum operation) throws InterruptedException {
+    private void performOperation(PlayerOperationEnum operation) throws InterruptedException {
         switch (operation) {
             case PERFORM_ACTION:
                 performActionHandler();
@@ -202,6 +203,8 @@ public class TurnController {
             case END_TURN:
                 endTurnHandler();
                 break;
+            default:
+                logger.log(Level.SEVERE, "Unsupported operation: \"{0}\"", operation.name());
         }
     }
 
@@ -219,7 +222,7 @@ public class TurnController {
      * @throws CancellationException If any request to the view is cancelled while performing the operation
      * @throws InterruptedException  If the thread gets interrupted
      */
-    void usePowerupHandler() throws InterruptedException {
+    private void usePowerupHandler() throws InterruptedException {
         Player player = turn.getTurnOwner();
         /* Determine the usable powerups */
         List<PowerupCard> powerups = player.getPowerups().stream()
@@ -264,7 +267,7 @@ public class TurnController {
     /**
      * Sets the state of the current turn to {@link PlayerTurnState#OVER}
      */
-    void endTurnHandler() {
+    private void endTurnHandler() {
         turn.setTurnState(OVER);
     }
 
@@ -281,7 +284,7 @@ public class TurnController {
      * @throws CancellationException If any request to the view is cancelled while performing the operation
      * @throws InterruptedException  If the thread gets interrupted
      */
-    void performActionHandler() throws InterruptedException {
+    private void performActionHandler() throws InterruptedException {
         /* Determine possible actions */
         List<ActionEnum> actions = new ArrayList<>(turn.getAvailableActions());
 
@@ -307,7 +310,7 @@ public class TurnController {
      * @throws CancellationException If the request to the user gets cancelled
      * @throws InterruptedException  If the thread gets interrupted
      */
-    ActionEnum askToChooseAction(PersistentView view, List<ActionEnum> actions) throws InterruptedException {
+    private ActionEnum askToChooseAction(PersistentView view, List<ActionEnum> actions) throws InterruptedException {
         ActionRequest req = new ActionRequest(MESSAGE_SELECT_ACTION, actions, true);
         return view.sendChoiceRequest(req).get();
     }
@@ -363,7 +366,7 @@ public class TurnController {
      * @throws CancellationException If any request to the view is cancelled while performing the operation
      * @throws InterruptedException  If the thread gets interrupted
      */
-    void runAction(ActionEnum action) throws InterruptedException {
+    private void runAction(ActionEnum action) throws InterruptedException {
         switch (action) {
             case RUN:
                 factory.createMoveActionController()
@@ -420,6 +423,8 @@ public class TurnController {
                 factory.createGrabActionController(currentView)
                         .execute(); /* Grab */
                 break;
+            default:
+                logger.log(Level.SEVERE, "Unsupported action: \"{0}\"", action.name());
         }
     }
 }
