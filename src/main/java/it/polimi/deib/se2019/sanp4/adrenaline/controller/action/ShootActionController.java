@@ -5,6 +5,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.PowerupCardRequest
 import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.WeaponCardRequest;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.ControllerFactory;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.PersistentView;
+import it.polimi.deib.se2019.sanp4.adrenaline.controller.powerups.PowerupController;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.weapons.AbstractWeapon;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.powerup.PowerupCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.powerup.PowerupEnum;
@@ -63,12 +64,11 @@ public class ShootActionController {
     /**
      * Offers a chance to use the {@link PowerupEnum#TAGBACK} powerup to a given player
      *
-     * @param shooter The player who performed damage, not null
      * @param victim  The player who received the damage, not null
      * @throws CancellationException If a request to the user gets cancelled
      * @throws InterruptedException  If the thread gets interrupted
      */
-    void handleRevenge(Player shooter, Player victim) throws InterruptedException {
+    private void handleRevenge(Player victim) throws InterruptedException {
         /* Check if the damaged player has TAGBACK powerups to revenge */
         List<PowerupCard> powerups = victim.getPowerups().stream()
                 .filter(powerupCard -> powerupCard.getType() == PowerupEnum.TAGBACK)
@@ -88,7 +88,9 @@ public class ShootActionController {
             return; /* He chose not to use a powerup */
         }
 
-        /* TODO: Create the powerup controller and use it */
+        /* Create the controller for that powerup and use it */
+        PowerupController powerupController = factory.createPowerupController(PowerupEnum.TAGBACK);
+        powerupController.use(damagedView); /* Execution goes fine by default */
 
         /* Discard the powerup card */
         victim.removePowerup(selected);
@@ -151,7 +153,7 @@ public class ShootActionController {
         Set<Player> damagedPlayers = weaponController.getDamagedPlayers();
         for (Player victim : damagedPlayers) {
             try {
-                handleRevenge(shooter, victim);
+                handleRevenge(victim);
             } catch (CancellationException e) {
                 /* We just go on with the next player: he didn't use the powerup */
             }

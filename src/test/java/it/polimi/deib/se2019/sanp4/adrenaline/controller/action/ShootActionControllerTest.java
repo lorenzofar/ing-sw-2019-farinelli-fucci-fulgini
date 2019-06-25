@@ -7,6 +7,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.controller.PersistentView;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.answerers.ChooseNoneAnswer;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.answerers.FirstChoiceAnswer;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.answerers.SendChoiceRequestAnswer;
+import it.polimi.deib.se2019.sanp4.adrenaline.controller.powerups.PowerupController;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.requests.CompletableChoice;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.weapons.AbstractWeapon;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.ModelTestUtil;
@@ -45,10 +46,11 @@ public class ShootActionControllerTest {
     private static PersistentView view;
     private static ControllerFactory factory;
     private static AbstractWeapon weaponController;
+    private static PowerupController powerupController;
     private static Player shooter;
 
     @BeforeClass
-    public static void classSetup() throws Exception {
+    public static void classSetup() {
         /* Disable logging */
         ModelTestUtil.disableLogging();
 
@@ -65,7 +67,7 @@ public class ShootActionControllerTest {
     }
 
     @Before
-    public void setUp() {
+    public void setUp() throws Exception {
         /* Create a match */
         match = MatchCreator.createMatch(validNames, validConfig);
         Board board = match.getBoard();
@@ -84,9 +86,14 @@ public class ShootActionControllerTest {
         when(weaponController.getDamagedPlayers())
                 .thenReturn(Collections.emptySet()); /* Return no damaged players by default */
 
+        /* Create a stub of the powerup controller that will be returned by the factory */
+        powerupController = mock(PowerupController.class);
+        when(powerupController.use(any())).thenReturn(true);
+
         /* Create a stub of the controller factory (only stub relevant methods) */
         factory = mock(ControllerFactory.class);
         when(factory.createWeaponController(any())).thenReturn(weaponController);
+        when(factory.createPowerupController(PowerupEnum.TAGBACK)).thenReturn(powerupController);
 
         /* Set up the shooter and his turn */
         shooter = match.getPlayerByName("bzoto");
@@ -196,7 +203,7 @@ public class ShootActionControllerTest {
         /* Check single interaction with p1 */
         verify(v1).sendChoiceRequest(any(PowerupCardRequest.class));
 
-        /* TODO: Check call to powerup controller */
+        verify(powerupController).use(v1);
 
         /* Check that p1 doesn't have that powerup anymore */
         assertFalse(p1.getPowerups().contains(tagback1));
@@ -249,7 +256,7 @@ public class ShootActionControllerTest {
         /* Check single interaction with p1 */
         verify(v1).sendChoiceRequest(any(PowerupCardRequest.class));
 
-        /* TODO: Check no call to powerup controller */
+        verify(powerupController, never()).use(v1);
 
         /* Check that p1 still has both powerups */
         assertTrue(p1.getPowerups().contains(tagback1));
