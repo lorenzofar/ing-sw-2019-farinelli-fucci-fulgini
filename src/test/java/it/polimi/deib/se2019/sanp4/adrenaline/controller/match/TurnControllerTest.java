@@ -2,6 +2,7 @@ package it.polimi.deib.se2019.sanp4.adrenaline.controller.match;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.ActionRequest;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.PlayerOperationRequest;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.PowerupCardRequest;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.*;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.action.GrabActionController;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.action.MoveActionController;
@@ -9,14 +10,19 @@ import it.polimi.deib.se2019.sanp4.adrenaline.controller.action.ReloadActionCont
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.action.ShootActionController;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.answerers.CancelRequestAnswer;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.answerers.SendChoiceRequestAnswer;
+import it.polimi.deib.se2019.sanp4.adrenaline.controller.powerups.PowerupController;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.requests.CompletableChoice;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.ModelTestUtil;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionCardEnum;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionEnum;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.Square;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCube;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.items.powerup.PowerupCard;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.items.powerup.PowerupEnum;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.match.*;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
+import it.polimi.deib.se2019.sanp4.adrenaline.view.MessageType;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -27,6 +33,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.*;
+import java.util.concurrent.CancellationException;
 
 import static it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionEnum.*;
 import static it.polimi.deib.se2019.sanp4.adrenaline.model.match.PlayerOperationEnum.*;
@@ -55,6 +62,8 @@ public class TurnControllerTest {
     private static ShootActionController shootActionController;
     @Mock
     private static ReloadActionController reloadActionController;
+    @Mock
+    private static PowerupController powerupController;
 
     @BeforeClass
     public static void classSetup() {
@@ -92,6 +101,7 @@ public class TurnControllerTest {
         when(factory.createGrabActionController(any())).thenReturn(grabActionController);
         when(factory.createShootActionController()).thenReturn(shootActionController);
         when(factory.createReloadActionController()).thenReturn(reloadActionController);
+        when(factory.createPowerupController(any())).thenReturn(powerupController);
     }
 
     private static SendChoiceRequestAnswer<PlayerOperationRequest> chooseOperation(PlayerOperationEnum choice) {
@@ -445,6 +455,204 @@ public class TurnControllerTest {
         inOrder.verify(reloadActionController).execute(view);
         inOrder.verify(shootActionController).execute(view);
         inOrder.verify(moveActionController).execute(view, 4);
+
+        /* Check that the turn is OVER */
+        assertThat(turn.getTurnState(), is(OVER));
+    }
+
+    /* ======= POWERUPS ======= */
+
+    @Test
+    public void runTurn_powerup_noPowerups_shouldNotifyPlayer() throws InterruptedException {
+        /* Set up the player */
+        Player p = match.getPlayerByName("bzoto");
+        PersistentView view = views.get("bzoto");
+
+        /* Create the turn controller */
+        PlayerTurn turn = new PlayerTurn(p);
+        match.setCurrentTurn(turn);
+        TurnController controller = new TurnController(turn, match, views, factory);
+
+        /* Set up the user's responses */
+        when(view.sendChoiceRequest(any(PlayerOperationRequest.class)))
+                .thenAnswer(chooseOperation(USE_POWERUP))
+                .thenAnswer(chooseOperation(END_TURN));
+
+        /* The player has no powerups */
+        controller.runTurn();
+
+        /* Check that he got no powerup requests, but only a warning */
+        verify(view, never()).sendChoiceRequest(any(PowerupCardRequest.class));
+        verify(view).showMessage(anyString(), eq(MessageType.WARNING));
+
+        /* Check that the factory has not been asked to create a powerup controller */
+        verify(factory, never()).createPowerupController(any());
+
+        /* Check that the turn is OVER */
+        assertThat(turn.getTurnState(), is(OVER));
+    }
+
+    @Test
+    public void runTurn_powerup_usedSuccessfully_shouldRemoveFromPlayer() throws Exception {
+        /* Set up the player */
+        Player p = match.getPlayerByName("bzoto");
+        PersistentView view = views.get("bzoto");
+
+        /* Add two distinct powerups */
+        PowerupCard pw1 = new PowerupCard(PowerupEnum.NEWTON, AmmoCube.RED);
+        PowerupCard pw2 = new PowerupCard(PowerupEnum.TARGETING_SCOPE, AmmoCube.BLUE);
+        p.addPowerup(pw1);
+        p.addPowerup(pw2);
+
+        /* Create the turn controller */
+        PlayerTurn turn = new PlayerTurn(p);
+        match.setCurrentTurn(turn);
+        TurnController controller = new TurnController(turn, match, views, factory);
+
+        /* Set up the user's responses */
+        when(view.sendChoiceRequest(any(PlayerOperationRequest.class)))
+                .thenAnswer(chooseOperation(USE_POWERUP))
+                .thenAnswer(chooseOperation(END_TURN));
+        List<PowerupCard> givenPowerups = new ArrayList<>(2);
+        when(view.sendChoiceRequest(any(PowerupCardRequest.class)))
+                .thenAnswer((SendChoiceRequestAnswer<PowerupCard>) req -> {
+                    givenPowerups.addAll(req.getChoices());
+                    return new CompletableChoice<>(req).complete(pw1);
+                });
+
+        /* Set up the mock of the powerup controller */
+        when(powerupController.use(view)).thenReturn(true);
+
+        /* Run */
+        controller.runTurn();
+
+        /* Check that he got one powerup request and no warning */
+        verify(view).sendChoiceRequest(any(PowerupCardRequest.class));
+        verify(view, never()).showMessage(anyString(), eq(MessageType.WARNING));
+
+        /* Check that the choices were as expected */
+        assertEquals(2, givenPowerups.size());
+        assertTrue(givenPowerups.contains(pw1));
+        assertTrue(givenPowerups.contains(pw2));
+
+        /* Check that the powerup controller has been used */
+        verify(factory).createPowerupController(pw1.getType());
+        verify(powerupController).use(view);
+
+        /* Check that the player hasn't got the powerup anymore */
+        assertFalse(p.getPowerups().contains(pw1));
+        assertTrue(p.getPowerups().contains(pw2));
+
+        /* Check that the turn is OVER */
+        assertThat(turn.getTurnState(), is(OVER));
+    }
+
+    @Test
+    public void runTurn_powerup_failedToUse_shouldNotRemoveFromPlayer() throws Exception {
+        /* Set up the player */
+        Player p = match.getPlayerByName("bzoto");
+        PersistentView view = views.get("bzoto");
+
+        /* Add two distinct powerups */
+        PowerupCard pw1 = new PowerupCard(PowerupEnum.NEWTON, AmmoCube.RED);
+        PowerupCard pw2 = new PowerupCard(PowerupEnum.TARGETING_SCOPE, AmmoCube.BLUE);
+        PowerupCard pw3 = new PowerupCard(PowerupEnum.TAGBACK, AmmoCube.BLUE);
+        p.addPowerup(pw1);
+        p.addPowerup(pw2);
+        p.addPowerup(pw3);
+
+        /* Create the turn controller */
+        PlayerTurn turn = new PlayerTurn(p);
+        match.setCurrentTurn(turn);
+        TurnController controller = new TurnController(turn, match, views, factory);
+
+        /* Set up the user's responses */
+        when(view.sendChoiceRequest(any(PlayerOperationRequest.class)))
+                .thenAnswer(chooseOperation(USE_POWERUP))
+                .thenAnswer(chooseOperation(END_TURN));
+        List<PowerupCard> givenPowerups = new ArrayList<>(2);
+        when(view.sendChoiceRequest(any(PowerupCardRequest.class)))
+                .thenAnswer((SendChoiceRequestAnswer<PowerupCard>) req -> {
+                    givenPowerups.addAll(req.getChoices());
+                    return new CompletableChoice<>(req).complete(pw1);
+                });
+
+        /* Set up the mock of the powerup controller */
+        when(powerupController.use(view)).thenReturn(false);
+
+        /* Run */
+        controller.runTurn();
+
+        /* Check that he got one powerup request and no warning */
+        verify(view).sendChoiceRequest(any(PowerupCardRequest.class));
+        verify(view, never()).showMessage(anyString(), eq(MessageType.WARNING));
+
+        /* Check that the choices were as expected */
+        assertEquals(2, givenPowerups.size());
+        assertTrue(givenPowerups.contains(pw1));
+        assertTrue(givenPowerups.contains(pw2));
+
+        /* Check that the powerup controller has been used */
+        verify(factory).createPowerupController(pw1.getType());
+        verify(powerupController).use(view);
+
+        /* Check that the player still has both powerups */
+        assertTrue(p.getPowerups().contains(pw1));
+        assertTrue(p.getPowerups().contains(pw2));
+
+        /* Check that the turn is OVER */
+        assertThat(turn.getTurnState(), is(OVER));
+    }
+
+    @Test
+    public void runTurn_powerup_cancelDuringUsage_shouldNotRemoveFromPlayer() throws Exception {
+        /* Set up the player */
+        Player p = match.getPlayerByName("bzoto");
+        PersistentView view = views.get("bzoto");
+
+        /* Add two distinct powerups */
+        PowerupCard pw1 = new PowerupCard(PowerupEnum.NEWTON, AmmoCube.RED);
+        PowerupCard pw2 = new PowerupCard(PowerupEnum.TARGETING_SCOPE, AmmoCube.BLUE);
+        p.addPowerup(pw1);
+        p.addPowerup(pw2);
+
+        /* Create the turn controller */
+        PlayerTurn turn = new PlayerTurn(p);
+        match.setCurrentTurn(turn);
+        TurnController controller = new TurnController(turn, match, views, factory);
+
+        /* Set up the user's responses */
+        when(view.sendChoiceRequest(any(PlayerOperationRequest.class)))
+                .thenAnswer(chooseOperation(USE_POWERUP));
+        List<PowerupCard> givenPowerups = new ArrayList<>(2);
+        when(view.sendChoiceRequest(any(PowerupCardRequest.class)))
+                .thenAnswer((SendChoiceRequestAnswer<PowerupCard>) req -> {
+                    givenPowerups.addAll(req.getChoices());
+                    return new CompletableChoice<>(req).complete(pw1);
+                });
+
+        /* Set up the mock of the powerup controller */
+        when(powerupController.use(view)).thenThrow(new CancellationException());
+
+        /* Run */
+        controller.runTurn();
+
+        /* Check that he got one powerup request and no warning */
+        verify(view).sendChoiceRequest(any(PowerupCardRequest.class));
+        verify(view, never()).showMessage(anyString(), eq(MessageType.WARNING));
+
+        /* Check that the choices were as expected */
+        assertEquals(2, givenPowerups.size());
+        assertTrue(givenPowerups.contains(pw1));
+        assertTrue(givenPowerups.contains(pw2));
+
+        /* Check that the powerup controller has been used */
+        verify(factory).createPowerupController(pw1.getType());
+        verify(powerupController).use(view);
+
+        /* Check that the player still has both powerups */
+        assertTrue(p.getPowerups().contains(pw1));
+        assertTrue(p.getPowerups().contains(pw2));
 
         /* Check that the turn is OVER */
         assertThat(turn.getTurnState(), is(OVER));
