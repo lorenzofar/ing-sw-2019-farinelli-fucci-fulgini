@@ -7,6 +7,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.controller.action.ShootActionContr
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.match.MatchController;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.match.SpawnController;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.match.TurnController;
+import it.polimi.deib.se2019.sanp4.adrenaline.controller.powerups.*;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.weapons.AbstractWeapon;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.weapons.AlternativeModesWeapon;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.weapons.OptionalEffectsWeapon;
@@ -17,6 +18,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.controller.weapons.effects.Targeti
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.weapons.targets.*;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.VisibilityEnum;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCubeCost;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.items.powerup.PowerupEnum;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.WeaponCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.WeaponCreator;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.match.Match;
@@ -26,9 +28,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Default implementation of controller factory
@@ -58,6 +58,8 @@ public class StandardControllerFactory implements ControllerFactory {
 
     private final ShootActionController shootActionController;
 
+    private final Map<PowerupEnum, PowerupController> powerupControllers;
+
     /**
      * Creates a factory associated to the given match and views of the players,
      * which will be injected as dependencies where needed.
@@ -79,6 +81,13 @@ public class StandardControllerFactory implements ControllerFactory {
         moveActionController = new MoveActionController(match);
         reloadActionController = new ReloadActionController(match, this);
         shootActionController = new ShootActionController(match, views, this);
+
+        /* Create powerup controllers */
+        powerupControllers = new EnumMap<>(PowerupEnum.class);
+        powerupControllers.put(PowerupEnum.TARGETING_SCOPE, new TargetingScopeController(match, this));
+        powerupControllers.put(PowerupEnum.NEWTON, new NewtonController(match));
+        powerupControllers.put(PowerupEnum.TAGBACK, new TagbackController(match));
+        powerupControllers.put(PowerupEnum.TELEPORTER, new TeleporterController(match));
     }
 
     /**
@@ -173,6 +182,19 @@ public class StandardControllerFactory implements ControllerFactory {
     @Override
     public ShootActionController createShootActionController() {
         return shootActionController;
+    }
+
+    /* =================== POWERUPS ==================== */
+
+    /**
+     * Creates the controller for a specific powerup effect
+     *
+     * @param type The type of the powerup effect, not null
+     * @return The controller for the powerup effect
+     */
+    @Override
+    public PowerupController createPowerupController(PowerupEnum type) {
+        return powerupControllers.get(type);
     }
 
     /* =================== WEAPONS ===================== */

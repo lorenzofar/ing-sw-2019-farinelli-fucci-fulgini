@@ -7,9 +7,11 @@ import it.polimi.deib.se2019.sanp4.adrenaline.controller.action.ShootActionContr
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.match.MatchController;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.match.SpawnController;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.match.TurnController;
+import it.polimi.deib.se2019.sanp4.adrenaline.controller.powerups.PowerupController;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.weapons.AbstractWeapon;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.weapons.effects.AbstractEffect;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.weapons.targets.AbstractTarget;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.items.powerup.PowerupEnum;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.WeaponCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.match.Match;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.match.PlayerTurn;
@@ -88,6 +90,14 @@ public interface ControllerFactory {
      * @return The controller for the Reload basic action
      */
     ShootActionController createShootActionController();
+
+    /**
+     * Creates the controller for a specific powerup effect
+     *
+     * @param type The type of the powerup effect, not null
+     * @return The controller for the powerup effect
+     */
+    PowerupController createPowerupController(PowerupEnum type);
 
     /**
      * Creates the controller for a specific weapon
