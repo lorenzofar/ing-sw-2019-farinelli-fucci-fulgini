@@ -141,12 +141,14 @@ public class GUIRenderer extends Application implements UIRenderer {
     @Override
     public void showMatchScreen() {
         showScene("/fxml/game.fxml");
-        try {
-            GameController gameController = (GameController) currentController;
-            Platform.runLater(gameController::buildMatchScreen);
-        } catch (Exception ignore) {
-            // An error occurred while building the match screen
-        }
+        Platform.runLater(() -> {
+            try {
+                GameController gameController = (GameController) currentController;
+                Platform.runLater(gameController::buildMatchScreen);
+            } catch (Exception ignore) {
+                // An error occurred while building the match screen
+            }
+        });
     }
 
     /**
@@ -230,7 +232,13 @@ public class GUIRenderer extends Application implements UIRenderer {
      */
     @Override
     public void refreshGameBoard() {
-        //TODO: Implement this method
+        Platform.runLater(() -> {
+            try {
+                ((GameController) currentController).updateBoard();
+            } catch (Exception ignore) {
+                // The game screen is not shown, hence we ignore the error
+            }
+        });
     }
 
     /**
@@ -240,16 +248,27 @@ public class GUIRenderer extends Application implements UIRenderer {
      */
     @Override
     public void refreshGameBoard(CoordPair... squares) {
-        //TODO: Implement this method
+        Platform.runLater(() -> {
+            try {
+                // Update all the provided squares
+                for (CoordPair square : squares) {
+                    ((GameController) currentController).updateSquareOverlay(square);
+                }
+            } catch (Exception ignore) {
+                // The game screen is not shown, hence we ignore the error
+            }
+        });
     }
 
     @Override
     public void refreshAmmoInfo() {
-        try {
-            ((GameController) currentController).updateAmmoAmount();
-        } catch (Exception e) {
-            // The game screen is not shown, hence we ignore the error
-        }
+        Platform.runLater(() -> {
+            try {
+                ((GameController) currentController).updateAmmoAmount();
+            } catch (Exception e) {
+                // The game screen is not shown, hence we ignore the error
+            }
+        });
     }
 
     /**

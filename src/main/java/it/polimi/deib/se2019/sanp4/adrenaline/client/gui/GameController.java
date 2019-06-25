@@ -2,6 +2,7 @@ package it.polimi.deib.se2019.sanp4.adrenaline.client.gui;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.client.ModelManager;
 import it.polimi.deib.se2019.sanp4.adrenaline.client.gui.controls.*;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.ColoredObject;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.*;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.ActionRequest;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.PlayerOperationRequest;
@@ -239,6 +240,7 @@ public class GameController extends GUIController {
         updateSpawnWeapons();
         updateKillshotsTrack();
         updateActionTrack();
+        updateBoard();
         // For each player, update its player board
         clientView.getModelManager().getPlayers().keySet().forEach(this::updatePlayerBoard);
     }
@@ -333,7 +335,7 @@ public class GameController extends GUIController {
                 images.get(i).setWeapon(weaponCards.get(i));
                 i++;
             }
-            while(i < images.size()){
+            while (i < images.size()) {
                 // If there are remaining places we fill them with null values
                 images.get(i).setWeapon(null);
                 i++;
@@ -386,6 +388,41 @@ public class GameController extends GUIController {
                 playerBoardView.getDamages().stream().map(shooter -> clientView.getModelManager().getPlayersColors().get(shooter)).collect(Collectors.toList()));
         playerBoardControl.setPlayerDeaths(clientView.getModelManager().getPlayerBoards().get(player).getDeaths());
         playerBoardControl.setPlayerMarks(clientView.getModelManager().getPlayerBoards().get(player).getMarks());
+    }
 
+    /**
+     * Update the rendered content of all the square overlays contained in the board
+     */
+    void updateBoard() {
+        // Get all the squares contained in the board and update the corresponding overlay
+        for (SquareView[] squaresRow : clientView.getModelManager().getBoard().getSquares()) {
+            for (SquareView squareView : squaresRow) {
+                // We do not consider null cells (i.e. missing squares)
+                if(squareView != null) {
+                    updateSquareOverlay(squareView.getLocation());
+                }
+            }
+        }
+    }
+
+    /**
+     * Update the rendered content of the overlay corresponding to the provided square
+     *
+     * @param location The location of the square in cartesian coordinates
+     */
+    void updateSquareOverlay(CoordPair location) {
+        SquareOverlay squareOverlay = squareOverlays[location.getX()][location.getY()];
+        SquareView squareView = clientView.getModelManager().getBoard().getSquare(location);
+        // Check whether the square is an ammo square
+        if (!clientView.getModelManager().getBoard().getSpawnPoints().containsValue(location)) {
+            // And update its ammo card
+            ((AmmoSquareOverlay) squareOverlay).setAmmoCard(((AmmoSquareView) squareView).getAmmoCard());
+        }
+        // Then get all the players that are inside that square and update the square content
+        Map<String, ColoredObject> squarePlayers = clientView.getModelManager().getPlayersColors()
+                .entrySet().stream()
+                .filter(entry -> squareView.getPlayers().contains(entry.getKey()))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+        squareOverlay.updateContent(squarePlayers);
     }
 }

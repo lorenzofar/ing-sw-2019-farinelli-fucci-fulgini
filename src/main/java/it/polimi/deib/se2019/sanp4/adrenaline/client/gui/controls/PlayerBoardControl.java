@@ -185,7 +185,7 @@ public class PlayerBoardControl extends VBox {
         for (ColoredObject token : damageTokens) {
             // First we create an overlay for the token
             Pane tokenOverlay = createTokenOverlay(cellRatios[i] / 100, damageTokensContainer, token.getHexCode());
-            tokenOverlay.getStyleClass().add("glossy-pane");
+            tokenOverlay.getStyleClass().add("glossy");
             tokenOverlay.setOpacity(0.75);
             GridPane.setColumnIndex(tokenOverlay, i);
             damageTokensContainer.getChildren().add(tokenOverlay);

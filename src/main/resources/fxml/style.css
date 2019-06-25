@@ -80,7 +80,7 @@ TextField {
 .square-overlay {
     -fx-background-color: transparent;
     -fx-border-width: 0;
-    -fx-opacity: 0.3;
+    -fx-opacity: 1;
 }
 
 .square-overlay.selectable {
@@ -155,6 +155,6 @@ TextField {
     -fx-fill: -fx-enabled-text;
 }
 
-.glossy-pane {
+.glossy {
     -fx-effect: innershadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 5, 5);
 }
