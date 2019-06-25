@@ -157,6 +157,16 @@ public class CLIRenderer implements UIRenderer {
         printMatchScreen();
     }
 
+    @Override
+    public void showDrawnWeapon(WeaponCard weapon) {
+        //TODO: Implement this method
+    }
+
+    @Override
+    public void showDrawnPowerup(PowerupCard powerup) {
+        //TODO: Implement this method
+    }
+
     /**
      * Generates and prints a textual representation of the game dashboard
      */

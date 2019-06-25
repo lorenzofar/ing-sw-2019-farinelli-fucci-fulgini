@@ -4,6 +4,8 @@ import it.polimi.deib.se2019.sanp4.adrenaline.client.ClientView;
 import it.polimi.deib.se2019.sanp4.adrenaline.client.UIRenderer;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.*;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.CoordPair;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.items.powerup.PowerupCard;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.WeaponCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.view.MessageType;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -148,6 +150,24 @@ public class GUIRenderer extends Application implements UIRenderer {
             } catch (Exception ignore) {
                 // An error occurred while building the match screen
             }
+        });
+    }
+
+    @Override
+    public void showDrawnWeapon(WeaponCard weapon) {
+        Platform.runLater(() -> {
+            ImageViewerController imageViewerController = (ImageViewerController) showNewWindow("/fxml/imageViewer.fxml", "New weapon");
+            imageViewerController.setCaption("You have just drawn this weapon:");
+            imageViewerController.setImage(String.format("/images/weapons/%s.png", weapon.getId()));
+        });
+    }
+
+    @Override
+    public void showDrawnPowerup(PowerupCard powerup) {
+        Platform.runLater(() -> {
+            ImageViewerController imageViewerController = (ImageViewerController) showNewWindow("/fxml/imageViewer.fxml", "New powerup");
+            imageViewerController.setCaption("You have just drawn this powerup:");
+            imageViewerController.setImage(String.format("/images/powerups/%s_%s.png", powerup.getType().name().toLowerCase(), powerup.getCubeColor().name().toLowerCase()));
         });
     }
 

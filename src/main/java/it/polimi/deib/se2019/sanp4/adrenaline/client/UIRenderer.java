@@ -2,6 +2,8 @@ package it.polimi.deib.se2019.sanp4.adrenaline.client;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.ChoiceRequestVisitor;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.CoordPair;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.items.powerup.PowerupCard;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.WeaponCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.view.MessageType;
 
 import java.util.Collection;
@@ -29,6 +31,16 @@ public interface UIRenderer extends ChoiceRequestVisitor {
      * Triggered when the match starts
      */
     void showMatchScreen();
+
+    /**
+     * Shows the user the weapon card he has just drawn
+     */
+    void showDrawnWeapon(WeaponCard weapon);
+
+    /**
+     * Shows the user the powerup he has just drawn
+     */
+    void showDrawnPowerup(PowerupCard powerup);
 
     /**
      * Shows a message to the user

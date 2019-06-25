@@ -47,49 +47,74 @@ public class Player extends Observable<ModelUpdate> implements Observer<ModelUpd
      */
     public static final int MAX_POWERUPS = 3;
 
-    /** Nickname of the player, must be unique on the whole server */
+    /**
+     * Nickname of the player, must be unique on the whole server
+     */
     private final String name;
 
-    /** The "points" the user has */
+    /**
+     * The "points" the user has
+     */
     private int score;
 
-    /** Number of times this player overkilled someone else during the match */
+    /**
+     * Number of times this player overkilled someone else during the match
+     */
     private int performedOverkills;
 
-    /** Number of times this player performed a killshot (overkills are excluded) */
+    /**
+     * Number of times this player performed a killshot (overkills are excluded)
+     */
     private int performedKillshots;
 
-    /** Shared object containing actions that the player can perform */
+    /**
+     * Shared object containing actions that the player can perform
+     */
     private ActionCard actionCard;
 
-    /** Board with damage and marks */
+    /**
+     * Board with damage and marks
+     */
     private final PlayerBoard playerBoard;
 
-    /** Weapon cards in player's hands */
+    /**
+     * Weapon cards in player's hands
+     */
     private List<WeaponCard> weapons;
 
-    /** Powerup cards in player's hands */
+    /**
+     * Powerup cards in player's hands
+     */
     private List<PowerupCard> powerups;
 
-    /** Ammo cubes for each color */
+    /**
+     * Ammo cubes for each color
+     */
     private Map<AmmoCube, Integer> ammo;
 
-    /** Color of the game character chosen by this player */
+    /**
+     * Color of the game character chosen by this player
+     */
     private final PlayerColor color;
 
-    /** Board square this player is currently in */
+    /**
+     * Board square this player is currently in
+     */
     private Square currentSquare;
 
-    /** Player's operational state */
+    /**
+     * Player's operational state
+     */
     private PlayerState state;
 
     /**
      * Constructs a player who is ready to play: sets counters to zero and sets initial ammo cubes.
-     * @param name server-unique nickname
+     *
+     * @param name       server-unique nickname
      * @param actionCard pre-built action card, may be shared with other players
-     * @param color color of the chosen character
+     * @param color      color of the chosen character
      */
-    public Player(String name, ActionCard actionCard, PlayerColor color){
+    public Player(String name, ActionCard actionCard, PlayerColor color) {
         if (actionCard == null || color == null || name == null) {
             throw new NullPointerException("Found null parameters!");
         }
@@ -115,7 +140,7 @@ public class Player extends Observable<ModelUpdate> implements Observer<ModelUpd
 
         /* Ammo */
         ammo = new EnumMap<>(AmmoCube.class);
-        for(int i= 0; i<AmmoCube.values().length; i++){
+        for (int i = 0; i < AmmoCube.values().length; i++) {
             ammo.put(AmmoCube.values()[i], INITIAL_AMMO);
         }
 
@@ -129,27 +154,28 @@ public class Player extends Observable<ModelUpdate> implements Observer<ModelUpd
     /**
      * Converts a map containing generic cubes (gray) to a map containg only payable cubes
      * It takes the first available cube from the player to suffice for the generic cost
+     *
      * @param cubesList The list of objects representing the cubes to convert
      * @return The map representing the converted cubes
      * @throws NotEnoughAmmoException If player's ammo is not sufficient to cover the cost
      */
-    private Map<AmmoCube, Integer> convertAmmoCubeCost(List<AmmoCubeCost> cubesList) throws NotEnoughAmmoException{
+    private Map<AmmoCube, Integer> convertAmmoCubeCost(List<AmmoCubeCost> cubesList) throws NotEnoughAmmoException {
         // Load count of cubes to convert
-        int genericCount = (int)cubesList.stream().filter(cube -> cube == AmmoCubeCost.ANY).count();
+        int genericCount = (int) cubesList.stream().filter(cube -> cube == AmmoCubeCost.ANY).count();
         Map<AmmoCube, Integer> convertedAmmo = new EnumMap<>(AmmoCube.class);
 
         cubesList.stream()
                 .filter(cube -> cube != AmmoCubeCost.ANY)
                 .forEach(cube ->
-                    convertedAmmo.merge(cube.getCorrespondingCube(), 1, Integer::sum)
+                        convertedAmmo.merge(cube.getCorrespondingCube(), 1, Integer::sum)
                 );
 
         // If there are no cubes to convert, do nothing
-        if(genericCount == 0){
+        if (genericCount == 0) {
             return convertedAmmo;
         }
         // Repeat this for all the cubes that need conversion:
-        while(genericCount > 0) {
+        while (genericCount > 0) {
             /* Here we search for a cube in the player wallet
             We first filter out colors with no cubes,
             then we retrieve a cube from the remaining ones*/
@@ -157,13 +183,13 @@ public class Player extends Observable<ModelUpdate> implements Observer<ModelUpd
                     .stream()
                     .filter(entry -> {
                         Integer userAmmo = entry.getValue();
-                        Integer pendingAmmo = convertedAmmo.getOrDefault(entry.getKey(),0);
+                        Integer pendingAmmo = convertedAmmo.getOrDefault(entry.getKey(), 0);
                         // Here we check that the player has enough ammo to pay for the pending ammo and for the generic cube
                         return userAmmo != null && userAmmo - pendingAmmo > 0;
                     })
                     .findAny();
             // We check whether that cube is really present, if not we throw an exception
-            if(!availableAmmo.isPresent()){
+            if (!availableAmmo.isPresent()) {
                 throw new NotEnoughAmmoException();
             }
             // The user can pay the cost, so we increase the corresponding counter
@@ -176,6 +202,7 @@ public class Player extends Observable<ModelUpdate> implements Observer<ModelUpd
 
     /**
      * Returns this player's name.
+     *
      * @return player's name
      */
     public String getName() {
@@ -184,10 +211,11 @@ public class Player extends Observable<ModelUpdate> implements Observer<ModelUpd
 
     /**
      * Add given points to player's score.
+     *
      * @param points points to be added to current score, must be positive
      * @throws IllegalArgumentException if points is negative
      */
-    public synchronized void addScorePoints(int points){
+    public synchronized void addScorePoints(int points) {
         if (points < 0) {
             throw new IllegalArgumentException("Score cannot be incremented by negative amount");
         }
@@ -196,6 +224,7 @@ public class Player extends Observable<ModelUpdate> implements Observer<ModelUpd
 
     /**
      * Returns player's score
+     *
      * @return player's score points
      */
     public int getScore() {
@@ -211,6 +240,7 @@ public class Player extends Observable<ModelUpdate> implements Observer<ModelUpd
 
     /**
      * Returns number of killshots performed by this player.
+     *
      * @return number of killshots performed by this player
      */
     public int getPerformedKillshots() {
@@ -226,6 +256,7 @@ public class Player extends Observable<ModelUpdate> implements Observer<ModelUpd
 
     /**
      * Returns number of overkills performed by this player.
+     *
      * @return number of overkills performed by this player
      */
     public int getPerformedOverkills() {
@@ -234,6 +265,7 @@ public class Player extends Observable<ModelUpdate> implements Observer<ModelUpd
 
     /**
      * Returns the current action card.
+     *
      * @return the action card (not null)
      */
     public ActionCard getActionCard() {
@@ -242,10 +274,11 @@ public class Player extends Observable<ModelUpdate> implements Observer<ModelUpd
 
     /**
      * Sets the action card.
+     *
      * @param card action card, not null
      * @throws NullPointerException if parameter is null
      */
-    public void setActionCard(ActionCard card){
+    public void setActionCard(ActionCard card) {
         if (card == null) {
             throw new NullPointerException("ActionCard cannot be null for player");
         }
@@ -270,6 +303,7 @@ public class Player extends Observable<ModelUpdate> implements Observer<ModelUpd
 
     /**
      * Getter for {@link #playerBoard}.
+     *
      * @return player board
      */
     public PlayerBoard getPlayerBoard() {
@@ -278,26 +312,29 @@ public class Player extends Observable<ModelUpdate> implements Observer<ModelUpd
 
     /**
      * Retrieves the weapon cards owned by the player
+     *
      * @return The list of objects representing the weapon cards
      */
-    public List<WeaponCard> getWeapons(){
+    public List<WeaponCard> getWeapons() {
         return new ArrayList<>(weapons);
     }
 
     /**
      * Determines whether the player owns the specified weapon card
+     *
      * @param weaponId The identifier of the weapon card
      * @return {@code true} if the player owns the card, {@code false} otherwise
      */
-    public boolean hasWeaponCard(String weaponId){
+    public boolean hasWeaponCard(String weaponId) {
         return weapons.stream().map(WeaponCard::getId).anyMatch(id -> id.equals(weaponId));
     }
 
     /**
      * Add a weapon card in player's hands.
      * Also takes care of the fact that you cannot have more than more than {@link #MAX_WEAPONS} cards.
+     *
      * @param weapon weapon card that should be added, not null
-     * @throws NullPointerException if weapon is null
+     * @throws NullPointerException  if weapon is null
      * @throws FullCapacityException if the weapon limit has been reached
      */
     public void addWeapon(WeaponCard weapon) throws FullCapacityException {
@@ -305,7 +342,7 @@ public class Player extends Observable<ModelUpdate> implements Observer<ModelUpd
             throw new NullPointerException("cannot add empty weapon to player");
         }
 
-        if(hasWeaponCard(weapon.getId())){
+        if (hasWeaponCard(weapon.getId())) {
             throw new IllegalStateException("The player already owns the card");
         }
 
@@ -319,6 +356,7 @@ public class Player extends Observable<ModelUpdate> implements Observer<ModelUpd
 
     /**
      * Removes a weapon card from player's hands and resets it.
+     *
      * @param weaponId identifier of the weapon, not null and not an empty string
      * @return weapon card drawn from player
      * @throws CardNotFoundException if the requested card is not owned by the player
@@ -329,7 +367,7 @@ public class Player extends Observable<ModelUpdate> implements Observer<ModelUpd
         }
 
         Optional<WeaponCard> weaponCard = weapons.stream().filter(w -> w.getId().equals(weaponId)).findFirst();
-        if(!weaponCard.isPresent()){
+        if (!weaponCard.isPresent()) {
             throw new CardNotFoundException(String.format("The weapon \"%s\" does not belong to the user", weaponId));
         }
         weapons.remove(weaponCard.get());
@@ -342,16 +380,17 @@ public class Player extends Observable<ModelUpdate> implements Observer<ModelUpd
 
     /**
      * Removes a weapon card from player's hands and resets it.
+     *
      * @param weapon weapon card to be removed
      * @return weapon card drawn from player
      * @throws CardNotFoundException if the requested card is not in available in this square
      */
     public WeaponCard removeWeapon(WeaponCard weapon) {
-        if(weapon == null){
+        if (weapon == null) {
             throw new NullPointerException("Weapon cannot be null");
         }
 
-        if(!(weapons.contains(weapon))){
+        if (!(weapons.contains(weapon))) {
             throw new CardNotFoundException(String.format("The weapon \"%s\" does not belong to the user", weapon.getId()));
         }
 
@@ -364,57 +403,62 @@ public class Player extends Observable<ModelUpdate> implements Observer<ModelUpd
 
     /**
      * Retrieves the powerup cards owned by the player
+     *
      * @return The list of objects representing the powerup cards
      */
-    public List<PowerupCard> getPowerups(){
+    public List<PowerupCard> getPowerups() {
         return new ArrayList<>(powerups);
     }
 
     /**
      * Adds powerup card to player's hands.
      * Also takes care of the fact that you cannot have more than more than {@link #MAX_POWERUPS} cards.
+     *
      * @param powerup powerup card to be added, not null
      * @throws FullCapacityException if the powerups limit has been reached
      */
-    public void addPowerup(PowerupCard powerup) throws FullCapacityException{
-        if(powerup == null){
+    public void addPowerup(PowerupCard powerup) throws FullCapacityException {
+        if (powerup == null) {
             throw new NullPointerException("Powerup card cannot be null");
         }
 
-        if(powerups.size() >= MAX_POWERUPS){
+        if (powerups.size() >= MAX_POWERUPS) {
             throw new FullCapacityException(MAX_POWERUPS);
         }
         powerups.add(powerup);
-        notifyObservers(new DrawnPowerupUpdate(name, powerup));
+        notifyObservers(new PlayerUpdate(this.generateView()));
     }
 
     /**
      * Removes a powerup card from player's hands
+     *
      * @param powerup powerup card to be removed
      * @return removed powerup card
      * @throws IllegalStateException if the powerup does not belong to the user
      */
     public PowerupCard removePowerup(PowerupCard powerup) {
-        if(powerup == null){
+        if (powerup == null) {
             throw new NullPointerException("Powerup card cannot be null");
         }
-        if(!(powerups.contains(powerup))){
+        if (!(powerups.contains(powerup))) {
             throw new IllegalStateException("User does not have the powerup card");
         }
         powerups.remove(powerup);
+        notifyObservers(new PlayerUpdate(this.generateView()));
         return powerup;
     }
 
     /**
      * Adds ammo cubes to the current player. If given ammo exceed capacity, they are simply discarded.
+     *
      * @param ammo a map containing the quantity of ammo cubes to add for each color, unspecified keys
      *             are treated as zero, not null and not containing negative values
      */
-    public void addAmmo(Map<AmmoCube, Integer> ammo){
-        if(ammo == null){
+    public void addAmmo(Map<AmmoCube, Integer> ammo) {
+        if (ammo == null) {
             throw new NullPointerException("Cubes map cannot be null");
         }
-        if(ammo.entrySet().stream().anyMatch(entry -> entry.getValue() < 0)){
+        if (ammo.entrySet().stream().anyMatch(entry -> entry.getValue() < 0)) {
             throw new IllegalArgumentException("Cubes amounts cannot be negative");
         }
         ammo.forEach((key, value) -> {
@@ -427,6 +471,7 @@ public class Player extends Observable<ModelUpdate> implements Observer<ModelUpd
 
     /**
      * Adds ammo cube to the current player. If given ammo exceeds capacity, it is simply discarded.
+     *
      * @param ammoCube The ammo cube to be added, not null
      */
     public void addAmmo(AmmoCube ammoCube) {
@@ -438,15 +483,16 @@ public class Player extends Observable<ModelUpdate> implements Observer<ModelUpd
 
     /**
      * Removes ammo cubes from current player.
+     *
      * @param ammo a map containing the quantity of ammo cubes to remove for each color, unspecified keys
      *             are treated as zero, not null and not containing negative values
      * @throws NotEnoughAmmoException if the player does not have enough ammo to pay the specified amount
      */
     public void payAmmo(Map<AmmoCube, Integer> ammo) throws NotEnoughAmmoException {
-        if(ammo == null){
+        if (ammo == null) {
             throw new NullPointerException("Cubes map cannot be null");
         }
-        if(ammo.entrySet().stream().anyMatch(entry -> entry.getValue() < 0)) {
+        if (ammo.entrySet().stream().anyMatch(entry -> entry.getValue() < 0)) {
             throw new IllegalArgumentException("Cubes amounts cannot be negative");
         }
         for (Map.Entry<AmmoCube, Integer> entry : ammo.entrySet()) {
@@ -463,12 +509,13 @@ public class Player extends Observable<ModelUpdate> implements Observer<ModelUpd
 
     /**
      * Removes ammo cubes from current player.
+     *
      * @param ammo a map containing the quantity of ammo cubes to remove for each color, unspecified keys
      *             are treated as zero, not null and not containing negative values
      * @throws NotEnoughAmmoException if the player does not have enough ammo to pay the specified amount
      */
-    public void payAmmo(List<AmmoCubeCost> ammo) throws NotEnoughAmmoException{
-        if(ammo == null){
+    public void payAmmo(List<AmmoCubeCost> ammo) throws NotEnoughAmmoException {
+        if (ammo == null) {
             throw new NullPointerException("Cubes list cannot be null");
         }
         payAmmo(convertAmmoCubeCost(ammo));
@@ -476,14 +523,16 @@ public class Player extends Observable<ModelUpdate> implements Observer<ModelUpd
 
     /**
      * Retrieves the ammo cubes belonging to the player
+     *
      * @return A map containing the count of each ammo cube
      */
-    public Map<AmmoCube, Integer> getAmmo(){
+    public Map<AmmoCube, Integer> getAmmo() {
         return new EnumMap<>(ammo);
     }
 
     /**
      * Returns the square this player is actually in.
+     *
      * @return square the player is in, null if the player has not spawned yet
      */
     public Square getCurrentSquare() {
@@ -492,11 +541,12 @@ public class Player extends Observable<ModelUpdate> implements Observer<ModelUpd
 
     /**
      * Sets the square this player is actually in.
+     *
      * @param currentSquare square where to set the player
      */
     public void setCurrentSquare(Square currentSquare) {
         Square start = this.currentSquare;
-        if(currentSquare == null){
+        if (currentSquare == null) {
             throw new NullPointerException("Square cannot be null");
         }
         this.currentSquare = currentSquare;
@@ -507,6 +557,7 @@ public class Player extends Observable<ModelUpdate> implements Observer<ModelUpd
 
     /**
      * Returns player's operational state.
+     *
      * @return player's state
      */
     public PlayerState getState() {
@@ -515,19 +566,21 @@ public class Player extends Observable<ModelUpdate> implements Observer<ModelUpd
 
     /**
      * Sets player's operational state.
+     *
      * @param state The object representing the state
      */
     public void setState(PlayerState state) {
-        if(state == null){
+        if (state == null) {
             throw new NullPointerException("State cannot be null");
         }
-        if(this.state != state) this.notifyObservers(new PlayerUpdate(generateView()));
+        if (this.state != state) this.notifyObservers(new PlayerUpdate(generateView()));
         this.state = state;
 
     }
 
     /**
      * Returns the color of the character chosen by the player
+     *
      * @return the color of the character chosen by the player
      */
     public PlayerColor getColor() {
@@ -541,9 +594,10 @@ public class Player extends Observable<ModelUpdate> implements Observer<ModelUpd
 
     /**
      * Generates the {@link PlayerView} of the player
+     *
      * @return the player view
      */
-    public PlayerView generateView(){
+    public PlayerView generateView() {
         PlayerView view = new PlayerView(name, color);
         view.setAmmo(ammo);
         view.setWeapons(weapons);

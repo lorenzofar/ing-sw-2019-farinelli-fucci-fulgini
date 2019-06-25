@@ -112,7 +112,7 @@ public class RenderingManager implements ModelUpdateVisitor {
         if (!update.getPlayer().equals(clientView.getUsername())) {
             return;
         }
-        // TODO: Show drawn card to the user
+        clientView.getRenderer().showDrawnPowerup(update.getPowerupCard());
     }
 
     @Override
@@ -120,7 +120,7 @@ public class RenderingManager implements ModelUpdateVisitor {
         if (!update.getPlayer().equals(clientView.getUsername())) {
             return;
         }
-        // TODO: Show drawn card to the user
+        clientView.getRenderer().showDrawnWeapon(update.getWeaponCard());
     }
 
     @Override

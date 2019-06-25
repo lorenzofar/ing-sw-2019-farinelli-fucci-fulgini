@@ -26,7 +26,7 @@ public class PowerupOverlay extends SelectableOverlay<PowerupCard> {
                 "null_powerup.png" :
                 String.format("%s_%s.png",
                         powerupCard.getType().name().toLowerCase(),
-                        powerupCard.getCubeColor().name().substring(0, 1).toLowerCase()));
+                        powerupCard.getCubeColor().name().toLowerCase()));
         Image powerupImage = new javafx.scene.image.Image(filePath, 200, 200, true, true);
         overlayRoot.setGraphic(new ImageView(powerupImage));
     }
