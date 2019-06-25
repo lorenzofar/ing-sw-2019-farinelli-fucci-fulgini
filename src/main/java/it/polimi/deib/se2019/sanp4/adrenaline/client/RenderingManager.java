@@ -132,7 +132,12 @@ public class RenderingManager implements ModelUpdateVisitor {
     }
 
     @Override
-    public void handle(WeaponCardUpdate weaponCardUpdate) {
+    public void handle(WeaponCardUpdate update) {
         // TODO: Refresh the component showing the cards (if present)
+    }
+
+    @Override
+    public void handle(MatchOperationalStateUpdate update) {
+        //TODO: Implement this method
     }
 }

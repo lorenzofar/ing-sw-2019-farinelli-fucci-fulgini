@@ -239,4 +239,9 @@ public class ModelManager implements ModelUpdateVisitor {
         WeaponCard weaponCard = ownerWeapons.get(ownerWeapons.indexOf(update.getWeaponCard()));
         weaponCard.setState(update.getWeaponCard().getState());
     }
+
+    @Override
+    public void handle(MatchOperationalStateUpdate update) {
+        //TODO: Implement this method
+    }
 }
