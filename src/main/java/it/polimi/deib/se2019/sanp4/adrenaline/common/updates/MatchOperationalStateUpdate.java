@@ -23,6 +23,14 @@ public class MatchOperationalStateUpdate extends ModelUpdate {
         this.state = state;
     }
 
+    public MatchOperationalState getState() {
+        return state;
+    }
+
+    public void setState(MatchOperationalState state) {
+        this.state = state;
+    }
+
     @Override
     public void accept(ModelUpdateVisitor visitor) {
         visitor.handle(this);
