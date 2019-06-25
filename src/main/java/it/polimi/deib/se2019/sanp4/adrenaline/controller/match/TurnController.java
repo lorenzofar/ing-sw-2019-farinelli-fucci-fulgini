@@ -109,7 +109,8 @@ public class TurnController {
             currentView.stopTimer();
         } catch (CancellationException e) {
             /* The player of this turn has been suspended */
-            logger.log(Level.INFO, "Caught a cancellation during \"{0}\"'s turn, ending it");
+            logger.log(Level.INFO, "Caught a cancellation during \"{0}\" turn, ending it",
+                    currentView.getUsername());
             turn.setTurnState(OVER);
         } finally {
             resetViewScenes(); /* Set all player scenes to idle */
