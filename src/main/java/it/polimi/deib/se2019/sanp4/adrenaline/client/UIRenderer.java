@@ -104,7 +104,10 @@ public interface UIRenderer extends ChoiceRequestVisitor {
      */
     public void refreshSpawnWeapons();
 
-    // TODO: add endpoint to refresh the list of weapons
+    /**
+     * Refreshes the rendered list of weapons owned by each player participating in the match
+     */
+    public void refreshOwnedWeapons();
 
     //TODO: Add more methods
 }

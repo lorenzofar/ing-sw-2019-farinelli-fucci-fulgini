@@ -4,7 +4,9 @@ import it.polimi.deib.se2019.sanp4.adrenaline.common.ColoredObject;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.*;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.*;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.WeaponCard;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.WeaponCreator;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -77,7 +79,16 @@ public class ModelManager implements ModelUpdateVisitor {
 
     @Override
     public void handle(AddedWeaponUpdate update) {
-        //TODO: Implement this method
+        PlayerView playerView = players.get(update.getPlayer());
+        if (playerView == null) {
+            return;
+        }
+        try {
+            WeaponCard weaponCard = WeaponCreator.createWeaponCard(update.getWeapon());
+            playerView.getWeapons().add(weaponCard);
+        } catch (IOException ignore) {
+            // Ignore error
+        }
     }
 
     @Override
@@ -127,7 +138,16 @@ public class ModelManager implements ModelUpdateVisitor {
 
     @Override
     public void handle(RemovedWeaponUpdate update) {
-        //TODO: Implement this method
+        PlayerView playerView = players.get(update.getPlayer());
+        if (playerView == null) {
+            return;
+        }
+        // We check whether the card is present in the player's hand
+        Optional<WeaponCard> weaponCard = playerView.getWeapons().stream().filter(card -> card.getId().equals(update.getWeapon())).findFirst();
+        if (!weaponCard.isPresent()) {
+            return;
+        }
+        playerView.getWeapons().remove(weaponCard.get());
     }
 
     @Override

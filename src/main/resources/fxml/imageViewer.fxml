@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.geometry.Insets?>
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="it.polimi.deib.se2019.sanp4.adrenaline.client.gui.ImageViewerController"
+      stylesheets="@style.css"
+      styleClass="dark-background"
+      prefHeight="400.0" prefWidth="300"
+      alignment="CENTER">
+    
+    <padding>
+        <Insets top="12" left="12" right="12" bottom="12"/>
+    </padding>
+
+    <ImageView fx:id="imageView" styleClass="shadowed"/>
+
+</VBox>

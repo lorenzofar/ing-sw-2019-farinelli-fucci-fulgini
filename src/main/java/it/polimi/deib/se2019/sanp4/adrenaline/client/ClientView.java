@@ -143,7 +143,7 @@ public class ClientView extends RemoteObservable<ViewEvent> implements RemoteVie
      *
      * @return The object representing the rendering engine
      */
-    UIRenderer getRenderer() {
+    public UIRenderer getRenderer() {
         return renderer;
     }
 

@@ -18,7 +18,7 @@ public class RenderingManager implements ModelUpdateVisitor {
 
     @Override
     public void handle(AddedWeaponUpdate update) {
-        //TODO: Implement this method
+        clientView.getRenderer().refreshOwnedWeapons();
     }
 
     @Override
@@ -50,17 +50,19 @@ public class RenderingManager implements ModelUpdateVisitor {
 
     @Override
     public void handle(ReloadUpdate update) {
-        //TODO: Implement this method
+        clientView.getRenderer().refreshOwnedWeapons();
     }
 
     @Override
     public void handle(RemovedWeaponUpdate update) {
-        //TODO: Implement this method
+        clientView.getRenderer().refreshOwnedWeapons();
     }
 
     @Override
     public void handle(PlayerUpdate update) {
         clientView.getRenderer().refreshPlayerBoard(update.getPlayer().getName());
+        // Also refresh the list of weapons (a player could have grabbed or discarded a weapon)
+        clientView.getRenderer().refreshOwnedWeapons();
         // Then if the updated player is our user, we refresh the match info pane to update its score
         if (update.getPlayer().getName().equals(clientView.getUsername())) {
             clientView.getRenderer().refreshMatchInfo();

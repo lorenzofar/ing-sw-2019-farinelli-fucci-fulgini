@@ -314,7 +314,7 @@ public class Player extends Observable<ModelUpdate> implements Observer<ModelUpd
         }
         weapons.add(weapon);
         weapon.addObserver(this);
-        notifyObservers(new AddedWeaponUpdate(this.getName(), weapon.getName()));
+        notifyObservers(new AddedWeaponUpdate(this.getName(), weapon.getId()));
     }
 
     /**

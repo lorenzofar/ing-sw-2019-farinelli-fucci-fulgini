@@ -92,7 +92,7 @@ public class GUIRenderer extends Application implements UIRenderer {
      * @param title    The title of the window
      * @return The controller associated to the newly created window
      */
-    private GUIController showNewWindow(String resource, String title) {
+    GUIController showNewWindow(String resource, String title) {
         try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(getClass().getResource(resource));
@@ -290,6 +290,17 @@ public class GUIRenderer extends Application implements UIRenderer {
         } catch (Exception ignore) {
             // The game screen is not shown, hence we ignore the error
         }
+    }
+
+    @Override
+    public void refreshOwnedWeapons() {
+        Platform.runLater(() -> {
+            try {
+                ((GameController) currentController).updateWeaponsInfo();
+            } catch (Exception ignore) {
+                // The game screen is not shown, hence we ignore the error
+            }
+        });
     }
 
     @Override

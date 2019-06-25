@@ -8,6 +8,7 @@
 <?import javafx.scene.control.Label?>
 <?import it.polimi.deib.se2019.sanp4.adrenaline.client.gui.controls.KillshotsTrack?>
 <?import it.polimi.deib.se2019.sanp4.adrenaline.client.gui.controls.PlayerBoardControl?>
+<?import it.polimi.deib.se2019.sanp4.adrenaline.client.gui.controls.WeaponsInfoPane?>
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       stylesheets="@style.css"
@@ -59,14 +60,17 @@
                 <RowConstraints/>
                 <RowConstraints/>
                 <RowConstraints/>
+                <RowConstraints/>
             </rowConstraints>
             <!-- Here we place:
             * in the first row the pane with info about the match
             * in the second row the ammo counter
+            * in the third row the pane showing info about weapons
             * int the remaining room the scrollable list of player boards -->
             <MatchInfoPane fx:id="matchInfoPane" GridPane.rowIndex="0"/>
             <AmmoPane fx:id="ammoPane" GridPane.rowIndex="1"/>
-            <VBox fx:id="playerBoardsContainer" GridPane.rowIndex="2" spacing="12"/>
+            <WeaponsInfoPane fx:id="weaponsInfoPane" GridPane.rowIndex="2"/>
+            <VBox fx:id="playerBoardsContainer" GridPane.rowIndex="3" spacing="12"/>
         </GridPane>
     </GridPane>
 

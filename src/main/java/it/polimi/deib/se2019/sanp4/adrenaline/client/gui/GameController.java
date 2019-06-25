@@ -83,6 +83,8 @@ public class GameController extends GUIController {
     @FXML
     private MatchInfoPane matchInfoPane;
     @FXML
+    private WeaponsInfoPane weaponsInfoPane;
+    @FXML
     private PlayerBoardControl userBoard;
     @FXML
     private VBox playerBoardsContainer;
@@ -229,18 +231,28 @@ public class GameController extends GUIController {
             playerBoards.put(player, playerBoardControl);
         });
 
+        // Set the image viewer handler for the weapons table
+        // and make it open a new window with the image of the selected weapon card
+        weaponsInfoPane.setImageViewer(weaponId -> {
+            // Show a new window for the image viewer
+            ImageViewerController imageViewerController = (ImageViewerController) ((GUIRenderer) clientView.getRenderer()).showNewWindow("/fxml/imageViewer.fxml", "Weapon details");
+            imageViewerController.setImage(String.format("/images/weapons/%s.png", weaponId));
+        });
+
         // Then load the background
         Platform.runLater(() -> setBoard(boardView.getId()));
 
         //TODO: Finish implementing this method
 
         // Then populate everything
+        updateBoard();
+        updateKillshotsTrack();
         updateMatchInfo();
+        updateWeaponsInfo();
         updateAmmoAmount();
         updateSpawnWeapons();
-        updateKillshotsTrack();
         updateActionTrack();
-        updateBoard();
+
         // For each player, update its player board
         clientView.getModelManager().getPlayers().keySet().forEach(this::updatePlayerBoard);
     }
@@ -398,7 +410,7 @@ public class GameController extends GUIController {
         for (SquareView[] squaresRow : clientView.getModelManager().getBoard().getSquares()) {
             for (SquareView squareView : squaresRow) {
                 // We do not consider null cells (i.e. missing squares)
-                if(squareView != null) {
+                if (squareView != null) {
                     updateSquareOverlay(squareView.getLocation());
                 }
             }
@@ -424,5 +436,19 @@ public class GameController extends GUIController {
                 .filter(entry -> squareView.getPlayers().contains(entry.getKey()))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
         squareOverlay.updateContent(squarePlayers);
+    }
+
+    /**
+     * Updates the rendered content of the pane showing information about weapons owned by players
+     */
+    void updateWeaponsInfo() {
+        // Retrieve all the weapons of the players and update the pane content
+        weaponsInfoPane.setPlayersWeapons(
+                clientView.getModelManager()
+                        .getPlayers()
+                        .entrySet()
+                        .stream()
+                        .collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().getWeapons()))
+        );
     }
 }

@@ -366,6 +366,11 @@ public class CLIRenderer implements UIRenderer {
     }
 
     @Override
+    public void refreshOwnedWeapons() {
+        printMatchScreen();
+    }
+
+    @Override
     public void handle(ActionRequest request) {
         requestRoutine("Action selection", request, actionEnum -> String.format("%s : %s", actionEnum.name(), actionEnum.toString()));
     }
