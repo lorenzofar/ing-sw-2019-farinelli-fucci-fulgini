@@ -12,6 +12,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.Observable;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.RemoteObservable;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.ModelUpdate;
 import it.polimi.deib.se2019.sanp4.adrenaline.utils.JSONUtils;
+import it.polimi.deib.se2019.sanp4.adrenaline.view.ViewScene;
 
 import java.io.*;
 import java.net.Socket;
@@ -211,6 +212,7 @@ public class SocketServerConnection extends RemoteObservable<ModelUpdate>
             } catch (IOException e) {
                 /* This is a problem with the connection */
                 close();
+                view.selectScene(ViewScene.DISCONNECTED);
                 throw e; /* Rethrow exceptions so the caller of the command knows of the dead connection */
             }
         } else {
@@ -238,6 +240,7 @@ public class SocketServerConnection extends RemoteObservable<ModelUpdate>
                 /* This is a problem with the connection */
                 /* In either case, we interpret the connection as closed */
                 close(); /* Explicitly close the socket */
+                view.selectScene(ViewScene.DISCONNECTED);
             }
         }
         return null;

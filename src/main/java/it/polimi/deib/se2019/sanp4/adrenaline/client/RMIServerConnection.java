@@ -7,12 +7,16 @@ import it.polimi.deib.se2019.sanp4.adrenaline.common.network.RemoteServer;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.network.RemoteView;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.RemoteObservable;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.ModelUpdate;
+import it.polimi.deib.se2019.sanp4.adrenaline.view.ViewScene;
 
 import java.io.IOException;
 import java.rmi.Naming;
 import java.rmi.NoSuchObjectException;
 import java.rmi.NotBoundException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -23,9 +27,11 @@ import java.util.logging.Logger;
  * uses to call methods on the view (and receive events)
  */
 public class RMIServerConnection extends RemoteObservable<ModelUpdate> implements ServerConnection {
+    private final int PING_INTERVAL;
     private RemoteServer server;
     private ClientView view;
     private RemoteView viewStub;
+    private ScheduledExecutorService pingExecutor = Executors.newSingleThreadScheduledExecutor();
 
     private static final Logger logger = Logger.getLogger(RMIServerConnection.class.getName());
 
@@ -35,6 +41,8 @@ public class RMIServerConnection extends RemoteObservable<ModelUpdate> implement
      */
     public RMIServerConnection(ClientView view){
         this.view = view;
+        PING_INTERVAL = Integer.parseInt((String) AdrenalineProperties.getProperties()
+                .getOrDefault("adrenaline.rmi.ping.interval", "10"));
     }
 
     /**
@@ -87,9 +95,25 @@ public class RMIServerConnection extends RemoteObservable<ModelUpdate> implement
             logger.log(Level.INFO, "Successfully connected to RMI server at {0}", registryURL);
             /* Export the view and save it in a local attribute, it will be later sent to the server */
             viewStub = (RemoteView) UnicastRemoteObject.exportObject(view, 0);
+            startPing(); /* Ping to check that the server is still alive */
         } catch (NotBoundException e) {
             throw new IOException("Could connect to the remote registry, but the server is not bound", e);
         }
+    }
+
+    private void startPing() {
+        /* Ping at fixed intervals */
+        pingExecutor.scheduleAtFixedRate(() -> {
+            try {
+                /* Try to ping the server */
+                server.ping();
+            } catch (IOException | NullPointerException e) {
+                /* If the server is unreachable, tell it to the view and stop pinging */
+                view.selectScene(ViewScene.DISCONNECTED);
+                pingExecutor.shutdown(); /* New tasks cannot be submitted */
+                close();
+            }
+        }, PING_INTERVAL, PING_INTERVAL, TimeUnit.SECONDS);
     }
 
     /**
