@@ -4,10 +4,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.model.match.Match;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.ScoresIterator;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.Map.Entry.comparingByValue;
@@ -114,15 +111,25 @@ public class StandardScoreManager implements ScoreManager {
         // Count how many killshots has each player performed
         match.getKillshotsTrack().forEach(player -> killshotsCount.merge(player, 1, Integer::sum));
 
-        // Resolve draws by giving points to the first player performing the killshot
-        killshotsCount.values().forEach(count -> {
+        // Resolve ties by giving points to the first player performing the killshot,
+        // the others get removed from killshotsCount
+        // Create a set with the distinct number ok killshots
+        Set<Integer> distinctKillshotCounts = killshotsCount.values().stream()
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
+
+        distinctKillshotCounts.forEach(count -> {
             List<Player> playersWithSameCount = killshotsCount.entrySet()
                     .stream()
                     .filter(entry -> entry.getValue().equals(count))
                     .map(Map.Entry::getKey)
                     .collect(Collectors.toList());
             if(playersWithSameCount.size() > 1){
-                Player firstKillshotShooter = match.getKillshotsTrack().stream().filter(playersWithSameCount::contains).findFirst().get();
+                /* Determine the player who got the earlier killshot */
+                Player firstKillshotShooter = match.getKillshotsTrack().stream()
+                        .filter(playersWithSameCount::contains)
+                        .findFirst().get();
+                /* Remove from killshots count all the players except the first */
                 playersWithSameCount.remove(firstKillshotShooter);
                 playersWithSameCount.forEach(killshotsCount::remove);
             }
