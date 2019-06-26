@@ -2,6 +2,7 @@ package it.polimi.deib.se2019.sanp4.adrenaline.client;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.client.cli.CLIRenderer;
 import it.polimi.deib.se2019.sanp4.adrenaline.client.gui.GUIRenderer;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.AdrenalineProperties;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.ResourcesLoader;
 
 /**
@@ -13,6 +14,9 @@ public class ClientLauncher {
 
         // We initialize resources of the creators
         ResourcesLoader.loadCreatorResources();
+
+        // Load properties
+        AdrenalineProperties.getProperties().loadProperties();
 
         // We create the default rendering engine (GUI)
         UIRenderer renderer = new GUIRenderer();
