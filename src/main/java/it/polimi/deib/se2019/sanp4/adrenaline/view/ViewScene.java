@@ -21,6 +21,10 @@ public enum ViewScene {
      */
     MATCH_START_CANCELLED("Match cancelled"),
     /**
+     * The view has been reconnected to the server but is waiting to rejoin the match
+     */
+    WAITING_REJOIN("Waiting rejoin"),
+    /**
      * The view is asking the player to select a spawn point
      */
     SPAWN_FORM("Spawn point selection"),
@@ -53,4 +57,21 @@ public enum ViewScene {
     public String toString() {
         return this.message;
     }
+
+    /**
+     * Determines whether the scene represents a view in which the user is actually
+     * playing and hence its content should be refreshed to match the latest incoming updates
+     *
+     * @return {@code true} if the view should be refreshed, {@code false} otherwise
+     */
+    public boolean isGameScene() {
+        switch (this) {
+            case TURN_PLAYING:
+            case TURN_IDLE:
+                return true;
+            default:
+                return false;
+        }
+    }
+
 }

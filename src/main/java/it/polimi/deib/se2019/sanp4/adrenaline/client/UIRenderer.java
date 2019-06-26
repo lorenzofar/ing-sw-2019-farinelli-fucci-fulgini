@@ -68,6 +68,11 @@ public interface UIRenderer extends ChoiceRequestVisitor {
     void showDisconnectedScreen();
 
     /**
+     * Shows a screen to tell the user that he is about to rejoin the match
+     */
+    void showRejoinScreen();
+
+    /**
      * Updates the screen when the player is in IDLE mode
      */
     void setIdleScreen();

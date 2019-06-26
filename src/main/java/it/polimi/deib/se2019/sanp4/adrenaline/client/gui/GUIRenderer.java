@@ -217,6 +217,14 @@ public class GUIRenderer extends Application implements UIRenderer {
         });
     }
 
+    /**
+     * Shows a screen to tell the user that he is about to rejoin the match
+     */
+    @Override
+    public void showRejoinScreen() {
+        Platform.runLater(() -> showScene("/fxml/rejoin.fxml", false));
+    }
+
     @Override
     public void setIdleScreen() {
         //TODO: Implement this method

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressIndicator?>
+<?import javafx.scene.layout.VBox?>
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      stylesheets="@style.css"
+      styleClass="dark-background"
+      prefHeight="400.0" prefWidth="600.0">
+
+    <Label styleClass="title-text" text="Rejoining the match"/>
+    <Label text="You have been reconnected to your previous match"/>
+    <Label text="You will rejoin the match at the end of the current turn"/>
+
+    <ProgressIndicator/>
+
+</VBox>

@@ -299,6 +299,13 @@ public class CLIRenderer implements UIRenderer {
     }
 
     @Override
+    public void showRejoinScreen() {
+        CLIHelper.printTitle("Rejoining the match");
+        CLIHelper.println("You have been reconnected to your previous match");
+        CLIHelper.println("You will rejoin the match at the end of the current turn...");
+    }
+
+    @Override
     public void setIdleScreen() {
         // We start the command parser
         commandsParser.setAlive(true);

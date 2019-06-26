@@ -45,11 +45,14 @@ public class ClientView extends RemoteObservable<ViewEvent> implements RemoteVie
      * It is managed with a FIFO policy
      */
     private Deque<ChoiceRequest> pendingRequests;
-
     /**
      * The current selection handler
      */
     private SelectionHandler selectionHandler;
+    /**
+     * The scene the view is currently into
+     */
+    private ViewScene scene;
 
     public ClientView() {
         this.modelManager = new ModelManager();
@@ -101,6 +104,15 @@ public class ClientView extends RemoteObservable<ViewEvent> implements RemoteVie
      */
     public ServerConnection getServerConnection() {
         return serverConnection;
+    }
+
+    /**
+     * Retrieves the current scene of the view
+     *
+     * @return The object representing the scene
+     */
+    public ViewScene getScene() {
+        return scene;
     }
 
     /* ====================================== */
@@ -211,10 +223,16 @@ public class ClientView extends RemoteObservable<ViewEvent> implements RemoteVie
     @Override
     public void selectScene(ViewScene scene) {
         renderer.cancelSelection();
+
+        // If the scene is changed to an operational one while we are waiting to rejoin, we show the match screen
+        if (this.scene == ViewScene.WAITING_REJOIN && (scene == ViewScene.TURN_IDLE || scene == ViewScene.TURN_PLAYING)) {
+            renderer.showMatchScreen();
+        }
+        // Then we update our reference to the current scene
+        this.scene = scene;
         if (scene == ViewScene.LOBBY) {
             renderer.showLobby();
         } else if (scene == ViewScene.DISCONNECTED) {
-            // TODO: Check how the scene is set from the server connection
             renderer.showDisconnectedScreen();
         } else if (scene == ViewScene.TURN_IDLE) {
             renderer.setIdleScreen();
@@ -227,6 +245,7 @@ public class ClientView extends RemoteObservable<ViewEvent> implements RemoteVie
     @Override
     public void update(ModelUpdate event) {
         event.accept(modelManager);
+        // We prevent the renderer to render updates when we are waiting to rejoin the match
         event.accept(renderingManager);
     }
 
