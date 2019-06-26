@@ -290,7 +290,12 @@ public class CLIRenderer implements UIRenderer {
      */
     @Override
     public void showDisconnectedScreen() {
-        //TODO: Implement this method
+        CLIHelper.printTitle("Disconnected");
+        CLIHelper.printlnColored("Connection to the server has been lost", CLIHelper.ANSI_RED);
+        CLIHelper.println("Press enter key to close the game...");
+        CLIHelper.parseString();
+        System.exit(0);
+
     }
 
     @Override

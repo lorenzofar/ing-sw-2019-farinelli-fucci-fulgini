@@ -196,7 +196,12 @@ public class GUIRenderer extends Application implements UIRenderer {
      */
     @Override
     public void showDisconnectedScreen() {
-        Platform.runLater(() -> showScene("/fxml/disconnected.fxml"));
+        Platform.runLater(() ->
+        {
+            new Alert(Alert.AlertType.WARNING, "Connection to the server has been lost", ButtonType.OK).showAndWait();
+            Platform.exit();
+            System.exit(0);
+        });
     }
 
     @Override
