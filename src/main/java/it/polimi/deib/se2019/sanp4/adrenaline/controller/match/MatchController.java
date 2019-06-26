@@ -300,7 +300,7 @@ public class MatchController {
         views.values().forEach(view -> view.selectScene(ViewScene.FINAL_SCORES));
     }
 
-    /* ======= CALLBACK ========== */
+    /* ====================== CALLBACK ===================== */
 
     /**
      * Returns the callback that is called at the end of a turn

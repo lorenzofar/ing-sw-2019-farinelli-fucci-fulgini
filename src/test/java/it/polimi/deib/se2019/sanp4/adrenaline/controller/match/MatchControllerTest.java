@@ -1,5 +1,6 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.controller.match;
 
+import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.LeaderboardUpdate;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.*;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.answerers.FirstChoiceAnswer;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.ModelTestUtil;
@@ -8,6 +9,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.model.board.CoordPair;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.match.*;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.PlayerBoard;
+import it.polimi.deib.se2019.sanp4.adrenaline.view.ViewScene;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -307,5 +309,57 @@ public class MatchControllerTest {
 
         /* Check that players have the correct action cards */
         match.getPlayers().forEach(p -> assertThat(p.getActionCard().getType(), anyOf(is(FRENZY1), is(FRENZY2))));
+    }
+
+    /* =========================== END MATCH ============================= */
+
+    @Test
+    public void endMatch_emptyKillshotTrack_shouldEndNormally() throws Exception {
+        /* End the match */
+        matchController.endMatch();
+
+        /* Check that the correct scene has been set */
+        for (PersistentView v : views.values()) {
+            verify(v).selectScene(ViewScene.FINAL_SCORES);
+        }
+    }
+
+    @Test
+    public void endMatch_partialKillshotsTrack_shouldEndNormally() {
+        /* SET UP THE SCENARIO */
+        Player bzoto = match.getPlayerByName("bzoto");
+        Player loSqualo = match.getPlayerByName("loSqualo");
+        Player zoni = match.getPlayerByName("zoniMyLord");
+
+        /* Killshots track: BBLZZ */
+        match.addKillshot(bzoto);
+        match.addKillshot(bzoto);
+        match.addKillshot(loSqualo);
+        match.addKillshot(zoni);
+        match.addKillshot(zoni);
+
+        bzoto.addPerformedKillshot();
+        bzoto.addPerformedKillshot();
+        loSqualo.addPerformedOverkill();
+        zoni.addPerformedOverkill();
+        zoni.addPerformedKillshot();
+
+        /* End the match */
+        matchController.endMatch();
+
+        /* Check that the correct scene has been set */
+        for (PersistentView v : views.values()) {
+            verify(v).selectScene(ViewScene.FINAL_SCORES);
+        }
+    }
+
+    /* =========== RECONNECTION CALLBACK ================= */
+
+    @Test
+    public void setReconnectionCallback_shouldBeSet() {
+        Runnable callback = mock(Runnable.class);
+
+        matchController.setAfterTurnCallback(callback);
+        assertEquals(callback, matchController.getAfterTurnCallback());
     }
 }
