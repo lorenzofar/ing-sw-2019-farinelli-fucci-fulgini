@@ -2,7 +2,9 @@ package it.polimi.deib.se2019.sanp4.adrenaline.controller.match;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.common.AdrenalineProperties;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.LeaderboardUpdate;
-import it.polimi.deib.se2019.sanp4.adrenaline.controller.*;
+import it.polimi.deib.se2019.sanp4.adrenaline.controller.ControllerFactory;
+import it.polimi.deib.se2019.sanp4.adrenaline.controller.PersistentView;
+import it.polimi.deib.se2019.sanp4.adrenaline.controller.ScoreManager;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionCardCreator;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionCardEnum;
@@ -16,7 +18,8 @@ import it.polimi.deib.se2019.sanp4.adrenaline.view.ViewScene;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Callable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 /**
@@ -43,6 +46,8 @@ public class MatchController {
     private ControllerFactory factory;
 
     private Runnable afterTurnCallback;
+
+    private static final Logger logger = Logger.getLogger(MatchController.class.getName());
 
     /**
      * Creates the controller for given match
@@ -71,6 +76,7 @@ public class MatchController {
      * @throws InterruptedException if the thread is interrupted while running the match
      */
     public void runMatch() throws InterruptedException {
+        logger.log(Level.FINE, "Starting the match");
         selectNextTurn(); /* Trigger the selection of the first turn */
 
         /* Main loop for each turn */
@@ -99,6 +105,7 @@ public class MatchController {
         }
 
         /* The match is over */
+        logger.log(Level.FINE, "Ending the match");
         endMatch();
     }
 
@@ -200,6 +207,7 @@ public class MatchController {
      * </ul>
      */
     private void setupFrenzyMode() {
+        logger.log(Level.FINE, "Setting up frenzy mode");
         /* Set the frenzy attribute */
         match.goFrenzy();
 

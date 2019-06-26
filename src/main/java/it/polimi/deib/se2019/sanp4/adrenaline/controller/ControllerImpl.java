@@ -18,6 +18,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Implementation of the Controller, which uses {@link PersistentView}s to decorate the
@@ -32,6 +34,8 @@ public class ControllerImpl implements Controller {
     private final Map<String, PersistentView> views;
 
     private final ConcurrentMap<String, PersistentView> waitingToRejoin;
+
+    private static final Logger logger = Logger.getLogger(ControllerImpl.class.getName());
 
     /**
      * Creates the controller for a new instance of the game
@@ -185,6 +189,7 @@ public class ControllerImpl implements Controller {
         Set<PersistentView> toRejoin = new HashSet<>(waitingToRejoin.values());
 
         toRejoin.forEach(view -> {
+            logger.log(Level.FINE, "Player \"{0}\" is rejoining the match", view.getUsername());
             model.unsuspendPlayer(view.getUsername());
             model.sendInitialUpdate(view.getUsername());
 
