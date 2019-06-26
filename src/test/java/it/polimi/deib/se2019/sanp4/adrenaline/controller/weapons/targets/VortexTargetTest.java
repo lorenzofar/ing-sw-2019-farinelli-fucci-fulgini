@@ -171,6 +171,30 @@ public class VortexTargetTest {
     /* =============== PLAYER SELECTION ================== */
 
     @Test
+    public void execute_noSelectablePlayer_shouldTerminate() throws Exception {
+        /* Set the shooter in a desired square */
+        Player shooter = match.getPlayerByName("bzoto");
+        board.movePlayer(shooter, board.getSquare(1,1));
+        PersistentView view = views.get("bzoto");
+
+        /* Save the vortex */
+        Square vortex = board.getSquare(1,2);
+        weapon.saveSquare("vortex", vortex);
+
+        /* Set up the target */
+        VortexTarget target = new VortexTarget("v", weapon, match, factory);
+        target.setVisibility(ANY);
+        target.setMaxDist(1);
+        target.setDamage(1);
+
+        /* No other player is spawned, so this will terminate */
+        assertFalse(target.execute(view));
+
+        /* Check no interaction with the user */
+        verify(view, never()).sendChoiceRequest(any());
+    }
+
+    @Test
     public void execute_oneSelectablePlayer_mandatory_shouldAutoSelect() throws InterruptedException {
         /* Set the shooter in a desired square */
         Player shooter = match.getPlayerByName("bzoto");

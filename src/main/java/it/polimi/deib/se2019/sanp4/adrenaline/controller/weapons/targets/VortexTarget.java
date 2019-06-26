@@ -113,8 +113,9 @@ public class VortexTarget extends AbstractTarget {
      * @throws InterruptedException  if the thread gets interrupted
      */
     private Player handlePlayerSelection(PersistentView view, Set<Player> choices) throws InterruptedException {
+        if (choices.isEmpty()) return null;
         Player selectedPlayer;
-
+        
         /* Ask the user to select or auto-select */
         if (choices.size() > 1 || optional) {
             /* Ask the player to select a square */
