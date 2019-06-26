@@ -311,7 +311,6 @@ public class Board extends Observable<ModelUpdate> implements Observer<ModelUpda
      */
     void setSpawnPoint(AmmoCube color, SpawnSquare square) {
         spawnPoints.put(color, square);
-        this.notifyObservers(new BoardUpdate(this.generateView()));
     }
 
     /**
