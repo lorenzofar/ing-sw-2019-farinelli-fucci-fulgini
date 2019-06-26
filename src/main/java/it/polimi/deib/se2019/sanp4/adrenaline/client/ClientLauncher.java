@@ -14,13 +14,13 @@ public class ClientLauncher {
         // We initialize resources of the creators
         ResourcesLoader.loadCreatorResources();
 
-        // We create the default rendering engine (CLI)
-        UIRenderer renderer = new CLIRenderer();
+        // We create the default rendering engine (GUI)
+        UIRenderer renderer = new GUIRenderer();
 
         // We then check if the user chose different modes, by looking at the provided options
         String uiMode = System.getProperty("adrenaline.uimode");
-        if (uiMode != null && uiMode.equalsIgnoreCase("gui")) {
-            renderer = new GUIRenderer();
+        if (uiMode != null && uiMode.equalsIgnoreCase("cli")) {
+            renderer = new CLIRenderer();
         }
         // Initialize the renderer
         renderer.initialize();
