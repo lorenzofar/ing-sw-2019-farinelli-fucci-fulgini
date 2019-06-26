@@ -6,6 +6,9 @@ import it.polimi.deib.se2019.sanp4.adrenaline.utils.JSONUtils;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -14,7 +17,7 @@ public class MatchUpdateTest {
 
     private ObjectMapper objectMapper = JSONUtils.getObjectMapper();
     private MatchView matchView;
-    private int killshots = 4;
+    private List<String> killshots = Arrays.asList("player1", "player2", "player3");
     private boolean frenzy = true;
 
     @Test
@@ -26,12 +29,12 @@ public class MatchUpdateTest {
 
         MatchUpdate matchUpdate = objectMapper.readValue(s, MatchUpdate.class);
 
-        assertEquals(0, matchUpdate.getMatch().getKillshotsCount());
+        assertEquals(Collections.emptyList(), matchUpdate.getMatch().getKillshotsTrack());
         assertFalse(matchUpdate.getMatch().isFrenzy());
 
         update = new MatchUpdate(matchView);
         matchView.setFrenzy(frenzy);
-        matchView.setKillshotsCount(killshots);
+        matchView.setKillshotsTrack(killshots);
         update.setMatch(matchView);
 
         s = objectMapper.writeValueAsString(update);
@@ -39,7 +42,7 @@ public class MatchUpdateTest {
         matchUpdate = objectMapper.readValue(s, MatchUpdate.class);
 
         assertEquals(frenzy, matchUpdate.getMatch().isFrenzy());
-        assertEquals(killshots, matchUpdate.getMatch().getKillshotsCount());
+        assertEquals(killshots, matchUpdate.getMatch().getKillshotsTrack());
 
 
     }

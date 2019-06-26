@@ -13,6 +13,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.PlayerState;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Hold the representation of the match.
@@ -100,7 +101,7 @@ public class Match extends Observable<ModelUpdate> implements Observer<ModelUpda
      */
     public MatchView generateView() {
         MatchView view = new MatchView();
-        view.setKillshotsCount(getKillshotsTrack().size());
+        view.setKillshotsTrack(getKillshotsTrack().stream().map(Player::getName).collect(Collectors.toList()));
         view.setTotalSkulls(skulls);
         view.setFrenzy(frenzy);
         return view;

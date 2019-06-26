@@ -339,7 +339,10 @@ public class GameController extends GUIController {
         if (match == null) {
             return;
         }
-        killshotsTrack.setSkulls(match.getTotalSkulls(), match.getKillshotsCount());
+        killshotsTrack.setSkulls(match.getTotalSkulls(),
+                match.getKillshotsTrack().stream()
+                        .map(shooter -> clientView.getModelManager().getPlayersColors().get(shooter))
+                        .collect(Collectors.toList()));
     }
 
     /**

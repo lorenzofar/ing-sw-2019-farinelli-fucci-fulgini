@@ -937,7 +937,7 @@ class CLIHelper {
      * @param totalSkulls THe number of total skulls
      * @return A list of all the lines composing the rendered track
      */
-    public static List<List<String>> renderKillshotsTrack(int takenSkulls, int totalSkulls) {
+    public static List<List<String>> renderKillshotsTrack(List<ColoredObject> takenSkulls, int totalSkulls) {
         final String header = "Killshots";
         List<List<String>> renderedTrack = new ArrayList<>();
         int trackWidth = Math.max(header.length() + 4, totalSkulls * 2 + 4); // add gap between two consecutive skulls and external padding
@@ -954,7 +954,7 @@ class CLIHelper {
         fillLineWithObjects(
                 renderedTrack.get(renderedTrack.size() - 1),
                 skulls,
-                skullIndex -> skullIndex < takenSkulls ? ANSI_RED : ANSI_RESET,
+                skullIndex -> skullIndex < takenSkulls.size() ? takenSkulls.get(skullIndex).getAnsiCode() : ANSI_RESET,
                 skullIndex -> ANSI_SKULL,
                 2,
                 2

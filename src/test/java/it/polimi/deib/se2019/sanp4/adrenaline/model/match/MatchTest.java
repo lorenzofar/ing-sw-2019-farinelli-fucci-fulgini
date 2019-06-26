@@ -20,6 +20,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
 
@@ -335,7 +336,7 @@ public class MatchTest {
         assertEquals(mockMatch.isFrenzy(), view.isFrenzy());
         int matchSkulls = mockMatch.getSkulls() + mockMatch.getKillshotsTrack().size();
         assertEquals(matchSkulls, view.getTotalSkulls());
-        assertEquals(mockMatch.getKillshotsTrack().size(), view.getKillshotsCount());
+        assertEquals(mockMatch.getKillshotsTrack().stream().map(Player::getName).collect(Collectors.toList()), view.getKillshotsTrack());
     }
 
     @Test

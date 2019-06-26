@@ -3,6 +3,8 @@ package it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews;
 import com.fasterxml.jackson.annotation.JsonCreator;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A lightweight representation of the match in the view
@@ -11,9 +13,9 @@ public class MatchView implements Serializable {
 
     private static final long serialVersionUID = 4604955484168954165L;
     /**
-     * The count of killshots in the killshots track
+     * The list of players that have performed killshots in the killshots track
      */
-    private int killshotsCount;
+    private List<String> killshotsTrack;
     /**
      * The total count of skulls in the killshots track
      */
@@ -28,7 +30,7 @@ public class MatchView implements Serializable {
      */
     @JsonCreator
     public MatchView() {
-        this.killshotsCount = 0;
+        this.killshotsTrack = new ArrayList<>();
         this.frenzy = false;
     }
 
@@ -37,19 +39,18 @@ public class MatchView implements Serializable {
      *
      * @return The number of skulls
      */
-    public int getKillshotsCount() {
-        return killshotsCount;
+    public List<String> getKillshotsTrack() {
+        return killshotsTrack;
     }
 
     /**
-     * Sets the count of skulls in the killshots track
-     * If a negative value is passed, nothing happens
+     * Sets the list of players that have performed killshots in the killshots track
      *
-     * @param killshotsCount The number of skulls
+     * @param killshotsTrack The list of players that have performed the killshot
      */
-    public void setKillshotsCount(int killshotsCount) {
-        if (killshotsCount >= 0) {
-            this.killshotsCount = killshotsCount;
+    public void setKillshotsTrack(List<String> killshotsTrack) {
+        if (killshotsTrack != null) {
+            this.killshotsTrack = killshotsTrack;
         }
     }
 

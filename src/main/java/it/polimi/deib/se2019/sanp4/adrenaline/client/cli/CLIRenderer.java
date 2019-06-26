@@ -187,7 +187,12 @@ public class CLIRenderer implements UIRenderer {
 
         // We first render the killshots track
         List<List<String>> renderedKillshotsTrack = CLIHelper.renderKillshotsTrack(
-                modelManager.getMatch() != null ? modelManager.getMatch().getKillshotsCount() : 0,
+                modelManager.getMatch() != null ?
+                        modelManager.getMatch()
+                                .getKillshotsTrack()
+                                .stream()
+                                .map(shooter -> clientView.getModelManager().getPlayersColors().get(shooter))
+                                .collect(Collectors.toList()) : Collections.emptyList(),
                 modelManager.getMatch() != null ? modelManager.getMatch().getTotalSkulls() : 0);
         // Then the table showing information about spawn points
         List<List<String>> renderedSpawnTable = CLIHelper.renderSpawnWeaponsTable(modelManager.getBoard());

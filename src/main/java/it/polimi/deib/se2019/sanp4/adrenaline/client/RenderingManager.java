@@ -157,7 +157,7 @@ public class RenderingManager implements ModelUpdateVisitor {
 
     @Override
     public void handle(InitialUpdate update) {
-        if (clientView.getScene().isGameScene()) {
+        if (clientView.getScene().isGameScene() || clientView.getScene() == ViewScene.LOBBY) {
             clientView.getRenderer().showMatchScreen();
         }
     }
