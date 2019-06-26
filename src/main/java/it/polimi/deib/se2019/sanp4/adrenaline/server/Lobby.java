@@ -3,6 +3,7 @@ package it.polimi.deib.se2019.sanp4.adrenaline.server;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.AdrenalineProperties;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.network.RemoteView;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.LobbyUpdate;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.player.PlayerColor;
 import it.polimi.deib.se2019.sanp4.adrenaline.view.ViewScene;
 
 import java.io.IOException;
@@ -21,10 +22,10 @@ public class Lobby implements Runnable {
     private boolean stayActive = true;
 
     /** Minimum number of players to start a match */
-    public static final int MIN_PLAYERS = 3;
+    public final int minPlayers;
 
     /** Maxmimum number of players in a match */
-    public static final int MAX_PLAYERS = 5;
+    public final int maxPlayers;
 
     /** Waiting time of the timer, in seconds (default 30 sec.) */
     private final int waitingTime;
@@ -45,8 +46,12 @@ public class Lobby implements Runnable {
      * Creates an empty lobby and reads the configured timeout
      */
     public Lobby() {
+        minPlayers = Integer.parseInt((String)AdrenalineProperties.getProperties()
+                .getOrDefault("adrenaline.players.min", "3"));
+        maxPlayers = PlayerColor.values().length;
         waitingTime = Integer.parseInt((String)AdrenalineProperties.getProperties()
                 .getOrDefault("adrenaline.waitingtime", "30"));
+
     }
 
     /**
@@ -65,8 +70,8 @@ public class Lobby implements Runnable {
      * When it gets the incoming player:
      * <ol>
      *     <li>Inserts it in the waiting list</li>
-     *     <li>If there are {@link #MAX_PLAYERS} in the waiting list, creates a new match and empties the waiting list</li>
-     *     <li>If there are at least {@link #MIN_PLAYERS} starts a timer which will start the match later</li>
+     *     <li>If there are {@link #maxPlayers} in the waiting list, creates a new match and empties the waiting list</li>
+     *     <li>If there are at least {@link #minPlayers} starts a timer which will start the match later</li>
      * </ol>
      * @param incomingPlayer (username, view) pair of a player view received from the server
      */
@@ -85,11 +90,11 @@ public class Lobby implements Runnable {
         disconnectInactive();
 
         /* First check if we can start straight away */
-        if (waitingPlayers.size() == MAX_PLAYERS) {
+        if (waitingPlayers.size() == maxPlayers) {
             stopTimer(); /* Stop any running timer */
             notifyWaitingList(true);
             triggerMatchStart();
-        } else if (waitingPlayers.size() >= MIN_PLAYERS && !isTimerRunning()) {
+        } else if (waitingPlayers.size() >= minPlayers && !isTimerRunning()) {
             /* If the minimum number of players has been reached and the timer is not started, start it */
             notifyWaitingList(true);
             startTimer();
@@ -103,7 +108,7 @@ public class Lobby implements Runnable {
         /* Disconnect all inactive players */
         disconnectInactive();
         /* Check if we still have enough players */
-        if (waitingPlayers.size() >= MIN_PLAYERS) {
+        if (waitingPlayers.size() >= minPlayers) {
             notifyWaitingList(true);
             triggerMatchStart();
         }

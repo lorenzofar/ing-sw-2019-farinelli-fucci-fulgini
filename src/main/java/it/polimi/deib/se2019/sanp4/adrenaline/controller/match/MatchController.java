@@ -1,5 +1,6 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.controller.match;
 
+import it.polimi.deib.se2019.sanp4.adrenaline.common.AdrenalineProperties;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.LeaderboardUpdate;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.*;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionCard;
@@ -22,7 +23,7 @@ import java.util.stream.Collectors;
  */
 public class MatchController {
 
-    private static final int MIN_PLAYERS = 3;
+    private final int minPlayers;
 
     private Match match;
 
@@ -56,6 +57,9 @@ public class MatchController {
         this.deadPlayers = new ArrayList<>();
         this.finished = false;
         this.factory = factory;
+
+        minPlayers = Integer.parseInt((String) AdrenalineProperties.getProperties()
+                .getOrDefault("adrenaline.players.min", "3"));
     }
 
     /**
@@ -120,7 +124,7 @@ public class MatchController {
         /* Determine the number of active players */
         int activePlayers = (int) players.stream().filter(p -> p.getState().canPlay()).count();
 
-        if (activePlayers < MIN_PLAYERS || match.isFinalPlayer(currentPlayer)) {
+        if (activePlayers < minPlayers || match.isFinalPlayer(currentPlayer)) {
             finished = true;
         }
     }

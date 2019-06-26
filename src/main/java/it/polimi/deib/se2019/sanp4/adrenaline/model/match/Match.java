@@ -35,8 +35,6 @@ public class Match extends Observable<ModelUpdate> implements Observer<ModelUpda
 
     private static final String NULL_PLAYER_ERROR = "Player cannot be null";
     private static final String NULL_CARD_STACK = "Cannot set card stack to null";
-
-    public static final int MAX_PLAYERS = 5;
     private final int skulls;
 
     /**
