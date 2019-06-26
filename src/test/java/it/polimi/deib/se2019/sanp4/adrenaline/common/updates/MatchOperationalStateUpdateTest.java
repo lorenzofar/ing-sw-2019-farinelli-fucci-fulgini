@@ -22,7 +22,7 @@ public class MatchOperationalStateUpdateTest {
         String s = objectMapper.writeValueAsString(update);
         MatchOperationalStateUpdate stateUpdate = objectMapper.readValue(s, MatchOperationalStateUpdate.class);
 
-        assertEquals(state, update.getState());
+        assertEquals(state, stateUpdate.getState());
     }
 
     @Test

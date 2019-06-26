@@ -4,6 +4,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.Observable;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.Observer;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.RemoteRoutingObservable;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.InitialUpdate;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.MatchOperationalStateUpdate;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.match.Match;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.ModelUpdate;
 
@@ -100,7 +101,11 @@ public class ModelImpl extends RemoteRoutingObservable<ModelUpdate> implements M
      */
     @Override
     public void setOperationalState(MatchOperationalState state) {
+        MatchOperationalState oldState = this.operationalState;
         this.operationalState = state;
+        if(oldState != state) {
+            this.notifyObservers(new MatchOperationalStateUpdate(this.operationalState));
+        }
     }
 
     /**
