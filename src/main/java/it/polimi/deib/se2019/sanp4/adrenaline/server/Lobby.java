@@ -22,13 +22,13 @@ public class Lobby implements Runnable {
     private boolean stayActive = true;
 
     /** Minimum number of players to start a match */
-    public final int minPlayers;
+    private int minPlayers;
 
     /** Maxmimum number of players in a match */
-    public final int maxPlayers;
+    private int maxPlayers;
 
     /** Waiting time of the timer, in seconds (default 30 sec.) */
-    private final int waitingTime;
+    private int waitingTime;
 
     /** This will contain the players coming from the server */
     private BlockingQueue<Map.Entry<String, RemoteView>> incomingPlayers = new LinkedBlockingQueue<>();
@@ -46,12 +46,10 @@ public class Lobby implements Runnable {
      * Creates an empty lobby and reads the configured timeout
      */
     public Lobby() {
-        minPlayers = Integer.parseInt((String)AdrenalineProperties.getProperties()
-                .getOrDefault("adrenaline.players.min", "3"));
+        /* Assign default values, will be overwritten later */
+        minPlayers = 3;
+        waitingTime = 30;
         maxPlayers = PlayerColor.values().length;
-        waitingTime = Integer.parseInt((String)AdrenalineProperties.getProperties()
-                .getOrDefault("adrenaline.timeout.lobby", "30"));
-
     }
 
     /**
@@ -226,7 +224,14 @@ public class Lobby implements Runnable {
      */
     @Override
     public void run() {
-        logger.log(Level.FINER, "Running lobby");
+        logger.log(Level.FINE, "Running lobby, min players to start match: {0}", minPlayers);
+
+        /* Get updated values for properties */
+        minPlayers = Integer.parseInt((String)AdrenalineProperties.getProperties()
+                .getOrDefault("adrenaline.players.min", "3"));
+        waitingTime = Integer.parseInt((String)AdrenalineProperties.getProperties()
+                .getOrDefault("adrenaline.timeout.lobby", "30"));
+
         stayActive = true;
         while (stayActive) {
             try {
@@ -253,5 +258,32 @@ public class Lobby implements Runnable {
         /* Empty the waiting list and notify players */
         notifyWaitingList(false);
         waitingPlayers.clear();
+    }
+
+    /* ======= GETTERS ========= */
+
+    /**
+     * Returns the minimum number of players required to start a match
+     * @return The minimum number of players required to start a match
+     */
+    public int getMinPlayers() {
+        return minPlayers;
+    }
+
+    /**
+     * Returns the maximum number of players allowed in a match
+     * @return The maximum number of players allowed in a match
+     */
+    public int getMaxPlayers() {
+        return maxPlayers;
+    }
+
+    /**
+     * Returns the time (in seconds) that the lobby waits to start a match
+     * when there are at least minimum players, but less than maximum
+     * @return The waiting time to start the match
+     */
+    public int getWaitingTime() {
+        return waitingTime;
     }
 }

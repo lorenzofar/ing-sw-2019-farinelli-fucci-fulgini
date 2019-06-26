@@ -66,7 +66,7 @@ public class LobbyTest {
         Lobby lobby = new Lobby();
 
         /* Insert enough players */
-        for (int i = 0; i < lobby.minPlayers; i++) {
+        for (int i = 0; i < lobby.getMinPlayers(); i++) {
             lobby.receiveIncomingPlayer(new AbstractMap.SimpleEntry<>(Integer.toString(i), mock(RemoteView.class)));
         }
 
@@ -78,7 +78,7 @@ public class LobbyTest {
         Lobby lobby = new Lobby();
 
         /* Insert enough players */
-        for (int i = 0; i < lobby.maxPlayers; i++) {
+        for (int i = 0; i < lobby.getMaxPlayers(); i++) {
             lobby.receiveIncomingPlayer(new AbstractMap.SimpleEntry<>(Integer.toString(i), mock(RemoteView.class)));
         }
 
@@ -92,7 +92,7 @@ public class LobbyTest {
 
         /* Insert enough players */
         Map<String, RemoteView> waitingList = lobby.getWaitingPlayers();
-        for (int i = 0; i < lobby.minPlayers; i++) {
+        for (int i = 0; i < lobby.getMinPlayers(); i++) {
             waitingList.put(Integer.toString(i), mock(RemoteView.class));
         }
 
