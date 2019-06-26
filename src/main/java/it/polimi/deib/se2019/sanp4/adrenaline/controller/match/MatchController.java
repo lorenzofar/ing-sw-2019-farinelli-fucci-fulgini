@@ -1,13 +1,16 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.controller.match;
 
+import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.LeaderboardUpdate;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.*;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionCardCreator;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionCardEnum;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.match.Leaderboard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.match.Match;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.match.PlayerTurn;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.PlayerException;
+import it.polimi.deib.se2019.sanp4.adrenaline.view.ViewScene;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -273,7 +276,16 @@ public class MatchController {
      */
     void endMatch() {
         scoreManager.scoreFinal(match);
-        /* TODO: Set scoring scene in views and send leaderboard */
+
+        /* Generate leaderboard and update */
+        Leaderboard leaderboard = Leaderboard.generate(players);
+        LeaderboardUpdate leaderboardUpdate = new LeaderboardUpdate(leaderboard);
+
+        /* Send the update to everyone */
+        match.update(leaderboardUpdate);
+
+        /* Then set the final scoring view on all views */
+        views.values().forEach(view -> view.selectScene(ViewScene.FINAL_SCORES));
     }
 
     /* ======= GETTERS AND SETTERS FOR TESTING ========= */

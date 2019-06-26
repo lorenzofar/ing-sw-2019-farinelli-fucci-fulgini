@@ -33,6 +33,10 @@ public enum ViewScene {
      */
     TURN_IDLE("Waiting for turn"),
     /**
+     * Scene where the leaderboard with the final scores is shown
+     */
+    FINAL_SCORES("Final scores"),
+    /**
      * The user is disconnected from the server
      */
     DISCONNECTED("Disconnected");
