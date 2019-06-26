@@ -46,7 +46,8 @@ public abstract class SquareView implements Serializable {
 
     /**
      * Creates a new square view
-     * @param location the coordinates of the square
+     *
+     * @param location  the coordinates of the square
      * @param roomColor the color of the room the square is in
      */
     public SquareView(
@@ -128,6 +129,13 @@ public abstract class SquareView implements Serializable {
      * @return The string representing the marker
      */
     public abstract String printTypeMarker();
+
+    /**
+     * Retrieves a textual representation of the content inside the square
+     *
+     * @return The string representing the content
+     */
+    public abstract String printSquareContent();
 
     /**
      * Retrieves the map of adjacency of the square

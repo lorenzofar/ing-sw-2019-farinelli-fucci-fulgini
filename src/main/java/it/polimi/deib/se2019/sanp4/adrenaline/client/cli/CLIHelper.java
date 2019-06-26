@@ -691,9 +691,14 @@ class CLIHelper {
             renderedSquare.get(centerY).set(playerX, String.format(TRISTRING_TEMPLATE, playersColors.get(player).getAnsiCode(), ANSI_DOT, square.getRoomColor().getAnsiCode()));
             playerX++;
         }
+
+        /* ===== CONTENT RENDERING ===== */
+        // We fill the first line with the content of the square
+        fillLineWithText(renderedSquare.get(1), square.printSquareContent(), 3, "", square.getRoomColor().getAnsiCode());
+
         // Then eventually put the correct ANSI code for the square color
         renderedSquare.forEach(row -> row.set(0, String.format("%s%s", square.getRoomColor().getAnsiCode(), row.get(0))));
-
+        renderedSquare.forEach(row -> row.set(row.size() - 1, String.format(TRISTRING_TEMPLATE, square.getRoomColor().getAnsiCode(), row.get(row.size() - 1), ANSI_RESET)));
         return renderedSquare;
     }
 

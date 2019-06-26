@@ -22,7 +22,8 @@ public class SpawnSquareView extends SquareView {
 
     /**
      * Creates a spawn square view
-     * @param location the coordinates of the spawn square
+     *
+     * @param location  the coordinates of the spawn square
      * @param roomColor the color of the room the square is in
      */
     @JsonCreator
@@ -44,8 +45,15 @@ public class SpawnSquareView extends SquareView {
         return "S";
     }
 
+    @Override
+    public String printSquareContent() {
+        // We return a string that tells how many weapons are in the square
+        return String.format("%d wpns", weapons.size());
+    }
+
     /**
      * Retrieves the weapons contained in the square
+     *
      * @return The list of ids of the weapons
      */
     public List<String> getWeapons() {
@@ -54,6 +62,7 @@ public class SpawnSquareView extends SquareView {
 
     /**
      * Sets the weapons contained in the square
+     *
      * @param weapons The list of ids of the weapons
      */
     public void setWeapons(List<String> weapons) {
