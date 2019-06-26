@@ -69,6 +69,9 @@ public class ShootActionController {
      * @throws InterruptedException  If the thread gets interrupted
      */
     private void handleRevenge(Player victim) throws InterruptedException {
+        /* Check if the damaged player can actually play */
+        if (!victim.getState().canPlay()) return;
+
         /* Check if the damaged player has TAGBACK powerups to revenge */
         List<PowerupCard> powerups = victim.getPowerups().stream()
                 .filter(powerupCard -> powerupCard.getType() == PowerupEnum.TAGBACK)

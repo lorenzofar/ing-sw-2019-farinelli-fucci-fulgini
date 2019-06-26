@@ -23,6 +23,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.model.match.MatchConfiguration;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.match.MatchCreator;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.match.PlayerTurn;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.player.PlayerState;
 import it.polimi.deib.se2019.sanp4.adrenaline.view.MessageType;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -268,6 +269,48 @@ public class ShootActionControllerTest {
     }
 
     @Test
+    public void execute_damagedPlayer_suspended_shouldNotBeAskedToRevenge() throws Exception {
+        Player p1 = match.getPlayerByName("loSqualo");
+        Set<Player> victims = Collections.singleton(p1);
+        PersistentView v1 = views.get(p1.getName());
+        PowerupCard tagback1 = new PowerupCard(PowerupEnum.TAGBACK, AmmoCube.RED);
+
+        /* Set up a shooter with only one loaded weapon */
+        WeaponCard w1 = WeaponCreator.createWeaponCard("flamethrower");
+        w1.setState(new LoadedState());
+        shooter.addWeapon(w1);
+
+        /* Set up the shooter's answer: select the only weapon available */
+        when(view.sendChoiceRequest(any(WeaponCardRequest.class))).thenAnswer(new FirstChoiceAnswer());
+
+        /* Set up the revenge: player p1 has been damaged and he has a tagback */
+        when(weaponController.getDamagedPlayers()).thenReturn(victims);
+        p1.addPowerup(tagback1);
+        p1.setState(PlayerState.SUSPENDED); /* But he's suspended */
+
+        /* Set up the action controller */
+        ShootActionController controller = new ShootActionController(match, views, factory);
+
+        /* Execute the action */
+        controller.execute(view);
+
+        /* Check single interaction with shooter */
+        verify(view).sendChoiceRequest(any());
+
+        /* Check no interaction with p1 */
+        verify(v1, never()).sendChoiceRequest(any(PowerupCardRequest.class));
+
+        verify(powerupController, never()).use(v1);
+
+        /* Check that p1 still has his powerups */
+        assertTrue(p1.getPowerups().contains(tagback1));
+
+        /* Check that the damaged players have been saved into the turn */
+        assertEquals(1, match.getCurrentTurn().getDamagedPlayers().size());
+        assertTrue(match.getCurrentTurn().getDamagedPlayers().containsAll(victims));
+    }
+
+    @Test
     public void execute_damagedPlayers_firstThrows_secondShouldStillRevenge() throws Exception {
         Player p1 = match.getPlayerByName("loSqualo");
         Player p2 = match.getPlayerByName("zoniMyLord");
@@ -323,7 +366,7 @@ public class ShootActionControllerTest {
         /* Check single interaction with p1 */
         verify(v1).sendChoiceRequest(any(PowerupCardRequest.class));
 
-        /* TODO: Check call to powerup controller */
+        verify(powerupController).use(any(PersistentView.class));
 
         /* Check that the first still has the powerup which is chosen */
         assertTrue(first.get().getPowerups().contains(tagback1));
