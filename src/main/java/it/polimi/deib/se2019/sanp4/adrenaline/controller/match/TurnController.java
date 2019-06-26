@@ -46,7 +46,7 @@ public class TurnController {
 
     private static final String MESSAGE_SELECT_ACTION = "Select the action you wish to perform";
 
-    private static final String MESSAGE_SELECT_POWERUP = "Select the action you wish to perform";
+    private static final String MESSAGE_SELECT_POWERUP = "Select the powerup you want to use";
 
     private static final String MESSAGE_NO_POWERUPS = "You have no usable powerups";
 
@@ -115,6 +115,8 @@ public class TurnController {
      * @throws InterruptedException If the thread gets interrupted
      */
     public void runTurn() throws InterruptedException {
+        logger.log(Level.FINE, "Starting \"{0}\" turn", currentView.getUsername());
+
         /* Start the timer of the turn */
         currentView.startTimer(() -> null, timeout, TimeUnit.SECONDS);
 
@@ -136,6 +138,8 @@ public class TurnController {
 
             /* Stop the timer: the turn ended without cancellations */
             currentView.stopTimer();
+
+            logger.log(Level.FINE, "Turn \"{0}\" ended normally", currentView.getUsername());
         } catch (CancellationException e) {
             /* The player of this turn has been suspended */
             logger.log(Level.INFO, "Caught a cancellation during \"{0}\" turn, ending it",
@@ -161,12 +165,11 @@ public class TurnController {
 
     /**
      * Selects the scenes of the player views at the end of the turn:
-     * All the players get {@link ViewScene#TURN_IDLE}
+     * All the players get {@link ViewScene#TURN_IDLE}, by only changing the current player's scene,
+     * since the others are already in IDLE
      */
     private void resetViewScenes() {
-        for (PersistentView v : views.values()) {
-            v.selectScene(TURN_IDLE);
-        }
+        currentView.selectScene(TURN_IDLE);
     }
 
     /**
