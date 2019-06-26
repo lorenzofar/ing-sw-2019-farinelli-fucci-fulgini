@@ -18,7 +18,7 @@ public class AdrenalineProperties extends Properties {
     private static final String[] ARGUMENTS = {
             "adrenaline.rmiport", "adrenaline.socketport",
             "adrenaline.turntime", "adrenaline.waitingtime",
-            "adrenaline.shorttime", "adrenaline.hostname",
+            "adrenaline.shorttime", "adrenaline.server.hostname", "adrenaline.client.hostname",
             "adrenaline.players.min"
     };
     private static final long serialVersionUID = -2776486894760552339L;

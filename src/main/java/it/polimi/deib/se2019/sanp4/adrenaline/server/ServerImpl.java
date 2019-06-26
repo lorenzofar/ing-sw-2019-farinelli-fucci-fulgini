@@ -103,7 +103,7 @@ public class ServerImpl implements SocketServer, RemoteServer, Runnable {
         try {
             /* Get the IP address of the server */
             String hostname = (String) AdrenalineProperties.getProperties()
-                    .getOrDefault("adrenaline.hostname", InetAddress.getLocalHost().getHostAddress());
+                    .getOrDefault("adrenaline.server.hostname", InetAddress.getLocalHost().getHostAddress());
 
             /* Set RMI server hostname */
             System.setProperty("java.rmi.server.hostname", hostname);

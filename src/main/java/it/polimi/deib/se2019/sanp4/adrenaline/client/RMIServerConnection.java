@@ -10,6 +10,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.ModelUpdate;
 import it.polimi.deib.se2019.sanp4.adrenaline.view.ViewScene;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.rmi.Naming;
 import java.rmi.NoSuchObjectException;
 import java.rmi.NotBoundException;
@@ -27,7 +28,7 @@ import java.util.logging.Logger;
  * uses to call methods on the view (and receive events)
  */
 public class RMIServerConnection extends RemoteObservable<ModelUpdate> implements ServerConnection {
-    private final int PING_INTERVAL;
+    private final int pingInterval;
     private RemoteServer server;
     private ClientView view;
     private RemoteView viewStub;
@@ -41,7 +42,7 @@ public class RMIServerConnection extends RemoteObservable<ModelUpdate> implement
      */
     public RMIServerConnection(ClientView view){
         this.view = view;
-        PING_INTERVAL = Integer.parseInt((String) AdrenalineProperties.getProperties()
+        pingInterval = Integer.parseInt((String) AdrenalineProperties.getProperties()
                 .getOrDefault("adrenaline.rmi.ping.interval", "10"));
     }
 
@@ -85,6 +86,15 @@ public class RMIServerConnection extends RemoteObservable<ModelUpdate> implement
     public void connect(String hostname, int port) throws IOException {
         if (isActive()) return; /* No need to connect if the connection is active */
 
+        /* Get the local IP address */
+        String localHostname = (String) AdrenalineProperties.getProperties()
+                .getOrDefault("adrenaline.client.hostname", InetAddress.getLocalHost().getHostAddress());
+
+        logger.log(Level.INFO, "Local hostname: {0}", localHostname);
+
+        /* Set RMI server hostname */
+        System.setProperty("java.rmi.server.hostname", localHostname);
+
         /* Base url of the remote registry */
         String registryURL = String.format("rmi://%s:%d/", hostname, port);
 
@@ -113,7 +123,7 @@ public class RMIServerConnection extends RemoteObservable<ModelUpdate> implement
                 pingExecutor.shutdown(); /* New tasks cannot be submitted */
                 close();
             }
-        }, PING_INTERVAL, PING_INTERVAL, TimeUnit.SECONDS);
+        }, pingInterval, pingInterval, TimeUnit.SECONDS);
     }
 
     /**
