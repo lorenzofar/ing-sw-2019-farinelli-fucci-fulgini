@@ -76,8 +76,7 @@ public class RenderingManager implements ModelUpdateVisitor {
         if (!update.getPlayer().equals(clientView.getUsername())) {
             return;
         }
-        // If yes, we refresh its actions tracks
-        clientView.getRenderer().refreshActionsTrack();
+        // TODO: Understand what to render, since the action card is not explicitly shown
     }
 
     @Override

@@ -17,7 +17,7 @@ public class PlayerOperationOverlay extends SelectableOverlay<PlayerOperationEnu
     @FXML
     private Label label;
 
-    PlayerOperationOverlay() {
+    public PlayerOperationOverlay() {
         super("/fxml/controls/labelSelectionOverlay.fxml");
     }
 

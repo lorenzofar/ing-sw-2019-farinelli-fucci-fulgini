@@ -21,6 +21,8 @@ import javafx.stage.WindowEvent;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class GUIRenderer extends Application implements UIRenderer {
 
@@ -40,6 +42,8 @@ public class GUIRenderer extends Application implements UIRenderer {
      */
     private GUIController currentController;
 
+    private static Logger logger = Logger.getLogger(GUIRenderer.class.getName());
+
     @Override
     public void initialize() {
         launch();
@@ -49,9 +53,10 @@ public class GUIRenderer extends Application implements UIRenderer {
      * Sets the current scene with the provided FXML resource
      *
      * @param fxmlResource The path of the FXML file to display
+     * @param fullScreen   {@code true} if the scene should be set in full screen, {@code false} otherwise
      * @return {@code true} if the scene has been set succesfully, {@code false} otherwise
      */
-    private boolean showScene(String fxmlResource) {
+    private boolean showScene(String fxmlResource, boolean fullScreen) {
         if (fxmlResource == null) {
             return false;
         }
@@ -59,7 +64,11 @@ public class GUIRenderer extends Application implements UIRenderer {
         loader.setLocation(getClass().getResource(fxmlResource));
         try {
             Scene scene = new Scene(loader.load());
-            Platform.runLater(() -> this.stage.setScene(scene));
+            Platform.runLater(() -> {
+                this.stage.setScene(scene);
+                this.stage.setMaximized(fullScreen);
+                this.stage.setResizable(!fullScreen);
+            });
 
             currentController = loader.getController();
             currentController.setClientView(clientView);
@@ -67,6 +76,8 @@ public class GUIRenderer extends Application implements UIRenderer {
             return true;
         } catch (IOException e) {
             // An error occurred loading the scene
+            logger.log(Level.SEVERE, "Cannot load scene with resource {0}", fxmlResource);
+            logger.log(Level.SEVERE, "Exception when loading scene", e);
             return false;
         }
     }
@@ -82,7 +93,7 @@ public class GUIRenderer extends Application implements UIRenderer {
         this.clientView = new ClientView();
         clientView.setRenderer(this);
 
-        showScene("/fxml/login.fxml");
+        showScene("/fxml/login.fxml", false);
 
         Platform.runLater(primaryStage::show);
     }
@@ -106,8 +117,9 @@ public class GUIRenderer extends Application implements UIRenderer {
             ((GUIController) loader.getController()).setStage(newStage);
             Platform.runLater(newStage::show);
             return (GUIController) loader.getController();
-        } catch (IOException ignore) {
-            // Ignore errors
+        } catch (IOException e) {
+            logger.log(Level.SEVERE, "Cannot load new window with resource {0}", resource);
+            logger.log(Level.SEVERE, "Exception when loading new window", e);
             return null;
         }
     }
@@ -116,7 +128,7 @@ public class GUIRenderer extends Application implements UIRenderer {
 
     @Override
     public void showLobby() {
-        Platform.runLater(() -> showScene("/fxml/lobby.fxml"));
+        Platform.runLater(() -> showScene("/fxml/lobby.fxml", false));
     }
 
     @Override
@@ -126,8 +138,9 @@ public class GUIRenderer extends Application implements UIRenderer {
                 LobbyController lobbyController = (LobbyController) currentController;
                 lobbyController.setConnectedPlayers(connectedPlayers);
                 lobbyController.setMatchStarting(matchStarting);
-            } catch (Exception ignore) {
+            } catch (Exception e) {
                 // If the previous calls fail, it means the lobby is not yet initialized
+                logger.log(Level.WARNING, "Error when updating lobby, showing it again");
                 showLobby();
             }
         });
@@ -142,13 +155,14 @@ public class GUIRenderer extends Application implements UIRenderer {
      */
     @Override
     public void showMatchScreen() {
-        showScene("/fxml/game.fxml");
+        showScene("/fxml/game.fxml", true);
         Platform.runLater(() -> {
             try {
                 GameController gameController = (GameController) currentController;
                 Platform.runLater(gameController::buildMatchScreen);
-            } catch (Exception ignore) {
+            } catch (Exception e) {
                 // An error occurred while building the match screen
+                logger.log(Level.WARNING, "Error when showing match screen", e);
             }
         });
     }
@@ -180,7 +194,7 @@ public class GUIRenderer extends Application implements UIRenderer {
     @Override
     public void showMessage(String text, MessageType type) {
         Platform.runLater(() ->
-                new Alert(type.getAlertType(), text, ButtonType.OK).showAndWait()
+                new Alert(type.getAlertType(), text, ButtonType.OK).show()
         );
     }
 
@@ -188,7 +202,6 @@ public class GUIRenderer extends Application implements UIRenderer {
     public void cancelSelection() {
         // We set a null selection handler and, incidentally, we cancel the existing one (if present)
         clientView.setSelectionHandler(null);
-        //TODO: Maybe notify the user?
     }
 
     /**
@@ -207,6 +220,7 @@ public class GUIRenderer extends Application implements UIRenderer {
     @Override
     public void setIdleScreen() {
         //TODO: Implement this method
+        this.stage.setOpacity(0.4);
     }
 
     @Override
@@ -235,18 +249,6 @@ public class GUIRenderer extends Application implements UIRenderer {
     public void refreshPlayerBoard(String boardOwner) {
         try {
             ((GameController) currentController).updatePlayerBoard(boardOwner);
-        } catch (Exception ignore) {
-            // The game screen is not shown, hence we ignore the error
-        }
-    }
-
-    /**
-     * Refreshes the rendered actions track of the user
-     */
-    @Override
-    public void refreshActionsTrack() {
-        try {
-            ((GameController) currentController).updateActionTrack();
         } catch (Exception ignore) {
             // The game screen is not shown, hence we ignore the error
         }
@@ -332,10 +334,12 @@ public class GUIRenderer extends Application implements UIRenderer {
     public void handle(ActionRequest request) {
         Platform.runLater(() -> {
             try {
-                GameController gameController = (GameController) currentController;
-                gameController.askActionSelection(request);
-            } catch (Exception ignore) {
-                // If this request is received when when are not in the game screen, we ignore it
+                ActionRequestController actionRequestController = (ActionRequestController) showNewWindow("/fxml/actionSelectionWindow.fxml", "Action selection");
+                if (actionRequestController != null) {
+                    actionRequestController.setup(request);
+                }
+            } catch (Exception e) {
+                logger.log(Level.WARNING, "Error during action request", e);
             }
         });
     }
@@ -348,8 +352,8 @@ public class GUIRenderer extends Application implements UIRenderer {
                 if (boardRequestController != null) {
                     boardRequestController.setup(request);
                 }
-            } catch (Exception ignore) {
-                // Errors are ignored
+            } catch (Exception e) {
+                logger.log(Level.WARNING, "Error during board request", e);
             }
         });
     }
@@ -358,10 +362,12 @@ public class GUIRenderer extends Application implements UIRenderer {
     public void handle(PlayerOperationRequest request) {
         Platform.runLater(() -> {
             try {
-                GameController gameController = (GameController) currentController;
-                gameController.askOperationSelection(request);
-            } catch (Exception ignore) {
-                // If this request is received when when are not in the game screen, we ignore it
+                PlayerOperationRequestController operationRequestController = (PlayerOperationRequestController) showNewWindow("/fxml/playerOperationSelectionWindow.fxml", "Operation selection");
+                if (operationRequestController != null) {
+                    operationRequestController.setup(request);
+                }
+            } catch (Exception e) {
+                logger.log(Level.WARNING, "Error during player operation request", e);
             }
         });
     }
@@ -374,8 +380,8 @@ public class GUIRenderer extends Application implements UIRenderer {
                 if (playerRequestController != null) {
                     playerRequestController.setup(request);
                 }
-            } catch (Exception ignore) {
-                // We ignore this error
+            } catch (Exception e) {
+                logger.log(Level.WARNING, "Error during player request", e);
             }
         });
     }
@@ -388,8 +394,8 @@ public class GUIRenderer extends Application implements UIRenderer {
                 if (powerupRequestController != null) {
                     powerupRequestController.setup(request);
                 }
-            } catch (Exception ignore) {
-                // We ignore this error
+            } catch (Exception e) {
+                logger.log(Level.WARNING, "Error during powerup request", e);
             }
         });
     }
@@ -402,8 +408,8 @@ public class GUIRenderer extends Application implements UIRenderer {
                 if (skullsRequestController != null) {
                     skullsRequestController.setup(request);
                 }
-            } catch (Exception ignore) {
-                // Errors are ignored
+            } catch (Exception e) {
+                logger.log(Level.WARNING, "Error during skulls count request", e);
             }
         });
     }
@@ -428,8 +434,8 @@ public class GUIRenderer extends Application implements UIRenderer {
                 if (weaponCardRequestController != null) {
                     weaponCardRequestController.setup(request);
                 }
-            } catch (Exception ignore) {
-                // We ignore this error
+            } catch (Exception e) {
+                logger.log(Level.WARNING, "Error during weapon card request", e);
             }
         });
     }
@@ -442,8 +448,8 @@ public class GUIRenderer extends Application implements UIRenderer {
                 if (effectRequestController != null) {
                     effectRequestController.setup(request);
                 }
-            } catch (Exception ignore) {
-                // We ignore this error
+            } catch (Exception e) {
+                logger.log(Level.WARNING, "Error during effect request", e);
             }
         });
     }

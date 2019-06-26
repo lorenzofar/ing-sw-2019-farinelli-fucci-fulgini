@@ -92,11 +92,6 @@ public interface UIRenderer extends ChoiceRequestVisitor {
     public void refreshPlayerBoard(String boardOwner);
 
     /**
-     * Refreshes the rendered actions track of the user
-     */
-    public void refreshActionsTrack();
-
-    /**
      * Refreshes the whole rendered game board
      */
     public void refreshGameBoard();

@@ -7,6 +7,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 
@@ -53,11 +54,16 @@ public abstract class RequestController<T extends Serializable> extends GUIContr
         overlaysContainer.getChildren().clear();
         overlaysContainer.getRowConstraints().clear();
 
+        // Build columns
+        for (int i = 0; i < getColumnsCount(); i++) {
+            ColumnConstraints columnConstraints = new ColumnConstraints();
+            columnConstraints.setPercentWidth(100 / getColumnsCount());
+            overlaysContainer.getColumnConstraints().add(columnConstraints);
+        }
 
-        // Build rows to put cards inside
+        // Build rows
         for (int i = 0; i < request.getChoices().size() / getColumnsCount(); i++) {
-            RowConstraints rowConstraints = new RowConstraints();
-            overlaysContainer.getRowConstraints().add(rowConstraints);
+            overlaysContainer.getRowConstraints().add(new RowConstraints());
         }
 
         messageProperty.set(request.getMessage());

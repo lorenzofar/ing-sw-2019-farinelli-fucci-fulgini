@@ -4,13 +4,9 @@ import it.polimi.deib.se2019.sanp4.adrenaline.client.ModelManager;
 import it.polimi.deib.se2019.sanp4.adrenaline.client.gui.controls.*;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.ColoredObject;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.*;
-import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.ActionRequest;
-import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.PlayerOperationRequest;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.SquareRequest;
-import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionEnum;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.CoordPair;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCube;
-import it.polimi.deib.se2019.sanp4.adrenaline.model.match.PlayerOperationEnum;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.PlayerColor;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -39,9 +35,9 @@ public class GameController extends GUIController {
 
     private static final double BOARD_RATIO = 1389.6 / 1836.72;
     /**
-     * The percentage width of the screen the board occupies
+     * The percentage height of the screen the board occupies
      */
-    private static final double BOARD_COL_RATIO = 0.75;
+    private static final double BOARD_ROW_RATIO = 0.75;
     private static final int SPAWN_WEAPONS_COUNT = 3;
 
     @FXML
@@ -70,14 +66,6 @@ public class GameController extends GUIController {
      */
     private SquareOverlay[][] squareOverlays;
 
-    /**
-     * The container for all the supported players operations
-     * It references the control defined in the FXML file
-     */
-    @FXML
-    private PlayerOperationsTrack playerOperationsTrack;
-    @FXML
-    private ActionsTrack actionsTrack;
     @FXML
     private AmmoPane ammoPane;
     @FXML
@@ -88,6 +76,8 @@ public class GameController extends GUIController {
     private PlayerBoardControl userBoard;
     @FXML
     private VBox playerBoardsContainer;
+    @FXML
+    private HBox bottomRow;
 
     /**
      * A map describing the player board control associated to each player
@@ -100,13 +90,19 @@ public class GameController extends GUIController {
     private Map<AmmoCube, List<WeaponImage>> spawnWeaponsImages;
 
     /**
-     * Compute the size of the board to keep the ratio and update it accordingly
+     * Compute the size of the board to keep the image ratio
+     * as well as setting the height of bottom row elements to fill it
      */
-    private void computeBoardSize(double sceneWidth) {
-        gameContainer.setMinWidth(sceneWidth * BOARD_COL_RATIO);
-        gameContainer.setMaxWidth(sceneWidth * BOARD_COL_RATIO);
-        gameContainer.setMinHeight(gameContainer.getWidth() * BOARD_RATIO);
-        gameContainer.setMaxHeight(gameContainer.getWidth() * BOARD_RATIO);
+    private void computeBoardSize() {
+        double sceneHeight = gameScene.getHeight();
+        double gameWidth = sceneHeight * BOARD_ROW_RATIO;
+        gameContainer.setMinHeight(sceneHeight * BOARD_ROW_RATIO);
+        gameContainer.setMaxHeight(sceneHeight * BOARD_ROW_RATIO);
+        gameContainer.setMinWidth(gameWidth / BOARD_RATIO);
+        gameContainer.setMaxWidth(gameWidth / BOARD_RATIO);
+        userBoard.setMinHeight(sceneHeight * 0.2);
+        userBoard.setMaxHeight(sceneHeight * 0.2);
+
     }
 
 
@@ -123,7 +119,9 @@ public class GameController extends GUIController {
         setRowConstraints(middleDxContainer, DX_COL_SPAWN_WEAPONS_ROWS);
 
         topGameRow.prefWidthProperty().bind(gameScene.widthProperty());
-        gameScene.widthProperty().addListener((v, oldVal, newVal) -> computeBoardSize(newVal.doubleValue()));
+        // Set the bottom row to take the 25% of the screen height
+        // The remaining space is taken by the game board
+        bottomRow.prefHeightProperty().bind(gameScene.heightProperty().multiply(0.25));
 
         /* ===== BOARD LAYOUT ===== */
         middleRow.prefWidthProperty().bind(gameContainer.widthProperty());
@@ -187,7 +185,9 @@ public class GameController extends GUIController {
      * Set up the layout of the game screen by creating overlays and binding dimensions
      */
     void buildMatchScreen() {
-        computeBoardSize(gameScene.getWidth());
+        // Maximize the game window and make it not resizable
+        computeBoardSize();
+
         // Get the model manager
         ModelManager modelManager = clientView.getModelManager();
 
@@ -251,7 +251,6 @@ public class GameController extends GUIController {
         updateWeaponsInfo();
         updateAmmoAmount();
         updateSpawnWeapons();
-        updateActionTrack();
 
         // For each player, update its player board
         clientView.getModelManager().getPlayers().keySet().forEach(this::updatePlayerBoard);
@@ -282,30 +281,6 @@ public class GameController extends GUIController {
         Collection<SelectableOverlay<CoordPair>> selectableSquares = Arrays.stream(squareOverlays).flatMap(Arrays::stream).filter(Objects::nonNull).filter(overlay -> request.getChoices().contains(overlay.getData())).collect(Collectors.toList());
         // Then create a selection handler to handle the request and set it as the current one in the view
         clientView.setSelectionHandler(new SelectionHandler<CoordPair>(selectableSquares));
-    }
-
-    /**
-     * Asks the user to select an operation to perform in the current turn, replying to the related server request
-     *
-     * @param request The object representing the operation request
-     */
-    void askOperationSelection(PlayerOperationRequest request) {
-        // First retrieve all the selectable overlays in the operations track
-        Collection<SelectableOverlay<PlayerOperationEnum>> selectableOperations = playerOperationsTrack.getSelectableOverlays(request.getChoices());
-        // Then create a new selection handler and set it in the client view
-        clientView.setSelectionHandler(new SelectionHandler<PlayerOperationEnum>(selectableOperations));
-    }
-
-    /**
-     * Asks the user to select an action to perform, replying to the related server request
-     *
-     * @param request The object representing the request
-     */
-    void askActionSelection(ActionRequest request) {
-        // First retrieve all the selectable overlays in the actions track
-        Collection<SelectableOverlay<ActionEnum>> selectableActions = actionsTrack.getSelectableOverlays(request.getChoices());
-        // Then create a new selection handler and set it in the client view
-        clientView.setSelectionHandler(new SelectionHandler<ActionEnum>(selectableActions));
     }
 
     /**
@@ -364,13 +339,6 @@ public class GameController extends GUIController {
             return;
         }
         killshotsTrack.setSkulls(match.getTotalSkulls(), match.getKillshotsCount());
-    }
-
-    /**
-     * Update the track showing the supported actions, according to the owned action card
-     */
-    void updateActionTrack() {
-        actionsTrack.setActionCard(clientView.getModelManager().getActionCard(clientView.getUsername()));
     }
 
     /**

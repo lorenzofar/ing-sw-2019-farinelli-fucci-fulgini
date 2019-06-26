@@ -334,14 +334,6 @@ public class CLIRenderer implements UIRenderer {
     }
 
     /**
-     * Refreshes the rendered actions track of the user
-     */
-    @Override
-    public void refreshActionsTrack() {
-        // Do nothing, since the action track is not explicitly shown
-    }
-
-    /**
      * Refreshes the whole rendered game board
      */
     @Override

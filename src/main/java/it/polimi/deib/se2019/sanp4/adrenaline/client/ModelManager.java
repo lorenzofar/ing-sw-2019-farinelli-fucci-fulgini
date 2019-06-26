@@ -239,9 +239,7 @@ public class ModelManager implements ModelUpdateVisitor {
 
     @Override
     public void handle(PlayerTurnUpdate update) {
-        currentTurn.setRemainingActions(update.getPlayerTurn().getRemainingActions());
-        currentTurn.setPlayer(update.getPlayerTurn().getPlayer());
-        currentTurn.setState(update.getPlayerTurn().getState());
+        currentTurn = update.getPlayerTurn();
     }
 
     @Override

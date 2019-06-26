@@ -76,13 +76,7 @@
 
     <!-- BOTTOM ROW -->
     <HBox fx:id="bottomRow" GridPane.rowIndex="1" spacing="8">
-        <PlayerBoardControl fx:id="userBoard" styleClass="shadowed" prefWidth="400"/>
-        <VBox fx:id="buttonsRoom" spacing="8">
-            <Label styleClass="title-text" text="Operations"/>
-            <PlayerOperationsTrack fx:id="playerOperationsTrack"/>
-            <Label styleClass="title-text" text="Actions"/>
-            <ActionsTrack fx:id="actionsTrack"/>
-        </VBox>
+        <PlayerBoardControl fx:id="userBoard" styleClass="shadowed"/>
     </HBox>
     <!-- TODO: Add player boards and fix bindings after addition -->
     <!-- TODO: Fix position and layout pf operations track, after having added all the remaining controls -->

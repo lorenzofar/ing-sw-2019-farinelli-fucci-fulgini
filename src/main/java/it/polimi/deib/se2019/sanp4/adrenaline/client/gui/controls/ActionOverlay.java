@@ -16,7 +16,7 @@ public class ActionOverlay extends SelectableOverlay<ActionEnum> {
     @FXML
     private Label label;
 
-    ActionOverlay() {
+    public ActionOverlay() {
         super("/fxml/controls/labelSelectionOverlay.fxml");
     }
 

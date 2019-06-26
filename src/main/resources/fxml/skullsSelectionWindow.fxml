@@ -4,7 +4,6 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.layout.ColumnConstraints?>
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="it.polimi.deib.se2019.sanp4.adrenaline.client.gui.SkullsRequestController"
@@ -21,17 +20,6 @@
 
     <Label text="Choose the number of skulls that will be placed in the killshots track"/>
 
-    <GridPane fx:id="overlaysContainer" hgap="8" vgap="8">
-        <columnConstraints>
-            <ColumnConstraints/>
-            <ColumnConstraints/>
-            <ColumnConstraints/>
-            <ColumnConstraints/>
-            <ColumnConstraints/>
-            <ColumnConstraints/>
-            <ColumnConstraints/>
-            <ColumnConstraints/>
-        </columnConstraints>
-    </GridPane>
+    <GridPane fx:id="overlaysContainer" hgap="8" vgap="8"/>
 
 </VBox>
