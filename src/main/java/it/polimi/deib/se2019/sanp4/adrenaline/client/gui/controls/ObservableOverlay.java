@@ -51,7 +51,9 @@ public abstract class ObservableOverlay<T> extends Button {
      * Notify the listeners that the element has fired an event
      */
     void notifyListeners() {
-        listeners.forEach(listener -> listener.accept(this));
+        // Create a new list of listeners to notify to avoid concurrent modification exceptions
+        List<Consumer<ObservableOverlay<T>>> listenersToNotify = new ArrayList<>(this.listeners);
+        listenersToNotify.forEach(listener -> listener.accept(this));
     }
 
     /**
