@@ -10,6 +10,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.model.ModelImpl;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.match.Match;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.match.MatchConfiguration;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.match.MatchCreator;
+import it.polimi.deib.se2019.sanp4.adrenaline.view.ViewScene;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -168,6 +169,8 @@ public class ControllerImpl implements Controller {
         view.setReconnectionCallback(() -> {
             /* Put this view in the map so it will be picked up after the end of the current turn */
             waitingToRejoin.put(username, view);
+            /* Set the proper view */
+            view.selectScene(ViewScene.WAITING_REJOIN);
             return null;
         });
     }
