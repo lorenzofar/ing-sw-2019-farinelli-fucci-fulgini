@@ -91,7 +91,7 @@ public class SocketRemoteView extends RemoteObservable<ViewEvent>
         }
         /* When finished close the connection */
         closeConnection();
-        logger.log(Level.INFO, "End of connection thread");
+        logger.log(Level.FINER, "End of connection thread");
     }
 
     /** See {@link #run()} */
