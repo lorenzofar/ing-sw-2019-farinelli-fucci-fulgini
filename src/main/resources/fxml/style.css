@@ -126,7 +126,7 @@ TextField {
 
 /* ===== EFFECT SELECTION ===== */
 .effect-overlay {
-    -fx-background-color: #DFDFDF;
+    -fx-background-color: -fx-light-button-gray;
 }
 
 /* Shadowed effect, applies a shadow behind the element */

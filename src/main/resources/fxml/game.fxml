@@ -55,22 +55,30 @@
         </GridPane>
 
         <!-- RIGHT PANE -->
-        <GridPane GridPane.columnIndex="1" GridPane.rowIndex="0" vgap="12">
-            <rowConstraints>
-                <RowConstraints/>
-                <RowConstraints/>
-                <RowConstraints/>
-                <RowConstraints/>
-            </rowConstraints>
-            <!-- Here we place:
-            * in the first row the pane with info about the match
-            * in the second row the ammo counter
-            * in the third row the pane showing info about weapons
-            * int the remaining room the scrollable list of player boards -->
-            <MatchInfoPane fx:id="matchInfoPane" GridPane.rowIndex="0"/>
-            <AmmoPane fx:id="ammoPane" GridPane.rowIndex="1"/>
-            <WeaponsInfoPane fx:id="weaponsInfoPane" GridPane.rowIndex="2"/>
-            <VBox fx:id="playerBoardsContainer" GridPane.rowIndex="3" spacing="12"/>
+        <GridPane GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" GridPane.rowIndex="0"
+                  vgap="12">
+
+            <!-- In the second column we place the stacked player boards of the other players-->
+            <columnConstraints>
+                <ColumnConstraints percentWidth="30"/>
+                <ColumnConstraints percentWidth="70" fx:id="playerBoardsColumn"/>
+            </columnConstraints>
+            <GridPane GridPane.columnIndex="0">
+                <rowConstraints>
+                    <RowConstraints/>
+                    <RowConstraints/>
+                    <RowConstraints/>
+                    <RowConstraints/>
+                </rowConstraints>
+                <!-- Here we place:
+                * in the first row the pane with info about the match
+                * in the second row the ammo counter
+                * in the third row the pane showing info about weapons-->
+                <MatchInfoPane fx:id="matchInfoPane" GridPane.rowIndex="0"/>
+                <AmmoPane fx:id="ammoPane" GridPane.rowIndex="1"/>
+                <WeaponsInfoPane fx:id="weaponsInfoPane" GridPane.rowIndex="2"/>
+            </GridPane>
+            <VBox fx:id="playerBoardsContainer" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" spacing="12"/>
         </GridPane>
     </GridPane>
 

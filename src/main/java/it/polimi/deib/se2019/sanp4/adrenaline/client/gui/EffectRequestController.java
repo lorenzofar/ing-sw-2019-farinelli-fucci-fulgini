@@ -15,7 +15,7 @@ public class EffectRequestController extends RequestController<EffectDescription
      */
     @Override
     public int getColumnsCount() {
-        return 3;
+        return 1;
     }
 
     /**

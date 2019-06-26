@@ -34,7 +34,7 @@ public class PlayerBoardControl extends VBox {
     private static final double[] ROWS = {34, 32, 34};
     private static final double[] MIDDLE_ROW_COLUMNS = {9, 67, 24};
 
-    private static final double BOARD_RATIO = 1121.0 / 274.0;
+    public static final double BOARD_RATIO = 1121.0 / 274.0;
 
     private final Map<String, double[]> stateCellsMap;
 

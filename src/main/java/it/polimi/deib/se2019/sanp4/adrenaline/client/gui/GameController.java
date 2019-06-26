@@ -227,6 +227,7 @@ public class GameController extends GUIController {
         // Then create the player boards for the other players
         clientView.getModelManager().getPlayers().keySet().stream().filter(player -> !player.equals(clientView.getUsername())).forEach(player -> {
             PlayerBoardControl playerBoardControl = new PlayerBoardControl();
+            playerBoardControl.prefHeightProperty().bind(playerBoardsContainer.widthProperty().divide(PlayerBoardControl.BOARD_RATIO));
             playerBoardsContainer.getChildren().add(playerBoardControl);
             playerBoards.put(player, playerBoardControl);
         });
