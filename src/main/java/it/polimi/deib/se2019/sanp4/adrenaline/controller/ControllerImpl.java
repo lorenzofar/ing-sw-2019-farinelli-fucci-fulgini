@@ -12,8 +12,11 @@ import it.polimi.deib.se2019.sanp4.adrenaline.model.match.MatchConfiguration;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.match.MatchCreator;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * Implementation of the Controller, which uses {@link PersistentView}s to decorate the
@@ -27,6 +30,8 @@ public class ControllerImpl implements Controller {
     /** A map with (username, view) */
     private final Map<String, PersistentView> views;
 
+    private final ConcurrentMap<String, PersistentView> waitingToRejoin;
+
     /**
      * Creates the controller for a new instance of the game
      * @param remotes a map with (username, remote view)
@@ -38,6 +43,9 @@ public class ControllerImpl implements Controller {
         /* Set up the persistent views */
         views = new HashMap<>(remotes.size());
         remotes.forEach(this::setupPersistentView);
+
+        /* Set up the data structure for views waiting to rejoin the match after reconnection */
+        waitingToRejoin = new ConcurrentHashMap<>();
     }
 
     /**
@@ -66,6 +74,7 @@ public class ControllerImpl implements Controller {
 
             /* Create the match controller and run the match */
             MatchController matchController = factory.createMatchController();
+            matchController.setAfterTurnCallback(this::rejoinReconnectedPlayers); /* Rejoin after turn */
             matchController.runMatch();
 
             /* When the match is over, change the operational state again */
@@ -157,9 +166,27 @@ public class ControllerImpl implements Controller {
         });
 
         view.setReconnectionCallback(() -> {
-            model.unsuspendPlayer(username);
-            model.sendInitialUpdate(username);
+            /* Put this view in the map so it will be picked up after the end of the current turn */
+            waitingToRejoin.put(username, view);
             return null;
+        });
+    }
+
+    /**
+     * Takes the views that have been reconnected, but are waiting to rejoin the match,
+     * unsuspends the relative players and sends them the initial update.
+     *
+     * This is given as a callback to the match controller after executing the turn
+     */
+    private void rejoinReconnectedPlayers() {
+        Set<PersistentView> toRejoin = new HashSet<>(waitingToRejoin.values());
+
+        toRejoin.forEach(view -> {
+            model.unsuspendPlayer(view.getUsername());
+            model.sendInitialUpdate(view.getUsername());
+
+            /* Remove it from the map */
+            waitingToRejoin.remove(view.getUsername());
         });
     }
 }

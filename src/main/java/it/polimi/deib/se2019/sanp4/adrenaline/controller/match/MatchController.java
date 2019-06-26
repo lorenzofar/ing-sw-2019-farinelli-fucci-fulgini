@@ -16,6 +16,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.view.ViewScene;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
 
 /**
@@ -40,6 +41,8 @@ public class MatchController {
     private boolean finished;
 
     private ControllerFactory factory;
+
+    private Runnable afterTurnCallback;
 
     /**
      * Creates the controller for given match
@@ -77,6 +80,11 @@ public class MatchController {
 
             /* Let the player play his turn */
             runCurrentTurn();
+
+            /* Call the callback if provided */
+            if (afterTurnCallback != null) {
+                afterTurnCallback.run();
+            }
 
             /* Check for final player and active players number */
             checkIfMatchIsFinished(); // <- sets finished flag
@@ -290,6 +298,31 @@ public class MatchController {
 
         /* Then set the final scoring view on all views */
         views.values().forEach(view -> view.selectScene(ViewScene.FINAL_SCORES));
+    }
+
+    /* ======= CALLBACK ========== */
+
+    /**
+     * Returns the callback that is called at the end of a turn
+     *
+     * @return The callback
+     */
+    public Runnable getAfterTurnCallback() {
+        return afterTurnCallback;
+    }
+
+    /**
+     * Sets the callback which is called at the end of a turn
+     * <p>
+     * It gets called right after the current player completed his turn, but before checking the number of active
+     * players, respawning and preparing for the next turn.
+     * </p>
+     * <p>An example usage would be to reconnect players before the next turn</p>
+     *
+     * @param afterTurnCallback The callback to be called, nullable
+     */
+    public void setAfterTurnCallback(Runnable afterTurnCallback) {
+        this.afterTurnCallback = afterTurnCallback;
     }
 
     /* ======= GETTERS AND SETTERS FOR TESTING ========= */
