@@ -30,7 +30,7 @@ public class MatchBootstrapper {
     public MatchBootstrapper() {
         /* Get the value of the timeout */
         timeout = Integer.parseInt((String) AdrenalineProperties.getProperties()
-                .getOrDefault("adrenaline.shorttime", "30"));
+                .getOrDefault("adrenaline.timeout.config", "30"));
     }
 
     /**

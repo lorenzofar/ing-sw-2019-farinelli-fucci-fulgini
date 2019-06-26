@@ -72,7 +72,7 @@ public class RMIServerConnection extends RemoteObservable<ModelUpdate> implement
     @Override
     public void connect(String hostname) throws IOException {
         int port = Integer.parseInt((String)AdrenalineProperties.getProperties()
-                .getOrDefault("adrenaline.rmiport", "1099"));
+                .getOrDefault("adrenaline.rmi.port", "1099"));
         connect(hostname, port);
     }
 

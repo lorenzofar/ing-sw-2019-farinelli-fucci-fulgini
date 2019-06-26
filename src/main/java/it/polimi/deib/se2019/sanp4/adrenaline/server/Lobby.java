@@ -50,7 +50,7 @@ public class Lobby implements Runnable {
                 .getOrDefault("adrenaline.players.min", "3"));
         maxPlayers = PlayerColor.values().length;
         waitingTime = Integer.parseInt((String)AdrenalineProperties.getProperties()
-                .getOrDefault("adrenaline.waitingtime", "30"));
+                .getOrDefault("adrenaline.timeout.lobby", "30"));
 
     }
 

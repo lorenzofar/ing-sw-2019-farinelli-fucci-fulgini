@@ -86,8 +86,8 @@ public class ServerImpl implements SocketServer, RemoteServer, Runnable {
         /* First start the Lobby */
         lobbyExecutor.submit(lobby);
         /* Then start listening for connections */
-        int rmiPort = Integer.parseInt((String) AdrenalineProperties.getProperties().getOrDefault("adrenaline.rmiport", "1099"));
-        int socketPort = Integer.parseInt((String) AdrenalineProperties.getProperties().getOrDefault("adrenaline.socketport", "3000"));
+        int rmiPort = Integer.parseInt((String) AdrenalineProperties.getProperties().getOrDefault("adrenaline.rmi.port", "1099"));
+        int socketPort = Integer.parseInt((String) AdrenalineProperties.getProperties().getOrDefault("adrenaline.socket.port", "3000"));
         startRMI(rmiPort);
         startSocket(socketPort);
     }

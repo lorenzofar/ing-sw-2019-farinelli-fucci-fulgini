@@ -16,9 +16,11 @@ public class AdrenalineProperties extends Properties {
 
     /** Arguments that can be provided by the user */
     private static final String[] ARGUMENTS = {
-            "adrenaline.rmiport", "adrenaline.socketport",
-            "adrenaline.turntime", "adrenaline.waitingtime",
-            "adrenaline.shorttime", "adrenaline.server.hostname", "adrenaline.client.hostname",
+            "adrenaline.rmi.port", "adrenaline.socket.port",
+            "adrenaline.server.hostname", "adrenaline.client.hostname",
+            "adrenaline.rmi.ping.interval",
+            "adrenaline.timeout.turn", "adrenaline.timeout.lobby",
+            "adrenaline.timeout.config", "adrenaline.timeout.spawn", "adrenaline.timeout.revenge",
             "adrenaline.players.min"
     };
     private static final long serialVersionUID = -2776486894760552339L;
