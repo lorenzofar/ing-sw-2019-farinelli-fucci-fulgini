@@ -69,10 +69,6 @@ public class ModelManager implements ModelUpdateVisitor {
         return currentTurn;
     }
 
-    public void setCurrentTurn(PlayerTurnView currentTurn) {
-        this.currentTurn = currentTurn;
-    }
-
     public ActionCardView getActionCard(String player) {
         return actionCards.getOrDefault(player, null);
     }
@@ -153,68 +149,39 @@ public class ModelManager implements ModelUpdateVisitor {
     @Override
     public void handle(PlayerUpdate update) {
         // Retrieve the player view associated to the player
-        PlayerView playerView = players.get(update.getPlayer().getName());
-        if (playerView == null) {
-            return;
+        if (players.containsKey(update.getPlayer().getName())) {
+            players.put(update.getPlayer().getName(), update.getPlayer());
         }
-        // Set properties according to the received update
-        playerView.setAmmo(update.getPlayer().getAmmo());
-        playerView.setPowerups(update.getPlayer().getPowerups());
-        playerView.setWeapons(update.getPlayer().getWeapons());
-        playerView.setState(update.getPlayer().getState());
-        playerView.setScore(update.getPlayer().getScore());
     }
 
     @Override
     public void handle(ActionCardUpdate update) {
-        ActionCardView actionCardView = actionCards.get(update.getPlayer());
-        if (actionCardView == null) {
-            return;
+        if (actionCards.containsKey(update.getPlayer())) {
+            actionCards.put(update.getPlayer(), update.getActionCard());
         }
-        actionCardView.setActions(update.getActionCard().getActions());
-        actionCardView.setFinalAction(update.getActionCard().getFinalAction());
-        actionCardView.setType(update.getActionCard().getType());
     }
 
     @Override
     public void handle(SquareUpdate update) {
         SquareView square = board.getSquare(update.getSquare().getLocation());
-        if (square == null) {
-            return;
-        }
-        square.setAdjacentMap(update.getSquare().getAdjacentMap());
-        square.setPlayers(update.getSquare().getPlayers());
-        // Check whether the square is a spawn or ammo square
-        if (square.printTypeMarker().equals("S")) {
-            ((SpawnSquareView) square).setWeapons(((SpawnSquareView) update.getSquare()).getWeapons());
-        } else {
-            ((AmmoSquareView) square).setAmmoCard(((AmmoSquareView) update.getSquare()).getAmmoCard());
-        }
+        board.setSquare(square);
     }
 
     @Override
     public void handle(BoardUpdate update) {
-        board.setSquares(update.getBoard().getSquares());
-        board.setSpawnPoints(update.getBoard().getSpawnPoints());
+        this.board = update.getBoard();
     }
 
     @Override
     public void handle(MatchUpdate update) {
-        match.setFrenzy(update.getMatch().isFrenzy());
-        match.setKillshotsCount(update.getMatch().getKillshotsCount());
-        match.setTotalSkulls(update.getMatch().getTotalSkulls());
+        this.match = update.getMatch();
     }
 
     @Override
     public void handle(PlayerBoardUpdate update) {
-        PlayerBoardView playerBoardView = playerBoards.get(update.getPlayer());
-        if (playerBoardView == null) {
-            return;
+        if (playerBoards.containsKey(update.getPlayer())) {
+            playerBoards.put(update.getPlayer(), update.getPlayerBoard());
         }
-        playerBoardView.setDeaths(update.getPlayerBoard().getDeaths());
-        playerBoardView.setDamages(update.getPlayerBoard().getDamages());
-        playerBoardView.setMarks(update.getPlayerBoard().getMarks());
-        playerBoardView.setState(update.getPlayerBoard().getState());
     }
 
     @Override

@@ -31,7 +31,8 @@ public class BoardView implements Serializable {
 
     /**
      * Creates a new board view
-     * @param id the board identifier
+     *
+     * @param id    the board identifier
      * @param xSize the number of columns
      * @param ySize the number of rows
      */
@@ -98,6 +99,16 @@ public class BoardView implements Serializable {
             return squares[location.getX()][location.getY()];
         } catch (IndexOutOfBoundsException e) {
             return null;
+        }
+    }
+
+    public void setSquare(SquareView square) {
+        if (square != null) {
+            try {
+                squares[square.getLocation().getX()][square.getLocation().getY()] = square;
+            } catch (IndexOutOfBoundsException e) {
+                // We ignore this error
+            }
         }
     }
 
