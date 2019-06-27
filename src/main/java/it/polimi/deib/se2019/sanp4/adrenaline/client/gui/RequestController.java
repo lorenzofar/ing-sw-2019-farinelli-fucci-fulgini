@@ -2,6 +2,7 @@ package it.polimi.deib.se2019.sanp4.adrenaline.client.gui;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.client.gui.controls.ObservableOverlay;
 import it.polimi.deib.se2019.sanp4.adrenaline.client.gui.controls.SelectableOverlay;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.events.ChoiceResponse;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.ChoiceRequest;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -10,6 +11,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
+import javafx.stage.WindowEvent;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -49,6 +51,12 @@ public abstract class RequestController<T extends Serializable> extends GUIContr
      */
     @Override
     public void setup(ChoiceRequest<T> request) {
+        // When the window is closed, we reply with a null response
+        this.stage.setOnCloseRequest((WindowEvent t) -> {
+            ChoiceResponse<T> choiceResponse = new ChoiceResponse<>(clientView.getUsername(), clientView.getCurrentRequest().getUuid(), null);
+            clientView.notifyObservers(choiceResponse);
+        });
+
         overlays.forEach(ObservableOverlay::clearListeners);
         overlays.clear();
         overlaysContainer.getChildren().clear();
