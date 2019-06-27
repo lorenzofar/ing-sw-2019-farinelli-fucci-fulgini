@@ -125,7 +125,10 @@ public class PlayerBoard extends Observable<ModelUpdate> {
         if(count < 0){
             throw new IllegalArgumentException("Number of damage tokens cannot be negative");
         }
-        damages.addAll(Collections.nCopies(count, shooter));
+        while(damages.size() < MAX_DAMAGES && count > 0) {
+            damages.add(shooter);
+            count--;
+        }
         notifyObservers(new PlayerBoardUpdate(generateView(), player.getName()));
     }
 

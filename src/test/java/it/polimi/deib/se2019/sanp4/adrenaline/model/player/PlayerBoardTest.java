@@ -1,6 +1,5 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.model.player;
 
-import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.BoardView;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.PlayerBoardView;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionCardEnum;
@@ -108,6 +107,17 @@ public class PlayerBoardTest {
         oldDamages.forEach(currentDamages::remove);
         assertEquals(damage, currentDamages.size());
         currentDamages.forEach(p -> assertEquals(p, shooter));
+    }
+
+    @Test
+    public void addDamage_hugeDamageProvided_DamageCountShouldNotExceedMax() {
+        Player player = new Player(validName, validActionCard, validColor);
+        Player shooter = new Player("Another player", validActionCard, validColor);
+        PlayerBoard playerBoard = new PlayerBoard(player);
+        int damage = 773;
+        playerBoard.addDamage(shooter, damage);
+        List<Player> currentDamages = playerBoard.getDamages();
+        assertEquals(PlayerBoard.MAX_DAMAGES, currentDamages.size());
     }
 
     /* ===== MARKS ===== */
