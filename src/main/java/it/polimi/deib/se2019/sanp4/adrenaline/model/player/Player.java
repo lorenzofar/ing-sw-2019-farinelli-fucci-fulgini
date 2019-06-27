@@ -6,7 +6,9 @@ import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.NotEnoughAmmoExc
 import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.PlayerView;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.Observable;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.Observer;
-import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.*;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.ActionCardUpdate;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.ModelUpdate;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.PlayerUpdate;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionCardCreator;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionCardEnum;
@@ -559,7 +561,7 @@ public class Player extends Observable<ModelUpdate> implements Observer<ModelUpd
      *
      * @return player's state
      */
-    public PlayerState getState() {
+    public synchronized PlayerState getState() {
         return state;
     }
 
@@ -568,7 +570,7 @@ public class Player extends Observable<ModelUpdate> implements Observer<ModelUpd
      *
      * @param state The object representing the state
      */
-    public void setState(PlayerState state) {
+    public synchronized void setState(PlayerState state) {
         if (state == null) {
             throw new NullPointerException("State cannot be null");
         }

@@ -4,9 +4,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.common.ColoredObject;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.*;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.*;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.WeaponCard;
-import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.WeaponCreator;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,60 +29,60 @@ public class ModelManager implements ModelUpdateVisitor {
         actionCards = new HashMap<>();
     }
 
-    public Map<String, PlayerView> getPlayers() {
-        return players;
+    public synchronized Map<String, PlayerView> getPlayers() {
+        return new HashMap<>(players);
     }
 
-    public Map<String, ColoredObject> getPlayersColors() {
+    public synchronized Map<String, ColoredObject> getPlayersColors() {
         return players.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().getColor()));
     }
 
-    public void setPlayers(Map<String, PlayerView> players) {
+    public synchronized void setPlayers(Map<String, PlayerView> players) {
         if (players != null && !players.entrySet().contains(null)) {
             this.players = players;
         }
     }
 
-    public MatchView getMatch() {
+    public synchronized MatchView getMatch() {
         return match;
     }
 
-    public void setMatch(MatchView match) {
+    public synchronized void setMatch(MatchView match) {
         this.match = match;
     }
 
-    public BoardView getBoard() {
+    public synchronized BoardView getBoard() {
         return board;
     }
 
-    public void setBoard(BoardView board) {
+    public synchronized void setBoard(BoardView board) {
         this.board = board;
     }
 
-    public Map<String, PlayerBoardView> getPlayerBoards() {
-        return playerBoards;
+    public synchronized Map<String, PlayerBoardView> getPlayerBoards() {
+        return new HashMap<>(playerBoards);
     }
 
-    public PlayerTurnView getCurrentTurn() {
+    public synchronized PlayerTurnView getCurrentTurn() {
         return currentTurn;
     }
 
-    public ActionCardView getActionCard(String player) {
+    public synchronized ActionCardView getActionCard(String player) {
         return actionCards.getOrDefault(player, null);
     }
 
     @Override
-    public void handle(LobbyUpdate update) {
+    public synchronized void handle(LobbyUpdate update) {
         // Do nothing, since this update is only used to render the list of connected players
     }
 
     @Override
-    public void handle(ReloadUpdate update) {
+    public synchronized void handle(ReloadUpdate update) {
         //TODO: Implement this method
     }
 
     @Override
-    public void handle(PlayerUpdate update) {
+    public synchronized void handle(PlayerUpdate update) {
         // Retrieve the player view associated to the player
         if (players.containsKey(update.getPlayer().getName())) {
             players.put(update.getPlayer().getName(), update.getPlayer());
@@ -92,42 +90,42 @@ public class ModelManager implements ModelUpdateVisitor {
     }
 
     @Override
-    public void handle(ActionCardUpdate update) {
+    public synchronized void handle(ActionCardUpdate update) {
         if (actionCards.containsKey(update.getPlayer())) {
             actionCards.put(update.getPlayer(), update.getActionCard());
         }
     }
 
     @Override
-    public void handle(SquareUpdate update) {
+    public synchronized void handle(SquareUpdate update) {
         SquareView square = board.getSquare(update.getSquare().getLocation());
         board.setSquare(square);
     }
 
     @Override
-    public void handle(MatchUpdate update) {
+    public synchronized void handle(MatchUpdate update) {
         this.match = update.getMatch();
     }
 
     @Override
-    public void handle(PlayerBoardUpdate update) {
+    public synchronized void handle(PlayerBoardUpdate update) {
         if (playerBoards.containsKey(update.getPlayer())) {
             playerBoards.put(update.getPlayer(), update.getPlayerBoard());
         }
     }
 
     @Override
-    public void handle(DrawnWeaponUpdate update) {
+    public synchronized void handle(DrawnWeaponUpdate update) {
         //TODO: Implement this method
     }
 
     @Override
-    public void handle(DrawnPowerupUpdate update) {
+    public synchronized void handle(DrawnPowerupUpdate update) {
         //TODO: Implement this method
     }
 
     @Override
-    public void handle(InitialUpdate update) {
+    public synchronized void handle(InitialUpdate update) {
         this.actionCards = update.getActionCards();
         this.board = update.getBoard();
         this.currentTurn = update.getCurrentTurn();
@@ -137,12 +135,12 @@ public class ModelManager implements ModelUpdateVisitor {
     }
 
     @Override
-    public void handle(PlayerTurnUpdate update) {
+    public synchronized void handle(PlayerTurnUpdate update) {
         currentTurn = update.getPlayerTurn();
     }
 
     @Override
-    public void handle(WeaponCardUpdate update) {
+    public synchronized void handle(WeaponCardUpdate update) {
         // First determine who is the owner of the weapon card
         Optional<String> weaponCardOwner = players.entrySet().stream().filter(entry ->
                 entry.getValue().getWeapons().contains(update.getWeaponCard())
@@ -158,12 +156,12 @@ public class ModelManager implements ModelUpdateVisitor {
     }
 
     @Override
-    public void handle(MatchOperationalStateUpdate update) {
+    public synchronized void handle(MatchOperationalStateUpdate update) {
         //TODO: Implement this method
     }
 
     @Override
-    public void handle(LeaderboardUpdate update) {
+    public synchronized void handle(LeaderboardUpdate update) {
         //TODO: Implement this method
     }
 }

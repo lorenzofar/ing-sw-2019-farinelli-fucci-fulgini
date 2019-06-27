@@ -70,7 +70,7 @@ public class BoardView implements Serializable {
      *
      * @return The matrix representing the squares
      */
-    public SquareView[][] getSquares() {
+    public synchronized SquareView[][] getSquares() {
         return squares;
     }
 
@@ -79,7 +79,7 @@ public class BoardView implements Serializable {
      *
      * @param squares The matrix representing the squares
      */
-    public void setSquares(SquareView[][] squares) {
+    public synchronized void setSquares(SquareView[][] squares) {
         if (squares != null) {
             this.squares = squares;
         }
@@ -91,7 +91,7 @@ public class BoardView implements Serializable {
      * @param location The object representing the location
      * @return The object representing the square
      */
-    public SquareView getSquare(CoordPair location) {
+    public synchronized SquareView getSquare(CoordPair location) {
         if (location == null) {
             return null;
         }
@@ -102,7 +102,12 @@ public class BoardView implements Serializable {
         }
     }
 
-    public void setSquare(SquareView square) {
+    /**
+     * Sets the provided square in the board, updating the one that is currently in its location
+     *
+     * @param square The object representing the square
+     */
+    public synchronized void setSquare(SquareView square) {
         if (square != null) {
             try {
                 squares[square.getLocation().getX()][square.getLocation().getY()] = square;
@@ -112,14 +117,29 @@ public class BoardView implements Serializable {
         }
     }
 
+    /**
+     * Retrieves a map indicating the spawn square for each AmmoCube color
+     *
+     * @return The map associating each color to the corresponding spawn square
+     */
     public Map<AmmoCube, CoordPair> getSpawnPoints() {
         return spawnPoints;
     }
 
+    /**
+     * Sets the spawn squares corresponding to each AmmoCube color
+     *
+     * @param spawnPoints The map associating each color to the corresponding spawn square
+     */
     public void setSpawnPoints(Map<AmmoCube, CoordPair> spawnPoints) {
         this.spawnPoints = spawnPoints;
     }
 
+    /**
+     * Retrieves the identifier of the board
+     *
+     * @return The numerical identifier of the board
+     */
     public int getId() {
         return id;
     }

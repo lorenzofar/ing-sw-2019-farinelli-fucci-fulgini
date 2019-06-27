@@ -21,23 +21,35 @@ public class WeaponCard extends Observable<ModelUpdate> implements Serializable 
 
     private static final long serialVersionUID = 2151651272278660643L;
 
-    /** A unique identifier of the weapon */
+    /**
+     * A unique identifier of the weapon
+     */
     private String id;
 
-    /** A human-readable identifier of the weapon */
+    /**
+     * A human-readable identifier of the weapon
+     */
     private String name;
 
-    /** The list of ammo cubes the user has to pay to use the weapon */
+    /**
+     * The list of ammo cubes the user has to pay to use the weapon
+     */
     private List<AmmoCubeCost> cost;
 
-    /** The list of effects provided by the weapon */
+    /**
+     * The list of effects provided by the weapon
+     */
     private List<EffectDescription> effects;
 
-    /** Current state of this weapon */
+    /**
+     * Current state of this weapon
+     */
     private WeaponCardState state;
 
-    /** Default constructor only to be used by Jackson */
-    private WeaponCard(){
+    /**
+     * Default constructor only to be used by Jackson
+     */
+    private WeaponCard() {
         /* Provide some reasonable default values */
         cost = new ArrayList<>(0); /* Default cost is zero */
         effects = new ArrayList<>(0);
@@ -46,19 +58,20 @@ public class WeaponCard extends Observable<ModelUpdate> implements Serializable 
 
     /**
      * Creates a new weapon card
-     * @param id The identifier of the weapon
-     * @param name The name of the weapon, not null and not an empty string
-     * @param cost The list of objects representing the cost of the weapon, not null
+     *
+     * @param id      The identifier of the weapon
+     * @param name    The name of the weapon, not null and not an empty string
+     * @param cost    The list of objects representing the cost of the weapon, not null
      * @param effects The list of objects representing description of the effects in this weapon, not null
      */
-    public WeaponCard(String id, String name, List<AmmoCubeCost> cost, List<EffectDescription> effects){
-        if(id == null || name == null || cost == null || effects == null){
+    public WeaponCard(String id, String name, List<AmmoCubeCost> cost, List<EffectDescription> effects) {
+        if (id == null || name == null || cost == null || effects == null) {
             throw new NullPointerException("Found null parameters");
         }
-        if(id.isEmpty()){
+        if (id.isEmpty()) {
             throw new IllegalArgumentException("Weapon id cannot be empty");
         }
-        if(name.isEmpty()){
+        if (name.isEmpty()) {
             throw new IllegalArgumentException("Weapon name cannot be empty");
         }
         this.id = id;
@@ -71,9 +84,10 @@ public class WeaponCard extends Observable<ModelUpdate> implements Serializable 
     /**
      * Reloads the weapon by calling the reload method in {@link WeaponCardState}
      * and notifies all the observers
+     *
      * @param player the player who reloads the weapon
      */
-    public void reload(Player player){
+    public void reload(Player player) {
         this.state.reload(player, this);
         this.notifyObservers(new WeaponCardUpdate(this));
     }
@@ -82,7 +96,7 @@ public class WeaponCard extends Observable<ModelUpdate> implements Serializable 
      * Unloads the weapon by calling the unload method in {@link WeaponCardState}
      * and notifies all the observers
      */
-    public void unload(){
+    public void unload() {
         this.state.unload(this);
         this.notifyObservers(new WeaponCardUpdate(this));
     }
@@ -91,13 +105,14 @@ public class WeaponCard extends Observable<ModelUpdate> implements Serializable 
      * Resets the weapon by calling the reset method in {@link WeaponCardState}
      * and notifies all the observer
      */
-    public void reset(){
+    public void reset() {
         this.state.reset(this);
         this.notifyObservers(new WeaponCardUpdate(this));
     }
 
     /**
      * Returns whether this weapon can be used to shoot or not
+     *
      * @return {@code true} if the weapon can shoot, {@code false} otherwise
      */
     @JsonIgnore
@@ -107,6 +122,7 @@ public class WeaponCard extends Observable<ModelUpdate> implements Serializable 
 
     /**
      * Retrieved the identifier of the weapon
+     *
      * @return The identifier of the weapon
      */
     public String getId() {
@@ -115,6 +131,7 @@ public class WeaponCard extends Observable<ModelUpdate> implements Serializable 
 
     /**
      * Retrieves the name of the weapon
+     *
      * @return The name of the weapon
      */
     public String getName() {
@@ -123,6 +140,7 @@ public class WeaponCard extends Observable<ModelUpdate> implements Serializable 
 
     /**
      * Retrieves the cost of the weapon
+     *
      * @return The list of objects representing the cost of the weapon
      */
     public List<AmmoCubeCost> getCost() {
@@ -131,40 +149,43 @@ public class WeaponCard extends Observable<ModelUpdate> implements Serializable 
 
     /**
      * Retrieves the effects provided by the weapon
+     *
      * @return The list of objects describing the effects
      */
-    public List<EffectDescription> getEffects(){
+    public List<EffectDescription> getEffects() {
         return Collections.unmodifiableList(effects);
     }
 
     /**
      * Retrieves the loading state of the weapon
+     *
      * @return The object representing the state
      */
-    public WeaponCardState getState(){
+    public synchronized WeaponCardState getState() {
         return state;
     }
 
     /**
      * Sets the loading state of the weapon
+     *
      * @param state The object representing the state
      * @return The object representing the new state
      */
-    public WeaponCardState setState(WeaponCardState state){
+    public synchronized WeaponCardState setState(WeaponCardState state) {
         this.state = state;
         this.notifyObservers(new WeaponCardUpdate(this));
         return this.state;
     }
 
     @Override
-    public boolean equals(Object obj){
-        if(obj == this) return true;
-        if(!(obj instanceof WeaponCard)) return false;
-        return ((WeaponCard)obj).getId().equals(this.id);
+    public boolean equals(Object obj) {
+        if (obj == this) return true;
+        if (!(obj instanceof WeaponCard)) return false;
+        return ((WeaponCard) obj).getId().equals(this.id);
     }
 
     @Override
-    public int hashCode(){
+    public int hashCode() {
         return Objects.hash(id);
     }
- }
+}
