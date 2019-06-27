@@ -10,10 +10,9 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class StandardScoreManagerTest {
 
@@ -21,7 +20,7 @@ public class StandardScoreManagerTest {
     private static MatchConfiguration validConfig;
     private static Set<String> validNames;
     private static int skulls = 5;
-    private static StandardScoreManager scoreManager = new StandardScoreManager();
+    private static StandardScoreManager scoreManager;
 
     @BeforeClass
     public static void classSetup() {
@@ -42,9 +41,10 @@ public class StandardScoreManagerTest {
     }
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         /* Use match creator to create a mock match */
         match = MatchCreator.createMatch(validNames, validConfig);
+        scoreManager = new StandardScoreManager();
     }
 
     public void shoot(Player shooter, Player shot, int damage) {
@@ -53,52 +53,56 @@ public class StandardScoreManagerTest {
 
     @Test
     public void scoreTurn_scoreFinal_ShouldSucceed() {
-        shoot(match.getPlayerByName("mango"),
-                match.getPlayerByName("papaya"),
-                4);
-        shoot(match.getPlayerByName("durian"),
-                match.getPlayerByName("papaya"),
-                5);
-        shoot(match.getPlayerByName("avocado"),
-                match.getPlayerByName("papaya"),
-                5);
+        Player papaya = match.getPlayerByName("papaya");
+        Player mango = match.getPlayerByName("mango");
+        Player avocado = match.getPlayerByName("avocado");
+        Player durian = match.getPlayerByName("durian");
+
+        shoot(mango, papaya,4);
+        shoot(durian, papaya, 5);
+        shoot(avocado, papaya, 5);
         scoreManager.scoreTurn(match);
 
-        assertEquals(8, match.getPlayerByName("durian").getScore());
-        assertEquals(7, match.getPlayerByName("mango").getScore());
-        assertEquals(4, match.getPlayerByName("avocado").getScore());
-        assertEquals(0, match.getPlayerByName("papaya").getScore());
+        assertEquals(8, durian.getScore());
+        assertEquals(7, mango.getScore());
+        assertEquals(4, avocado.getScore());
+        assertEquals(0, papaya.getScore());
+        assertEquals("avocado", match.getKillshotsTrack().get(0).getName());
 
         scoreManager.scoreFinal(match);
 
-        assertEquals(8, match.getPlayerByName("durian").getScore());
-        assertEquals(7, match.getPlayerByName("mango").getScore());
-        assertEquals(12, match.getPlayerByName("avocado").getScore());
-        assertEquals(0, match.getPlayerByName("papaya").getScore());
+        assertEquals(8, durian.getScore());
+        assertEquals(7, mango.getScore());
+        assertEquals(12, avocado.getScore());
+        assertEquals(0, papaya.getScore());
     }
 
     @Test
     public void noShots_ScoreFinal_shouldSucceed() {
+        Player papaya = match.getPlayerByName("papaya");
+        Player mango = match.getPlayerByName("mango");
+        Player avocado = match.getPlayerByName("avocado");
+        Player durian = match.getPlayerByName("durian");
+
         scoreManager.scoreTurn(match);
         scoreManager.scoreFinal(match);
 
-        assertEquals(0, match.getPlayerByName("durian").getScore());
-        assertEquals(0, match.getPlayerByName("mango").getScore());
-        assertEquals(0, match.getPlayerByName("avocado").getScore());
-        assertEquals(0, match.getPlayerByName("papaya").getScore());
+        assertEquals(0, durian.getScore());
+        assertEquals(0, mango.getScore());
+        assertEquals(0, avocado.getScore());
+        assertEquals(0, papaya.getScore());
     }
 
     @Test
     public void tieBreaker_shouldSucceed() {
-        shoot(match.getPlayerByName("mango"),
-                match.getPlayerByName("papaya"),
-                11);
-        shoot(match.getPlayerByName("durian"),
-                match.getPlayerByName("mango"),
-                12);
-        shoot(match.getPlayerByName("avocado"),
-                match.getPlayerByName("durian"),
-                11);
+        Player papaya = match.getPlayerByName("papaya");
+        Player mango = match.getPlayerByName("mango");
+        Player avocado = match.getPlayerByName("avocado");
+        Player durian = match.getPlayerByName("durian");
+
+        shoot(mango, papaya, 11);
+        shoot(durian, mango, 12);
+        shoot(avocado, durian,11);
         scoreManager.scoreTurn(match);
         assertEquals(9, match.getPlayerByName("durian").getScore());
         assertEquals(9, match.getPlayerByName("mango").getScore());

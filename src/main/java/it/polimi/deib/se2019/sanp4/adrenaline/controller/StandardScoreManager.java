@@ -16,7 +16,6 @@ import static java.util.Map.Entry.comparingByValue;
 public class StandardScoreManager implements ScoreManager {
 
     private static final int[] POINTS = {8, 6, 4, 2, 1, 1};
-    private static final ScoresIterator scoresIterator = new ScoresIterator(POINTS, 0);
 
     /**
      * Assign scores to players according to the damage boards of the provided players
@@ -114,7 +113,7 @@ public class StandardScoreManager implements ScoreManager {
                 .collect(Collectors.toMap(
                         p -> p, /* Key is the player itself */
                         /* Value is the sum of tokens */
-                        p -> p.getPerformedKillshots() + 2 * p.getPerformedOverkills()));
+                        p -> p.getPerformedKillshots() + p.getPerformedOverkills()));
 
         // Resolve ties by giving points to the first player performing the kill,
         // the others get removed from tokensCount
@@ -143,6 +142,7 @@ public class StandardScoreManager implements ScoreManager {
         Map<Player, Integer> killshotTrackScores = new HashMap<>();
 
         // Compute extra points for performed kills
+        ScoresIterator scoresIterator = new ScoresIterator(POINTS, 0);
         tokenCount.entrySet()
                 .stream()
                 .sorted(Collections.reverseOrder(comparingByValue()))
