@@ -57,31 +57,33 @@ public class GUIRenderer extends Application implements UIRenderer {
      *
      * @param fxmlResource The path of the FXML file to display
      * @param fullScreen   {@code true} if the scene should be set in full screen, {@code false} otherwise
-     * @return {@code true} if the scene has been set succesfully, {@code false} otherwise
      */
-    private boolean showScene(String fxmlResource, boolean fullScreen) {
+    private void showScene(String fxmlResource, boolean fullScreen) {
         if (fxmlResource == null) {
-            return false;
+            return;
         }
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource(fxmlResource));
         try {
             Scene scene = new Scene(loader.load());
-            Platform.runLater(() -> {
-                this.stage.setMaximized(fullScreen);
-                this.stage.setResizable(!fullScreen);
-                this.stage.setScene(scene);
-            });
-
+            // If a stage is already present, we close it
+            if (this.stage != null) {
+                this.stage.close();
+            }
+            this.stage = new Stage();
+            this.stage.setTitle("Adrenaline");
+            this.stage.setMaximized(fullScreen);
+            this.stage.setResizable(!fullScreen);
+            Platform.runLater(() ->
+                    this.stage.setScene(scene));
             currentController = loader.getController();
             currentController.setClientView(clientView);
             currentController.setStage(this.stage);
-            return true;
+            Platform.runLater(this.stage::show);
         } catch (IOException e) {
             // An error occurred loading the scene
             logger.log(Level.SEVERE, "Cannot load scene with resource {0}", fxmlResource);
             logger.log(Level.SEVERE, "Exception when loading scene", e);
-            return false;
         }
     }
 
@@ -97,8 +99,6 @@ public class GUIRenderer extends Application implements UIRenderer {
         clientView.setRenderer(this);
 
         showScene("/fxml/login.fxml", false);
-
-        Platform.runLater(primaryStage::show);
     }
 
     /**
@@ -163,14 +163,14 @@ public class GUIRenderer extends Application implements UIRenderer {
      */
     @Override
     public void showMatchScreen() {
-        showScene("/fxml/game.fxml", true);
         Platform.runLater(() -> {
             try {
-                GameController gameController = (GameController) currentController;
-                Platform.runLater(gameController::buildMatchScreen);
-            } catch (Exception e) {
+                ((GameController) currentController).refreshMatchScreen();
+            } catch (ClassCastException e) {
+                showScene("/fxml/game.fxml", true);
+                Platform.runLater(((GameController) currentController)::buildMatchScreen);
                 // An error occurred while building the match screen
-                logger.log(Level.WARNING, "Error when showing match screen", e);
+                logger.log(Level.INFO, "Game screen was not loaded, we show it for the first time");
             }
         });
     }

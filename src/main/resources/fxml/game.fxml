@@ -1,14 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import it.polimi.deib.se2019.sanp4.adrenaline.client.gui.controls.ActionsTrack?>
-<?import it.polimi.deib.se2019.sanp4.adrenaline.client.gui.controls.AmmoPane?>
-<?import it.polimi.deib.se2019.sanp4.adrenaline.client.gui.controls.PlayerOperationsTrack?>
+<?import it.polimi.deib.se2019.sanp4.adrenaline.client.gui.controls.*?>
 <?import javafx.scene.layout.*?>
-<?import it.polimi.deib.se2019.sanp4.adrenaline.client.gui.controls.MatchInfoPane?>
-<?import javafx.scene.control.Label?>
-<?import it.polimi.deib.se2019.sanp4.adrenaline.client.gui.controls.KillshotsTrack?>
-<?import it.polimi.deib.se2019.sanp4.adrenaline.client.gui.controls.PlayerBoardControl?>
-<?import it.polimi.deib.se2019.sanp4.adrenaline.client.gui.controls.WeaponsInfoPane?>
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       stylesheets="@style.css"

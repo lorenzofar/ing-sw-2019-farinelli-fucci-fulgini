@@ -102,9 +102,7 @@ public class GameController extends GUIController {
         gameContainer.setMaxWidth(gameWidth / BOARD_RATIO);
         userBoard.setMinHeight(sceneHeight * 0.2);
         userBoard.setMaxHeight(sceneHeight * 0.2);
-
     }
-
 
     @FXML
     public void initialize() {
@@ -245,13 +243,7 @@ public class GameController extends GUIController {
 
         //TODO: Finish implementing this method
 
-        // Then populate everything
-        updateBoard();
-        updateKillshotsTrack();
-        updateMatchInfo();
-        updateWeaponsInfo();
-        updateAmmoAmount();
-        updateSpawnWeapons();
+        refreshMatchScreen();
 
         // For each player, update its player board
         clientView.getModelManager().getPlayers().keySet().forEach(this::updatePlayerBoard);
@@ -282,6 +274,19 @@ public class GameController extends GUIController {
         Collection<SelectableOverlay<CoordPair>> selectableSquares = Arrays.stream(squareOverlays).flatMap(Arrays::stream).filter(Objects::nonNull).filter(overlay -> request.getChoices().contains(overlay.getData())).collect(Collectors.toList());
         // Then create a selection handler to handle the request and set it as the current one in the view
         clientView.setSelectionHandler(new SelectionHandler<CoordPair>(selectableSquares));
+    }
+
+    /**
+     * Refresh all the containers and rendered content in the screen
+     */
+    void refreshMatchScreen() {
+        // Then populate everything
+        updateBoard();
+        updateKillshotsTrack();
+        updateMatchInfo();
+        updateWeaponsInfo();
+        updateAmmoAmount();
+        updateSpawnWeapons();
     }
 
     /**
