@@ -4,9 +4,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.controller.action.GrabActionContro
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.action.MoveActionController;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.action.ReloadActionController;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.action.ShootActionController;
-import it.polimi.deib.se2019.sanp4.adrenaline.controller.match.MatchController;
-import it.polimi.deib.se2019.sanp4.adrenaline.controller.match.SpawnController;
-import it.polimi.deib.se2019.sanp4.adrenaline.controller.match.TurnController;
+import it.polimi.deib.se2019.sanp4.adrenaline.controller.match.*;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.powerups.*;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.weapons.AbstractWeapon;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.weapons.AlternativeModesWeapon;

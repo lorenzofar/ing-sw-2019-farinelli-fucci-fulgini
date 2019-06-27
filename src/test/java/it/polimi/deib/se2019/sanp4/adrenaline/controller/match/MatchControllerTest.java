@@ -2,7 +2,6 @@ package it.polimi.deib.se2019.sanp4.adrenaline.controller.match;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.ControllerFactory;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.PersistentView;
-import it.polimi.deib.se2019.sanp4.adrenaline.controller.StandardScoreManager;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.answerers.FirstChoiceAnswer;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.ModelTestUtil;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.Board;

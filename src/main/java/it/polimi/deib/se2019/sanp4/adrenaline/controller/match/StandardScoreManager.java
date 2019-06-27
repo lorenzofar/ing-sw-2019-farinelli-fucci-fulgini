@@ -1,4 +1,4 @@
-package it.polimi.deib.se2019.sanp4.adrenaline.controller;
+package it.polimi.deib.se2019.sanp4.adrenaline.controller.match;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.model.match.Match;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
