@@ -9,10 +9,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.model.match.CardStack;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.match.Match;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /** A specialized class representing a square available as spawn points and that contain weapon cards*/
@@ -114,11 +111,16 @@ public class SpawnSquare extends Square {
         CardStack<WeaponCard> stack = match.getWeaponStack();
 
         /* Draw the cards until the square is full */
-        while (!isFull()) {
-            // We bypass the check for duplicates:
-            // if the card is already on this square, it is certainly not in the stack
-            weaponCards.add(stack.draw());
+        try {
+            while (!isFull()) {
+                // We bypass the check for duplicates:
+                // if the card is already on this square, it is certainly not in the stack
+                weaponCards.add(stack.draw());
+            }
+        } catch (EmptyStackException e) {
+            /* No more weapons to draw, totally fine */
         }
+
         this.notifyObservers(new SquareUpdate(this.generateView()));
     }
 

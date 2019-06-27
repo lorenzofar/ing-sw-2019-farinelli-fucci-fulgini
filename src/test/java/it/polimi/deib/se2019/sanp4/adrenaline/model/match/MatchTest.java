@@ -286,6 +286,25 @@ public class MatchTest {
         squares.forEach(sq -> assertTrue(sq.isFull()));
     }
 
+    @Test
+    public void refillBoard_emptyStacks_shouldNotTrow() throws Exception {
+        /* Create a new match with empty stacks */
+        Match match = MatchCreator.createMatch(validNames, validConfig);
+        match.setAmmoStack(new AutoShufflingStack<>(Collections.singleton(AmmoCardCreator.getAmmoCard(0))));
+        match.setWeaponStack(new AutoShufflingStack<>(Collections.singleton(WeaponCreator
+                .createWeaponCard("cyberblade"))));
+
+        /* Empty out the stacks */
+        match.getAmmoStack().draw();
+        match.getWeaponStack().draw();
+
+        try {
+            mockMatch.refillBoard();
+        } catch (EmptyStackException e) {
+            fail();
+        }
+    }
+
     /* ========== KILLSHOT TRACK =========== */
 
     @Test(expected = NullPointerException.class)

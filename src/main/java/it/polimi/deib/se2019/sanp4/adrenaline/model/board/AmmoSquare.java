@@ -7,6 +7,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.model.match.CardStack;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.match.Match;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
 
+import java.util.EmptyStackException;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -71,11 +72,16 @@ public class AmmoSquare extends Square {
      */
     @Override
     public void refill(Match match) {
-        if (ammoCard == null) {
-            /* Get the ammo card stack */
-            CardStack<AmmoCard> stack = match.getAmmoStack();
-            insertAmmo(stack.draw());
+        try {
+            if (ammoCard == null) {
+                /* Get the ammo card stack */
+                CardStack<AmmoCard> stack = match.getAmmoStack();
+                insertAmmo(stack.draw());
+            }
+        } catch (EmptyStackException e) {
+            /* No more ammo cards to draw */
         }
+
         this.notifyObservers(new SquareUpdate(this.generateView()));
     }
 
