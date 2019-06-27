@@ -27,10 +27,14 @@ import java.util.logging.Logger;
  */
 public class ControllerImpl implements Controller {
 
-    /** Associated model instance */
+    /**
+     * Associated model instance
+     */
     private final Model model;
 
-    /** A map with (username, view) */
+    /**
+     * A map with (username, view)
+     */
     private final Map<String, PersistentView> views;
 
     private final ConcurrentMap<String, PersistentView> waitingToRejoin;
@@ -39,6 +43,7 @@ public class ControllerImpl implements Controller {
 
     /**
      * Creates the controller for a new instance of the game
+     *
      * @param remotes a map with (username, remote view)
      */
     public ControllerImpl(Map<String, RemoteView> remotes) {
@@ -120,7 +125,7 @@ public class ControllerImpl implements Controller {
      * if it has been detected that the player is disconnected
      *
      * @param username username of the player
-     * @param remote     remote view of the player
+     * @param remote   remote view of the player
      * @return {@code true} if the reconnection succeeded, {@code false} otherwise
      */
     @Override
@@ -132,10 +137,13 @@ public class ControllerImpl implements Controller {
 
     /**
      * Forces interruption of the running game
+     * <p>
+     * Disconnects all views
+     * </p>
      */
     @Override
     public void shutdown() {
-        /* TODO: Implement this method */
+        views.values().forEach(PersistentView::disconnectRemoteView);
     }
 
     /**
@@ -154,8 +162,9 @@ public class ControllerImpl implements Controller {
      * Creates a persistent view which wraps the given remote view,
      * then adds it to the map, subscribes it to the model for updates
      * and sets the callbacks
+     *
      * @param username username of the player the view belongs to
-     * @param remote the remote view of the player
+     * @param remote   the remote view of the player
      */
     private void setupPersistentView(String username, RemoteView remote) {
         PersistentView view = new PersistentViewImpl(username, remote);
@@ -182,7 +191,7 @@ public class ControllerImpl implements Controller {
     /**
      * Takes the views that have been reconnected, but are waiting to rejoin the match,
      * unsuspends the relative players and sends them the initial update.
-     *
+     * <p>
      * This is given as a callback to the match controller after executing the turn
      */
     private void rejoinReconnectedPlayers() {
