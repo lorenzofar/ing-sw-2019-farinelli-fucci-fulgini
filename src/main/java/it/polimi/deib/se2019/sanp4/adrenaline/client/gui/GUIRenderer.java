@@ -226,14 +226,19 @@ public class GUIRenderer extends Application implements UIRenderer {
     }
 
     @Override
-    public void setIdleScreen() {
+    public void showLeaderBoard() {
         //TODO: Implement this method
+    }
+
+    @Override
+    public void setIdleScreen() {
+        showMatchScreen();
         this.stage.setOpacity(0.4);
     }
 
     @Override
     public void setActiveScreen() {
-        //TODO: Implement this method
+        showMatchScreen();
     }
 
     /**

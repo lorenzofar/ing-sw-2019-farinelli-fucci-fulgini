@@ -14,8 +14,13 @@ import java.io.Serializable;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.NoSuchElementException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ClientView extends RemoteObservable<ViewEvent> implements RemoteView {
+
+    private static final Logger logger = Logger.getLogger(ClientView.class.getName());
+
     /**
      * The username of the player owning the view
      */
@@ -222,24 +227,34 @@ public class ClientView extends RemoteObservable<ViewEvent> implements RemoteVie
 
     @Override
     public void selectScene(ViewScene scene) {
+        // We first cancel a pending selection
         renderer.cancelSelection();
-
-        // If the scene is changed to an operational one while we are waiting to rejoin, we show the match screen
-        if (this.scene == ViewScene.WAITING_REJOIN && (scene == ViewScene.TURN_IDLE || scene == ViewScene.TURN_PLAYING)) {
-            renderer.showMatchScreen();
-        }
         // Then we update our reference to the current scene
         this.scene = scene;
-        if (scene == ViewScene.LOBBY) {
-            renderer.showLobby();
-        } else if (scene == ViewScene.DISCONNECTED) {
-            renderer.showDisconnectedScreen();
-        } else if (scene == ViewScene.TURN_IDLE) {
-            renderer.setIdleScreen();
-        } else if (scene == ViewScene.TURN_PLAYING) {
-            renderer.setActiveScreen();
+        switch (scene) {
+            case LOGIN:
+                break;
+            case LOBBY:
+                renderer.showLobby();
+                break;
+            case WAITING_REJOIN:
+                renderer.showRejoinScreen();
+                break;
+            case TURN_PLAYING:
+                renderer.setActiveScreen();
+                break;
+            case TURN_IDLE:
+                renderer.setIdleScreen();
+                break;
+            case FINAL_SCORES:
+                renderer.showLeaderBoard();
+                break;
+            case DISCONNECTED:
+                renderer.showDisconnectedScreen();
+                break;
+            default:
+                logger.log(Level.SEVERE, "Unexpected scene {0}", scene.name());
         }
-        //TODO: Implement more scenes
     }
 
     @Override

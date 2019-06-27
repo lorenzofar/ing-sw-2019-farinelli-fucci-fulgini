@@ -311,6 +311,11 @@ public class CLIRenderer implements UIRenderer {
     }
 
     @Override
+    public void showLeaderBoard() {
+        //TODO: Implement this method
+    }
+
+    @Override
     public void setIdleScreen() {
         // We start the command parser
         commandsParser.setAlive(true);

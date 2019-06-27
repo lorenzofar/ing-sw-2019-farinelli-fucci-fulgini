@@ -13,21 +13,9 @@ public enum ViewScene {
      */
     LOBBY("Lobby"),
     /**
-     * The match is about to start
-     */
-    MATCH_STARTING("Match starting"),
-    /**
-     * Match start has been cancelled (e.g. lack of players)
-     */
-    MATCH_START_CANCELLED("Match cancelled"),
-    /**
      * The view has been reconnected to the server but is waiting to rejoin the match
      */
     WAITING_REJOIN("Waiting rejoin"),
-    /**
-     * The view is asking the player to select a spawn point
-     */
-    SPAWN_FORM("Spawn point selection"),
     /**
      * Scene of the current player
      */
