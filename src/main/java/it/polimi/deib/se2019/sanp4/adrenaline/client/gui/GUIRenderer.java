@@ -75,6 +75,11 @@ public class GUIRenderer extends Application implements UIRenderer {
             this.stage.setMaximized(fullScreen);
             this.stage.setResizable(!fullScreen);
 
+            this.stage.setOnCloseRequest((WindowEvent t) -> {
+                Platform.exit();
+                System.exit(0);
+            });
+
             this.stage.maximizedProperty().addListener((o, oldVal, newVal) ->
                     this.stage.setMaximized(true)
             );
@@ -94,11 +99,6 @@ public class GUIRenderer extends Application implements UIRenderer {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        primaryStage.setTitle("Adrenaline");
-        primaryStage.setOnCloseRequest((WindowEvent t) -> {
-            Platform.exit();
-            System.exit(0);
-        });
         this.stage = primaryStage;
         this.clientView = new ClientView();
         clientView.setRenderer(this);

@@ -115,12 +115,12 @@ public class ModelManager implements ModelUpdateVisitor {
 
     @Override
     public synchronized void handle(DrawnWeaponUpdate update) {
-        //TODO: Implement this method
+        // Here we do nothing since we do not have to update anything
     }
 
     @Override
     public synchronized void handle(DrawnPowerupUpdate update) {
-        //TODO: Implement this method
+        // Here we do nothing since we do not have to update anything
     }
 
     @Override

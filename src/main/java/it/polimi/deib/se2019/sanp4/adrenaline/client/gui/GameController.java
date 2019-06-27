@@ -369,14 +369,16 @@ public class GameController extends GUIController {
             // TODO: Create a board control for the player?
             return;
         }
-        // Eventually update the information
-        playerBoardControl.setPlayerName(player);
-        playerBoardControl.setBoardColor((PlayerColor) clientView.getModelManager().getPlayersColors().get(player));
-        playerBoardControl.setBoardState(playerBoardView.getState());
-        playerBoardControl.setDamageTokens(
-                playerBoardView.getDamages().stream().map(shooter -> clientView.getModelManager().getPlayersColors().get(shooter)).collect(Collectors.toList()));
-        playerBoardControl.setPlayerDeaths(clientView.getModelManager().getPlayerBoards().get(player).getDeaths());
-        playerBoardControl.setPlayerMarks(clientView.getModelManager().getPlayerBoards().get(player).getMarks());
+        Platform.runLater(() -> {
+            // Eventually update the information
+            playerBoardControl.setPlayerName(player);
+            playerBoardControl.setBoardColor((PlayerColor) clientView.getModelManager().getPlayersColors().get(player));
+            playerBoardControl.setBoardState(playerBoardView.getState());
+            playerBoardControl.setDamageTokens(
+                    playerBoardView.getDamages().stream().map(shooter -> clientView.getModelManager().getPlayersColors().get(shooter)).collect(Collectors.toList()));
+            playerBoardControl.setPlayerDeaths(clientView.getModelManager().getPlayerBoards().get(player).getDeaths());
+            playerBoardControl.setPlayerMarks(clientView.getModelManager().getPlayerBoards().get(player).getMarks());
+        });
     }
 
     /**
@@ -400,6 +402,9 @@ public class GameController extends GUIController {
      * @param location The location of the square in cartesian coordinates
      */
     void updateSquareOverlay(CoordPair location) {
+        if (squareOverlays == null) {
+            return;
+        }
         SquareOverlay squareOverlay = squareOverlays[location.getX()][location.getY()];
         SquareView squareView = clientView.getModelManager().getBoard().getSquare(location);
         // Check whether the square is an ammo square

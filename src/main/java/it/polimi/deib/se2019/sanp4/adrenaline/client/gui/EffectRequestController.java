@@ -30,7 +30,7 @@ public class EffectRequestController extends RequestController<EffectDescription
         if (request.isOptional()) {
             choices.add(null);
         }
-        for (EffectDescription effect : request.getChoices()) {
+        for (EffectDescription effect : choices) {
             EffectSelectionOverlay overlay = new EffectSelectionOverlay();
             overlay.setEffect(effect);
             overlay.enable();

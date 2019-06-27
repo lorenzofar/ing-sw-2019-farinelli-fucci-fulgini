@@ -34,8 +34,8 @@ public abstract class SquareOverlay extends SelectableOverlay<CoordPair> {
      * @param squareContent The pane in which to put the content into
      */
     void fillPlayers(Map<String, ColoredObject> players, GridPane squareContent) {
-        // First compute the count of elements already present in the content to avoid overlaps
-        int i = squareContent.getChildren().size();
+        int i = 0;
+        boolean contentAlreadyPresent = !squareContent.getChildren().isEmpty();
         for (Map.Entry<String, ColoredObject> entry : players.entrySet()) {
             // Create a new pawn for the player, filling it with its color
             Circle playerPawn = new Circle(PLAYER_PAWN_RADIUS, Color.web(entry.getValue().getHexCode()));
@@ -43,7 +43,7 @@ public abstract class SquareOverlay extends SelectableOverlay<CoordPair> {
             playerPawn.getStyleClass().addAll("glossy", "shadowed");
             // Then set its row and column indexes
             GridPane.setColumnIndex(playerPawn, i % SQUARE_COLS);
-            GridPane.setRowIndex(playerPawn, i / SQUARE_COLS);
+            GridPane.setRowIndex(playerPawn, (i / SQUARE_COLS) + (contentAlreadyPresent ? 1 : 0));
             // And add to the pane
             squareContent.getChildren().add(playerPawn);
             i++;

@@ -61,7 +61,7 @@ public class AmmoSquareOverlay extends SquareOverlay {
     private void updateAmmoCardImage() {
         squareContent.getChildren().remove(ammoCardImage);
         String ammoCardPath = ammoCard == null ? "/images/ammo/ammo_null.png" : String.format("/images/ammo/ammo_%d.png", ammoCard.getId());
-        ammoCardImage.setImage(new Image(ammoCardPath, 36, 36, true, true));
+        ammoCardImage.setImage(new Image(ammoCardPath, 24, 24, true, true));
         squareContent.getChildren().add(ammoCardImage);
     }
 

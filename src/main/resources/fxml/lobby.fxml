@@ -26,7 +26,7 @@
         <Image url="@../adrenaline_title.png"/>
     </ImageView>
 
-    <AnchorPane>
+    <StackPane alignment="CENTER">
         <VBox fx:id="connectedPlayersContainer" spacing="10">
             <Label
                     styleClass="title-text"
@@ -34,7 +34,6 @@
             <Label
                     text="The game will start once enough players are connected"/>
 
-            <!-- TODO: Add list of connected players -->
             <ListView
                     fx:id="connectedPlayersListView"
                     GridPane.rowIndex="1">
@@ -50,7 +49,6 @@
             <Label
                     text="The game is starting soon"/>
         </VBox>
-    </AnchorPane>
-    <!-- TODO: Add indicators for reamining time  when the players count is sufficient -->
+    </StackPane>
 
 </VBox>

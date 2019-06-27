@@ -79,6 +79,4 @@
     <HBox fx:id="bottomRow" GridPane.rowIndex="1" spacing="8">
         <PlayerBoardControl fx:id="userBoard" styleClass="shadowed"/>
     </HBox>
-    <!-- TODO: Add player boards and fix bindings after addition -->
-    <!-- TODO: Fix position and layout pf operations track, after having added all the remaining controls -->
 </VBox>
