@@ -193,8 +193,12 @@ public class ServerImpl implements SocketServer, RemoteServer, Runnable {
      */
     @Override
     public void playerLogout(String username) {
-        /* Check whether the player is logged in */
-        /* TODO: Tell the controller to disconnect him */
+        /* Check if the player is in a match */
+        Controller controller = playerMatches.get(username);
+        if(controller != null) {
+            /* Try to disconnect the player */
+            controller.disconnectRemoteView(username);
+        }
     }
 
     /**
@@ -260,14 +264,26 @@ public class ServerImpl implements SocketServer, RemoteServer, Runnable {
 
     /* ========== GETTERS ============= */
 
+    /**
+     * Returns the TCP server socket used to accept connections
+     * @return The TCP server socket used to accept connections
+     */
     public ServerSocket getServerSocket() {
         return serverSocket;
     }
 
+    /**
+     * Returns the Lobby used to triage incoming players until a match can start
+     * @return The lobby
+     */
     public Lobby getLobby() {
         return lobby;
     }
 
+    /**
+     * Returns a map containing, for each player, the controller he's currently playing in
+     * @return A map with the controller of the match he's playing in
+     */
     public ConcurrentMap<String, Controller> getPlayerMatches() {
         return playerMatches;
     }
