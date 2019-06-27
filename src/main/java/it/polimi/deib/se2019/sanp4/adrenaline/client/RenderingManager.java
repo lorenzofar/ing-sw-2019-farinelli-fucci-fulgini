@@ -18,28 +18,6 @@ public class RenderingManager implements ModelUpdateVisitor {
     }
 
     @Override
-    public void handle(AddedWeaponUpdate update) {
-        if (clientView.getScene().isGameScene()) {
-            clientView.getRenderer().refreshOwnedWeapons();
-        }
-    }
-
-    @Override
-    public void handle(DamageUpdate update) {
-        if (clientView.getScene().isGameScene()) {
-            clientView.getRenderer().refreshPlayerBoard(update.getShot());
-        }
-    }
-
-    @Override
-    public void handle(KillUpdate update) {
-        // Refresh the player board of the killed player
-        if (clientView.getScene().isGameScene()) {
-            clientView.getRenderer().refreshPlayerBoard(update.getKilled());
-        }
-    }
-
-    @Override
     public void handle(LobbyUpdate update) {
         if (clientView.getScene() == ViewScene.LOBBY) {
             clientView.getRenderer().updateLobby(update.getWaitingPlayers(), update.isStarting());
@@ -47,29 +25,7 @@ public class RenderingManager implements ModelUpdateVisitor {
     }
 
     @Override
-    public void handle(OverkillUpdate update) {
-        if (clientView.getScene().isGameScene()) {
-            clientView.getRenderer().refreshPlayerBoard(update.getKilled());
-        }
-    }
-
-    @Override
-    public void handle(PlayerMoveUpdate update) {
-        if (clientView.getScene().isGameScene()) {
-            // Refresh the game board to show the
-            clientView.getRenderer().refreshGameBoard(update.getStart(), update.getEnd());
-        }
-    }
-
-    @Override
     public void handle(ReloadUpdate update) {
-        if (clientView.getScene().isGameScene()) {
-            clientView.getRenderer().refreshOwnedWeapons();
-        }
-    }
-
-    @Override
-    public void handle(RemovedWeaponUpdate update) {
         if (clientView.getScene().isGameScene()) {
             clientView.getRenderer().refreshOwnedWeapons();
         }
@@ -109,13 +65,6 @@ public class RenderingManager implements ModelUpdateVisitor {
             if (clientView.getModelManager().getBoard().getSpawnPoints().containsValue(update.getSquare().getLocation())) {
                 clientView.getRenderer().refreshSpawnWeapons();
             }
-        }
-    }
-
-    @Override
-    public void handle(BoardUpdate update) {
-        if (clientView.getScene().isGameScene()) {
-            clientView.getRenderer().refreshGameBoard();
         }
     }
 
@@ -182,5 +131,10 @@ public class RenderingManager implements ModelUpdateVisitor {
         if (clientView.getScene().isGameScene()) {
             //TODO: Implement this method
         }
+    }
+
+    @Override
+    public void handle(LeaderboardUpdate update) {
+        //TODO: Implement this method
     }
 }

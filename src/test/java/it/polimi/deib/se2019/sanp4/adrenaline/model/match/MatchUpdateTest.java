@@ -2,12 +2,11 @@ package it.polimi.deib.se2019.sanp4.adrenaline.model.match;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.FullCapacityException;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.Observer;
-import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.AddedWeaponUpdate;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.ModelUpdate;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.PlayerUpdate;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.ModelTestUtil;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.SpawnSquare;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.WeaponCard;
-import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,12 +30,6 @@ public class MatchUpdateTest {
 
     @Mock
     private static Observer<ModelUpdate> observer;
-
-    @Mock
-    private static Player mockplayer;
-
-    @Mock
-    private static AddedWeaponUpdate update;
 
     private static WeaponCard weaponCard;
 
@@ -83,6 +76,6 @@ public class MatchUpdateTest {
         mockMatch.getPlayerByName("bzoto").addObserver(mockMatch);
         mockMatch.getPlayerByName("bzoto").addWeapon(weaponCard);
 
-        verify(observer).update(any(AddedWeaponUpdate.class));
+        verify(observer).update(any(PlayerUpdate.class));
     }
 }

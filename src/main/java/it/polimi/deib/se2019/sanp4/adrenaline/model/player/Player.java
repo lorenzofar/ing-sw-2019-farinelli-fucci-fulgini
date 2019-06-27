@@ -351,7 +351,7 @@ public class Player extends Observable<ModelUpdate> implements Observer<ModelUpd
         }
         weapons.add(weapon);
         weapon.addObserver(this);
-        notifyObservers(new AddedWeaponUpdate(this.getName(), weapon.getId()));
+        notifyObservers(new PlayerUpdate(this.generateView()));
     }
 
     /**
@@ -371,9 +371,8 @@ public class Player extends Observable<ModelUpdate> implements Observer<ModelUpd
             throw new CardNotFoundException(String.format("The weapon \"%s\" does not belong to the user", weaponId));
         }
         weapons.remove(weaponCard.get());
-        notifyObservers(new RemovedWeaponUpdate(this.getName(), weaponId));
+        notifyObservers(new PlayerUpdate(this.generateView()));
         weaponCard.get().removeObserver(this);
-
         weaponCard.get().getState().reset(weaponCard.get()); // Resets the weapon card
         return weaponCard.get();
     }
@@ -395,7 +394,7 @@ public class Player extends Observable<ModelUpdate> implements Observer<ModelUpd
         }
 
         weapons.remove(weapon);
-        notifyObservers(new RemovedWeaponUpdate(this.getName(), weapon.getId()));
+        notifyObservers(new PlayerUpdate(this.generateView()));
         weapon.removeObserver(this);
         weapon.getState().reset(weapon);
         return weapon;

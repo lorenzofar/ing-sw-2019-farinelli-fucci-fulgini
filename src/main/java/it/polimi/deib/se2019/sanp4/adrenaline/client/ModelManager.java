@@ -74,76 +74,13 @@ public class ModelManager implements ModelUpdateVisitor {
     }
 
     @Override
-    public void handle(AddedWeaponUpdate update) {
-        PlayerView playerView = players.get(update.getPlayer());
-        if (playerView == null) {
-            return;
-        }
-        try {
-            WeaponCard weaponCard = WeaponCreator.createWeaponCard(update.getWeapon());
-            playerView.getWeapons().add(weaponCard);
-        } catch (IOException ignore) {
-            // Ignore error
-        }
-    }
-
-    @Override
-    public void handle(DamageUpdate update) {
-        //TODO: Implement this method
-    }
-
-    @Override
-    public void handle(KillUpdate update) {
-        PlayerBoardView playerBoardView = playerBoards.get(update.getKilled());
-        if (playerBoardView == null) {
-            return;
-        }
-        playerBoardView.setDeaths(update.getDeaths());
-    }
-
-    @Override
     public void handle(LobbyUpdate update) {
         // Do nothing, since this update is only used to render the list of connected players
     }
 
     @Override
-    public void handle(OverkillUpdate update) {
-        //TODO: Implement this method
-    }
-
-    @Override
-    public void handle(PlayerMoveUpdate update) {
-        if (update.getStart() != null) {
-            SquareView start = board.getSquare(update.getStart());
-            if (start == null) {
-                return;
-            }
-            start.removePlayer(update.getPlayer());
-        }
-        SquareView end = board.getSquare(update.getEnd());
-        if (end == null) {
-            return;
-        }
-        end.addPlayer(update.getPlayer());
-    }
-
-    @Override
     public void handle(ReloadUpdate update) {
         //TODO: Implement this method
-    }
-
-    @Override
-    public void handle(RemovedWeaponUpdate update) {
-        PlayerView playerView = players.get(update.getPlayer());
-        if (playerView == null) {
-            return;
-        }
-        // We check whether the card is present in the player's hand
-        Optional<WeaponCard> weaponCard = playerView.getWeapons().stream().filter(card -> card.getId().equals(update.getWeapon())).findFirst();
-        if (!weaponCard.isPresent()) {
-            return;
-        }
-        playerView.getWeapons().remove(weaponCard.get());
     }
 
     @Override
@@ -165,11 +102,6 @@ public class ModelManager implements ModelUpdateVisitor {
     public void handle(SquareUpdate update) {
         SquareView square = board.getSquare(update.getSquare().getLocation());
         board.setSquare(square);
-    }
-
-    @Override
-    public void handle(BoardUpdate update) {
-        this.board = update.getBoard();
     }
 
     @Override
@@ -227,6 +159,11 @@ public class ModelManager implements ModelUpdateVisitor {
 
     @Override
     public void handle(MatchOperationalStateUpdate update) {
+        //TODO: Implement this method
+    }
+
+    @Override
+    public void handle(LeaderboardUpdate update) {
         //TODO: Implement this method
     }
 }

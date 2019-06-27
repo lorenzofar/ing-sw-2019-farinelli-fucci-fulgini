@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.PlayerBoardView;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.Observable;
-import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.DamageUpdate;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.ModelUpdate;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.PlayerBoardUpdate;
 
@@ -127,7 +126,7 @@ public class PlayerBoard extends Observable<ModelUpdate> {
             throw new IllegalArgumentException("Number of damage tokens cannot be negative");
         }
         damages.addAll(Collections.nCopies(count, shooter));
-        notifyObservers(new DamageUpdate(shooter.getName(), player.getName(), count));
+        notifyObservers(new PlayerBoardUpdate(generateView(), player.getName()));
     }
 
     /**
