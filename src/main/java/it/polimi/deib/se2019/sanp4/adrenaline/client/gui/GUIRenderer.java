@@ -17,6 +17,7 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
 
 import java.io.IOException;
@@ -101,16 +102,21 @@ public class GUIRenderer extends Application implements UIRenderer {
     /**
      * Spawns a new windows with the provided title and showing the provided FXML file
      *
-     * @param resource The path of the FXML file
-     * @param title    The title of the window
+     * @param resource    The path of the FXML file
+     * @param title       The title of the window
+     * @param isCloseable {@code true} if the window can be closed, {@code false} otherwise
      * @return The controller associated to the newly created window
      */
-    GUIController showNewWindow(String resource, String title) {
+    GUIController showNewWindow(String resource, String title, boolean isCloseable) {
         try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(getClass().getResource(resource));
             Stage newStage = new Stage();
             newStage.setTitle(title);
+            if (!isCloseable) {
+                // If the window cannot be closed, we remove buttons
+                newStage.initStyle(StageStyle.UNDECORATED);
+            }
             Scene newScene = new Scene(loader.load());
             Platform.runLater(() -> newStage.setScene(newScene));
             ((GUIController) loader.getController()).setClientView(clientView);
@@ -170,7 +176,7 @@ public class GUIRenderer extends Application implements UIRenderer {
     @Override
     public void showDrawnWeapon(WeaponCard weapon) {
         Platform.runLater(() -> {
-            ImageViewerController imageViewerController = (ImageViewerController) showNewWindow("/fxml/imageViewer.fxml", "New weapon");
+            ImageViewerController imageViewerController = (ImageViewerController) showNewWindow("/fxml/imageViewer.fxml", "New weapon", true);
             imageViewerController.setCaption("You have just drawn this weapon:");
             imageViewerController.setImage(String.format("/images/weapons/%s.png", weapon.getId()));
         });
@@ -179,7 +185,7 @@ public class GUIRenderer extends Application implements UIRenderer {
     @Override
     public void showDrawnPowerup(PowerupCard powerup) {
         Platform.runLater(() -> {
-            ImageViewerController imageViewerController = (ImageViewerController) showNewWindow("/fxml/imageViewer.fxml", "New powerup");
+            ImageViewerController imageViewerController = (ImageViewerController) showNewWindow("/fxml/imageViewer.fxml", "New powerup", true);
             imageViewerController.setCaption("You have just drawn this powerup:");
             imageViewerController.setImage(String.format("/images/powerups/%s_%s.png", powerup.getType().name().toLowerCase(), powerup.getCubeColor().name().toLowerCase()));
         });
@@ -347,7 +353,7 @@ public class GUIRenderer extends Application implements UIRenderer {
     public void handle(ActionRequest request) {
         Platform.runLater(() -> {
             try {
-                ActionRequestController actionRequestController = (ActionRequestController) showNewWindow("/fxml/actionSelectionWindow.fxml", "Action selection");
+                ActionRequestController actionRequestController = (ActionRequestController) showNewWindow("/fxml/actionSelectionWindow.fxml", "Action selection", false);
                 if (actionRequestController != null) {
                     actionRequestController.setup(request);
                 }
@@ -361,7 +367,7 @@ public class GUIRenderer extends Application implements UIRenderer {
     public void handle(BoardRequest request) {
         Platform.runLater(() -> {
             try {
-                BoardRequestController boardRequestController = (BoardRequestController) showNewWindow("/fxml/BoardConfig.fxml", "Board configuration");
+                BoardRequestController boardRequestController = (BoardRequestController) showNewWindow("/fxml/BoardConfig.fxml", "Board configuration", false);
                 if (boardRequestController != null) {
                     boardRequestController.setup(request);
                 }
@@ -375,7 +381,7 @@ public class GUIRenderer extends Application implements UIRenderer {
     public void handle(PlayerOperationRequest request) {
         Platform.runLater(() -> {
             try {
-                PlayerOperationRequestController operationRequestController = (PlayerOperationRequestController) showNewWindow("/fxml/playerOperationSelectionWindow.fxml", "Operation selection");
+                PlayerOperationRequestController operationRequestController = (PlayerOperationRequestController) showNewWindow("/fxml/playerOperationSelectionWindow.fxml", "Operation selection", false);
                 if (operationRequestController != null) {
                     operationRequestController.setup(request);
                 }
@@ -389,7 +395,7 @@ public class GUIRenderer extends Application implements UIRenderer {
     public void handle(PlayerRequest request) {
         Platform.runLater(() -> {
             try {
-                PlayerRequestController playerRequestController = (PlayerRequestController) showNewWindow("/fxml/playerSelectionWindow.fxml", "Select player");
+                PlayerRequestController playerRequestController = (PlayerRequestController) showNewWindow("/fxml/playerSelectionWindow.fxml", "Select player", false);
                 if (playerRequestController != null) {
                     playerRequestController.setup(request);
                 }
@@ -403,7 +409,7 @@ public class GUIRenderer extends Application implements UIRenderer {
     public void handle(PowerupCardRequest request) {
         Platform.runLater(() -> {
             try {
-                PowerupRequestController powerupRequestController = (PowerupRequestController) showNewWindow("/fxml/powerupSelectionWindow.fxml", "Select powerup");
+                PowerupRequestController powerupRequestController = (PowerupRequestController) showNewWindow("/fxml/powerupSelectionWindow.fxml", "Select powerup", false);
                 if (powerupRequestController != null) {
                     powerupRequestController.setup(request);
                 }
@@ -417,7 +423,7 @@ public class GUIRenderer extends Application implements UIRenderer {
     public void handle(SkullCountRequest request) {
         Platform.runLater(() -> {
             try {
-                SkullsRequestController skullsRequestController = (SkullsRequestController) showNewWindow("/fxml/skullsSelectionWindow.fxml", "Skulls configuration");
+                SkullsRequestController skullsRequestController = (SkullsRequestController) showNewWindow("/fxml/skullsSelectionWindow.fxml", "Skulls configuration", false);
                 if (skullsRequestController != null) {
                     skullsRequestController.setup(request);
                 }
@@ -443,7 +449,7 @@ public class GUIRenderer extends Application implements UIRenderer {
     public void handle(WeaponCardRequest request) {
         Platform.runLater(() -> {
             try {
-                WeaponCardRequestController weaponCardRequestController = (WeaponCardRequestController) showNewWindow("/fxml/weaponCardSelectionWindow.fxml", "Select Weapon");
+                WeaponCardRequestController weaponCardRequestController = (WeaponCardRequestController) showNewWindow("/fxml/weaponCardSelectionWindow.fxml", "Select Weapon", false);
                 if (weaponCardRequestController != null) {
                     weaponCardRequestController.setup(request);
                 }
@@ -457,7 +463,7 @@ public class GUIRenderer extends Application implements UIRenderer {
     public void handle(EffectRequest request) {
         Platform.runLater(() -> {
             try {
-                EffectRequestController effectRequestController = (EffectRequestController) showNewWindow("/fxml/effectSelectionWindow.fxml", "Select effect");
+                EffectRequestController effectRequestController = (EffectRequestController) showNewWindow("/fxml/effectSelectionWindow.fxml", "Select effect", false);
                 if (effectRequestController != null) {
                     effectRequestController.setup(request);
                 }

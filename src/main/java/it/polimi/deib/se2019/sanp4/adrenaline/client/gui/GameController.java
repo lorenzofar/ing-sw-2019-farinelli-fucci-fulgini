@@ -236,7 +236,7 @@ public class GameController extends GUIController {
         // and make it open a new window with the image of the selected weapon card
         weaponsInfoPane.setImageViewer(weaponId -> {
             // Show a new window for the image viewer
-            ImageViewerController imageViewerController = (ImageViewerController) ((GUIRenderer) clientView.getRenderer()).showNewWindow("/fxml/imageViewer.fxml", "Weapon details");
+            ImageViewerController imageViewerController = (ImageViewerController) ((GUIRenderer) clientView.getRenderer()).showNewWindow("/fxml/imageViewer.fxml", "Weapon details", true);
             imageViewerController.setImage(String.format("/images/weapons/%s.png", weaponId));
         });
 
