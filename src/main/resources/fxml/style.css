@@ -158,3 +158,21 @@ TextField {
 .glossy {
     -fx-effect: innershadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 5, 5);
 }
+
+/* ===== LEADERBOARD ===== */
+.leaderboard-winner-entry {
+    -fx-background-color: -fx-accent-color-translucent;
+    -fx-border-width: 2;
+    -fx-border-color: -fx-accent-color;
+    -fx-border-radius: 5;
+}
+
+.leaderboard-position-label {
+    -fx-font-size: 11pt;
+}
+
+.leaderboard-score-label {
+    -fx-text-fill: -fx-accent-color;
+    -fx-font-size: 12pt;
+    -fx-font-weight: bold;
+}

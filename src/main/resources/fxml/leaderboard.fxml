@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.VBox?>
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="it.polimi.deib.se2019.sanp4.adrenaline.client.gui.LeaderboardController"
+      stylesheets="@style.css"
+      styleClass="dark-background"
+      spacing="8"
+      prefHeight="400.0" prefWidth="450.0">
+
+    <padding>
+        <Insets top="25" right="25" bottom="10" left="25"/>
+    </padding>
+
+    <Label styleClass="title-text" text="Final scores"/>
+    <Label text="The match is over, here is the final leaderboard"/>
+
+    <VBox fx:id="leaderBoardContainer" spacing="12">
+        <padding>
+            <Insets top="12"/>
+        </padding>
+    </VBox>
+
+</VBox>

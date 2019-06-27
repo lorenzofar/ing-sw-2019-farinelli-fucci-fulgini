@@ -234,12 +234,18 @@ public class GUIRenderer extends Application implements UIRenderer {
 
     @Override
     public void showLeaderBoard() {
-        //TODO: Implement this method
+        Platform.runLater(() -> showScene("/fxml/leaderboard.fxml", true));
     }
 
     @Override
     public void updateLeaderBoard(Leaderboard leaderboard) {
-        //TODO: Implement this method
+        Platform.runLater(() -> {
+            try {
+                ((LeaderboardController) currentController).updateLeaderBoard(leaderboard);
+            } catch (Exception e) {
+                logger.log(Level.WARNING, "Error when updating leaderboard scene");
+            }
+        });
     }
 
     @Override
