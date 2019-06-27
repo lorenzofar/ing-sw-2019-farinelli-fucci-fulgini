@@ -271,6 +271,21 @@ public class PersistentViewImplTest {
     }
 
     @Test
+    public void sendChoiceRequest_timerNotRunning_shouldReturnCancelledChoice() throws IOException {
+        PersistentViewImpl view = new PersistentViewImpl(username, remoteView);
+
+        /* Do not start timer to trigger cancelled choice */
+
+        /* Send request */
+        CompletableChoice<String> choice = view.sendChoiceRequest(sampleRequest);
+        view.stopTimer();
+
+        assertTrue(choice.isCancelled());
+        assertFalse(view.getRequestManager().hasPendingRequests());
+        verify(remoteView, never()).performRequest(any(StringRequest.class)); /* Verify no remote method call */
+    }
+
+    @Test
     public void sendChoiceRequest_duplicate_shouldReturnCancelledChoice() {
         PersistentViewImpl view = new PersistentViewImpl(username, remoteView);
 
@@ -387,6 +402,9 @@ public class PersistentViewImplTest {
 
         view.update(modelUpdate);
         verify(remoteView, never()).update(modelUpdate);
+
+        view.updateSync(modelUpdate);
+        verify(remoteView, never()).update(modelUpdate);
     }
 
     @Test
@@ -455,7 +473,7 @@ public class PersistentViewImplTest {
     }
 
     @Test
-    public void visit_invalidChoice_shouldIgnore() {
+    public void visit_invalidChoice_remoteConnected_shouldResend() throws Exception {
         PersistentViewImpl view = new PersistentViewImpl(username, remoteView);
 
         view.startTimer(() -> null, 10, TimeUnit.SECONDS); /* Start timer to prevent cancelled choice */
@@ -470,5 +488,32 @@ public class PersistentViewImplTest {
 
         assertFalse(choice.isCompleted());
         assertTrue(view.getRequestManager().hasPendingRequests());
+
+        /* Check that it has been sent twice */
+        verify(remoteView, times(2)).performRequest(sampleRequest);
+    }
+
+    @Test
+    public void visit_invalidChoice_faultyRemote_netWorkFaultNotDetected_shouldDetect() throws Exception {
+        PersistentViewImpl view = new PersistentViewImpl(username, remoteView);
+
+        view.startTimer(() -> null, 10, TimeUnit.SECONDS); /* Start timer to prevent cancelled choice */
+
+        /* Send request */
+        CompletableChoice<String> choice = view.sendChoiceRequest(sampleRequest);
+
+        view.stopTimer();
+
+        /* Now the remote changes behaviour because it throws */
+        doThrow(new IOException()).when(remoteView).performRequest(any(StringRequest.class));
+
+        ChoiceResponse<String> res = new ChoiceResponse<>("sender", sampleRequest.getUuid(), "invalid");
+        view.visit(res);
+
+        assertTrue(choice.isCancelled());
+        assertFalse(view.getRequestManager().hasPendingRequests());
+
+        /* Check that the fault has been detected */
+        assertTrue(view.hasNetworkFault());
     }
 }

@@ -155,7 +155,7 @@ public class RequestManager {
      * @apiNote This method is package-private because external classes are not encouraged to manipulate
      * the choices directly, because it prevents them from being automatically taken out of the pending map
      */
-    CompletableChoice getPendingChoice(String uuid) {
+    public CompletableChoice getPendingChoice(String uuid) {
         return pendingChoices.get(uuid);
     }
 }
