@@ -74,6 +74,11 @@ public class GUIRenderer extends Application implements UIRenderer {
             this.stage.setTitle("Adrenaline");
             this.stage.setMaximized(fullScreen);
             this.stage.setResizable(!fullScreen);
+
+            this.stage.maximizedProperty().addListener((o, oldVal, newVal) ->
+                    this.stage.setMaximized(true)
+            );
+
             Platform.runLater(() ->
                     this.stage.setScene(scene));
             currentController = loader.getController();
@@ -235,7 +240,7 @@ public class GUIRenderer extends Application implements UIRenderer {
 
     @Override
     public void showLeaderBoard() {
-        Platform.runLater(() -> showScene("/fxml/leaderboard.fxml", true));
+        Platform.runLater(() -> showScene("/fxml/leaderboard.fxml", false));
     }
 
     @Override
@@ -255,7 +260,6 @@ public class GUIRenderer extends Application implements UIRenderer {
     @Override
     public void setIdleScreen() {
         showMatchScreen();
-        this.stage.setOpacity(0.4);
     }
 
     @Override
