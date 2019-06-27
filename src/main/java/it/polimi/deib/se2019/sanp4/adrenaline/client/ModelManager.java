@@ -98,8 +98,7 @@ public class ModelManager implements ModelUpdateVisitor {
 
     @Override
     public synchronized void handle(SquareUpdate update) {
-        SquareView square = board.getSquare(update.getSquare().getLocation());
-        board.setSquare(square);
+        board.setSquare(update.getSquare());
     }
 
     @Override

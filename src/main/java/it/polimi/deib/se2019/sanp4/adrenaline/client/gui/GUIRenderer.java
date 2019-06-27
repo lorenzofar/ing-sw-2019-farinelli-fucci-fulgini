@@ -8,6 +8,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.model.items.powerup.PowerupCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.WeaponCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.match.Leaderboard;
 import it.polimi.deib.se2019.sanp4.adrenaline.view.MessageType;
+import it.polimi.deib.se2019.sanp4.adrenaline.view.ViewScene;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -67,9 +68,9 @@ public class GUIRenderer extends Application implements UIRenderer {
         try {
             Scene scene = new Scene(loader.load());
             Platform.runLater(() -> {
-                this.stage.setScene(scene);
                 this.stage.setMaximized(fullScreen);
                 this.stage.setResizable(!fullScreen);
+                this.stage.setScene(scene);
             });
 
             currentController = loader.getController();
@@ -239,6 +240,9 @@ public class GUIRenderer extends Application implements UIRenderer {
 
     @Override
     public void updateLeaderBoard(Leaderboard leaderboard) {
+        if (clientView.getScene() != ViewScene.FINAL_SCORES) {
+            clientView.selectScene(ViewScene.FINAL_SCORES);
+        }
         Platform.runLater(() -> {
             try {
                 ((LeaderboardController) currentController).updateLeaderBoard(leaderboard);
