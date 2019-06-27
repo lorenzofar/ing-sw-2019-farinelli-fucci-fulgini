@@ -1,7 +1,8 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.controller.match;
 
-import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.LeaderboardUpdate;
-import it.polimi.deib.se2019.sanp4.adrenaline.controller.*;
+import it.polimi.deib.se2019.sanp4.adrenaline.controller.ControllerFactory;
+import it.polimi.deib.se2019.sanp4.adrenaline.controller.PersistentView;
+import it.polimi.deib.se2019.sanp4.adrenaline.controller.StandardScoreManager;
 import it.polimi.deib.se2019.sanp4.adrenaline.controller.answerers.FirstChoiceAnswer;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.ModelTestUtil;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.Board;
@@ -14,9 +15,15 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.stubbing.Answer;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 import static it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionCardEnum.*;
 import static it.polimi.deib.se2019.sanp4.adrenaline.model.player.PlayerState.SUSPENDED;
@@ -34,6 +41,8 @@ public class MatchControllerTest {
     private static int skulls = 5;
     private static Map<String, PersistentView> views;
     private static MatchController matchController;
+    @Mock
+    private static TurnController turnController;
 
     @BeforeClass
     public static void classSetup() {
@@ -69,6 +78,7 @@ public class MatchControllerTest {
         ControllerFactory controllerFactory = mock(ControllerFactory.class);
         when(controllerFactory.createSpawnController()).thenReturn(new SpawnController(match));
         when(controllerFactory.createScoreManager()).thenReturn(new StandardScoreManager());
+        when(controllerFactory.createTurnController(any())).thenReturn(turnController);
 
         /* Create the instance of the match controller */
         matchController = new MatchController(match, views, controllerFactory);
@@ -314,7 +324,7 @@ public class MatchControllerTest {
     /* =========================== END MATCH ============================= */
 
     @Test
-    public void endMatch_emptyKillshotTrack_shouldEndNormally() throws Exception {
+    public void endMatch_emptyKillshotTrack_shouldEndNormally() {
         /* End the match */
         matchController.endMatch();
 
@@ -351,6 +361,88 @@ public class MatchControllerTest {
         for (PersistentView v : views.values()) {
             verify(v).selectScene(ViewScene.FINAL_SCORES);
         }
+    }
+
+    /* =========== RUN MATCH ================= */
+
+    @Test
+    public void runMatch_belowMinPlayersAfterTwoTurns_shouldEnd() throws Exception {
+        /* Simulate disconnection during the fourth turn */
+        doAnswer(new Answer() {
+            private int turnCount = 0;
+            @Override
+            public Object answer(InvocationOnMock invocationOnMock) {
+                if (turnCount == 3) {
+                    match.suspendPlayer("bzoto");
+                    match.suspendPlayer("loSqualo");
+                    match.suspendPlayer("zoniMyLord");
+                }
+                turnCount++;
+                return null;
+            }
+        }).when(turnController).runTurn();
+
+        Runnable callback = mock(Runnable.class);
+        matchController.setAfterTurnCallback(callback);
+
+        /* Run the match */
+        matchController.runMatch();
+
+        /* Check that the after turn callback has been called after each turn */
+        verify(callback, times(4)).run();
+    }
+
+    @Test
+    public void runMatch_reachesFinalTurn_shouldEnd() throws Exception {
+        /* Add the player of each turn to the killshot track */
+        doAnswer(new Answer() {
+            private Player previousPlayer;
+            @Override
+            public Object answer(InvocationOnMock invocationOnMock) {
+                Player currentPlayer = match.getCurrentTurn().getTurnOwner();
+                if (previousPlayer != null && match.getSkulls() > 0) {
+                    match.addKillshot(previousPlayer);
+                    currentPlayer.addPerformedKillshot();
+                }
+                previousPlayer = currentPlayer;
+                return null;
+            }
+        }).when(turnController).runTurn();
+
+        Runnable callback = mock(Runnable.class);
+        matchController.setAfterTurnCallback(callback);
+
+        /* Run the match */
+        matchController.runMatch();
+
+        /* Check that the after turn callback has been called after each turn */
+        verify(callback, times(skulls + views.size())).run();
+    }
+
+    @Test
+    public void runMatch_reachesFinalTurn_noCallback_shouldNeverCall() throws Exception {
+        /* Add the player of each turn to the killshot track */
+        doAnswer(new Answer() {
+            private Player previousPlayer;
+            @Override
+            public Object answer(InvocationOnMock invocationOnMock) {
+                Player currentPlayer = match.getCurrentTurn().getTurnOwner();
+                if (previousPlayer != null && match.getSkulls() > 0) {
+                    match.addKillshot(previousPlayer);
+                    currentPlayer.addPerformedKillshot();
+                }
+                previousPlayer = currentPlayer;
+                return null;
+            }
+        }).when(turnController).runTurn();
+
+        Runnable callback = mock(Runnable.class);
+
+        /* Run the match */
+        matchController.runMatch();
+
+        /* Check that the after turn callback has been called after each turn */
+        verify(callback, never()).run();
     }
 
     /* =========== RECONNECTION CALLBACK ================= */

@@ -115,7 +115,7 @@ public class MatchController {
      *
      * @throws InterruptedException If the thread gets interrupted
      */
-    void runCurrentTurn() throws InterruptedException {
+    private void runCurrentTurn() throws InterruptedException {
         /* Select the current turn */
         PlayerTurn turn = match.getCurrentTurn();
 
