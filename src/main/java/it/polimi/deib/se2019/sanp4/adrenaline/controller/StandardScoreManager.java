@@ -106,20 +106,25 @@ public class StandardScoreManager implements ScoreManager {
             throw new NullPointerException("Match cannot be null");
         }
 
-        // Consider the killshot track
-        Map<Player, Integer> killshotsCount = new HashMap<>();
-        // Count how many killshots has each player performed
-        match.getKillshotsTrack().forEach(player -> killshotsCount.merge(player, 1, Integer::sum));
+        List<Player> killshotsTrack = match.getKillshotsTrack();
 
-        // Resolve ties by giving points to the first player performing the killshot,
-        // the others get removed from killshotsCount
-        // Create a set with the distinct number ok killshots
-        Set<Integer> distinctKillshotCounts = killshotsCount.values().stream()
+        // Count how many tokens each player has on the killshot track
+        Map<Player, Integer> tokenCount = match.getPlayers().stream()
+                .filter(killshotsTrack::contains)
+                .collect(Collectors.toMap(
+                        p -> p, /* Key is the player itself */
+                        /* Value is the sum of tokens */
+                        p -> p.getPerformedKillshots() + 2 * p.getPerformedOverkills()));
+
+        // Resolve ties by giving points to the first player performing the kill,
+        // the others get removed from tokensCount
+        // Create a set with the distinct number ok tokens
+        Set<Integer> distinctTokensCount = tokenCount.values().stream()
                 .filter(Objects::nonNull)
                 .collect(Collectors.toSet());
 
-        distinctKillshotCounts.forEach(count -> {
-            List<Player> playersWithSameCount = killshotsCount.entrySet()
+        distinctTokensCount.forEach(count -> {
+            List<Player> playersWithSameCount = tokenCount.entrySet()
                     .stream()
                     .filter(entry -> entry.getValue().equals(count))
                     .map(Map.Entry::getKey)
@@ -131,14 +136,14 @@ public class StandardScoreManager implements ScoreManager {
                         .findFirst().get();
                 /* Remove from killshots count all the players except the first */
                 playersWithSameCount.remove(firstKillshotShooter);
-                playersWithSameCount.forEach(killshotsCount::remove);
+                playersWithSameCount.forEach(tokenCount::remove);
             }
         });
 
         Map<Player, Integer> killshotTrackScores = new HashMap<>();
 
-        // Compute extra points for performed killshots
-        killshotsCount.entrySet()
+        // Compute extra points for performed kills
+        tokenCount.entrySet()
                 .stream()
                 .sorted(Collections.reverseOrder(comparingByValue()))
                 .map(Map.Entry::getKey)
