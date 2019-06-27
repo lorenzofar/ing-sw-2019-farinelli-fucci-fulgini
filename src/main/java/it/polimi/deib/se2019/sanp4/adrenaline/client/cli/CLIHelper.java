@@ -9,6 +9,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCubeCost;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.powerup.PowerupCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.EffectDescription;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.WeaponCard;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.match.Leaderboard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.PlayerColor;
 
 import java.io.InputStreamReader;
@@ -105,6 +106,8 @@ class CLIHelper {
     private static final String TRISTRING_TEMPLATE = "%s%s%s";
     private static final String QUADSTRING_TEMPLATE = "%s%s%s%s";
     private static final String PROMPT_TEMPLATE = ">> ";
+    private static final String LEADERBOARD_FIRST_ROW_TEMPLATE = "%2d. %s %4d";
+    private static final String LEADERBOARD_SECOND_ROW_TEMPLATE = "kill: %2d - okill: %2d - deaths: %3d";
 
     /**
      * Prints the provided text, formatting it with the provided parameters
@@ -624,6 +627,21 @@ class CLIHelper {
         }
         return text.substring(0, maxWidth);
     }
+
+    /**
+     * Adds right padding to the provided string to make it fill the provided width
+     *
+     * @param text        The string to expand
+     * @param widthToFill The width the final string has to fill
+     * @return The expanded string
+     */
+    private static String addStringPadding(String text, int widthToFill) {
+        StringBuilder paddedString = new StringBuilder(text);
+        for (int i = text.length(); i < widthToFill; i++) {
+            paddedString.append(BLANK);
+        }
+        return paddedString.toString();
+    }
     /* =================== */
 
     /**
@@ -1101,6 +1119,66 @@ class CLIHelper {
         // Then add the table bottom
         expandStringRendering(renderedTable, generateLine(HORIZONTAL_BORDER, WEAPONS_TABLE_DIM, LEFT_BOTTOM_CORNER, RIGHT_BOTTOM_CORNER));
         return renderedTable;
+    }
+
+    /**
+     * Renders the leaderboard showing the final player scores and the match:
+     * The rendered table will show information about:
+     * <ul>
+     * <li>The final position of the player</li>
+     * <li>The player's name</li>
+     * <li>The final score of the player</li>
+     * <li>The count of performed killshots</li>
+     * <li>The count of performed overkills</li>
+     * <li>The count of deaths of the player</li>
+     * </ul>
+     *
+     * @param leaderboard The object representing the leaderboard
+     * @return The textual representation of the leaderboard
+     */
+    public static List<List<String>> renderLeaderBoard(Leaderboard leaderboard) {
+        List<List<String>> renderedLeaderBoard = new ArrayList<>();
+        // First determine the maximum length of the players' names
+        final int maxNameLength = leaderboard.getEntries().stream().map(Leaderboard.Entry::getName).map(String::length).max(Integer::compareTo).orElse(0);
+        // We then compute the maximum width of the leaderboard, by taking into account:
+        // * On the first row:
+        //      * 3 characters for the player position (e.g.  2. )
+        //      * #maxNameLength for the player name
+        //      * 4 digits for the player score (e.g. 1111)
+        // * On the second row:
+        //      * 8 characters for the count of killshots (e.g. kill: 11)
+        //      * 9 characters for the count of overkills (e.g. okill: 11)
+        //      * 11 characters for the count of deaths (e.g. deaths: 111)
+
+        // We then compute the lengths of the two rows composing each entry
+        final int firstRowLength = 3 + 1 + maxNameLength + 1 + 4;
+        final int secondRowLength = 4 + 8 + 3 + 9 + 3 + 11;
+
+        // And compute the width of the leaderboard to match the maximum length of the two rows
+        final int leaderBoardWidth = Math.max(firstRowLength, secondRowLength);
+
+        // Then for each entry of the leaderboard add a new line with the formatted templates
+        int i = 0;
+        for (Leaderboard.Entry entry : leaderboard.getEntries()) {
+            expandStringRendering(renderedLeaderBoard, generateLine(BLANK, leaderBoardWidth));
+            fillLineWithText(renderedLeaderBoard.get(renderedLeaderBoard.size() - 1),
+                    String.format(LEADERBOARD_FIRST_ROW_TEMPLATE,
+                            i,
+                            addStringPadding(entry.getName(), maxNameLength + leaderBoardWidth - firstRowLength),
+                            entry.getScore()),
+                    0);
+            expandStringRendering(renderedLeaderBoard, generateLine(BLANK, leaderBoardWidth));
+            fillLineWithText(renderedLeaderBoard.get(renderedLeaderBoard.size() - 1),
+                    String.format(LEADERBOARD_SECOND_ROW_TEMPLATE,
+                            entry.getPerformedKillshots(),
+                            entry.getPerformedOverkills(),
+                            entry.getDeaths()),
+                    4);
+            expandStringRendering(renderedLeaderBoard, generateLine(BLANK, leaderBoardWidth));
+            i++;
+        }
+        // Eventually return the rendered leaderboard
+        return renderedLeaderBoard;
     }
 
     /* ===== RENDERINGS MANIPULATION ===== */

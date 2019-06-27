@@ -135,6 +135,8 @@ public class RenderingManager implements ModelUpdateVisitor {
 
     @Override
     public void handle(LeaderboardUpdate update) {
-        //TODO: Implement this method
+        if (clientView.getScene().equals(ViewScene.FINAL_SCORES)) {
+            clientView.getRenderer().updateLeaderBoard(update.getLeaderboard());
+        }
     }
 }

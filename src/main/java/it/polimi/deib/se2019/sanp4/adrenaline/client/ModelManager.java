@@ -162,6 +162,6 @@ public class ModelManager implements ModelUpdateVisitor {
 
     @Override
     public synchronized void handle(LeaderboardUpdate update) {
-        //TODO: Implement this method
+        // The leaderboard should only be rendered, hence we do not update anything
     }
 }

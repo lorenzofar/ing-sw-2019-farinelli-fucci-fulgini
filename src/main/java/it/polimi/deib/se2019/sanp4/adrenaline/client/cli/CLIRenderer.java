@@ -12,6 +12,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.model.board.CoordPair;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.powerup.PowerupCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.EffectDescription;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.WeaponCard;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.match.Leaderboard;
 import it.polimi.deib.se2019.sanp4.adrenaline.view.MessageType;
 
 import java.io.IOException;
@@ -312,7 +313,14 @@ public class CLIRenderer implements UIRenderer {
 
     @Override
     public void showLeaderBoard() {
-        //TODO: Implement this method
+        CLIHelper.clearScreen();
+        CLIHelper.printFullScreenRenderedGameElement(Collections.emptyList(), "Final scores");
+    }
+
+    @Override
+    public void updateLeaderBoard(Leaderboard leaderboard) {
+        CLIHelper.clearScreen();
+        CLIHelper.printFullScreenRenderedGameElement(CLIHelper.renderLeaderBoard(leaderboard), "Final scores");
     }
 
     @Override

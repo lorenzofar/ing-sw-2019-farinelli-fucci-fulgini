@@ -4,6 +4,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.ChoiceRequestVisit
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.CoordPair;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.powerup.PowerupCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.WeaponCard;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.match.Leaderboard;
 import it.polimi.deib.se2019.sanp4.adrenaline.view.MessageType;
 
 import java.util.Collection;
@@ -71,10 +72,17 @@ public interface UIRenderer extends ChoiceRequestVisitor {
      * Shows a screen to tell the user that he is about to rejoin the match
      */
     void showRejoinScreen();
+
     /**
      * Shows a screen to display the final scores and match stats
      */
     void showLeaderBoard();
+
+    /**
+     * Updates the content of the displayed leaderboard
+     */
+    void updateLeaderBoard(Leaderboard leaderboard);
+
     /**
      * Updates the screen when the player is in IDLE mode
      */

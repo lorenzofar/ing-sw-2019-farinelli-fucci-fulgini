@@ -36,6 +36,6 @@ public class LeaderboardUpdate extends ModelUpdate {
      */
     @Override
     public void accept(ModelUpdateVisitor visitor) {
-        /* TODO: Make the visitor accept this */
+        visitor.handle(this);
     }
 }

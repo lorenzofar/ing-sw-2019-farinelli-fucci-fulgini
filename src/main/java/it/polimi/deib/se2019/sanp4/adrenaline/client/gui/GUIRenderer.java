@@ -6,6 +6,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.*;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.CoordPair;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.powerup.PowerupCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.WeaponCard;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.match.Leaderboard;
 import it.polimi.deib.se2019.sanp4.adrenaline.view.MessageType;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -233,6 +234,11 @@ public class GUIRenderer extends Application implements UIRenderer {
 
     @Override
     public void showLeaderBoard() {
+        //TODO: Implement this method
+    }
+
+    @Override
+    public void updateLeaderBoard(Leaderboard leaderboard) {
         //TODO: Implement this method
     }
 
