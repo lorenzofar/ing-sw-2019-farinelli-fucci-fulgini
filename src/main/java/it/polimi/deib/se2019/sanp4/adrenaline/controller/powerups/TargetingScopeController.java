@@ -31,7 +31,7 @@ public class TargetingScopeController implements PowerupController {
     private static final String MESSAGE_SELECT_PLAYER = "Select the player who will get the additional damage";
 
     private static final String MESSAGE_CANT_USE = "You can't use this powerup: you haven't damaged any players" +
-            "during this turn";
+            " during this turn";
 
     private static final String MESSAGE_CANT_PAY = "You can't pay to use this powerup";
 
