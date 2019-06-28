@@ -25,13 +25,6 @@ public class RenderingManager implements ModelUpdateVisitor {
     }
 
     @Override
-    public void handle(ReloadUpdate update) {
-        if (clientView.getScene().isGameScene()) {
-            clientView.getRenderer().refreshOwnedWeapons();
-        }
-    }
-
-    @Override
     public void handle(PlayerUpdate update) {
         if (clientView.getScene().isGameScene()) {
             clientView.getRenderer().refreshPlayerBoard(update.getPlayer().getName());

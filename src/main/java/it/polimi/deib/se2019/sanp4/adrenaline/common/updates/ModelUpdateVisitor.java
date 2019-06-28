@@ -5,7 +5,6 @@ package it.polimi.deib.se2019.sanp4.adrenaline.common.updates;
  */
 public interface ModelUpdateVisitor {
     void handle(LobbyUpdate update);
-    void handle(ReloadUpdate update);
     void handle(PlayerUpdate update);
     void handle(ActionCardUpdate update);
     void handle(SquareUpdate update);

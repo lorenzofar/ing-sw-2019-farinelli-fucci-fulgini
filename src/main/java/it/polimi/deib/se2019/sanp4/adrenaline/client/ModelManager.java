@@ -77,11 +77,6 @@ public class ModelManager implements ModelUpdateVisitor {
     }
 
     @Override
-    public synchronized void handle(ReloadUpdate update) {
-        //TODO: Implement this method
-    }
-
-    @Override
     public synchronized void handle(PlayerUpdate update) {
         // Retrieve the player view associated to the player
         if (players.containsKey(update.getPlayer().getName())) {
