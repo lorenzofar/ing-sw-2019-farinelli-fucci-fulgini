@@ -5,8 +5,12 @@ import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCubeCost;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
 
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class PickupState extends WeaponCardState {
+
+    private static final Logger logger = Logger.getLogger(PickupState.class.getName());
 
     private static final long serialVersionUID = -5853062872021530478L;
 
@@ -43,7 +47,8 @@ public class PickupState extends WeaponCardState {
             weapon.setState(new LoadedState());
         }
         catch(NotEnoughAmmoException e){
-            // Here the user does not have enough ammo to pay the reload cost
+            logger.log(Level.FINE, () ->
+                    String.format("Player %s has not been able to reload weapon %s", player.getName(), weapon.getId()));
         }
     }
 }

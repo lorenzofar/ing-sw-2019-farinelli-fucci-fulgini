@@ -207,13 +207,20 @@ public class PersistentViewImpl extends RemoteObservable<ViewEvent> implements P
             remote.ping();
         } catch (IOException e) {
             /* No connectivity => we invalidate the current remote */
-            remote = null;
+            invalidateRemote();
         } catch (NullPointerException ignore) {
             /* This means that remote was already null */
         }
 
         /* If there were network problems, accept reconnection */
         if (remote == null) {
+            /* Add the listener */
+            try {
+                view.addObserver(eventSpy);
+            } catch (IOException e) {
+                return false; /* Does not respond => don't keep it */
+            }
+
             /* Substitute the remote */
             remote = view;
             /* Call the reconnection callback asynchronously */
@@ -279,13 +286,27 @@ public class PersistentViewImpl extends RemoteObservable<ViewEvent> implements P
      */
     private void foundNetworkFault() {
         /* No connectivity => we invalidate the current remote */
-        remote = null;
+        invalidateRemote();
         cancelPendingRequests();
         stopTimer();
         if (networkFaultCallback != null) {
             /* Notify the subscriber in another thread */
             callbackExecutor.submit(networkFaultCallback);
         }
+    }
+
+    /**
+     * Tries to remove the event observer from the current remote
+     * and then sets it to null, even if it couldn't remove the observer
+     */
+    private void invalidateRemote() {
+        /* Try to remove the observer */
+        try {
+            remote.removeObserver(eventSpy);
+        } catch (IOException | NullPointerException e) {
+            /* Ignore, it just doesn't respond anymore */
+        }
+        remote = null;
     }
 
     /**
