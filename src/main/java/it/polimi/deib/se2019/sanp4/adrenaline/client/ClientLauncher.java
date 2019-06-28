@@ -18,6 +18,9 @@ public class ClientLauncher {
         // Load properties
         AdrenalineProperties.getProperties().loadProperties();
 
+        // Load configuration for the logger
+        AdrenalineProperties.loadLoggerConfig("/logger_client.properties");
+
         // We then check if the user chose different modes, by looking at the provided options
         String uiMode = args.length > 0 ? args[0] : "";
 
