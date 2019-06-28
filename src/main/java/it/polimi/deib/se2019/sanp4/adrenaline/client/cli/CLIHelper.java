@@ -819,7 +819,6 @@ class CLIHelper {
      */
     public static List<List<String>> renderWeaponCard(WeaponCard weaponCard) {
         if (weaponCard == null) {
-            //TODO: Check this scenario and what to return
             return Collections.emptyList();
         }
 
@@ -856,8 +855,10 @@ class CLIHelper {
         expandStringRendering(renderedWeapon, generateLine(HORIZONTAL_BORDER, CARD_WIDTH, LEFT_VERTICAL_SEPARATOR, RIGHT_VERTICAL_SEPARATOR));
 
         // Add description of effects
-        weaponCard.getEffects().forEach(effect ->
-                renderedWeapon.addAll(renderEffectDescription(effect, false)));
+        weaponCard.getEffects().forEach(effect -> {
+            expandStringRendering(renderedWeapon, generateLine(LIGHT_HORIZONTAL_BORDER, CARD_WIDTH, LIGHT_LEFT_VERTICAL_SEPARATOR, LIGHT_RIGHT_VERTICAL_SEPARATOR));
+            renderedWeapon.addAll(renderEffectDescription(effect, false));
+        });
 
         // Then remove the last inserted line, since is a middle separator
         renderedWeapon.remove(renderedWeapon.size() - 1);
