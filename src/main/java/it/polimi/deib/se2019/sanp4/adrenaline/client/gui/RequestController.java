@@ -55,6 +55,7 @@ public abstract class RequestController<T extends Serializable> extends GUIContr
         this.stage.setOnCloseRequest((WindowEvent t) -> {
             ChoiceResponse<T> choiceResponse = new ChoiceResponse<>(clientView.getUsername(), clientView.getCurrentRequest().getUuid(), null);
             clientView.notifyObservers(choiceResponse);
+            clientView.onRequestCompleted();
         });
 
         overlays.forEach(ObservableOverlay::clearListeners);

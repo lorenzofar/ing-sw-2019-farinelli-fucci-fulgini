@@ -169,6 +169,12 @@ public class CLIRenderer implements UIRenderer {
      * Generates and prints a textual representation of the game dashboard
      */
     private void printMatchScreen() {
+
+        // If there is a request pending, we do not print the match screen
+        if (clientView.getCurrentRequest() != null) {
+            return;
+        }
+
         /*  The match screen is divided into two main panes,
             that correspond to two different contexts
             - LEFT PANE : game information
@@ -326,6 +332,7 @@ public class CLIRenderer implements UIRenderer {
     @Override
     public void setIdleScreen() {
         // We start the command parser
+        CLIHelper.cancelInput();
         commandsParser.setAlive(true);
         commandsParserExecutor.submit(commandsParser);
     }
