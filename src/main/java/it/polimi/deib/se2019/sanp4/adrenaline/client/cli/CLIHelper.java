@@ -9,9 +9,11 @@ import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCubeCost;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.powerup.PowerupCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.EffectDescription;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.WeaponCard;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.WeaponCreator;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.match.Leaderboard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.PlayerColor;
 
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.*;
 import java.util.concurrent.CancellationException;
@@ -179,7 +181,7 @@ class CLIHelper {
      *
      * @param gameElement The textual representation of the element
      */
-    public static void printRenderedGameElement(List<List<String>> gameElement) {
+    static void printRenderedGameElement(List<List<String>> gameElement) {
         if (gameElement != null) {
             gameElement.forEach(line -> println(String.join("", line)));
         }
@@ -193,7 +195,7 @@ class CLIHelper {
      * @param title       The title of the screen
      * @param description The description of the screen
      */
-    public static void printFullScreenRenderedGameElement(List<List<String>> gameElement, String title, String description) {
+    private static void printFullScreenRenderedGameElement(List<List<String>> gameElement, String title, String description) {
         if (gameElement == null || gameElement.isEmpty()) {
             return;
         }
@@ -261,7 +263,7 @@ class CLIHelper {
      * @param gameElement The textual representation of the element
      * @param title       The title of the screen
      */
-    public static void printFullScreenRenderedGameElement(List<List<String>> gameElement, String title) {
+    static void printFullScreenRenderedGameElement(List<List<String>> gameElement, String title) {
         printFullScreenRenderedGameElement(gameElement, title, "");
     }
 
@@ -360,7 +362,7 @@ class CLIHelper {
     /**
      * Cancels the current input request
      */
-    public static void cancelInput() {
+    static void cancelInput() {
         input.cancel();
     }
 
@@ -405,20 +407,6 @@ class CLIHelper {
             println("Please insert a valid input");
             return parseInt();
         }
-    }
-
-    /**
-     * Retrieves an integer entered in the console
-     * If the user enters an invalid input, it asks for it again until a valid one is provided
-     *
-     * @param message An message to show to the user
-     * @return The integer entered by the user
-     */
-    private static Integer parseInt(String message) {
-        print(ANSI_CYAN);
-        println(message);
-        resetColor();
-        return parseInt();
     }
 
     /* ===== SPINNERS AND LOADING ===== */
@@ -664,7 +652,7 @@ class CLIHelper {
      * @return The list of all the rows the rendered square is composed of.
      * Each row is a list of string containing all the cells of the rendered square.
      */
-    static List<List<String>> renderSquare(SquareView square, Map<String, ColoredObject> playersColors) {
+    private static List<List<String>> renderSquare(SquareView square, Map<String, ColoredObject> playersColors) {
         List<List<String>> renderedSquare = new ArrayList<>();
         if (square == null) {
             for (int i = 0; i < SQUARE_DIM / 2; i++) {
@@ -726,7 +714,7 @@ class CLIHelper {
      *
      * @param board The object representing the board
      */
-    public static List<List<String>> renderBoard(BoardView board, Map<String, ColoredObject> playersColors) {
+    static List<List<String>> renderBoard(BoardView board, Map<String, ColoredObject> playersColors) {
         int width = board.getSquares().length;
 
         // We define an initial list of lists to hold the rendered board
@@ -776,7 +764,7 @@ class CLIHelper {
      * @param closed {@code true} if the resulting text box has to be closed, {@code false} otherwise
      * @return The textual representation of the effect
      */
-    public static List<List<String>> renderEffectDescription(EffectDescription effect, boolean closed) {
+    static List<List<String>> renderEffectDescription(EffectDescription effect, boolean closed) {
         List<List<String>> renderedEffect = new ArrayList<>();
         List<String> effectNameChunks = splitString(effect.getName(), CARD_WIDTH - 4);
         List<String> effectDescriptionChunks = splitString(effect.getDescription(), CARD_WIDTH - 4);
@@ -818,7 +806,7 @@ class CLIHelper {
      * @param weaponCard The object representing the weapon card
      * @return A list of all the lines composing the rendered card
      */
-    public static List<List<String>> renderWeaponCard(WeaponCard weaponCard) {
+    static List<List<String>> renderWeaponCard(WeaponCard weaponCard) {
         if (weaponCard == null) {
             return Collections.emptyList();
         }
@@ -878,9 +866,8 @@ class CLIHelper {
      * @param powerupCard The object representing the powerup card
      * @return A list of all the lines composing the rendered card
      */
-    public static List<List<String>> renderPowerupCard(PowerupCard powerupCard) {
+    static List<List<String>> renderPowerupCard(PowerupCard powerupCard) {
         if (powerupCard == null) {
-            // TODO: Check this scenario
             return Collections.emptyList();
         }
         List<List<String>> renderedPowerup = new ArrayList<>();
@@ -901,7 +888,22 @@ class CLIHelper {
     }
 
     /* ===== PLAYER BOARD ===== */
-    public static List<List<String>> renderPlayerBoard(PlayerBoardView playerBoard, String player, Map<String, ColoredObject> playersColor) {
+
+    /**
+     * Renders the provided player board, to show information about:
+     * <ul>
+     * <li>The name of the player owning the board</li>
+     * <li>The number of deaths the player has</li>
+     * <li>The number of marks the player received</li>
+     * <li>The damage track, with colored dots whose color represents the player that performed the damage</li>
+     * </ul>
+     *
+     * @param playerBoard  The object representing the player board
+     * @param player       The username of the board's owner
+     * @param playersColor A map associating each player of the match to its color
+     * @return The textual representation of the player board
+     */
+    static List<List<String>> renderPlayerBoard(PlayerBoardView playerBoard, String player, Map<String, ColoredObject> playersColor) {
         List<List<String>> renderedPlayerBoard = new ArrayList<>();
         if (playerBoard == null) {
             return renderedPlayerBoard;
@@ -957,7 +959,7 @@ class CLIHelper {
      * @param totalSkulls THe number of total skulls
      * @return A list of all the lines composing the rendered track
      */
-    public static List<List<String>> renderKillshotsTrack(List<ColoredObject> takenSkulls, int totalSkulls) {
+    static List<List<String>> renderKillshotsTrack(List<ColoredObject> takenSkulls, int totalSkulls) {
         final String header = "Killshots";
         List<List<String>> renderedTrack = new ArrayList<>();
         int trackWidth = Math.max(header.length() + 4, totalSkulls * 2 + 4); // add gap between two consecutive skulls and external padding
@@ -994,7 +996,6 @@ class CLIHelper {
      * @return The textual representation of the cell
      */
     private static List<List<String>> renderSpawnWeaponsCell(ColoredObject color, CoordPair location, BoardView board) {
-        //TODO: Use weapons factory to retrieve weapon names
         List<List<String>> renderedCell = new ArrayList<>();
         List<String> weapons = ((SpawnSquareView) board.getSquare(location)).getWeapons();
         expandStringRendering(renderedCell, generateLine(HORIZONTAL_BORDER, SPAWN_WEAPONS_CELL_DIM, LEFT_TOP_CORNER, RIGHT_TOP_CORNER));
@@ -1003,7 +1004,11 @@ class CLIHelper {
         expandStringRendering(renderedCell, generateLine(LIGHT_HORIZONTAL_BORDER, SPAWN_WEAPONS_CELL_DIM, LIGHT_LEFT_VERTICAL_SEPARATOR, LIGHT_RIGHT_VERTICAL_SEPARATOR));
         weapons.stream().filter(Objects::nonNull).forEach(weapon -> {
             expandStringRendering(renderedCell, generateLine(BLANK, SPAWN_WEAPONS_CELL_DIM, VERTICAL_BORDER, VERTICAL_BORDER));
-            fillLineWithText(renderedCell.get(renderedCell.size() - 1), weapon, 2);
+            try {
+                fillLineWithText(renderedCell.get(renderedCell.size() - 1), WeaponCreator.createWeaponCard(weapon).getName(), 2);
+            } catch (IOException e) {
+                // If the weapon does not exist we do not print the weapon name
+            }
         });
         expandStringRendering(renderedCell, generateLine(HORIZONTAL_BORDER, SPAWN_WEAPONS_CELL_DIM, LEFT_BOTTOM_CORNER, RIGHT_BOTTOM_CORNER));
         return renderedCell;
@@ -1015,7 +1020,7 @@ class CLIHelper {
      * @param board The object representing the board view
      * @return The textual representation of the table
      */
-    public static List<List<String>> renderSpawnWeaponsTable(BoardView board) {
+    static List<List<String>> renderSpawnWeaponsTable(BoardView board) {
         List<List<List<String>>> renderedCells = new ArrayList<>();
         board.getSpawnPoints().forEach((color, location) -> renderedCells.add(renderSpawnWeaponsCell(color, location, board)));
         return concatRenderedElements(renderedCells, 1);
@@ -1037,7 +1042,7 @@ class CLIHelper {
      * @param score   The score of the user
      * @return The textual representation of the table
      */
-    public static List<List<String>> renderMatchOverview(Map<String, PlayerColor> players, boolean frenzy, PlayerTurnView turn, int score) {
+    static List<List<String>> renderMatchOverview(Map<String, PlayerColor> players, boolean frenzy, PlayerTurnView turn, int score) {
 
         String currentPlayer = turn != null ? turn.getPlayer() : "---";
 
@@ -1064,7 +1069,6 @@ class CLIHelper {
                     String.format("%s - %s", color.name().substring(0, 1), truncateString(player, PLAYERS_OVERVIEW_DIM - 8)),
                     2,
                     color.getAnsiCode());
-            // TODO: Find a way to distinguish between green and gray
             expandStringRendering(renderedOverview, generateLine(BLANK, PLAYERS_OVERVIEW_DIM, VERTICAL_BORDER, VERTICAL_BORDER));
         });
         renderedOverview.remove(renderedOverview.size() - 1);
@@ -1078,7 +1082,7 @@ class CLIHelper {
      * @param ammo A map containing the owned amount for each color
      * @return The textual representation of the table
      */
-    public static List<List<String>> renderAmmoOverview(Map<AmmoCube, Integer> ammo) {
+    static List<List<String>> renderAmmoOverview(Map<AmmoCube, Integer> ammo) {
         List<List<String>> renderedTable = new ArrayList<>();
         expandStringRendering(renderedTable, generateLine(HORIZONTAL_BORDER, AMMO_TABLE_DIM, LEFT_TOP_CORNER, RIGHT_TOP_CORNER));
         expandStringRendering(renderedTable, generateLine(BLANK, AMMO_TABLE_DIM, VERTICAL_BORDER, VERTICAL_BORDER));
@@ -1093,7 +1097,7 @@ class CLIHelper {
     }
 
     /**
-     * Renders a table showing the owned weapons, with information about:
+     * Renders an entry of the weapons table showing the weapons owned by a player, with information about:
      * <ul>
      * <li>Their name</li>
      * <li>Their usability state</li>
@@ -1103,11 +1107,8 @@ class CLIHelper {
      * @param weaponCards The list of objects representing the weapon cards
      * @return The textual representation of the table
      */
-    public static List<List<String>> renderWeaponsTable(List<WeaponCard> weaponCards) {
+    private static List<List<String>> renderWeaponsTableEntry(List<WeaponCard> weaponCards) {
         List<List<String>> renderedTable = new ArrayList<>();
-        expandStringRendering(renderedTable, generateLine(HORIZONTAL_BORDER, WEAPONS_TABLE_DIM, LEFT_TOP_CORNER, RIGHT_TOP_CORNER));
-        expandStringRendering(renderedTable, generateLine(BLANK, WEAPONS_TABLE_DIM, VERTICAL_BORDER, VERTICAL_BORDER));
-        fillLineWithText(renderedTable.get(renderedTable.size() - 1), "Weapons", 2, ANSI_BOLD);
         weaponCards.forEach(weaponCard -> {
             expandStringRendering(renderedTable, generateLine(LIGHT_HORIZONTAL_BORDER, WEAPONS_TABLE_DIM, LIGHT_LEFT_VERTICAL_SEPARATOR, LIGHT_RIGHT_VERTICAL_SEPARATOR));
             expandStringRendering(renderedTable, generateLine(BLANK, WEAPONS_TABLE_DIM, VERTICAL_BORDER, VERTICAL_BORDER));
@@ -1118,7 +1119,30 @@ class CLIHelper {
             // And on the new row put the cost of the weapon
             fillLineWithObjects(renderedTable.get(renderedTable.size() - 1), weaponCard.getCost(), AmmoCubeCost::getAnsiCode, cube -> ANSI_DOT, 4, 2);
         });
-        // Then add the table bottom
+        return renderedTable;
+    }
+
+    /**
+     * Renders a table showing information about the weapons owned by the players, namely:
+     * <ul>
+     * <li>The name of the player</li>
+     * <li>The list of owned weapons, with info about name, cost and usability</li>
+     * </ul>
+     *
+     * @param playersWeapons A map associating each player's name to the list of objects representing the weapons he owns
+     * @return The textual representation of the table
+     */
+    static List<List<String>> renderWeaponsTable(Map<String, List<WeaponCard>> playersWeapons) {
+        List<List<String>> renderedTable = new ArrayList<>();
+        expandStringRendering(renderedTable, generateLine(HORIZONTAL_BORDER, WEAPONS_TABLE_DIM, LEFT_TOP_CORNER, RIGHT_TOP_CORNER));
+        expandStringRendering(renderedTable, generateLine(BLANK, WEAPONS_TABLE_DIM, VERTICAL_BORDER, VERTICAL_BORDER));
+        fillLineWithText(renderedTable.get(renderedTable.size() - 1), "Weapons", 2, ANSI_BOLD);
+        playersWeapons.forEach((player, weapons) -> {
+            expandStringRendering(renderedTable, generateLine(HORIZONTAL_BORDER, WEAPONS_TABLE_DIM, LEFT_VERTICAL_SEPARATOR, RIGHT_VERTICAL_SEPARATOR));
+            expandStringRendering(renderedTable, generateLine(BLANK, WEAPONS_TABLE_DIM, VERTICAL_BORDER, VERTICAL_BORDER));
+            fillLineWithText(renderedTable.get(renderedTable.size() - 1), truncateString(player, WEAPONS_TABLE_DIM - 4), 2, ANSI_ITALIC);
+            renderedTable.addAll(renderWeaponsTableEntry(weapons));
+        });
         expandStringRendering(renderedTable, generateLine(HORIZONTAL_BORDER, WEAPONS_TABLE_DIM, LEFT_BOTTOM_CORNER, RIGHT_BOTTOM_CORNER));
         return renderedTable;
     }
@@ -1133,7 +1157,7 @@ class CLIHelper {
      * @param powerupCards The list of objects representing the powerup cards
      * @return The textual representation of the table
      */
-    public static List<List<String>> renderPowerupsTable(List<PowerupCard> powerupCards) {
+    static List<List<String>> renderPowerupsTable(List<PowerupCard> powerupCards) {
         List<List<String>> renderedTable = new ArrayList<>();
         expandStringRendering(renderedTable, generateLine(HORIZONTAL_BORDER, POWERUPS_TABLE_DIM, LEFT_TOP_CORNER, RIGHT_TOP_CORNER));
         expandStringRendering(renderedTable, generateLine(BLANK, POWERUPS_TABLE_DIM, VERTICAL_BORDER, VERTICAL_BORDER));
@@ -1164,7 +1188,7 @@ class CLIHelper {
      * @param leaderboard The object representing the leaderboard
      * @return The textual representation of the leaderboard
      */
-    public static List<List<String>> renderLeaderBoard(Leaderboard leaderboard) {
+    static List<List<String>> renderLeaderBoard(Leaderboard leaderboard) {
         List<List<String>> renderedLeaderBoard = new ArrayList<>();
         // First determine the maximum length of the players' names
         final int maxNameLength = leaderboard.getEntries().stream().map(Leaderboard.Entry::getName).map(String::length).max(Integer::compareTo).orElse(0);
@@ -1243,7 +1267,7 @@ class CLIHelper {
      * @param spacing  The spacing between two consecutive elements
      * @return A list of all the lines composing the concatenated elements
      */
-    public static List<List<String>> concatRenderedElements(List<List<List<String>>> elements, int spacing) {
+    static List<List<String>> concatRenderedElements(List<List<List<String>>> elements, int spacing) {
         // First retrieve the tallest element
         Optional<List<List<String>>> tallestElement = elements.stream().max(Comparator.comparingInt(List::size));
         if (!(tallestElement.isPresent())) {
@@ -1286,7 +1310,7 @@ class CLIHelper {
      * @param spacing  The spacing between two consecutive elements
      * @return A list of all the lines composing the rendered stacked elements
      */
-    public static List<List<String>> stackRenderedElements(List<List<List<String>>> elements, int spacing) {
+    static List<List<String>> stackRenderedElements(List<List<List<String>>> elements, int spacing) {
         if (elements == null) {
             return Collections.emptyList();
         }

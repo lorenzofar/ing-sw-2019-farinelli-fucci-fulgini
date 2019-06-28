@@ -219,10 +219,12 @@ public class CLIRenderer implements UIRenderer {
                 .collect(Collectors.toList());
         // Then we stack each board on top of the other
         List<List<String>> stackedPlayerBoards = CLIHelper.stackRenderedElements(renderedPlayerBoards, 1);
-
+        // Then the table showing the owned weapons
+        List<List<String>> renderedWeaponsTable = CLIHelper.renderWeaponsTable(
+                modelManager.getPlayers().entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().getWeapons())));
         // And concatenate elements in the middle row
         List<List<String>> leftMiddleRow = CLIHelper.concatRenderedElements(
-                Arrays.asList(renderedBoard, renderedPlayersList, stackedPlayerBoards),
+                Arrays.asList(renderedBoard, renderedPlayersList, stackedPlayerBoards, renderedWeaponsTable),
                 4
         );
 
@@ -234,12 +236,11 @@ public class CLIRenderer implements UIRenderer {
         );
         // Then the table showing the owned ammo
         List<List<String>> renderedAmmoTable = CLIHelper.renderAmmoOverview(modelManager.getPlayers().get(clientView.getUsername()).getAmmo());
-        // Then the table showing the owned weapons
-        List<List<String>> renderedWeaponsTable = CLIHelper.renderWeaponsTable(modelManager.getPlayers().get(clientView.getUsername()).getWeapons());
+
         // Then the table showing the owned powerups
         List<List<String>> renderedPowerupsTable = CLIHelper.renderPowerupsTable(modelManager.getPlayers().get(clientView.getUsername()).getPowerups());
         List<List<String>> leftBottomRow = CLIHelper.concatRenderedElements(
-                Arrays.asList(renderedUserPlayerBoard, renderedAmmoTable, renderedWeaponsTable, renderedPowerupsTable),
+                Arrays.asList(renderedUserPlayerBoard, renderedAmmoTable, renderedPowerupsTable),
                 2
         );
         // And eventually build the left pane
