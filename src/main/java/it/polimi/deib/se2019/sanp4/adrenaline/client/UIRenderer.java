@@ -64,9 +64,12 @@ public interface UIRenderer extends ChoiceRequestVisitor {
     void cancelSelection();
 
     /**
-     * Shows a screen to tell the user that he is disconnected, letting him to reconnect
+     * Shows a screen to tell the user that the client is going to be closed due to a fault
+     *
+     * @param title   The title of the screen
+     * @param message The message to show to the user
      */
-    void showDisconnectedScreen();
+    void showPreemptionScreen(String title, String message);
 
     /**
      * Shows a screen to tell the user that he is about to rejoin the match

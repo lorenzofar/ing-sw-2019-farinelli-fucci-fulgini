@@ -112,8 +112,10 @@ public class PlayerTurn extends Observable{
         if(state == null){
             throw new NullPointerException("State cannot be null");
         }
-        if (this.state != state) this.notifyObservers(new PlayerTurnUpdate(this.generateView()));
-        this.state = state;
+        if (this.state != state){
+            this.state = state;
+            this.notifyObservers(new PlayerTurnUpdate(this.generateView()));
+        }
     }
 
     /**

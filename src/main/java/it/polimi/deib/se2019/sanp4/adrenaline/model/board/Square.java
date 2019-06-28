@@ -120,7 +120,6 @@ public abstract class Square extends Observable<ModelUpdate> {
      */
     public void setRoom(Room room) {
         this.room = room;
-        this.notifyObservers(new SquareUpdate(this.generateView()));
     }
 
     /**

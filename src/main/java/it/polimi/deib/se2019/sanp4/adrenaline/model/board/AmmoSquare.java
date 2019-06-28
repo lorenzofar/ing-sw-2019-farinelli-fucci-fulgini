@@ -11,34 +11,42 @@ import java.util.EmptyStackException;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-/** A specialized class representing a square containing ammo cards */
+/**
+ * A specialized class representing a square containing ammo cards
+ */
 public class AmmoSquare extends Square {
 
-    /** The ammo card contained in the square */
+    /**
+     * The ammo card contained in the square
+     */
     private AmmoCard ammoCard;
 
-    /** Default constructor only to be used by Jackson */
-    protected AmmoSquare(){
+    /**
+     * Default constructor only to be used by Jackson
+     */
+    protected AmmoSquare() {
         super();
         this.ammoCard = null;
     }
 
     /**
      * Creates a new ammo square at the specified location
+     *
      * @param location The cartesian coordinates of the location
      */
-    public AmmoSquare(CoordPair location){
+    public AmmoSquare(CoordPair location) {
         super(location);
         this.ammoCard = null;
     }
 
     /**
      * Takes the ammo card that is currently placed in the square
+     *
      * @return The object representing the ammo card
      * @throws IllegalStateException if there is no ammo on the square
      */
     public AmmoCard grabAmmo() {
-        if(this.ammoCard != null) {
+        if (this.ammoCard != null) {
             AmmoCard picked = this.ammoCard;
             this.ammoCard = null;
             this.notifyObservers(new SquareUpdate(this.generateView()));
@@ -54,10 +62,11 @@ public class AmmoSquare extends Square {
 
     /**
      * Puts an ammo card on the square
+     *
      * @param ammo The object representing the ammo card, not null
      */
-    public void insertAmmo(AmmoCard ammo){
-        if(ammo == null){
+    public void insertAmmo(AmmoCard ammo) {
+        if (ammo == null) {
             throw new NullPointerException("Ammo cannot be null");
         }
         this.ammoCard = ammo;
@@ -81,8 +90,6 @@ public class AmmoSquare extends Square {
         } catch (EmptyStackException e) {
             /* No more ammo cards to draw */
         }
-
-        this.notifyObservers(new SquareUpdate(this.generateView()));
     }
 
     /**
@@ -107,6 +114,7 @@ public class AmmoSquare extends Square {
 
     /**
      * Generates the {@link AmmoSquareView} of the ammo square.
+     *
      * @return the ammo square view.
      */
     @Override
@@ -115,13 +123,13 @@ public class AmmoSquare extends Square {
         RoomColor color = getRoom() == null ? RoomColor.BLUE : getRoom().getColor();
         AmmoSquareView view = new AmmoSquareView(this.getLocation(), color);
         view.setPlayers(this.getPlayers()
-                        .stream()
-                        .map(Player::getName)
-                        .collect(Collectors.toSet()));
+                .stream()
+                .map(Player::getName)
+                .collect(Collectors.toSet()));
         /* From AdjacentMap, create a Map in which the entry is the same and the value is the SquareConnectionType
         contained by the SquareConnection */
         Map<CardinalDirection, SquareConnectionType> adjacentMap =
-                        getAdjacentSquares().entrySet()
+                getAdjacentSquares().entrySet()
                         .stream()
                         .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().getConnectionType()));
         view.setAdjacentMap(adjacentMap);

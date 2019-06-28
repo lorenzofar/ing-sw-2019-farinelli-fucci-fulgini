@@ -1,6 +1,7 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.client;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.*;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.player.PlayerState;
 import it.polimi.deib.se2019.sanp4.adrenaline.view.ViewScene;
 
 /**
@@ -34,6 +35,11 @@ public class RenderingManager implements ModelUpdateVisitor {
             if (update.getPlayer().getName().equals(clientView.getUsername())) {
                 clientView.getRenderer().refreshMatchInfo();
                 clientView.getRenderer().refreshAmmoInfo();
+                if (update.getPlayer().getState().equals(PlayerState.SUSPENDED)) {
+                    clientView.getRenderer().showPreemptionScreen(
+                            "Suspended",
+                            "You have been suspended from the match, to rejoin open the client and log in with the same username");
+                }
             }
         }
     }

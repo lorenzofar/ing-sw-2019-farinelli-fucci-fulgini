@@ -250,7 +250,7 @@ public class ClientView extends RemoteObservable<ViewEvent> implements RemoteVie
                 renderer.showLeaderBoard();
                 break;
             case DISCONNECTED:
-                renderer.showDisconnectedScreen();
+                renderer.showPreemptionScreen("Disconnected", "Connection to the server has been lost");
                 break;
             default:
                 logger.log(Level.SEVERE, "Unexpected scene {0}", scene.name());

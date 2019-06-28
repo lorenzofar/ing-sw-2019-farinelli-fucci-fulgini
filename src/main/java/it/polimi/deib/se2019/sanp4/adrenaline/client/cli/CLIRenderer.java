@@ -297,17 +297,14 @@ public class CLIRenderer implements UIRenderer {
         CLIHelper.cancelInput();
     }
 
-    /**
-     * Shows a screen to tell the user that he is disconnected, letting him to reconnect
-     */
     @Override
-    public void showDisconnectedScreen() {
-        CLIHelper.printTitle("Disconnected");
-        CLIHelper.printlnColored("Connection to the server has been lost", CLIHelper.ANSI_RED);
+    public void showPreemptionScreen(String title, String message) {
+        CLIHelper.clearScreen();
+        CLIHelper.printTitle(title);
+        CLIHelper.printlnColored(message, CLIHelper.ANSI_RED);
         CLIHelper.println("Press enter key to close the game...");
         CLIHelper.parseString();
         System.exit(0);
-
     }
 
     @Override

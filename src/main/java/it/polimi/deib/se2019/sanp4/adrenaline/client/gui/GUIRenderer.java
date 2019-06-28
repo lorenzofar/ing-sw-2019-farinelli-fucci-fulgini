@@ -18,6 +18,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
@@ -215,13 +216,21 @@ public class GUIRenderer extends Application implements UIRenderer {
     }
 
     /**
-     * Shows a screen to tell the user that he is disconnected, letting him to reconnect
+     * Shows a screen to tell the user that the client is going to be closed due to a fault
+     *
+     * @param title   The title of the screen
+     * @param message The message to show to the user
      */
     @Override
-    public void showDisconnectedScreen() {
+    public void showPreemptionScreen(String title, String message) {
         Platform.runLater(() ->
         {
-            new Alert(Alert.AlertType.WARNING, "Connection to the server has been lost", ButtonType.OK).showAndWait();
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.getButtonTypes().set(0, ButtonType.OK);
+            Text alertText = new Text(message);
+            alertText.setWrappingWidth(50);
+            alert.getDialogPane().setContent(alertText);
+            alert.showAndWait();
             Platform.exit();
             System.exit(0);
         });

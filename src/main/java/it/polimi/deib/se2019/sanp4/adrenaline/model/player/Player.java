@@ -480,6 +480,7 @@ public class Player extends Observable<ModelUpdate> implements Observer<ModelUpd
         if (currentCount < MAX_AMMO_CUBES) {
             ammo.put(ammoCube, currentCount + 1);
         }
+        notifyObservers(new PlayerUpdate(this.generateView()));
     }
 
     /**
@@ -506,6 +507,7 @@ public class Player extends Observable<ModelUpdate> implements Observer<ModelUpd
             }
             this.ammo.put(key, playerAmmo - value);
         }
+        notifyObservers(new PlayerUpdate(this.generateView()));
     }
 
     /**
@@ -546,14 +548,10 @@ public class Player extends Observable<ModelUpdate> implements Observer<ModelUpd
      * @param currentSquare square where to set the player
      */
     public void setCurrentSquare(Square currentSquare) {
-        Square start = this.currentSquare;
         if (currentSquare == null) {
             throw new NullPointerException("Square cannot be null");
         }
         this.currentSquare = currentSquare;
-        if (start != null && (start.getLocation() != currentSquare.getLocation())) {
-            this.notifyObservers(new PlayerUpdate(this.generateView()));
-        }
     }
 
     /**
@@ -574,8 +572,10 @@ public class Player extends Observable<ModelUpdate> implements Observer<ModelUpd
         if (state == null) {
             throw new NullPointerException("State cannot be null");
         }
-        if (this.state != state) this.notifyObservers(new PlayerUpdate(generateView()));
-        this.state = state;
+        if (this.state != state) {
+            this.state = state;
+            this.notifyObservers(new PlayerUpdate(generateView()));
+        }
 
     }
 
@@ -603,6 +603,8 @@ public class Player extends Observable<ModelUpdate> implements Observer<ModelUpd
         view.setAmmo(ammo);
         view.setWeapons(weapons);
         view.setPowerups(powerups);
+        view.setState(state);
+        view.setScore(score);
         return view;
     }
 
