@@ -167,9 +167,9 @@ public class GUIRenderer extends Application implements UIRenderer {
     @Override
     public void showMatchScreen() {
         Platform.runLater(() -> {
-            try {
+            if (clientView.getScene().isGameScene() && currentController != null) {
                 ((GameController) currentController).refreshMatchScreen();
-            } catch (ClassCastException e) {
+            } else {
                 showScene("/fxml/game.fxml", true);
                 Platform.runLater(((GameController) currentController)::buildMatchScreen);
                 // An error occurred while building the match screen
@@ -228,7 +228,7 @@ public class GUIRenderer extends Application implements UIRenderer {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.getButtonTypes().set(0, ButtonType.OK);
             Text alertText = new Text(message);
-            alertText.setWrappingWidth(50);
+            alertText.setWrappingWidth(200);
             alert.getDialogPane().setContent(alertText);
             alert.showAndWait();
             Platform.exit();

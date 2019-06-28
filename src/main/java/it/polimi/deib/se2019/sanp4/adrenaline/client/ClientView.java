@@ -116,7 +116,7 @@ public class ClientView extends RemoteObservable<ViewEvent> implements RemoteVie
      *
      * @return The object representing the scene
      */
-    public ViewScene getScene() {
+    public synchronized ViewScene getScene() {
         return scene;
     }
 
@@ -226,11 +226,9 @@ public class ClientView extends RemoteObservable<ViewEvent> implements RemoteVie
     }
 
     @Override
-    public void selectScene(ViewScene scene) {
+    public synchronized void selectScene(ViewScene scene) {
         // We first cancel a pending selection
         renderer.cancelSelection();
-        // Then we update our reference to the current scene
-        this.scene = scene;
         switch (scene) {
             case LOGIN:
                 break;
@@ -255,6 +253,8 @@ public class ClientView extends RemoteObservable<ViewEvent> implements RemoteVie
             default:
                 logger.log(Level.SEVERE, "Unexpected scene {0}", scene.name());
         }
+        // Then we update our reference to the current scene
+        this.scene = scene;
     }
 
     @Override
