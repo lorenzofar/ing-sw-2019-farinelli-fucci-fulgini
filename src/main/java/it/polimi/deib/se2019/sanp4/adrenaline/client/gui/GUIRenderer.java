@@ -237,7 +237,12 @@ public class GUIRenderer extends Application implements UIRenderer {
 
     @Override
     public void showLeaderBoard() {
-        Platform.runLater(() -> showScene("/fxml/leaderboard.fxml", false));
+        Platform.runLater(() -> {
+            showScene("/fxml/leaderboard.fxml", false);
+            if (clientView.getModelManager().getLeaderboard() != null) {
+                ((LeaderboardController) currentController).updateLeaderBoard(clientView.getModelManager().getLeaderboard());
+            }
+        });
     }
 
     @Override

@@ -4,6 +4,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.common.ColoredObject;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.*;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.*;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.WeaponCard;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.match.Leaderboard;
 
 import java.util.HashMap;
 import java.util.List;
@@ -22,6 +23,8 @@ public class ModelManager implements ModelUpdateVisitor {
     private MatchView match;
     private BoardView board;
     private PlayerTurnView currentTurn;
+
+    private Leaderboard leaderboard;
 
     ModelManager() {
         players = new HashMap<>();
@@ -69,6 +72,10 @@ public class ModelManager implements ModelUpdateVisitor {
 
     public synchronized ActionCardView getActionCard(String player) {
         return actionCards.getOrDefault(player, null);
+    }
+
+    public synchronized Leaderboard getLeaderboard() {
+        return leaderboard;
     }
 
     @Override
@@ -156,6 +163,6 @@ public class ModelManager implements ModelUpdateVisitor {
 
     @Override
     public synchronized void handle(LeaderboardUpdate update) {
-        // The leaderboard should only be rendered, hence we do not update anything
+        this.leaderboard = update.getLeaderboard();
     }
 }
