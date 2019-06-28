@@ -244,8 +244,10 @@ public class CLIRenderer implements UIRenderer {
         List<List<String>> renderedAmmoTable = CLIHelper.renderAmmoOverview(modelManager.getPlayers().get(clientView.getUsername()).getAmmo());
         // Then the table showing the owned weapons
         List<List<String>> renderedWeaponsTable = CLIHelper.renderWeaponsTable(modelManager.getPlayers().get(clientView.getUsername()).getWeapons());
+        // Then the table showing the owned powerups
+        List<List<String>> renderedPowerupsTable = CLIHelper.renderPowerupsTable(modelManager.getPlayers().get(clientView.getUsername()).getPowerups());
         List<List<String>> leftBottomRow = CLIHelper.concatRenderedElements(
-                Arrays.asList(renderedUserPlayerBoard, renderedAmmoTable, renderedWeaponsTable),
+                Arrays.asList(renderedUserPlayerBoard, renderedAmmoTable, renderedWeaponsTable, renderedPowerupsTable),
                 2
         );
         // And eventually build the left pane
