@@ -176,3 +176,8 @@ TextField {
     -fx-font-size: 12pt;
     -fx-font-weight: bold;
 }
+
+/* ===== PROGRESS INDICATOR ===== */
+ProgressIndicator {
+    -fx-progress-color: -fx-accent-color;
+}

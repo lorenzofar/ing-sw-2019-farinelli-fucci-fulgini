@@ -72,7 +72,7 @@ public class GUIRenderer extends Application implements UIRenderer {
             this.stage = new Stage();
             this.stage.setTitle("Adrenaline");
             this.stage.setMaximized(fullScreen);
-            this.stage.setResizable(!fullScreen);
+            this.stage.setResizable(true);
 
             this.stage.setOnCloseRequest((WindowEvent t) -> {
                 Platform.exit();
@@ -86,8 +86,11 @@ public class GUIRenderer extends Application implements UIRenderer {
             Platform.runLater(() ->
                     this.stage.setScene(scene));
             currentController = loader.getController();
-            currentController.setClientView(clientView);
-            currentController.setStage(this.stage);
+            if (currentController != null) {
+                // We attach the client view and the stage only to those scenes who have a controller
+                currentController.setClientView(clientView);
+                currentController.setStage(this.stage);
+            }
             Platform.runLater(this.stage::show);
         } catch (IOException e) {
             // An error occurred loading the scene

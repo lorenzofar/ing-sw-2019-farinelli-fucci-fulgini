@@ -97,7 +97,6 @@ public class LoginController extends GUIController {
             clientView.getServerConnection().login(username.getValue());
             clientView.setUsername(username.getValue());
             loggedIn.set(true);
-            Platform.runLater(() -> new Alert(Alert.AlertType.INFORMATION, "Succesfully connected", ButtonType.OK).show());
         } catch (IOException e) {
             new Alert(Alert.AlertType.ERROR, "A network error occurred").showAndWait();
             // A network error occurred
