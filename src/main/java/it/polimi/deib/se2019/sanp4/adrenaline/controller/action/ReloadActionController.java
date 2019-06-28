@@ -66,6 +66,9 @@ public class ReloadActionController {
             WeaponCard selectedWeapon = askToSelectWeapon(view, selectable);
 
             if (selectedWeapon != null) {
+                /* Get the real weapon from the player */
+                selectedWeapon = player.getWeapons().get(player.getWeapons().indexOf(selectedWeapon));
+
                 /* Ask the player to pay the cost and reload the weapon */
                 askToReloadWeapon(view, selectedWeapon);
 

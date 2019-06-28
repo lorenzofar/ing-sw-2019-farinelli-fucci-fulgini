@@ -249,7 +249,7 @@ public class GrabActionController implements SquareVisitor {
                 }
 
                 /* Grab the weapon, load it and give it to the player */
-                square.grabWeaponCard(selectedWeapon.getId());
+                selectedWeapon = square.grabWeaponCard(selectedWeapon.getId());
                 selectedWeapon.reload(player);
                 player.addWeapon(selectedWeapon);
 
@@ -292,7 +292,7 @@ public class GrabActionController implements SquareVisitor {
         WeaponCardRequest req = new WeaponCardRequest(MESSAGE_DISCARD_WEAPON, choices, false);
         WeaponCard selected = view.sendChoiceRequest(req).get();
 
-        player.removeWeapon(selected); /* Remove from player */
+        selected = player.removeWeapon(selected); /* Remove from player */
         return selected;
     }
 

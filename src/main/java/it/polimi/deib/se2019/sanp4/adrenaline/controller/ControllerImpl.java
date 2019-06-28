@@ -175,6 +175,7 @@ public class ControllerImpl implements Controller {
 
         /* Set callbacks */
         view.setNetworkFaultCallback(() -> {
+            logger.log(Level.FINE, "Suspending player \"{0}\" for network fault");
             model.suspendPlayer(username);
             return null;
         });

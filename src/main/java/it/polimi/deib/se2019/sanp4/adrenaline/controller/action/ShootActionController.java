@@ -35,7 +35,7 @@ public class ShootActionController {
     private static final String WARNING_NO_WEAPONS = "You don't have any loaded weapon";
 
     private static final String MESSAGE_OFFER_TAGBACK = "You received damage from %s, use one of these powerups" +
-            " to give him a mark";
+            " to revenge";
 
     private final int revengeTimeout;
 
@@ -65,10 +65,11 @@ public class ShootActionController {
      * Offers a chance to use the {@link PowerupEnum#TAGBACK} powerup to a given player
      *
      * @param victim  The player who received the damage, not null
+     * @param shooter The player using the weapon
      * @throws CancellationException If a request to the user gets cancelled
      * @throws InterruptedException  If the thread gets interrupted
      */
-    private void handleRevenge(Player victim) throws InterruptedException {
+    private void handleRevenge(Player victim, Player shooter) throws InterruptedException {
         /* Check if the damaged player can actually play */
         if (!victim.getState().canPlay()) return;
 
@@ -84,7 +85,8 @@ public class ShootActionController {
         /* Ask the user to choose one or no powerup */
         PersistentView damagedView = views.get(victim.getName());
         damagedView.startTimer(() -> null, revengeTimeout, TimeUnit.SECONDS);
-        PowerupCardRequest req = new PowerupCardRequest(MESSAGE_OFFER_TAGBACK, powerups, true);
+        PowerupCardRequest req =
+                new PowerupCardRequest(String.format(MESSAGE_OFFER_TAGBACK, shooter.getName()), powerups, true);
         PowerupCard selected = damagedView.sendChoiceRequest(req).get();
 
         if (selected == null) {
@@ -136,6 +138,9 @@ public class ShootActionController {
         WeaponCardRequest req = new WeaponCardRequest(MESSAGE_SELECT_WEAPON, weapons, false);
         WeaponCard selectedWeapon = view.sendChoiceRequest(req).get();
 
+        /* Substitute the weapon returned from the request with the weapon from the player */
+        selectedWeapon = shooter.getWeapons().get(shooter.getWeapons().indexOf(selectedWeapon));
+
         /* Create the controller for that weapon */
         AbstractWeapon weaponController = factory.createWeaponController(selectedWeapon);
 
@@ -156,7 +161,7 @@ public class ShootActionController {
         Set<Player> damagedPlayers = weaponController.getDamagedPlayers();
         for (Player victim : damagedPlayers) {
             try {
-                handleRevenge(victim);
+                handleRevenge(victim, shooter);
             } catch (CancellationException e) {
                 /* We just go on with the next player: he didn't use the powerup */
             }
