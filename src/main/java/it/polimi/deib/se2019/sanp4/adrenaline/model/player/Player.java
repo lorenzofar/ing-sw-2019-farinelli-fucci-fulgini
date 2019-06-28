@@ -468,6 +468,7 @@ public class Player extends Observable<ModelUpdate> implements Observer<ModelUpd
             playerAmmo = playerAmmo + value > MAX_AMMO_CUBES ? MAX_AMMO_CUBES : playerAmmo + value; // Check whether the final amount exceeds maximum capacity
             this.ammo.put(key, playerAmmo);
         });
+        notifyObservers(new PlayerUpdate(this.generateView()));
     }
 
     /**
