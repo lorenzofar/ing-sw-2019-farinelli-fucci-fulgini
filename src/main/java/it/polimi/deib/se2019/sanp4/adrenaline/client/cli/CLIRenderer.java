@@ -5,7 +5,6 @@ import it.polimi.deib.se2019.sanp4.adrenaline.client.ModelManager;
 import it.polimi.deib.se2019.sanp4.adrenaline.client.UIRenderer;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.events.ChoiceResponse;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.LoginException;
-import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.PlayerView;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.*;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.BoardCreator;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.CoordPair;
@@ -18,8 +17,6 @@ import it.polimi.deib.se2019.sanp4.adrenaline.view.MessageType;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -29,9 +26,6 @@ public class CLIRenderer implements UIRenderer {
     private static final String LOBBY_MATCH_STARTING = "The match is starting soon with these players";
 
     private ClientView clientView;
-
-    private CommandsParser commandsParser;
-    private ExecutorService commandsParserExecutor;
 
     /* ASCII-art version of the game title */
     private static final String ADRENALINE_TITLE =
@@ -44,10 +38,6 @@ public class CLIRenderer implements UIRenderer {
 
     @Override
     public void initialize() {
-
-        // Create the executor for the commands parser
-        commandsParserExecutor = Executors.newSingleThreadExecutor();
-        commandsParser = new CommandsParser(this);
 
         // Create a new client view
         clientView = new ClientView();
@@ -157,12 +147,14 @@ public class CLIRenderer implements UIRenderer {
 
     @Override
     public void showDrawnWeapon(WeaponCard weapon) {
-        //TODO: Implement this method
+        // We refresh the match screen since the list of owned weapon cards is shown there
+        printMatchScreen();
     }
 
     @Override
     public void showDrawnPowerup(PowerupCard powerup) {
-        //TODO: Implement this method
+        // We refresh the match screen since the list of owned powerup cards is shown there
+        printMatchScreen();
     }
 
     /**
@@ -261,29 +253,6 @@ public class CLIRenderer implements UIRenderer {
     }
 
     /**
-     * Shows the weapons held by the user
-     */
-    public void showUserWeapons() {
-        PlayerView user = clientView.getModelManager().getPlayers().getOrDefault(clientView.getUsername(), null);
-        if (user == null) {
-            // This should never happen, since the user is a player
-            return;
-        }
-        List<List<List<String>>> userWeapons = user.getWeapons().stream().map(CLIHelper::renderWeaponCard).collect(Collectors.toList());
-        CLIHelper.printFullScreenRenderedGameElement(CLIHelper.concatRenderedElements(userWeapons, 2), "Weapons");
-    }
-
-    public void showUserPowerups() {
-        PlayerView user = clientView.getModelManager().getPlayers().getOrDefault(clientView.getUsername(), null);
-        if (user == null) {
-            // This should never happen, since the user is a player
-            return;
-        }
-        List<List<List<String>>> userPowerups = user.getPowerups().stream().map(CLIHelper::renderPowerupCard).collect(Collectors.toList());
-        CLIHelper.printFullScreenRenderedGameElement(CLIHelper.concatRenderedElements(userPowerups, 2), "Powerups");
-    }
-
-    /**
      * Shows a message to the user
      *
      * @param text The text of the message
@@ -335,10 +304,8 @@ public class CLIRenderer implements UIRenderer {
 
     @Override
     public void setIdleScreen() {
-        // We start the command parser
+        // We cancel pending input requests
         CLIHelper.cancelInput();
-        commandsParser.setAlive(true);
-        commandsParserExecutor.submit(commandsParser);
     }
 
     /**
@@ -346,9 +313,8 @@ public class CLIRenderer implements UIRenderer {
      */
     @Override
     public void setActiveScreen() {
-        // We kill the command parser and cancel input
+        // We cancel pending input requests
         CLIHelper.cancelInput();
-        commandsParser.setAlive(false);
     }
 
     /**
