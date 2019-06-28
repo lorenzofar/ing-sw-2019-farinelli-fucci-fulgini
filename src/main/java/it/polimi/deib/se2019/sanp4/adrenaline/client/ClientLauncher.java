@@ -17,9 +17,9 @@ public class ClientLauncher {
 
         // Load properties
         AdrenalineProperties.getProperties().loadProperties();
-        
+
         // We then check if the user chose different modes, by looking at the provided options
-        String uiMode = args.length > 1 ? args[1] : "";
+        String uiMode = args.length > 0 ? args[0] : "";
 
         // We create the rendering engine
         UIRenderer renderer;
