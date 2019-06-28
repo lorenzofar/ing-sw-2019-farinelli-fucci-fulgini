@@ -25,12 +25,18 @@ public class PlayerRequestController extends RequestController<String> {
      */
     @Override
     public void createOverlays(ChoiceRequest<String> request) {
-        //TODO: Handle optional request
         int i = 0;
         List<String> choices = request.getChoices();
-        for(String playerName : choices){
+        if (request.isOptional()) {
+            choices.add(null);
+        }
+        for (String playerName : choices) {
             PlayerSelectionOverlay overlay = new PlayerSelectionOverlay();
-            overlay.setPlayer(playerName, (PlayerColor)clientView.getModelManager().getPlayersColors().get(playerName));
+            if (playerName != null) {
+                overlay.setPlayer(playerName, (PlayerColor) clientView.getModelManager().getPlayersColors().get(playerName));
+            } else {
+                overlay.setPlayer(playerName, null);
+            }
             overlay.enable();
             GridPane.setColumnIndex(overlay, i % getColumnsCount());
             GridPane.setRowIndex(overlay, i / getColumnsCount());
