@@ -145,6 +145,8 @@ public class SocketServerConnection extends RemoteObservable<ModelUpdate>
 
         /* If not, create a new socket */
         socket = new Socket(hostname, port);
+        /* Set TCP keepalive option */
+        socket.setKeepAlive(true);
         /* Bind the streams */
         out = new BufferedOutputStream(socket.getOutputStream());
         InputStream in = new BufferedInputStream(socket.getInputStream());

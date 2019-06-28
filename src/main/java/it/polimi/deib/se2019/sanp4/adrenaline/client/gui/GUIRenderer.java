@@ -19,6 +19,7 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
@@ -228,7 +229,8 @@ public class GUIRenderer extends Application implements UIRenderer {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.getButtonTypes().set(0, ButtonType.OK);
             Text alertText = new Text(message);
-            alertText.setWrappingWidth(200);
+            alertText.setWrappingWidth(alert.getDialogPane().getWidth() - 24);
+            alertText.setTextAlignment(TextAlignment.CENTER);
             alert.getDialogPane().setContent(alertText);
             alert.showAndWait();
             Platform.exit();
