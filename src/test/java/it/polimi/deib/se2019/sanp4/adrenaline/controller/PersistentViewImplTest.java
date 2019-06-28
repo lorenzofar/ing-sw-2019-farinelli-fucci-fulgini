@@ -237,6 +237,19 @@ public class PersistentViewImplTest {
     }
 
     @Test
+    public void reconnectRemoteView_newRemoteThrowsDuringReconnection_shouldNotReconnect() throws IOException {
+        setupFaulty();
+
+        /* We first provide a remote that throws on ping */
+        doThrow(new IOException()).when(remoteView).ping();
+        PersistentViewImpl view = new PersistentViewImpl(username, remoteView);
+
+        /* Then we try to reconnect, but the new remote throws when adding the observer */
+        assertFalse(view.reconnectRemoteView(faultyRemote));
+        assertNull(view.getRemote());
+    }
+
+    @Test
     public void setNetworkFaultCallback_shouldBeSetAndScheduled() throws IOException {
         setupFaulty();
         PersistentViewImpl view = new PersistentViewImpl(username, faultyRemote);

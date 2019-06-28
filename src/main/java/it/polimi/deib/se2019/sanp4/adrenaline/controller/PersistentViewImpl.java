@@ -118,11 +118,13 @@ public class PersistentViewImpl extends RemoteObservable<ViewEvent> implements P
                 stopTimer();
             }
             timer = timerScheduler.schedule(() -> {
-                cancelPendingRequests();
-                try {
-                    callback.call();
-                } catch (Exception e) {
-                    /* Ignore the exception */
+                synchronized (timerLock) {
+                    cancelPendingRequests();
+                    try {
+                        callback.call();
+                    } catch (Exception e) {
+                        /* Ignore the exception */
+                    }
                 }
             }, delay, unit);
         }
