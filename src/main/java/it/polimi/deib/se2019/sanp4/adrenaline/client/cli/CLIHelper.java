@@ -293,7 +293,10 @@ class CLIHelper {
         println("%s", message);
         resetColor();
 
-        options.forEach(option -> println("%d.\t%s", options.indexOf(option), stringConverter.apply(option)));
+        for (int i = 0; i < options.size(); i++) {
+            println("%d.\t%s", i, stringConverter.apply(options.get(i)));
+        }
+
         if (allowNull) {
             println("%d. None", options.size());
         }

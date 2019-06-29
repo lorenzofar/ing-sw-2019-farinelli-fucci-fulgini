@@ -408,7 +408,7 @@ public class CLIRenderer implements UIRenderer {
         List<List<List<String>>> renderedPowerupCards = request.getChoices().stream().map(CLIHelper::renderPowerupCard).collect(Collectors.toList());
         // Then show them to the user by concatenating them
         CLIHelper.printRenderedGameElement(CLIHelper.concatRenderedElements(renderedPowerupCards, 1));
-        requestRoutine("Powerup selection", request, PowerupCard::getName);
+        requestRoutine("Powerup selection", request, powerup -> String.format("%s (%s)", powerup.getName(), powerup.getCubeColor()));
     }
 
     @Override
