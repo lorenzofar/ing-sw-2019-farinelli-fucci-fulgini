@@ -43,7 +43,7 @@ public class RequestManager {
      * @return an object which can be used to retrieve the choice
      * @throws DuplicateIdException if a request with the same uuid is pending
      */
-    public <T extends Serializable> CompletableChoice<T> insertRequest(ChoiceRequest<T> request)
+    public synchronized  <T extends Serializable> CompletableChoice<T> insertRequest(ChoiceRequest<T> request)
             throws DuplicateIdException {
         String uuid = request.getUuid();
         if (pendingChoices.containsKey(uuid)) {
@@ -67,7 +67,7 @@ public class RequestManager {
      * @throws UnknownIdException if no {@link CompletableChoice} associated to the UUID can be found
      * @throws InvalidChoiceException f the choice is invalid (not accepted by the request)
      */
-    public void completeRequest(String uuid, Object choice)
+    public synchronized void completeRequest(String uuid, Object choice)
             throws UnknownIdException, InvalidChoiceException {
 
         /* Get the pending choice, if it exists */
@@ -94,7 +94,7 @@ public class RequestManager {
      * @param uuid identifier of the request you want to cancel
      * @return {@code true} if the request was correctly cancelled, {@code false} if the request could not be cancelled
      */
-    public boolean cancelRequest(String uuid) {
+    public synchronized boolean cancelRequest(String uuid) {
         /* Get the pending choice, if it exists */
         CompletableChoice completableChoice = pendingChoices.get(uuid);
 
@@ -117,7 +117,7 @@ public class RequestManager {
      *     passing the turn over, so that the request doesn't get stuck in the manager forever.
      * </p>
      */
-    public void cancelPendingRequests() {
+    public synchronized void cancelPendingRequests() {
         /* Cancel all the choices */
         pendingChoices.values().forEach(CompletableChoice::cancel);
         /* Empty the map */
@@ -129,7 +129,7 @@ public class RequestManager {
      * @param uuid unique identifier of the request
      * @return {@code true} if the request is pending, {@code false} otherwise
      */
-    public boolean isRequestPending(String uuid) {
+    public synchronized boolean isRequestPending(String uuid) {
         /* If a choice exists in the map with associated UUID, then that request is pending */
         return pendingChoices.containsKey(uuid);
     }
@@ -138,7 +138,7 @@ public class RequestManager {
      * Returns whether there are pending requests or not
      * @return {@code true} if there are pending requests, {@code false} otherwise
      */
-    public boolean hasPendingRequests() {
+    public synchronized boolean hasPendingRequests() {
         return !pendingChoices.isEmpty();
     }
 
@@ -155,7 +155,7 @@ public class RequestManager {
      * @apiNote This method is package-private because external classes are not encouraged to manipulate
      * the choices directly, because it prevents them from being automatically taken out of the pending map
      */
-    public CompletableChoice getPendingChoice(String uuid) {
+    public synchronized CompletableChoice getPendingChoice(String uuid) {
         return pendingChoices.get(uuid);
     }
 }
