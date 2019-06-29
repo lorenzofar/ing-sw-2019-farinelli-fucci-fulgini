@@ -197,6 +197,7 @@ public class GUIRenderer extends Application implements UIRenderer {
         });
     }
 
+
     /**
      * Shows a message to the user
      *
@@ -206,7 +207,7 @@ public class GUIRenderer extends Application implements UIRenderer {
     @Override
     public void showMessage(String text, MessageType type) {
         Platform.runLater(() ->
-                new Alert(type.getAlertType(), text, ButtonType.OK).show()
+                new Alert(convertAlertType(type), text, ButtonType.OK).show()
         );
     }
 
@@ -518,6 +519,23 @@ public class GUIRenderer extends Application implements UIRenderer {
     }
 
     /* ===== STATIC HELPER METHODS ===== */
+
+    /**
+     * Converts a MessageType to a JavaFX AlertType
+     *
+     * @param messageType The object representing the message type
+     * @return The object representing the alert type
+     */
+    private Alert.AlertType convertAlertType(MessageType messageType) {
+        switch (messageType) {
+            case WARNING:
+                return Alert.AlertType.WARNING;
+            case ERROR:
+                return Alert.AlertType.ERROR;
+            default:
+                return Alert.AlertType.INFORMATION;
+        }
+    }
 
     /**
      * Creates row constraints for the provided grid pane according to the provided heights

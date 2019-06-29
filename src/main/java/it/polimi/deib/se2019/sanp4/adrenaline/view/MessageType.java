@@ -1,29 +1,34 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.view;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.common.ColoredObject;
-import javafx.scene.control.Alert;
 
-/** Describes the importance level of a message */
+/**
+ * Describes the importance level of a message
+ */
 public enum MessageType implements ColoredObject {
-    /** Informational message to show information about the ongoing game */
-    INFO("Info", "\u001B[34m", Alert.AlertType.INFORMATION),
-    /** Warning message to warn players about potential issues */
-    WARNING("Warning", "\u001B[33m", Alert.AlertType.WARNING),
-    /** Error message to warn about errors or illegal choices */
-    ERROR("Error", "\u001B[31m", Alert.AlertType.ERROR);
+    /**
+     * Informational message to show information about the ongoing game
+     */
+    INFO("Info", "\u001B[34m"),
+    /**
+     * Warning message to warn players about potential issues
+     */
+    WARNING("Warning", "\u001B[33m"),
+    /**
+     * Error message to warn about errors or illegal choices
+     */
+    ERROR("Error", "\u001B[31m");
 
     private String message;
     private String ansiCode;
-    private Alert.AlertType alertType;
 
-    MessageType(String message, String ansiCode, Alert.AlertType alertType) {
+    MessageType(String message, String ansiCode) {
         this.message = message;
         this.ansiCode = ansiCode;
-        this.alertType = alertType;
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return this.message;
     }
 
@@ -34,9 +39,5 @@ public enum MessageType implements ColoredObject {
     @Override
     public String getHexCode() {
         return "";
-    }
-
-    public Alert.AlertType getAlertType() {
-        return alertType;
     }
 }
