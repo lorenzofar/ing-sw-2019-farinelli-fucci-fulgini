@@ -419,7 +419,7 @@ public class CLIRenderer implements UIRenderer {
     @Override
     public void handle(SquareRequest request) {
         // First make sure the board is shown to the user, hence refresh the match screen
-        showMatchScreen();
+        printMatchScreen();
         requestRoutine("Square selection", request,
                 coordPair -> {
                     // We show information about:

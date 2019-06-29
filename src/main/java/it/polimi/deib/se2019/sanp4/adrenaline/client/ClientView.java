@@ -189,15 +189,17 @@ public class ClientView extends RemoteObservable<ViewEvent> implements RemoteVie
         if (request == null) {
             return;
         }
-        if (getCurrentRequest() == null) {
-            // Cancel the current selection if a new request arrives and has to be handled immediately
-            renderer.cancelSelection();
-            synchronized (requestsLock) {
-                this.currentRequest = request;
+        synchronized (requestsLock) {
+            if (getCurrentRequest() == null) {
+                // Cancel the current selection if a new request arrives and has to be handled immediately
+                renderer.cancelSelection();
+                synchronized (requestsLock) {
+                    this.currentRequest = request;
+                }
+                request.accept(renderer);
+            } else {
+                pendingRequests.add(request);
             }
-            request.accept(renderer);
-        } else {
-            pendingRequests.add(request);
         }
     }
 
@@ -206,11 +208,13 @@ public class ClientView extends RemoteObservable<ViewEvent> implements RemoteVie
      * in order to consider the next pending request (if present)
      */
     public void onRequestCompleted() {
-        try {
-            performRequest(pendingRequests.remove());
-        } catch (NoSuchElementException e) {
-            synchronized (requestsLock) {
-                currentRequest = null;
+        synchronized (requestsLock) {
+            try {
+                performRequest(pendingRequests.remove());
+            } catch (NoSuchElementException e) {
+                synchronized (requestsLock) {
+                    currentRequest = null;
+                }
             }
         }
     }

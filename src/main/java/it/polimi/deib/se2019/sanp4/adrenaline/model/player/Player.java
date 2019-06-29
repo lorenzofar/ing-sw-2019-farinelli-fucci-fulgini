@@ -222,6 +222,7 @@ public class Player extends Observable<ModelUpdate> implements Observer<ModelUpd
             throw new IllegalArgumentException("Score cannot be incremented by negative amount");
         }
         score += points;
+        notifyObservers(new PlayerUpdate(this.generateView()));
     }
 
     /**
