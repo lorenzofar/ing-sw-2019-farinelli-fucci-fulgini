@@ -17,13 +17,34 @@ import java.util.stream.Collectors;
  */
 public class ModelManager implements ModelUpdateVisitor {
 
+    /**
+     * The map associating each player username to the corresponding player view
+     */
     private Map<String, PlayerView> players;
+    /**
+     * The map associating each player username to the corresponding player board view
+     */
     private Map<String, PlayerBoardView> playerBoards;
-    private Map<String, ActionCardView> actionCards;
-    private MatchView match;
-    private BoardView board;
-    private PlayerTurnView currentTurn;
 
+    /**
+     * The map associating each player username to the corresponding action card view
+     */
+    private Map<String, ActionCardView> actionCards;
+    /**
+     * The view of the match
+     */
+    private MatchView match;
+    /**
+     * The view of the game board
+     */
+    private BoardView board;
+    /**
+     * THe view of the current turn
+     */
+    private PlayerTurnView currentTurn;
+    /**
+     * The leaderboard of the game, it will be {@code null} until a LeaderboardUpdate is received
+     */
     private Leaderboard leaderboard;
 
     ModelManager() {
@@ -32,48 +53,104 @@ public class ModelManager implements ModelUpdateVisitor {
         actionCards = new HashMap<>();
     }
 
+    /**
+     * Retrieves the player view of the players in the match
+     *
+     * @return A map associating each player username to the corresponding player view
+     */
     public synchronized Map<String, PlayerView> getPlayers() {
         return new HashMap<>(players);
     }
 
+    /**
+     * Retrieves the colors of the players in the match
+     *
+     * @return A map associating each player username to an object representing its color
+     */
     public synchronized Map<String, ColoredObject> getPlayersColors() {
         return players.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().getColor()));
     }
 
+    /**
+     * Sets the player views of the players in the match
+     *
+     * @param players A map associating each player username to the corresponding player view
+     */
     public synchronized void setPlayers(Map<String, PlayerView> players) {
         if (players != null && !players.entrySet().contains(null)) {
             this.players = players;
         }
     }
 
+    /**
+     * Retrieves the view of the match
+     *
+     * @return The object representing the view of the match
+     */
     public synchronized MatchView getMatch() {
         return match;
     }
 
+    /**
+     * Sets the view of the match
+     *
+     * @param match The object representing the view of the match
+     */
     public synchronized void setMatch(MatchView match) {
         this.match = match;
     }
 
+    /**
+     * Retrieves the view of the game board
+     *
+     * @return The object representing the view of the game board
+     */
     public synchronized BoardView getBoard() {
         return board;
     }
 
+    /**
+     * Sets the view of the game board
+     *
+     * @param board The object representing the view of the game board
+     */
     public synchronized void setBoard(BoardView board) {
         this.board = board;
     }
 
+    /**
+     * Sets the player board views of the players in the match
+     *
+     * @return A map associating each player username to the corresponding player board view
+     */
     public synchronized Map<String, PlayerBoardView> getPlayerBoards() {
         return new HashMap<>(playerBoards);
     }
 
+    /**
+     * Sets the view of the current turn
+     *
+     * @return The object representing the turn view
+     */
     public synchronized PlayerTurnView getCurrentTurn() {
         return currentTurn;
     }
 
+    /**
+     * Retrieves the view of the action card owned by the provided player
+     *
+     * @param player The username of the player
+     * @return The object representing the action card view
+     */
     public synchronized ActionCardView getActionCard(String player) {
         return actionCards.getOrDefault(player, null);
     }
 
+    /**
+     * Retrieves the leaderboard of the match
+     *
+     * @return The object representing the leaderboard
+     */
     public synchronized Leaderboard getLeaderboard() {
         return leaderboard;
     }

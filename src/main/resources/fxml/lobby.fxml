@@ -5,50 +5,53 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
-<VBox
-        fx:id="lobbyScene"
-        xmlns="http://javafx.com/javafx"
-        xmlns:fx="http://javafx.com/fxml"
-        fx:controller="it.polimi.deib.se2019.sanp4.adrenaline.client.gui.LobbyController"
-        stylesheets="@style.css"
-        styleClass="dark-background"
-        spacing="10"
-        prefHeight="400.0" prefWidth="600.0">
+<?import javafx.scene.Scene?>
 
-    <padding>
-        <Insets top="25" right="25" bottom="10" left="25"/>
-    </padding>
+<Scene fx:id="lobbyScene"
+       xmlns="http://javafx.com/javafx"
+       xmlns:fx="http://javafx.com/fxml"
+       fx:controller="it.polimi.deib.se2019.sanp4.adrenaline.client.gui.LobbyController"
+       stylesheets="@style.css">
 
-    <ImageView
-            fx:id="adrenalineLogo"
-            pickOnBounds="true"
-            preserveRatio="true">
-        <Image url="@../adrenaline_title.png"/>
-    </ImageView>
+    <VBox styleClass="dark-background"
+          spacing="10">
 
-    <StackPane alignment="CENTER">
-        <VBox fx:id="connectedPlayersContainer" spacing="10">
-            <Label
-                    styleClass="title-text"
-                    text="Waiting for players"/>
-            <Label
-                    text="The game will start once enough players are connected"/>
+        <padding>
+            <Insets top="25" right="25" bottom="10" left="25"/>
+        </padding>
 
-            <ListView
-                    fx:id="connectedPlayersListView"
-                    GridPane.rowIndex="1">
-            </ListView>
-        </VBox>
+        <ImageView
+                fx:id="adrenalineLogo"
+                pickOnBounds="true"
+                preserveRatio="true">
+            <Image url="@../adrenaline_title.png"/>
+        </ImageView>
 
-        <VBox fx:id="matchStartIndicator" alignment="CENTER" spacing="10">
-            <Label
-                    styleClass="title-text"
-                    text="Almost ready"/>
-            <ProgressIndicator
-                    GridPane.rowIndex="2"/>
-            <Label
-                    text="The game is starting soon"/>
-        </VBox>
-    </StackPane>
+        <StackPane alignment="CENTER">
+            <VBox fx:id="connectedPlayersContainer" spacing="10">
+                <Label
+                        styleClass="title-text"
+                        text="Waiting for players"/>
+                <Label
+                        text="The game will start once enough players are connected"/>
 
-</VBox>
+                <ListView
+                        fx:id="connectedPlayersListView"
+                        GridPane.rowIndex="1">
+                </ListView>
+            </VBox>
+
+            <VBox fx:id="matchStartIndicator" alignment="CENTER" spacing="10">
+                <Label
+                        styleClass="title-text"
+                        text="Almost ready"/>
+                <ProgressIndicator
+                        GridPane.rowIndex="2"/>
+                <Label
+                        text="The game is starting soon"/>
+            </VBox>
+        </StackPane>
+
+    </VBox>
+
+</Scene>

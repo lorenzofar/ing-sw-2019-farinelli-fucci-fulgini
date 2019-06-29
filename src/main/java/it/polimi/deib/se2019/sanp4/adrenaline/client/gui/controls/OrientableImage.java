@@ -14,7 +14,7 @@ public class OrientableImage extends Pane {
 
     private OrientationEnum orientation;
 
-    OrientableImage() {
+    public OrientableImage() {
         super();
         this.orientation = OrientationEnum.UP;
     }
@@ -24,7 +24,7 @@ public class OrientableImage extends Pane {
      *
      * @param imagePath The path of the image
      */
-    void setImage(String imagePath) {
+    public void setImage(String imagePath) {
         Image image = new Image(imagePath);
         // Create a new temporary imageview container
         ImageView imageView = new ImageView(image);

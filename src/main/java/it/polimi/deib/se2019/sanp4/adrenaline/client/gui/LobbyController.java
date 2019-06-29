@@ -6,6 +6,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.scene.Scene;
 import javafx.scene.control.ListView;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
@@ -16,7 +17,7 @@ import java.util.Collection;
 public class LobbyController extends GUIController {
 
     @FXML
-    private VBox lobbyScene;
+    private Scene lobbyScene;
     @FXML
     private ListView<String> connectedPlayersListView;
     @FXML

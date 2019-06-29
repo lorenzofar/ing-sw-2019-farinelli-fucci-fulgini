@@ -35,6 +35,7 @@ public class RenderingManager implements ModelUpdateVisitor {
             if (update.getPlayer().getName().equals(clientView.getUsername())) {
                 clientView.getRenderer().refreshMatchInfo();
                 clientView.getRenderer().refreshAmmoInfo();
+                clientView.getRenderer().refreshOwnedPowerups();
                 if (update.getPlayer().getState().equals(PlayerState.SUSPENDED)) {
                     clientView.getRenderer().showPreemptionScreen(
                             "Suspended",

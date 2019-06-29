@@ -55,45 +55,46 @@ public class GUIRenderer extends Application implements UIRenderer {
 
     /**
      * Sets the current scene with the provided FXML resource
+     * It must be executed in the JavaFX application thread
      *
      * @param fxmlResource The path of the FXML file to display
      * @param fullScreen   {@code true} if the scene should be set in full screen, {@code false} otherwise
+     * @throws IllegalStateException if it is called on a thread other than the JavaFX application thread
      */
-    private void showScene(String fxmlResource, boolean fullScreen) {
+    private synchronized void showScene(String fxmlResource, boolean fullScreen) {
         if (fxmlResource == null) {
             return;
         }
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource(fxmlResource));
         try {
-            Scene scene = new Scene(loader.load());
-            // If a stage is already present, we close it
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource(fxmlResource));
+            Scene scene = loader.load();
+            currentController = loader.getController();
+
+            // If a stage is already present, we hide it
             if (this.stage != null) {
-                this.stage.close();
+                this.stage.hide();
+            } else {
+                this.stage = new Stage();
+                this.stage.setTitle("Adrenaline");
+                this.stage.setResizable(true);
             }
-            this.stage = new Stage();
-            this.stage.setTitle("Adrenaline");
+
             this.stage.setMaximized(fullScreen);
-            this.stage.setResizable(true);
 
             this.stage.setOnCloseRequest((WindowEvent t) -> {
                 Platform.exit();
                 System.exit(0);
             });
 
-            this.stage.maximizedProperty().addListener((o, oldVal, newVal) ->
-                    this.stage.setMaximized(true)
-            );
-
-            Platform.runLater(() ->
-                    this.stage.setScene(scene));
-            currentController = loader.getController();
             if (currentController != null) {
                 // We attach the client view and the stage only to those scenes who have a controller
                 currentController.setClientView(clientView);
                 currentController.setStage(this.stage);
             }
-            Platform.runLater(this.stage::show);
+
+            this.stage.setScene(scene);
+            this.stage.show();
         } catch (IOException e) {
             // An error occurred loading the scene
             logger.log(Level.SEVERE, "Cannot load scene with resource {0}", fxmlResource);
@@ -168,13 +169,12 @@ public class GUIRenderer extends Application implements UIRenderer {
     @Override
     public void showMatchScreen() {
         Platform.runLater(() -> {
-            if (clientView.getScene().isGameScene() && currentController != null) {
+            try {
                 ((GameController) currentController).refreshMatchScreen();
-            } else {
-                showScene("/fxml/game.fxml", true);
-                Platform.runLater(((GameController) currentController)::buildMatchScreen);
-                // An error occurred while building the match screen
+            } catch (Exception e) {
                 logger.log(Level.INFO, "Game screen was not loaded, we show it for the first time");
+                showScene("/fxml/game.fxml", true);
+                ((GameController) currentController).buildMatchScreen();
             }
         });
     }
@@ -376,6 +376,17 @@ public class GUIRenderer extends Application implements UIRenderer {
         Platform.runLater(() -> {
             try {
                 ((GameController) currentController).updateWeaponsInfo();
+            } catch (Exception ignore) {
+                // The game screen is not shown, hence we ignore the error
+            }
+        });
+    }
+
+    @Override
+    public void refreshOwnedPowerups() {
+        Platform.runLater(() -> {
+            try {
+                ((GameController) currentController).updateOwnedPowerups();
             } catch (Exception ignore) {
                 // The game screen is not shown, hence we ignore the error
             }

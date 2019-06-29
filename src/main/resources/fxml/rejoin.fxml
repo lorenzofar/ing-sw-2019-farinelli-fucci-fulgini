@@ -4,28 +4,29 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ProgressIndicator?>
 <?import javafx.scene.layout.VBox?>
-<VBox xmlns="http://javafx.com/javafx"
-      xmlns:fx="http://javafx.com/fxml"
-      stylesheets="@style.css"
-      styleClass="dark-background"
-      spacing="12"
-      prefHeight="400.0" prefWidth="600.0">
+<?import javafx.scene.Scene?>
+<Scene xmlns="http://javafx.com/javafx"
+       stylesheets="@style.css">
 
-    <padding>
-        <Insets top="25" right="25" bottom="10" left="25"/>
-    </padding>
+    <VBox styleClass="dark-background"
+          spacing="12">
 
-    <Label styleClass="title-text" text="Rejoining the match"/>
+        <padding>
+            <Insets top="25" right="25" bottom="10" left="25"/>
+        </padding>
 
-    <VBox>
-        <Label text="You have been reconnected to your previous match" style="-fx-start-margin: 12"/>
-        <Label text="You will rejoin the match at the end of the current turn"/>
+        <Label styleClass="title-text" text="Rejoining the match"/>
+
+        <VBox>
+            <Label text="You have been reconnected to your previous match" style="-fx-start-margin: 12"/>
+            <Label text="You will rejoin the match at the end of the current turn"/>
+        </VBox>
+
+        <ProgressIndicator>
+            <VBox.margin>
+                <Insets top="24"/>
+            </VBox.margin>
+        </ProgressIndicator>
+
     </VBox>
-
-    <ProgressIndicator>
-        <VBox.margin>
-            <Insets top="24"/>
-        </VBox.margin>
-    </ProgressIndicator>
-
-</VBox>
+</Scene>

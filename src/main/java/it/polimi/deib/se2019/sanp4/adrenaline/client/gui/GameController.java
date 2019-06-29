@@ -11,6 +11,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.model.player.PlayerColor;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
+import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 
@@ -41,9 +42,11 @@ public class GameController extends GUIController {
     private static final int SPAWN_WEAPONS_COUNT = 3;
 
     @FXML
-    private VBox gameScene;
+    private Scene gameScene;
     @FXML
     private GridPane topGameRow;
+    @FXML
+    private ColumnConstraints boardColumn;
     @FXML
     private GridPane gameContainer;
     @FXML
@@ -78,6 +81,8 @@ public class GameController extends GUIController {
     private VBox playerBoardsContainer;
     @FXML
     private HBox bottomRow;
+    @FXML
+    private PowerupsContainer powerupsContainer;
 
     /**
      * A map describing the player board control associated to each player
@@ -94,14 +99,6 @@ public class GameController extends GUIController {
      * as well as setting the height of bottom row elements to fill it
      */
     private void computeBoardSize() {
-        double sceneHeight = gameScene.getHeight();
-        double gameWidth = sceneHeight * BOARD_ROW_RATIO;
-        gameContainer.setMinHeight(sceneHeight * BOARD_ROW_RATIO);
-        gameContainer.setMaxHeight(sceneHeight * BOARD_ROW_RATIO);
-        gameContainer.setMinWidth(gameWidth / BOARD_RATIO);
-        gameContainer.setMaxWidth(gameWidth / BOARD_RATIO);
-        userBoard.setMinHeight(sceneHeight * 0.2);
-        userBoard.setMaxHeight(sceneHeight * 0.2);
     }
 
     @FXML
@@ -116,10 +113,10 @@ public class GameController extends GUIController {
         setRowConstraints(middleSxContainer, SX_COL_SPAWN_WEAPONS_ROWS);
         setRowConstraints(middleDxContainer, DX_COL_SPAWN_WEAPONS_ROWS);
 
-        topGameRow.prefWidthProperty().bind(gameScene.widthProperty());
-        // Set the bottom row to take the 25% of the screen height
-        // The remaining space is taken by the game board
-        bottomRow.prefHeightProperty().bind(gameScene.heightProperty().multiply(0.25));
+        gameContainer.minHeightProperty().bind(gameScene.heightProperty().multiply(BOARD_ROW_RATIO));
+        gameContainer.maxHeightProperty().bind(gameScene.heightProperty().multiply(BOARD_ROW_RATIO));
+        gameContainer.minWidthProperty().bind(gameScene.heightProperty().multiply(BOARD_ROW_RATIO).divide(BOARD_RATIO));
+        gameContainer.maxWidthProperty().bind(gameScene.heightProperty().multiply(BOARD_ROW_RATIO).divide(BOARD_RATIO));
 
         /* ===== BOARD LAYOUT ===== */
         middleRow.prefWidthProperty().bind(gameContainer.widthProperty());
@@ -145,8 +142,6 @@ public class GameController extends GUIController {
         spawnWeaponsContainers.put(AmmoCube.BLUE, topWeaponsContainer);
         spawnWeaponsContainers.put(AmmoCube.RED, middleSxContainer);
         spawnWeaponsContainers.put(AmmoCube.YELLOW, middleDxContainer);
-
-        // TODO: Initialize player boards of the other players
 
         // Create the containers for weapons in the three tracks
         for (AmmoCube color : AmmoCube.values()) {
@@ -287,6 +282,7 @@ public class GameController extends GUIController {
         updateWeaponsInfo();
         updateAmmoAmount();
         updateSpawnWeapons();
+        updateOwnedPowerups();
     }
 
     /**
@@ -432,5 +428,12 @@ public class GameController extends GUIController {
                         .stream()
                         .collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().getWeapons()))
         );
+    }
+
+    /**
+     * Updates the rendered powerup cards owned by the user
+     */
+    void updateOwnedPowerups() {
+        powerupsContainer.setPowerups(clientView.getModelManager().getPlayers().get(clientView.getUsername()).getPowerups());
     }
 }

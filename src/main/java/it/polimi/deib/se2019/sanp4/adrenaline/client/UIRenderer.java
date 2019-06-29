@@ -142,5 +142,10 @@ public interface UIRenderer extends ChoiceRequestVisitor {
      */
     public void refreshOwnedWeapons();
 
+    /**
+     * Refreshes the rendered list of weapons owned by the user
+     */
+    public void refreshOwnedPowerups();
+
     //TODO: Add more methods
 }
