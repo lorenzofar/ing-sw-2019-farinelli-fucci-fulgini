@@ -209,12 +209,11 @@ public class ClientView extends RemoteObservable<ViewEvent> implements RemoteVie
      */
     public void onRequestCompleted() {
         synchronized (requestsLock) {
+            currentRequest = null;
             try {
                 performRequest(pendingRequests.remove());
             } catch (NoSuchElementException e) {
-                synchronized (requestsLock) {
-                    currentRequest = null;
-                }
+                // Do nothing
             }
         }
     }
