@@ -239,6 +239,19 @@ public class PlayerBoardTest {
     }
 
     @Test
+    public void getPlayerScores_frenzy_shouldNotCountFirstBlood() throws Exception {
+        Player player = new Player(validName, validActionCard, validColor);
+        PlayerBoard playerBoard = player.getPlayerBoard();
+        playerBoard.turnFrenzy();
+        Player shooter = new Player("player", validActionCard, validColor);
+        playerBoard.addDamage(shooter, 3);
+        Map<Player, Integer> playerScores = player.getPlayerBoard().getPlayerScores();
+
+        /* Check no point for first blood */
+        assertEquals(2, (int) playerScores.get(shooter));
+    }
+
+    @Test
     public void turnFrenzy_playerHasNoDamages_shouldTurnTheBoard() throws PlayerException {
         Player player = new Player(validName, validActionCard, validColor);
         PlayerBoard playerBoard = new PlayerBoard(player);

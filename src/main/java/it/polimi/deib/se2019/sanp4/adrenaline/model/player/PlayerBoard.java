@@ -246,10 +246,12 @@ public class PlayerBoard extends Observable<ModelUpdate> {
                 .sorted(Collections.reverseOrder(comparingByValue()))
                 .forEachOrdered(playerDamageEntry -> playerScores.put(playerDamageEntry.getKey(), scores.next()));
 
-        // Then determine who performed the first damage
-        Player firstBloodShooter = damages.get(0);
-        // And assign an extra point for first blood
-        playerScores.merge(firstBloodShooter, 1, Integer::sum);
+        if (!state.toString().equals("frenzy")) {
+            // Then determine who performed the first damage
+            Player firstBloodShooter = damages.get(0);
+            // And assign an extra point for first blood
+            playerScores.merge(firstBloodShooter, 1, Integer::sum);
+        }
         return playerScores;
     }
 

@@ -31,7 +31,9 @@ public class StandardScoreManager implements ScoreManager {
             shootersScores.forEach(Player::addScorePoints);
             // Update the counter of killshots on the killer
             Player killer = player.getPlayerBoard().getKillshot();
-            killer.addPerformedKillshot();
+            if (killer != null) {
+                killer.addPerformedKillshot();
+            }
             // Get the player who performed overkill (if present)
             Player overKiller = player.getPlayerBoard().getOverkill();
             if(overKiller != null){
@@ -104,6 +106,12 @@ public class StandardScoreManager implements ScoreManager {
         if(match == null){
             throw new NullPointerException("Match cannot be null");
         }
+
+        /* First score the boards which still have damages */
+        List<Player> playersWithDamage = match.getPlayers().stream()
+                .filter(player -> player.getPlayerBoard().getDamageCount() > 0)
+                .collect(Collectors.toList());
+        assignScores(playersWithDamage);
 
         List<Player> killshotsTrack = match.getKillshotsTrack();
 

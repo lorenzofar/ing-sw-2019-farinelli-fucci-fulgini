@@ -5,10 +5,12 @@ import it.polimi.deib.se2019.sanp4.adrenaline.model.match.Match;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.match.MatchConfiguration;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.match.MatchCreator;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.player.PlayerException;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.lang.reflect.Array;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -69,6 +71,15 @@ public class StandardScoreManagerTest {
         assertEquals(0, papaya.getScore());
         assertEquals("avocado", match.getKillshotsTrack().get(0).getName());
 
+        /* Reset boards */
+        for (Player player : new Player[]{papaya, mango, avocado, durian}) {
+            try {
+                player.getPlayerBoard().updateDeathsAndReset();
+            } catch (PlayerException e) {
+                /* OK, just flip */
+            }
+        }
+
         scoreManager.scoreFinal(match);
 
         assertEquals(8, durian.getScore());
@@ -109,6 +120,15 @@ public class StandardScoreManagerTest {
         assertEquals(9, match.getPlayerByName("avocado").getScore());
         assertEquals(0, match.getPlayerByName("papaya").getScore());
 
+        /* Reset boards */
+        for (Player player : new Player[]{papaya, mango, avocado, durian}) {
+            try {
+                player.getPlayerBoard().updateDeathsAndReset();
+            } catch (PlayerException e) {
+                /* OK, just flip */
+            }
+        }
+
         /* The player with the overkill takes 8 points in the final scoring, the tie of the two
         players with a single kill is broken in favour of the first to kill */
         scoreManager.scoreFinal(match);
@@ -116,5 +136,34 @@ public class StandardScoreManagerTest {
         assertEquals(15, match.getPlayerByName("mango").getScore());
         assertEquals(9, match.getPlayerByName("avocado").getScore());
         assertEquals(0, match.getPlayerByName("papaya").getScore());
+    }
+
+    @Test
+    public void scoreFinal_someFrenzy_shouldScoreBoardsWithDamage() throws Exception {
+        Player papaya = match.getPlayerByName("papaya");
+        Player mango = match.getPlayerByName("mango");
+        Player avocado = match.getPlayerByName("avocado");
+        Player durian = match.getPlayerByName("durian");
+
+        /* Turn a couple boards to frenzy mode */
+        mango.getPlayerBoard().turnFrenzy();
+        avocado.getPlayerBoard().turnFrenzy();
+
+        /* Add damages to each */
+        shoot(durian, papaya, 1);
+        shoot(mango, papaya, 2);
+        shoot(durian, papaya, 2);
+
+        shoot(avocado, mango, 3);
+        shoot(papaya, mango, 2);
+        shoot(avocado, mango, 3);
+
+        scoreManager.scoreFinal(match);
+
+        /* Check the points */
+        assertEquals(1, papaya.getScore());
+        assertEquals(6, mango.getScore());
+        assertEquals(2, avocado.getScore());
+        assertEquals(9, durian.getScore());
     }
 }
