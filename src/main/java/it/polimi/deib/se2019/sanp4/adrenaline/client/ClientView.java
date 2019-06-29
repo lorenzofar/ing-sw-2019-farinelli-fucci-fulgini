@@ -11,9 +11,9 @@ import it.polimi.deib.se2019.sanp4.adrenaline.view.MessageType;
 import it.polimi.deib.se2019.sanp4.adrenaline.view.ViewScene;
 
 import java.io.Serializable;
-import java.util.ArrayDeque;
-import java.util.Deque;
 import java.util.NoSuchElementException;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -49,7 +49,7 @@ public class ClientView extends RemoteObservable<ViewEvent> implements RemoteVie
      * The deque of requests that are waiting to be handled
      * It is managed with a FIFO policy
      */
-    private Deque<ChoiceRequest> pendingRequests;
+    private BlockingQueue<ChoiceRequest> pendingRequests;
     /**
      * The current selection handler
      */
@@ -59,12 +59,14 @@ public class ClientView extends RemoteObservable<ViewEvent> implements RemoteVie
      */
     private ViewScene scene;
 
+    private final Object requestsLock = new Object();
+
     public ClientView() {
         this.modelManager = new ModelManager();
         // Create a new model
         this.renderingManager = new RenderingManager(this);
         this.currentRequest = null;
-        pendingRequests = new ArrayDeque<>();
+        pendingRequests = new LinkedBlockingQueue<>();
     }
 
     /**
@@ -187,13 +189,15 @@ public class ClientView extends RemoteObservable<ViewEvent> implements RemoteVie
         if (request == null) {
             return;
         }
-        if (currentRequest == null) {
+        if (getCurrentRequest() == null) {
             // Cancel the current selection if a new request arrives and has to be handled immediately
             renderer.cancelSelection();
-            this.currentRequest = request;
+            synchronized (requestsLock) {
+                this.currentRequest = request;
+            }
             request.accept(renderer);
         } else {
-            pendingRequests.push(request);
+            pendingRequests.add(request);
         }
     }
 
@@ -203,11 +207,11 @@ public class ClientView extends RemoteObservable<ViewEvent> implements RemoteVie
      */
     public void onRequestCompleted() {
         try {
-            performRequest(pendingRequests.pop());
+            performRequest(pendingRequests.remove());
         } catch (NoSuchElementException e) {
-            currentRequest = null;
-        } finally {
-            //TODO: Refresh the rendered match screen
+            synchronized (requestsLock) {
+                currentRequest = null;
+            }
         }
     }
 
@@ -217,7 +221,9 @@ public class ClientView extends RemoteObservable<ViewEvent> implements RemoteVie
      * @return The object representing the request
      */
     public ChoiceRequest getCurrentRequest() {
-        return this.currentRequest;
+        synchronized (requestsLock) {
+            return this.currentRequest;
+        }
     }
 
     @Override
