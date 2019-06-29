@@ -118,13 +118,11 @@ public class PersistentViewImpl extends RemoteObservable<ViewEvent> implements P
                 stopTimer();
             }
             timer = timerScheduler.schedule(() -> {
-                synchronized (timerLock) {
-                    cancelPendingRequests();
-                    try {
-                        callback.call();
-                    } catch (Exception e) {
-                        /* Ignore the exception */
-                    }
+                cancelPendingRequests();
+                try {
+                    callback.call();
+                } catch (Exception e) {
+                    /* Ignore the exception */
                 }
             }, delay, unit);
         }
@@ -489,6 +487,7 @@ public class PersistentViewImpl extends RemoteObservable<ViewEvent> implements P
         /* Get the uuid and try to complete the choice */
         String uuid = choiceResponse.getUuid();
         T choice = choiceResponse.getChoice();
+        logger.log(Level.FINER, "Choice response: {0}", choice);
         try {
             requestManager.completeRequest(uuid, choice);
         } catch (UnknownIdException e) {

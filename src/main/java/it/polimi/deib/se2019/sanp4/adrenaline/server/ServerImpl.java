@@ -173,8 +173,10 @@ public class ServerImpl implements SocketServer, RemoteServer, Runnable {
             /* Check if the player is in a match */
             Controller controller = playerMatches.get(username);
             if(controller != null) {
+                logger.log(Level.INFO, "Player \"{0}\" is trying to rejoin", username);
                 /* Try to reconnect the player */
                 success = controller.reconnectRemoteView(username, view);
+                logger.log(Level.FINE, "Rejoin result: {0}", success);
             }
         }
 
@@ -258,6 +260,7 @@ public class ServerImpl implements SocketServer, RemoteServer, Runnable {
         /* Run the controller in another thread */
         matchExecutor.submit(() -> {
             controller.run(); /* Run */
+            logger.log(Level.INFO, "Match is over, unreserving usernames {0}", usernames);
             usernames.forEach(this::unreserveUsername); /* Unreserve usernames when finished */
         });
     }

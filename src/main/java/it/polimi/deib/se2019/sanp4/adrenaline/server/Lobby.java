@@ -109,6 +109,8 @@ public class Lobby implements Runnable {
         if (waitingPlayers.size() >= minPlayers) {
             notifyWaitingList(true);
             triggerMatchStart();
+        } else {
+            notifyWaitingList(false);
         }
         /* If we do not have minimum number of players, a new timer will be scheduled when we do */
         timer = null; /* Reset the timer */
