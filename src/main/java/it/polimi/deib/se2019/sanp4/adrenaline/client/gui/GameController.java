@@ -12,6 +12,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 
@@ -43,10 +44,6 @@ public class GameController extends GUIController {
 
     @FXML
     private Scene gameScene;
-    @FXML
-    private GridPane topGameRow;
-    @FXML
-    private ColumnConstraints boardColumn;
     @FXML
     private GridPane gameContainer;
     @FXML
@@ -80,9 +77,9 @@ public class GameController extends GUIController {
     @FXML
     private VBox playerBoardsContainer;
     @FXML
-    private HBox bottomRow;
-    @FXML
     private PowerupsContainer powerupsContainer;
+    @FXML
+    private Label squareRequestMessage;
 
     /**
      * A map describing the player board control associated to each player
@@ -93,13 +90,6 @@ public class GameController extends GUIController {
      * The map associating each spawn color to the list of weapon images sockets
      */
     private Map<AmmoCube, List<WeaponImage>> spawnWeaponsImages;
-
-    /**
-     * Compute the size of the board to keep the image ratio
-     * as well as setting the height of bottom row elements to fill it
-     */
-    private void computeBoardSize() {
-    }
 
     @FXML
     public void initialize() {
@@ -178,8 +168,6 @@ public class GameController extends GUIController {
      * Set up the layout of the game screen by creating overlays and binding dimensions
      */
     void buildMatchScreen() {
-        // Maximize the game window and make it not resizable
-        computeBoardSize();
 
         // Get the model manager
         ModelManager modelManager = clientView.getModelManager();
@@ -263,10 +251,19 @@ public class GameController extends GUIController {
      * @param request The object representing the square request
      */
     void askSquareSelection(SquareRequest request) {
+        // Set the text of the square request message
+        squareRequestMessage.setText(request.getMessage());
         // First retrieve all the squares the user can select among and create a pool of observable overlays
         Collection<SelectableOverlay<CoordPair>> selectableSquares = Arrays.stream(squareOverlays).flatMap(Arrays::stream).filter(Objects::nonNull).filter(overlay -> request.getChoices().contains(overlay.getData())).collect(Collectors.toList());
         // Then create a selection handler to handle the request and set it as the current one in the view
         clientView.setSelectionHandler(new SelectionHandler<CoordPair>(selectableSquares));
+    }
+
+    /**
+     * Resets and clears all the messages shown to the user in previous requests
+     */
+    void resetRequestMessages() {
+        squareRequestMessage.setText("");
     }
 
     /**

@@ -218,6 +218,14 @@ public class GUIRenderer extends Application implements UIRenderer {
     public void cancelSelection() {
         // We set a null selection handler and, incidentally, we cancel the existing one (if present)
         clientView.setSelectionHandler(null);
+        // We reset all the messages shown to the user
+        Platform.runLater(() -> {
+            try {
+                ((GameController) currentController).resetRequestMessages();
+            } catch (Exception e) {
+                logger.log(Level.INFO, "Failed to reset game request messages");
+            }
+        });
     }
 
     /**

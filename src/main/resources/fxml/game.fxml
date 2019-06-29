@@ -2,8 +2,10 @@
 
 <?import it.polimi.deib.se2019.sanp4.adrenaline.client.gui.controls.*?>
 <?import it.polimi.deib.se2019.sanp4.adrenaline.client.gui.PowerupsContainer?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.Scene?>
+<?import javafx.geometry.Insets?>
 <Scene xmlns="http://javafx.com/javafx"
        xmlns:fx="http://javafx.com/fxml"
        stylesheets="@style.css"
@@ -14,13 +16,14 @@
             styleClass="dark-background" hgap="12">
         <rowConstraints>
             <RowConstraints percentHeight="75"/>
-            <RowConstraints percentHeight="25"/>
+            <RowConstraints percentHeight="5"/>
+            <RowConstraints percentHeight="20"/>
         </rowConstraints>
 
         <!-- TOP ROW -->
         <GridPane fx:id="topGameRow" GridPane.rowIndex="0" hgap="12" GridPane.vgrow="ALWAYS" GridPane.hgrow="ALWAYS">
             <columnConstraints>
-                <ColumnConstraints fx:id="boardColumn" hgrow="SOMETIMES"    /> <!-- Column containing board -->
+                <ColumnConstraints fx:id="boardColumn" hgrow="SOMETIMES"/> <!-- Column containing board -->
                 <ColumnConstraints/> <!-- Column containing match info and player boards -->
             </columnConstraints>
             <!-- GAME BOARD -->
@@ -81,8 +84,16 @@
             </GridPane>
         </GridPane>
 
+        <Label fx:id="squareRequestMessage" styleClass="accent-text, title-text" GridPane.hgrow="ALWAYS"
+               GridPane.vgrow="ALWAYS"
+               GridPane.rowIndex="1">
+            <padding>
+                <Insets topRightBottomLeft="4"/>
+            </padding>
+        </Label>
+
         <!-- BOTTOM ROW -->
-        <HBox fx:id="bottomRow" GridPane.rowIndex="1" spacing="8" GridPane.vgrow="ALWAYS">
+        <HBox fx:id="bottomRow" GridPane.rowIndex="2" spacing="8" GridPane.vgrow="ALWAYS">
             <PlayerBoardControl fx:id="userBoard" styleClass="shadowed"/>
             <PowerupsContainer fx:id="powerupsContainer"/>
         </HBox>
