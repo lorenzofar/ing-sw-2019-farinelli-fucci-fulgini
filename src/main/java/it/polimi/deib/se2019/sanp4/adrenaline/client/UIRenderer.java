@@ -9,6 +9,10 @@ import it.polimi.deib.se2019.sanp4.adrenaline.view.MessageType;
 
 import java.util.Collection;
 
+/**
+ * An interface extending ChoiceRequestVisitor describing a class that renders or refreshes the screens shown to the user
+ * It provides method both to show screens and to refresh UI elements in a granular way
+ */
 public interface UIRenderer extends ChoiceRequestVisitor {
 
     /**
@@ -146,6 +150,4 @@ public interface UIRenderer extends ChoiceRequestVisitor {
      * Refreshes the rendered list of weapons owned by the user
      */
     public void refreshOwnedPowerups();
-
-    //TODO: Add more methods
 }

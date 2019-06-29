@@ -236,8 +236,6 @@ public class GameController extends GUIController {
         // Then load the background
         Platform.runLater(() -> setBoard(boardView.getId()));
 
-        //TODO: Finish implementing this method
-
         refreshMatchScreen();
 
         // For each player, update its player board

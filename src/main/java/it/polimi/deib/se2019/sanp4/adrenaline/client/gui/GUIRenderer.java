@@ -28,6 +28,9 @@ import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * A specialized class implementing the UIRenderer interface that provides methods to render content in a GUI environment
+ */
 public class GUIRenderer extends Application implements UIRenderer {
 
     public static final String CSS_BOLD_TITLE = "title-text";

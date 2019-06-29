@@ -55,7 +55,6 @@ public class ModelImpl extends RemoteRoutingObservable<ModelUpdate> implements M
         }
         this.match = match;
         this.match.addObserver(this);
-        //TODO: notify?
     }
 
     /**

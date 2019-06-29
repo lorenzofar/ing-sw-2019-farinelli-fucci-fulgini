@@ -33,8 +33,6 @@ public enum ViewScene {
      */
     DISCONNECTED("Disconnected");
 
-    //TODO: Add more states
-
     private String message;
 
     ViewScene(String message) {

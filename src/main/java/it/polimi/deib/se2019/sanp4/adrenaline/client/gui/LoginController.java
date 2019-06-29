@@ -1,7 +1,6 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.client.gui;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.LoginException;
-import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -11,6 +10,14 @@ import javafx.scene.control.*;
 
 import java.io.IOException;
 
+/**
+ * A controller used to handle the login scene. It provides methods to
+ * <ul>
+ * <li>Create and set up the network connection</li>
+ * <li>Connect to the server using the chosen connection</li>
+ * <li>Log in to the server</li>
+ * </ul>
+ */
 public class LoginController extends GUIController {
 
     @FXML

@@ -4,6 +4,10 @@ import it.polimi.deib.se2019.sanp4.adrenaline.client.gui.controls.BoardSelection
 import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.ChoiceRequest;
 import javafx.scene.layout.GridPane;
 
+/**
+ * A specialized request controller used to handle board requests.
+ * The window will show a grid with the images of the boards the user can select
+ */
 public class BoardRequestController extends RequestController<Integer> {
 
     /**

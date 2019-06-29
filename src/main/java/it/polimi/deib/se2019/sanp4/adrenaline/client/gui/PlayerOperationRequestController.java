@@ -7,6 +7,10 @@ import javafx.scene.layout.GridPane;
 
 import java.util.List;
 
+/**
+ * A specialized request controller used to handle player operation requests.
+ * The window will show a vertical list of buttons representing the available operations the user can select.
+ */
 public class PlayerOperationRequestController extends RequestController<PlayerOperationEnum> {
     /**
      * Retrieves the number of columns the grid is divided into

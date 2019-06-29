@@ -7,6 +7,10 @@ import javafx.scene.layout.GridPane;
 
 import java.util.List;
 
+/**
+ * A specialized request controller used to handle player requests.
+ * The window will show an horizontal track with the selectable players, showing their name and image
+ */
 public class PlayerRequestController extends RequestController<String> {
     /**
      * Retrieves the number of columns the grid is divided into

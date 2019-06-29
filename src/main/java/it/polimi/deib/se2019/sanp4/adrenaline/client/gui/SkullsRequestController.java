@@ -6,6 +6,10 @@ import javafx.scene.layout.GridPane;
 
 import java.util.List;
 
+/**
+ * A specialized request controller used to handle skulls requests.
+ * The window will show an horizontal track of buttons with the selectable amounts of skulls
+ */
 public class SkullsRequestController extends RequestController<Integer> {
 
     /**

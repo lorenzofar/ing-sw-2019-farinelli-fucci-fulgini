@@ -3,8 +3,18 @@ package it.polimi.deib.se2019.sanp4.adrenaline.client.gui;
 import it.polimi.deib.se2019.sanp4.adrenaline.client.ClientView;
 import javafx.stage.Stage;
 
+/**
+ * An abstract class representing a controller used to handle GUI screens.
+ * It holds a reference to the current ClientView and the current stage, along with methods to set them
+ */
 abstract class GUIController {
+    /**
+     * The object representing the current client view
+     */
     ClientView clientView;
+    /**
+     * The object representing the current stage
+     */
     Stage stage;
 
     /**
@@ -24,7 +34,7 @@ abstract class GUIController {
      *
      * @param stage The object representing the stage
      */
-    public void setStage(Stage stage) {
+    void setStage(Stage stage) {
         this.stage = stage;
     }
 }

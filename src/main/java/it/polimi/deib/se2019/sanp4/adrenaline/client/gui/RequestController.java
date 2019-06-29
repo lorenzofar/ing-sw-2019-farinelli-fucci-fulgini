@@ -32,6 +32,9 @@ public abstract class RequestController<T extends Serializable> extends GUIContr
 
     private StringProperty messageProperty;
 
+    /**
+     * The list of selectable overlays the user can select to select the choice
+     */
     List<SelectableOverlay<T>> overlays;
 
     @FXML

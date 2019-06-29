@@ -20,6 +20,9 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+/**
+ * A specialized class implementing the UIRenderer interface that provides methods to render content in a CLI environment
+ */
 public class CLIRenderer implements UIRenderer {
 
     private static final String LOBBY_MATCH_NOTSTARTING = "The match is about to start, wait for other players to join";

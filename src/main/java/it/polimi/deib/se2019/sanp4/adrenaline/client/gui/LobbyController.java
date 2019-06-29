@@ -13,7 +13,13 @@ import javafx.scene.layout.VBox;
 
 import java.util.Collection;
 
-
+/**
+ * A controller used to handle the lobby scene, providing information about
+ * <ul>
+ *     <li>The players connected to the game</li>
+ *     <li>Whether the match is starting soon or not</li>
+ * </ul>
+ */
 public class LobbyController extends GUIController {
 
     @FXML
