@@ -7,6 +7,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.*;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.SquareRequest;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.CoordPair;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCube;
+import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.WeaponCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.PlayerColor;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -17,6 +18,7 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import static it.polimi.deib.se2019.sanp4.adrenaline.client.gui.GUIRenderer.setColumnConstraints;
@@ -79,6 +81,8 @@ public class GameController extends GUIController {
     @FXML
     private PowerupsContainer powerupsContainer;
     @FXML
+    private WeaponsContainer weaponsContainer;
+    @FXML
     private Label squareRequestMessage;
 
     /**
@@ -90,6 +94,15 @@ public class GameController extends GUIController {
      * The map associating each spawn color to the list of weapon images sockets
      */
     private Map<AmmoCube, List<WeaponImage>> spawnWeaponsImages;
+
+    /**
+     * A string consumer that takes a weapon id and shows the corresponding card image in a new window
+     */
+    private Consumer<String> weaponsConsumer = weaponId -> {
+        // Show a new window for the image viewer
+        ImageViewerController imageViewerController = (ImageViewerController) ((GUIRenderer) clientView.getRenderer()).showNewWindow("/fxml/imageViewer.fxml", "Weapon details");
+        imageViewerController.setImage(String.format("/images/weapons/%s.png", weaponId));
+    };
 
     @FXML
     public void initialize() {
@@ -178,7 +191,6 @@ public class GameController extends GUIController {
             return;
         }
 
-        // TODO: Check the order of objects creation
         // Build the matrix of overlays
         squareOverlays = new SquareOverlay[boardView.getColumnsCount()][boardView.getRowsCount()];
         // Then create the overlays according to the board matrix
@@ -209,17 +221,15 @@ public class GameController extends GUIController {
         clientView.getModelManager().getPlayers().keySet().stream().filter(player -> !player.equals(clientView.getUsername())).forEach(player -> {
             PlayerBoardControl playerBoardControl = new PlayerBoardControl();
             playerBoardControl.prefHeightProperty().bind(playerBoardsContainer.widthProperty().divide(PlayerBoardControl.BOARD_RATIO));
+            GridPane.setHgrow(playerBoardControl, Priority.ALWAYS);
             playerBoardsContainer.getChildren().add(playerBoardControl);
             playerBoards.put(player, playerBoardControl);
         });
 
-        // Set the image viewer handler for the weapons table
+        // Set the image viewer handler for the weapons table and weapons container
         // and make it open a new window with the image of the selected weapon card
-        weaponsInfoPane.setImageViewer(weaponId -> {
-            // Show a new window for the image viewer
-            ImageViewerController imageViewerController = (ImageViewerController) ((GUIRenderer) clientView.getRenderer()).showNewWindow("/fxml/imageViewer.fxml", "Weapon details");
-            imageViewerController.setImage(String.format("/images/weapons/%s.png", weaponId));
-        });
+        weaponsInfoPane.setImageViewer(weaponsConsumer);
+        weaponsContainer.setWeaponsConsumer(weaponsConsumer);
 
         // Then load the background
         Platform.runLater(() -> setBoard(boardView.getId()));
@@ -415,14 +425,13 @@ public class GameController extends GUIController {
      * Updates the rendered content of the pane showing information about weapons owned by players
      */
     void updateWeaponsInfo() {
-        // Retrieve all the weapons of the players and update the pane content
-        weaponsInfoPane.setPlayersWeapons(
-                clientView.getModelManager()
-                        .getPlayers()
-                        .entrySet()
-                        .stream()
-                        .collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().getWeapons()))
-        );
+        // First retrieve all the weapons owned by the user
+        List<WeaponCard> userWeapons = clientView.getModelManager().getPlayers().get(clientView.getUsername()).getWeapons();
+        // Then all the weapons owned by the enemies
+        Map<String, List<WeaponCard>> enemiesWeapons = clientView.getModelManager().getPlayers().entrySet().stream().filter(entry -> !entry.getKey().equals(clientView.getUsername()))
+                .collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().getWeapons()));
+        weaponsInfoPane.setPlayersWeapons(enemiesWeapons);
+        weaponsContainer.setWeapons(userWeapons);
     }
 
     /**

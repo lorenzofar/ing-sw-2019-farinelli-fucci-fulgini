@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import it.polimi.deib.se2019.sanp4.adrenaline.client.gui.controls.*?>
-<?import it.polimi.deib.se2019.sanp4.adrenaline.client.gui.PowerupsContainer?>
+<?import it.polimi.deib.se2019.sanp4.adrenaline.client.gui.controls.PowerupsContainer?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.Scene?>
@@ -21,9 +21,9 @@
         </rowConstraints>
 
         <!-- TOP ROW -->
-        <GridPane fx:id="topGameRow" GridPane.rowIndex="0" hgap="12" GridPane.vgrow="ALWAYS" GridPane.hgrow="ALWAYS">
+        <GridPane GridPane.rowIndex="0" hgap="12" GridPane.vgrow="ALWAYS" GridPane.hgrow="ALWAYS">
             <columnConstraints>
-                <ColumnConstraints fx:id="boardColumn" hgrow="SOMETIMES"/> <!-- Column containing board -->
+                <ColumnConstraints hgrow="SOMETIMES"/> <!-- Column containing board -->
                 <ColumnConstraints/> <!-- Column containing match info and player boards -->
             </columnConstraints>
             <!-- GAME BOARD -->
@@ -80,7 +80,8 @@
                     <AmmoPane fx:id="ammoPane" GridPane.rowIndex="1"/>
                     <WeaponsInfoPane fx:id="weaponsInfoPane" GridPane.rowIndex="2"/>
                 </GridPane>
-                <VBox fx:id="playerBoardsContainer" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" spacing="12"/>
+                <VBox fx:id="playerBoardsContainer" GridPane.columnIndex="1"
+                      GridPane.hgrow="ALWAYS" spacing="12"/>
             </GridPane>
         </GridPane>
 
@@ -93,9 +94,10 @@
         </Label>
 
         <!-- BOTTOM ROW -->
-        <HBox fx:id="bottomRow" GridPane.rowIndex="2" spacing="8" GridPane.vgrow="ALWAYS">
-            <PlayerBoardControl fx:id="userBoard" styleClass="shadowed"/>
-            <PowerupsContainer fx:id="powerupsContainer"/>
+        <HBox GridPane.rowIndex="2" spacing="12" GridPane.vgrow="ALWAYS">
+            <PlayerBoardControl fx:id="userBoard" styleClass="shadowed" GridPane.vgrow="ALWAYS"/>
+            <PowerupsContainer fx:id="powerupsContainer" GridPane.vgrow="ALWAYS"/>
+            <WeaponsContainer fx:id="weaponsContainer" GridPane.vgrow="ALWAYS"/>
         </HBox>
 
     </GridPane>
