@@ -23,6 +23,30 @@ public class FrenzyPlayerBoardState implements PlayerBoardState {
     }
 
     /**
+     * Returns the iterator for giving extra points to players who performed
+     * damage, bases on the damage position: the player with first blood gets
+     * the first value and so on.
+     * Here none of the players gets extra points
+     * The iterator never stops.
+     *
+     * @return never-ending iterator with extra points
+     */
+    @Override
+    public Iterator<Integer> getExtraPoints() {
+        return new Iterator<Integer>() {
+            @Override
+            public boolean hasNext() {
+                return true;
+            }
+
+            @Override
+            public Integer next() {
+                return 0;
+            }
+        };
+    }
+
+    /**
      * Returns a string representation suitable for identifying the state
      * @return a string representation
      */

@@ -8,6 +8,8 @@ import java.util.Iterator;
 public class RegularPlayerBoardState implements PlayerBoardState {
     private static final int[] POINTS = {8, 6, 4, 2, 1, 1};
 
+    private static final int[] EXTRA_POINTS = {1, 0};
+
     /**
      * Returns iterator for scoring player boards. The player with most damage
      * will get the first value and so on.
@@ -19,6 +21,20 @@ public class RegularPlayerBoardState implements PlayerBoardState {
     @Override
     public Iterator<Integer> getDamageScores(PlayerBoard board) {
         return new ScoresIterator(POINTS, board.getDeaths());
+    }
+
+    /**
+     * Returns the iterator for giving extra points to players who performed
+     * damage, bases on the damage position: the player with first blood gets
+     * the first value and so on.
+     * Here the player with first blood gets one point, while the others get none
+     * The iterator never stops.
+     *
+     * @return never-ending iterator with extra points
+     */
+    @Override
+    public Iterator<Integer> getExtraPoints() {
+        return new ScoresIterator(EXTRA_POINTS, 0);
     }
 
     /**

@@ -58,7 +58,7 @@ public class PlayerBoardTest {
         assertEquals(0, playerBoard.getDamages().size());
         assertNull(playerBoard.getKillshot());
         assertNull(playerBoard.getOverkill());
-        assertEquals(0, playerBoard.getPlayerScores().size());
+        assertTrue(playerBoard.getPlayerScores().values().stream().noneMatch(i -> i > 0));
         assertEquals(playerBoard.getDamageCount(), playerBoard.getDamages().size());
     }
 
@@ -218,8 +218,7 @@ public class PlayerBoardTest {
         shooters.forEach(shooter -> player.getPlayerBoard().addDamage(shooter, 2));
         Map<Player, Integer> playerScores = player.getPlayerBoard().getPlayerScores();
         assertTrue(shooters.containsAll(playerScores.keySet()));
-        assertEquals(1, playerScores.size());
-        playerScores.values().forEach(score -> assertTrue(score >= 0));
+        assertEquals(1, playerScores.values().stream().filter(i -> i > 0).count());
     }
 
     @Test
