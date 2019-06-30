@@ -199,16 +199,20 @@ public class GameController extends GUIController {
         for (int i = 0; i < boardView.getSquares().length; i++) {
             for (int j = 0; j < boardView.getSquares()[i].length; j++) {
                 SquareView square = boardView.getSquares()[i][j];
-                SquareOverlay overlay = square.printTypeMarker().equals("S") ? new SpawnSquareOverlay(square.getLocation()) : new AmmoSquareOverlay(square.getLocation());
-                // Add it to the container
-                boardContainer.getChildren().add(overlay);
-                // Set the correct column and row indexes
-                GridPane.setRowIndex(overlay, j);
-                GridPane.setColumnIndex(overlay, i);
-                // Then bind its dimensions to those of the container
-                overlay.prefWidthProperty().bind(boardContainer.widthProperty().multiply(BOARD_CONTAINER_COLUMNS[i] / 100));
-                overlay.prefHeightProperty().bind(boardContainer.heightProperty().multiply(BOARD_CONTAINER_ROWS[j] / 100));
-                squareOverlays[i][j] = overlay;
+                if (square != null) {
+                    SquareOverlay overlay = square.printTypeMarker().equals("S") ? new SpawnSquareOverlay(square.getLocation()) : new AmmoSquareOverlay(square.getLocation());
+                    // Add it to the container
+                    boardContainer.getChildren().add(overlay);
+                    // Set the correct column and row indexes
+                    GridPane.setRowIndex(overlay, j);
+                    GridPane.setColumnIndex(overlay, i);
+                    // Then bind its dimensions to those of the container
+                    overlay.prefWidthProperty().bind(boardContainer.widthProperty().multiply(BOARD_CONTAINER_COLUMNS[i] / 100));
+                    overlay.prefHeightProperty().bind(boardContainer.heightProperty().multiply(BOARD_CONTAINER_ROWS[j] / 100));
+                    squareOverlays[i][j] = overlay;
+                } else {
+                    squareOverlays[i][j] = null;
+                }
             }
         }
 

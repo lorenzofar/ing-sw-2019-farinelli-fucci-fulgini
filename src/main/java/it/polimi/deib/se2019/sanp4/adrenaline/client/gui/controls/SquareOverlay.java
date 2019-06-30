@@ -17,10 +17,6 @@ public abstract class SquareOverlay extends SelectableOverlay<CoordPair> {
      * The columns the square layout is composed of
      */
     private static final int SQUARE_COLS = 3;
-    /**
-     * The radius of the circle representing the player pawn
-     */
-    private static final int PLAYER_PAWN_RADIUS = 12;
 
     SquareOverlay(CoordPair location) {
         super("/fxml/controls/squareOverlay.fxml");
@@ -38,7 +34,13 @@ public abstract class SquareOverlay extends SelectableOverlay<CoordPair> {
         boolean contentAlreadyPresent = !squareContent.getChildren().isEmpty();
         for (Map.Entry<String, ColoredObject> entry : players.entrySet()) {
             // Create a new pawn for the player, filling it with its color
-            Circle playerPawn = new Circle(PLAYER_PAWN_RADIUS, Color.web(entry.getValue().getHexCode()));
+            Circle playerPawn = new Circle();
+            playerPawn.radiusProperty().bind(squareContent.widthProperty().subtract(24).divide(12));
+            // Set the color of the pawn
+            playerPawn.setFill(Color.web(entry.getValue().getHexCode()));
+            // And add a black border around it
+            playerPawn.setStroke(Color.BLACK);
+            playerPawn.setStrokeWidth(4);
             // Add a glossy effect
             playerPawn.getStyleClass().addAll("glossy", "shadowed");
             // Then set its row and column indexes
