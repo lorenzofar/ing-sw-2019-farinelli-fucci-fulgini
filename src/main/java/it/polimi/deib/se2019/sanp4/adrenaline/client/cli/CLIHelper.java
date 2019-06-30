@@ -1065,6 +1065,7 @@ class CLIHelper {
         expandStringRendering(renderedOverview, generateLine(LIGHT_HORIZONTAL_BORDER, PLAYERS_OVERVIEW_DIM, LIGHT_LEFT_VERTICAL_SEPARATOR, LIGHT_RIGHT_VERTICAL_SEPARATOR));
         expandStringRendering(renderedOverview, generateLine(BLANK, PLAYERS_OVERVIEW_DIM, VERTICAL_BORDER, VERTICAL_BORDER));
         fillLineWithText(renderedOverview.get(renderedOverview.size() - 1), "Players", 2, ANSI_BOLD);
+        expandStringRendering(renderedOverview, generateLine(BLANK, PLAYERS_OVERVIEW_DIM, VERTICAL_BORDER, VERTICAL_BORDER));
         players.forEach((player, color) -> {
             expandStringRendering(renderedOverview, generateLine(BLANK, PLAYERS_OVERVIEW_DIM, VERTICAL_BORDER, VERTICAL_BORDER));
             fillLineWithText(

@@ -227,7 +227,7 @@ public class CLIRenderer implements UIRenderer {
                 modelManager.getPlayers().entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().getWeapons())));
         // And concatenate elements in the middle row
         List<List<String>> leftMiddleRow = CLIHelper.concatRenderedElements(
-                Arrays.asList(renderedBoard, renderedPlayersList, stackedPlayerBoards, renderedWeaponsTable),
+                Arrays.asList(renderedBoard, renderedPlayersList, renderedWeaponsTable, stackedPlayerBoards),
                 4
         );
 
@@ -422,7 +422,6 @@ public class CLIRenderer implements UIRenderer {
     @Override
     public void handle(SquareRequest request) {
         // First make sure the board is shown to the user, hence refresh the match screen
-        printMatchScreen();
         requestRoutine("Square selection", request,
                 coordPair -> {
                     // We show information about:
@@ -470,6 +469,8 @@ public class CLIRenderer implements UIRenderer {
     private <T extends Serializable> void requestRoutine(String title, ChoiceRequest<T> request, Function<T, String> stringConverter) {
         CLIHelper.cancelInput();
         CLIHelper.stopSpinner();
+        // Show the match screen again if something has changed
+        printMatchScreen();
         CLIHelper.printTitle(title);
         // Ask the user to select a choice
         T selectedObject = CLIHelper.askOptionFromList(
