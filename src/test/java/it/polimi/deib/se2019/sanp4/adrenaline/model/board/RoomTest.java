@@ -64,6 +64,4 @@ public class RoomTest {
         assertFalse(room.getSquares().contains(square));
         assertNull(square.getRoom());
     }
-
-    //TODO: test getPlayers()
 }

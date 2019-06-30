@@ -44,7 +44,6 @@ public class ModelTestUtil {
         JSONUtils.loadPowerupPackSchema("/schemas/powerup_pack.schema.json");
         JSONUtils.loadWeaponPackSchema("/schemas/weapon_pack.schema.json");
         JSONUtils.loadWeaponSchema("/schemas/weapon.schema.json");
-        /* TODO: Add player character schema */
 
         /* Then load the assets */
         ActionCardCreator.loadActionCardPack("/assets/standard_actioncards.json");
