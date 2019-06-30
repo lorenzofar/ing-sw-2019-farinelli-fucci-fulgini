@@ -1,6 +1,7 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.model.player;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 /**
  * Regular state of the player board. Scores do not depend on player's deaths.
@@ -41,6 +42,9 @@ public class FrenzyPlayerBoardState implements PlayerBoardState {
 
             @Override
             public Integer next() {
+                if (!hasNext()) {
+                    throw new NoSuchElementException();
+                }
                 return 0;
             }
         };
@@ -48,6 +52,7 @@ public class FrenzyPlayerBoardState implements PlayerBoardState {
 
     /**
      * Returns a string representation suitable for identifying the state
+     *
      * @return a string representation
      */
     @Override
