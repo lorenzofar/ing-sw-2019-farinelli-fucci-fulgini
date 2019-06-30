@@ -30,7 +30,7 @@ import java.util.logging.Logger;
  */
 public class PersistentViewImpl extends RemoteObservable<ViewEvent> implements PersistentView {
 
-    private static Logger logger = Logger.getLogger(PersistentView.class.getName());
+    private static Logger logger = Logger.getLogger(PersistentViewImpl.class.getName());
 
     /* This class observes the underlying remote view and sends updates to its parent */
     private class RemoteViewObserver implements RemoteObserver<ViewEvent> {

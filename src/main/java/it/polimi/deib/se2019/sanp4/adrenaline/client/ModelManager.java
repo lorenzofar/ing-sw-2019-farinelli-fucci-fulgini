@@ -235,7 +235,7 @@ public class ModelManager implements ModelUpdateVisitor {
 
     @Override
     public synchronized void handle(MatchOperationalStateUpdate update) {
-        //TODO: Implement this method
+        // We do nothing, since this information is not shown and doesn't need to be updated
     }
 
     @Override

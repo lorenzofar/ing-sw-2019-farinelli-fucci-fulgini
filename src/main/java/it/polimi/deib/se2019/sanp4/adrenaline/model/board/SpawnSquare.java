@@ -128,7 +128,7 @@ public class SpawnSquare extends Square {
                 // if the card is already on this square, it is certainly not in the stack
                 weaponCards.add(stack.draw());
             }
-        } catch (EmptyStackException e) {
+        } catch (NoSuchElementException e) {
             /* No more weapons to draw, totally fine */
         }
 

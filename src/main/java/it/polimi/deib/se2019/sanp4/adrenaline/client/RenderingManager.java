@@ -47,13 +47,7 @@ public class RenderingManager implements ModelUpdateVisitor {
 
     @Override
     public void handle(ActionCardUpdate update) {
-        if (clientView.getScene().isGameScene()) {
-            //First check whether the update refers to the user
-            if (!update.getPlayer().equals(clientView.getUsername())) {
-                return;
-            }
-        }
-        // TODO: Understand what to render, since the action card is not explicitly shown
+        // We do not refresh anything, since the information is not shown
     }
 
     @Override
@@ -122,15 +116,12 @@ public class RenderingManager implements ModelUpdateVisitor {
     public void handle(WeaponCardUpdate update) {
         if (clientView.getScene().isGameScene()) {
             clientView.getRenderer().refreshOwnedWeapons();
-            //TODO: Check whether to refresh just this particular weapon
         }
     }
 
     @Override
     public void handle(MatchOperationalStateUpdate update) {
-        if (clientView.getScene().isGameScene()) {
-            //TODO: Implement this method
-        }
+        // We do not refresh anything, since this information is not shown
     }
 
     @Override

@@ -369,7 +369,7 @@ public class GameController extends GUIController {
         PlayerBoardControl playerBoardControl = playerBoards.get(player);
         if (playerBoardControl == null) {
             // The provided player has no associated board controls
-            // TODO: Create a board control for the player?
+            // We do not do anything, since all the boards for all the players are created on game launch
             return;
         }
         Platform.runLater(() -> {

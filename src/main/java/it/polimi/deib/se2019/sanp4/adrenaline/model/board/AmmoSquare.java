@@ -7,8 +7,8 @@ import it.polimi.deib.se2019.sanp4.adrenaline.model.match.CardStack;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.match.Match;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
 
-import java.util.EmptyStackException;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 /**
@@ -87,7 +87,7 @@ public class AmmoSquare extends Square {
                 CardStack<AmmoCard> stack = match.getAmmoStack();
                 insertAmmo(stack.draw());
             }
-        } catch (EmptyStackException e) {
+        } catch (NoSuchElementException e) {
             /* No more ammo cards to draw */
         }
     }
