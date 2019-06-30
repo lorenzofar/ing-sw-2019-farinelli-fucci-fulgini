@@ -7,3 +7,8 @@
 log/
 target/
 *.log
+
+# UML diagrams
+deliveries/final/UML
+
+
