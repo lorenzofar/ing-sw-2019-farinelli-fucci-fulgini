@@ -7,7 +7,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.model.board.CardinalDirection;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.CoordPair;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.RoomColor;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.board.SquareConnectionType;
-import it.polimi.deib.se2019.sanp4.adrenaline.utils.JSONUtils;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.JSONUtils;
 import org.junit.Test;
 
 import java.io.IOException;

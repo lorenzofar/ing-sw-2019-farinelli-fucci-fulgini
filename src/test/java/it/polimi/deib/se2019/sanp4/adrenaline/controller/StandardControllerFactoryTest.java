@@ -13,10 +13,9 @@ import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCubeCost;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.WeaponCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.WeaponCreator;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.match.Match;
-import it.polimi.deib.se2019.sanp4.adrenaline.utils.JSONUtils;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.JSONUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,7 +29,6 @@ import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
-import static org.hamcrest.CoreMatchers.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class StandardControllerFactoryTest {

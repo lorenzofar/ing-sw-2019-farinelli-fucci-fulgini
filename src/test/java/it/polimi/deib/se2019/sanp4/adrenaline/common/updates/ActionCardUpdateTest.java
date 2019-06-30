@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.ActionCardView;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionCardEnum;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionEnum;
-import it.polimi.deib.se2019.sanp4.adrenaline.utils.JSONUtils;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.JSONUtils;
 import org.junit.Test;
 
 import java.io.IOException;

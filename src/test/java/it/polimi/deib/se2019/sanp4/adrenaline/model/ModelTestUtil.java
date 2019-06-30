@@ -10,7 +10,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.model.items.powerup.PowerupCreator
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.WeaponCreator;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.PlayerColor;
-import it.polimi.deib.se2019.sanp4.adrenaline.utils.JSONUtils;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.JSONUtils;
 
 import java.util.Arrays;
 import java.util.List;

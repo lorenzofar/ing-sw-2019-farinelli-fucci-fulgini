@@ -3,7 +3,7 @@ package it.polimi.deib.se2019.sanp4.adrenaline.model.items.powerup;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCube;
-import it.polimi.deib.se2019.sanp4.adrenaline.utils.JSONUtils;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.JSONUtils;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.hamcrest.CoreMatchers.containsString;

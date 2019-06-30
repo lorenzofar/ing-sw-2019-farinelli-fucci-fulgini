@@ -3,7 +3,7 @@ package it.polimi.deib.se2019.sanp4.adrenaline.model.match;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.ModelTestUtil;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
-import it.polimi.deib.se2019.sanp4.adrenaline.utils.JSONUtils;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.JSONUtils;
 import org.junit.Test;
 
 import java.util.ArrayList;

@@ -3,7 +3,7 @@ package it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.CardNotFoundException;
-import it.polimi.deib.se2019.sanp4.adrenaline.utils.JSONUtils;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.JSONUtils;
 import org.everit.json.schema.ValidationException;
 import org.json.JSONArray;
 import org.json.JSONException;

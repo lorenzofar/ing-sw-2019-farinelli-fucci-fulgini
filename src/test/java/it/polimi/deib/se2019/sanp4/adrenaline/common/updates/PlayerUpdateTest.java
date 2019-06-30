@@ -12,7 +12,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.model.items.powerup.PowerupEnum;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.EffectDescription;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.WeaponCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.PlayerColor;
-import it.polimi.deib.se2019.sanp4.adrenaline.utils.JSONUtils;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.JSONUtils;
 import org.junit.Test;
 
 import java.io.IOException;

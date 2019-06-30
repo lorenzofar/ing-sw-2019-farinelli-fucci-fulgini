@@ -11,7 +11,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.common.network.socket.*;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.Observable;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.observer.RemoteObservable;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.ModelUpdate;
-import it.polimi.deib.se2019.sanp4.adrenaline.utils.JSONUtils;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.JSONUtils;
 import it.polimi.deib.se2019.sanp4.adrenaline.view.ViewScene;
 
 import java.io.*;

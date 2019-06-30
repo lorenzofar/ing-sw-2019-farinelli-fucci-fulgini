@@ -2,7 +2,7 @@ package it.polimi.deib.se2019.sanp4.adrenaline.model.board;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.BoardNotFoundException;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCube;
-import it.polimi.deib.se2019.sanp4.adrenaline.utils.JSONUtils;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.JSONUtils;
 import org.everit.json.schema.ValidationException;
 import org.json.JSONException;
 import org.junit.After;

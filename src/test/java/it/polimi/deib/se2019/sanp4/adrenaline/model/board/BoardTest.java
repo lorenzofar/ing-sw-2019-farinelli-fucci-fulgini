@@ -5,14 +5,13 @@ import it.polimi.deib.se2019.sanp4.adrenaline.model.ModelTestUtil;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCube;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.BoardView;
-import it.polimi.deib.se2019.sanp4.adrenaline.utils.JSONUtils;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.JSONUtils;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.*;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
 import static it.polimi.deib.se2019.sanp4.adrenaline.model.board.CardinalDirection.*;

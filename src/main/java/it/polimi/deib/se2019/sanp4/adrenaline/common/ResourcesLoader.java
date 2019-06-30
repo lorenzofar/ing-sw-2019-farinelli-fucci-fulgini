@@ -5,7 +5,6 @@ import it.polimi.deib.se2019.sanp4.adrenaline.model.board.BoardCreator;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo.AmmoCardCreator;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.powerup.PowerupCreator;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.WeaponCreator;
-import it.polimi.deib.se2019.sanp4.adrenaline.utils.JSONUtils;
 
 /**
  * Responsible for loading resources needed by various factories/creators.

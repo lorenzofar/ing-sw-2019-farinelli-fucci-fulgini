@@ -1,7 +1,7 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.model.items.ammo;
 
 import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.CardNotFoundException;
-import it.polimi.deib.se2019.sanp4.adrenaline.utils.JSONUtils;
+import it.polimi.deib.se2019.sanp4.adrenaline.common.JSONUtils;
 import org.everit.json.schema.ValidationException;
 import org.junit.After;
 import org.junit.BeforeClass;
