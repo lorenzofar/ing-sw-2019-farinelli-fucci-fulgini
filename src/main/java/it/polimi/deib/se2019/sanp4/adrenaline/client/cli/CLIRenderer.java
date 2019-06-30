@@ -199,7 +199,7 @@ public class CLIRenderer implements UIRenderer {
         // Then the table showing information about spawn points
         List<List<String>> renderedSpawnTable = CLIHelper.renderSpawnWeaponsTable(modelManager.getBoard());
         // Then we build the first row
-        List<List<String>> leftTopRow = CLIHelper.concatRenderedElements(
+        List<List<String>> topRow = CLIHelper.concatRenderedElements(
                 Arrays.asList(renderedKillshotsTrack, renderedSpawnTable),
                 4);
         // We then render the board
@@ -215,21 +215,9 @@ public class CLIRenderer implements UIRenderer {
                 modelManager.getCurrentTurn(),
                 modelManager.getPlayers().get(clientView.getUsername()).getScore()
         );
-        // Then we generate all the player boards, removing the one of the current player
-        List<List<List<String>>> renderedPlayerBoards = modelManager.getPlayerBoards().entrySet().stream()
-                .filter(e -> !e.getKey().equals(clientView.getUsername()))
-                .map(e -> CLIHelper.renderPlayerBoard(e.getValue(), e.getKey(), modelManager.getPlayersColors()))
-                .collect(Collectors.toList());
-        // Then we stack each board on top of the other
-        List<List<String>> stackedPlayerBoards = CLIHelper.stackRenderedElements(renderedPlayerBoards, 1);
         // Then the table showing the owned weapons
         List<List<String>> renderedWeaponsTable = CLIHelper.renderWeaponsTable(
                 modelManager.getPlayers().entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().getWeapons())));
-        // And concatenate elements in the middle row
-        List<List<String>> leftMiddleRow = CLIHelper.concatRenderedElements(
-                Arrays.asList(renderedBoard, renderedPlayersList, renderedWeaponsTable, stackedPlayerBoards),
-                4
-        );
 
         // Then the player board of the user
         List<List<String>> renderedUserPlayerBoard = CLIHelper.renderPlayerBoard(
@@ -242,18 +230,35 @@ public class CLIRenderer implements UIRenderer {
 
         // Then the table showing the owned powerups
         List<List<String>> renderedPowerupsTable = CLIHelper.renderPowerupsTable(modelManager.getPlayers().get(clientView.getUsername()).getPowerups());
-        List<List<String>> leftBottomRow = CLIHelper.concatRenderedElements(
+        List<List<String>> bottomRow = CLIHelper.concatRenderedElements(
                 Arrays.asList(renderedUserPlayerBoard, renderedAmmoTable, renderedPowerupsTable),
                 2
         );
-        // And eventually build the left pane
-        List<List<String>> leftPane = CLIHelper.stackRenderedElements(
-                Arrays.asList(leftTopRow, leftMiddleRow, leftBottomRow),
-                2
+
+        // Then we render all the player boards if the enemies
+        List<List<List<String>>> renderedPlayerBoards = modelManager.getPlayerBoards().entrySet().stream()
+                .filter(e -> !e.getKey().equals(clientView.getUsername()))
+                .map(e -> CLIHelper.renderPlayerBoard(e.getValue(), e.getKey(), modelManager.getPlayersColors()))
+                .collect(Collectors.toList());
+        // Then we concatenate all of them
+        List<List<String>> stackedPlayerBoards = CLIHelper.stackRenderedElements(renderedPlayerBoards, 1);
+
+
+        // And concatenate elements in the middle row, stacking the game board and the user information
+        List<List<String>> middleRow = CLIHelper.concatRenderedElements(
+                Arrays.asList(
+                        CLIHelper.stackRenderedElements(Arrays.asList(renderedBoard, bottomRow), 2),
+                        renderedPlayersList, stackedPlayerBoards, renderedWeaponsTable),
+                4
+        );
+
+        // And eventually build the whole game screen
+        List<List<String>> gameScreen = CLIHelper.stackRenderedElements(
+                Arrays.asList(topRow, middleRow), 2
         );
 
         // And finally print the match screen
-        CLIHelper.printRenderedGameElement(leftPane);
+        CLIHelper.printRenderedGameElement(gameScreen);
     }
 
     /**

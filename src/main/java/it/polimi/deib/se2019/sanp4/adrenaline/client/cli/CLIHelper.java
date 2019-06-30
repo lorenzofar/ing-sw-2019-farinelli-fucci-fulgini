@@ -97,6 +97,7 @@ class CLIHelper {
     /* ===== DIMENSIONS ===== */
     private static final int SQUARE_DIM = 15;
     private static final int CARD_WIDTH = 20;
+    private static final int PLAYER_BOARD_DIM = 27;
     private static final int FULLSCREEN_WIDTH = 119;
     private static final int FULLSCREEN_TITLE_WIDTH = 40;
     private static final int SPAWN_WEAPONS_CELL_DIM = 40;
@@ -911,14 +912,11 @@ class CLIHelper {
         if (playerBoard == null) {
             return renderedPlayerBoard;
         }
-        // Determine the width of the board according to the number of damages
-        // Setting a minimum value of 20
-        final int boardWidth = playerBoard.getDamages().size() * 2 + 4 < 20 ? 20 : playerBoard.getDamages().size() * 2 + 4;
-        expandStringRendering(renderedPlayerBoard, generateLine(HORIZONTAL_BORDER, boardWidth, LEFT_TOP_CORNER, RIGHT_TOP_CORNER));
+        expandStringRendering(renderedPlayerBoard, generateLine(HORIZONTAL_BORDER, PLAYER_BOARD_DIM, LEFT_TOP_CORNER, RIGHT_TOP_CORNER));
         // Add the colored name of the player
-        List<String> playerNameChunks = splitString(player, boardWidth - 12);
+        List<String> playerNameChunks = splitString(player, PLAYER_BOARD_DIM - 12);
         playerNameChunks.forEach(nameChunk -> {
-            expandStringRendering(renderedPlayerBoard, generateLine(BLANK, boardWidth, VERTICAL_BORDER, VERTICAL_BORDER));
+            expandStringRendering(renderedPlayerBoard, generateLine(BLANK, PLAYER_BOARD_DIM, VERTICAL_BORDER, VERTICAL_BORDER));
             fillLineWithText(renderedPlayerBoard.get(renderedPlayerBoard.size() - 1), nameChunk, 2, ANSI_BOLD, playersColor.get(player).getAnsiCode());
         });
         // Then add indicators for deaths
@@ -930,16 +928,16 @@ class CLIHelper {
         // Add indicator for marks
         // Check whether there is already a free row, if not create it
         if (playerNameChunks.size() == 1) {
-            expandStringRendering(renderedPlayerBoard, generateLine(BLANK, boardWidth, VERTICAL_BORDER, VERTICAL_BORDER));
+            expandStringRendering(renderedPlayerBoard, generateLine(BLANK, PLAYER_BOARD_DIM, VERTICAL_BORDER, VERTICAL_BORDER));
         }
         playerInfoLine = renderedPlayerBoard.get(2);
         playerInfoLine.set(playerInfoLine.size() - 4, String.format("%2d", playerBoard.getMarks()));
         playerInfoLine.remove(playerInfoLine.size() - 2);
         playerInfoLine.set(playerInfoLine.size() - 6, ANSI_MARK);
         playerInfoLine.set(playerInfoLine.size() - 8, "|");
-        expandStringRendering(renderedPlayerBoard, generateLine(LIGHT_HORIZONTAL_BORDER, boardWidth, LIGHT_LEFT_VERTICAL_SEPARATOR, LIGHT_RIGHT_VERTICAL_SEPARATOR));
+        expandStringRendering(renderedPlayerBoard, generateLine(LIGHT_HORIZONTAL_BORDER, PLAYER_BOARD_DIM, LIGHT_LEFT_VERTICAL_SEPARATOR, LIGHT_RIGHT_VERTICAL_SEPARATOR));
         // Render damages
-        expandStringRendering(renderedPlayerBoard, generateLine(BLANK, boardWidth, VERTICAL_BORDER, VERTICAL_BORDER));
+        expandStringRendering(renderedPlayerBoard, generateLine(BLANK, PLAYER_BOARD_DIM, VERTICAL_BORDER, VERTICAL_BORDER));
         fillLineWithObjects(
                 renderedPlayerBoard.get(renderedPlayerBoard.size() - 1),
                 playerBoard.getDamages(),
@@ -949,7 +947,7 @@ class CLIHelper {
                 2
         );
         // Add bottom border
-        expandStringRendering(renderedPlayerBoard, generateLine(HORIZONTAL_BORDER, boardWidth, LEFT_BOTTOM_CORNER, RIGHT_BOTTOM_CORNER));
+        expandStringRendering(renderedPlayerBoard, generateLine(HORIZONTAL_BORDER, PLAYER_BOARD_DIM, LEFT_BOTTOM_CORNER, RIGHT_BOTTOM_CORNER));
         return renderedPlayerBoard;
     }
 
