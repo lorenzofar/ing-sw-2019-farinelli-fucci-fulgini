@@ -120,6 +120,8 @@ public class GameController extends GUIController {
         gameContainer.maxHeightProperty().bind(gameScene.heightProperty().multiply(BOARD_ROW_RATIO));
         gameContainer.minWidthProperty().bind(gameScene.heightProperty().multiply(BOARD_ROW_RATIO).divide(BOARD_RATIO));
         gameContainer.maxWidthProperty().bind(gameScene.heightProperty().multiply(BOARD_ROW_RATIO).divide(BOARD_RATIO));
+        squareRequestMessage.minWidthProperty().bind(gameScene.heightProperty().multiply(BOARD_ROW_RATIO).divide(BOARD_RATIO));
+        squareRequestMessage.minWidthProperty().bind(gameScene.heightProperty().multiply(BOARD_ROW_RATIO).divide(BOARD_RATIO));
 
         /* ===== BOARD LAYOUT ===== */
         middleRow.prefWidthProperty().bind(gameContainer.widthProperty());

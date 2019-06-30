@@ -9,6 +9,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.text.Text;
 
 import java.util.stream.Collectors;
 
@@ -24,7 +25,7 @@ public class EffectSelectionOverlay extends SelectableOverlay<EffectDescription>
     private Label effectName;
 
     @FXML
-    private Label effectDescription;
+    private Text effectDescription;
 
     @FXML
     private HBox costContainer;
@@ -51,6 +52,7 @@ public class EffectSelectionOverlay extends SelectableOverlay<EffectDescription>
         } else {
             this.effectName.textProperty().set(effect.getName());
             this.effectDescription.textProperty().set(effect.getDescription());
+            this.effectDescription.setWrappingWidth(300);
             // Set the cost of the effect
             // Take the cost container and add as many colored circles as the cubes in the list
             costContainer.getChildren().addAll(

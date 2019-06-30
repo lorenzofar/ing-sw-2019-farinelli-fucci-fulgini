@@ -209,9 +209,15 @@ public class GUIRenderer extends Application implements UIRenderer {
      */
     @Override
     public void showMessage(String text, MessageType type) {
-        Platform.runLater(() ->
-                new Alert(convertAlertType(type), text, ButtonType.OK).show()
-        );
+        Platform.runLater(() -> {
+            Alert alert = new Alert(convertAlertType(type));
+            alert.getButtonTypes().set(0, ButtonType.OK);
+            Text alertText = new Text(text);
+            alertText.setWrappingWidth(alert.getDialogPane().getWidth() - 24);
+            alertText.setTextAlignment(TextAlignment.CENTER);
+            alert.getDialogPane().setContent(alertText);
+            alert.show();
+        });
     }
 
     @Override

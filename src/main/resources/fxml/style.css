@@ -129,6 +129,10 @@ TextField {
     -fx-background-color: -fx-light-button-gray;
 }
 
+.effect-overlay Text {
+    -fx-fill: -fx-light-buttontext-gray;
+}
+
 /* Shadowed effect, applies a shadow behind the element */
 .shadowed {
     -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);

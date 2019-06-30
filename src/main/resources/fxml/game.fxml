@@ -85,7 +85,9 @@
             </GridPane>
         </GridPane>
 
-        <Label fx:id="squareRequestMessage" styleClass="accent-text, title-text" GridPane.hgrow="ALWAYS"
+        <Label fx:id="squareRequestMessage" alignment="CENTER" textAlignment="CENTER"
+               styleClass="accent-text, title-text"
+               GridPane.hgrow="ALWAYS"
                GridPane.vgrow="ALWAYS"
                GridPane.rowIndex="1">
             <padding>
