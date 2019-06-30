@@ -35,7 +35,7 @@ public class AmmoSquareOverlay extends SquareOverlay {
      */
     private ImageView ammoCardImage;
 
-    AmmoSquareOverlay(CoordPair location) {
+    public AmmoSquareOverlay(CoordPair location) {
         super(location);
         ammoCardImage = new ImageView();
     }

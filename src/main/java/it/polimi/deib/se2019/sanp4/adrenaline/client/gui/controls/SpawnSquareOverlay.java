@@ -23,7 +23,7 @@ public class SpawnSquareOverlay extends SquareOverlay {
     @FXML
     private GridPane squareContent;
 
-    SpawnSquareOverlay(CoordPair location) {
+    public SpawnSquareOverlay(CoordPair location) {
         super(location);
     }
 
