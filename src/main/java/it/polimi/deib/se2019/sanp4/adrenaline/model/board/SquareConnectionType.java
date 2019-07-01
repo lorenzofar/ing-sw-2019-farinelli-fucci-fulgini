@@ -32,10 +32,18 @@ public enum SquareConnectionType {
         return this.message;
     }
 
+    /**
+     * Returns a string with a single character to print this connection type, in horizontal direction
+     * @return A single-char string
+     */
     public String getHorizontalCharacterRepresentation() {
         return hCharacterRepresentation;
     }
 
+    /**
+     * Returns a string with a single character to print this connection type, in vertical direction
+     * @return A single-char string
+     */
     public String getVerticalCharacterRepresentation() {
         return vCharacterRepresentation;
     }

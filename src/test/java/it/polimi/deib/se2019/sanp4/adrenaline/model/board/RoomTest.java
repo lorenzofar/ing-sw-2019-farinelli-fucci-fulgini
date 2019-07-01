@@ -20,6 +20,9 @@ public class RoomTest {
         RoomColor color = RoomColor.BLUE;
         Room room = new Room(color);
         assertEquals(color, room.getColor());
+        assertNotNull(room.getColor().toString());
+        assertNotNull(room.getColor().getAnsiCode());
+        assertNotNull(room.getColor().getHexCode());
         assertEquals(0, room.getSquares().size());
         assertEquals(0, room.getPlayers().size());
     }

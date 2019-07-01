@@ -45,9 +45,21 @@ public class BoardTest {
     }
 
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void createBoard_NegativeValueProvided_ShouldThrowIllegalArgumentException(){
-        Board board = new Board(0, -1, 0);
+        try {
+            new Board(0, -1, 0);
+            fail();
+        } catch (IllegalArgumentException e) {
+            /* OK */
+        }
+
+        try {
+            new Board(0, 5, -1);
+            fail();
+        } catch (IllegalArgumentException e) {
+            /* OK */
+        }
     }
 
     @Test
@@ -63,11 +75,43 @@ public class BoardTest {
         board.addSquare(null);
     }
 
-    @Test(expected = IndexOutOfBoundsException.class)
+    @Test
     public void addSquare_SquareOutsideBoardProvided_ShouldThrowNullPointerException(){
         Board board = new Board(0, 4,3);
-        CoordPair location = new CoordPair(5,3);
-        board.addSquare(new AmmoSquare(location));
+
+        try {
+            board.addSquare(new AmmoSquare(new CoordPair(5,3)));
+            fail();
+        } catch (IndexOutOfBoundsException e) {
+            /* OK */
+        }
+        try {
+            board.addSquare(new AmmoSquare(new CoordPair(1,7)));
+            fail();
+        } catch (IndexOutOfBoundsException e) {
+            /* OK */
+        }
+    }
+
+    @Test
+    public void addSquare_notAssigned_shouldAssign() {
+        Board board = new Board(0, 4,3);
+
+        Square newSquare = new AmmoSquare(new CoordPair(1,1));
+        board.addSquare(newSquare);
+
+        assertSame(newSquare, board.getSquare(newSquare.getLocation()));
+    }
+
+    @Test
+    public void addSquare_previouslyAssigned_shouldSubstitute() {
+        Board board = new Board(0, 4,3);
+        board.addSquare(new AmmoSquare(new CoordPair(1,1)));
+
+        Square newSquare = new AmmoSquare(new CoordPair(1,1));
+        board.addSquare(newSquare);
+
+        assertSame(newSquare, board.getSquare(newSquare.getLocation()));
     }
 
     @Test(expected = NullPointerException.class)

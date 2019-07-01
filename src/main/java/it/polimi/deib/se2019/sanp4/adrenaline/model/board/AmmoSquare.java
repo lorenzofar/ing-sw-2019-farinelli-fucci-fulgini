@@ -56,6 +56,13 @@ public class AmmoSquare extends Square {
         }
     }
 
+    /**
+     * Returns the ammo card contained in this square without removing it
+     * If {@link #isFull()} returns {@code true}, then the return value will be non-null,
+     * else it will be null.
+     *
+     * @return The ammo card, null if the square is empty
+     */
     public AmmoCard getAmmoCard() {
         return ammoCard;
     }

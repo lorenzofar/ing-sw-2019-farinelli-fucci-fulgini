@@ -299,7 +299,7 @@ public class MatchTest {
         match.getWeaponStack().draw();
 
         try {
-            mockMatch.refillBoard();
+            match.refillBoard();
         } catch (EmptyStackException e) {
             fail();
         }

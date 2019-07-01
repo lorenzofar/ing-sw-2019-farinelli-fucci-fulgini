@@ -17,9 +17,18 @@ import static it.polimi.deib.se2019.sanp4.adrenaline.model.board.CardinalDirecti
 
 /**
  * This class represents the game board.
- * It holds the squares and the rooms in which the squares are organised.
+ * <p>
+ * It holds the squares, the rooms in which the squares are organised and the locations of the various spawn points
+ * (one for each powerup color).
+ * </p>
+ * <p>
  * By convention the square with coordinate (0,0) is in the upper-left corner; square (1,0) is immediately at its right,
  * while square (0,1) is immediately beneath it.
+ * </p>
+ * <p>
+ * The class also provides various methods to navigate the board from a starting point with various constraints
+ * (distance, movement direction, etc.)
+ * </p>
  */
 public class Board extends Observable<ModelUpdate> implements Observer<ModelUpdate> {
 

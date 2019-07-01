@@ -28,8 +28,6 @@ public class SquareTest {
         validActions.add(ActionEnum.ADRENALINE_SHOOT);
         ActionCardEnum validType = ActionCardEnum.ADRENALINE1;
         ActionEnum validFinalAction = ActionEnum.RELOAD;
-        String validDescription = "description1";
-        RoomColor validColor = RoomColor.BLUE;
 
         ActionCard validActionCard = new ActionCard(validMaxActions, validType, validActions, validFinalAction);
         validPlayer = new Player(validName, validActionCard, PlayerColor.YELLOW);
@@ -99,5 +97,15 @@ public class SquareTest {
         Square square = new AmmoSquare(validLocation);
         square.setRoom(null);
         assertNull(square.getRoom());
+    }
+
+    @Test
+    public void toString_shouldBeConsistentWithEquals() {
+        Square s1 = new AmmoSquare(new CoordPair(0,0));
+        Square s2 = new AmmoSquare(new CoordPair(0,0));
+        Square s3 = new AmmoSquare(new CoordPair(1,1));
+
+        assertEquals(s1.toString(), s2.toString());
+        assertNotEquals(s1.toString(), s3.toString());
     }
 }
