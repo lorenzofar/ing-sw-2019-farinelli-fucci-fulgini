@@ -123,6 +123,8 @@ public class GameController extends GUIController {
         squareRequestMessage.minWidthProperty().bind(gameScene.heightProperty().multiply(BOARD_ROW_RATIO).divide(BOARD_RATIO));
         squareRequestMessage.minWidthProperty().bind(gameScene.heightProperty().multiply(BOARD_ROW_RATIO).divide(BOARD_RATIO));
 
+        userBoard.prefWidthProperty().bind(gameScene.heightProperty().multiply(0.2).multiply(0.9).multiply(PlayerBoardControl.BOARD_RATIO));
+
         /* ===== BOARD LAYOUT ===== */
         middleRow.prefWidthProperty().bind(gameContainer.widthProperty());
         middleRow.prefHeightProperty().bind(gameContainer.heightProperty().multiply(GAME_CONTAINER_ROWS[1] / 100));
@@ -228,6 +230,14 @@ public class GameController extends GUIController {
             GridPane.setHgrow(playerBoardControl, Priority.ALWAYS);
             playerBoardsContainer.getChildren().add(playerBoardControl);
             playerBoards.put(player, playerBoardControl);
+        });
+
+        // Then bind their widths to that of the container
+        playerBoardsContainer.widthProperty().addListener((obs, oldVal, newVal) -> {
+            playerBoards.values().stream().filter(board -> !board.equals(userBoard)).forEach(playerBoard -> {
+                playerBoard.setMinWidth(newVal.doubleValue() * 0.8);
+                playerBoard.setMaxWidth(newVal.doubleValue() * 0.8);
+            });
         });
 
         // Set the image viewer handler for the weapons table and weapons container

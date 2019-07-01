@@ -80,8 +80,8 @@
                     <AmmoPane fx:id="ammoPane" GridPane.rowIndex="1"/>
                     <WeaponsInfoPane fx:id="weaponsInfoPane" GridPane.rowIndex="2"/>
                 </GridPane>
-                <VBox fx:id="playerBoardsContainer" GridPane.columnIndex="1"
-                      GridPane.hgrow="ALWAYS" spacing="12"/>
+                <VBox fx:id="playerBoardsContainer" GridPane.columnIndex="1" alignment="BASELINE_CENTER"
+                      GridPane.hgrow="ALWAYS" spacing="8"/>
             </GridPane>
         </GridPane>
 
@@ -96,7 +96,7 @@
         </Label>
 
         <!-- BOTTOM ROW -->
-        <HBox GridPane.rowIndex="2" spacing="12" GridPane.vgrow="ALWAYS">
+        <HBox GridPane.rowIndex="2" spacing="12" GridPane.vgrow="ALWAYS" alignment="BOTTOM_LEFT">
             <PlayerBoardControl fx:id="userBoard" styleClass="shadowed" GridPane.vgrow="ALWAYS"/>
             <PowerupsContainer fx:id="powerupsContainer" GridPane.vgrow="ALWAYS"/>
             <WeaponsContainer fx:id="weaponsContainer" GridPane.vgrow="ALWAYS"/>

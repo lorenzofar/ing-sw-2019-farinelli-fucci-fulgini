@@ -111,10 +111,11 @@ public class PlayerBoardControl extends VBox {
         GUIRenderer.setColumnConstraints(damageTokensContainer, stateCellsMap.get(boardState));
 
         // Then bind the width of the board to that of the container
-        playerBoardGrid.prefHeightProperty().bind(this.heightProperty().multiply(0.9));
-        playerBoardGrid.heightProperty().addListener((ob, oldval, newVal) -> {
-            playerBoardGrid.setMinWidth(newVal.doubleValue() * BOARD_RATIO);
-            playerBoardGrid.setMaxWidth(newVal.doubleValue() * BOARD_RATIO);
+        this.widthProperty().addListener((ob, oldval, newVal) -> {
+            playerBoardGrid.setMinWidth(newVal.doubleValue());
+            playerBoardGrid.setMaxWidth(newVal.doubleValue());
+            playerBoardGrid.setMinHeight(newVal.doubleValue() / BOARD_RATIO);
+            playerBoardGrid.setMaxHeight(newVal.doubleValue() / BOARD_RATIO);
         });
         this.getChildren().add(playerBoardGrid);
     }
