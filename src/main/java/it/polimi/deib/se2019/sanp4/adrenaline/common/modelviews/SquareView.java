@@ -16,7 +16,6 @@ import java.util.*;
  */
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
-        include = JsonTypeInfo.As.PROPERTY,
         property = "type")
 @JsonSubTypes({
         @JsonSubTypes.Type(value = SpawnSquareView.class, name = "SPAWN_SQUARE_VIEW"),

@@ -167,10 +167,18 @@ public class PlayerView implements Serializable {
         }
     }
 
+    /**
+     * Returns the operational state of this player
+     * @return The operational state of this player
+     */
     public PlayerState getState() {
         return state;
     }
 
+    /**
+     * Sets the operational state of this player
+     * @param state The state to be set
+     */
     public void setState(PlayerState state) {
         this.state = state;
     }

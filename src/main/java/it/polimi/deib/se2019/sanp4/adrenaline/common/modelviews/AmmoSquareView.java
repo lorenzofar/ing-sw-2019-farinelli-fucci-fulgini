@@ -51,7 +51,7 @@ public class AmmoSquareView extends SquareView {
             // If the square does not contain an ammo card, we return nothing
             return "none";
         }
-        StringBuilder squareContent = new StringBuilder("");
+        StringBuilder squareContent = new StringBuilder();
         for (Map.Entry<AmmoCube, Integer> entry : ammoCard.getCubes().entrySet()) {
             squareContent.append(String.format("%d%s ", entry.getValue(), entry.getKey().name().substring(0, 1)));
         }
