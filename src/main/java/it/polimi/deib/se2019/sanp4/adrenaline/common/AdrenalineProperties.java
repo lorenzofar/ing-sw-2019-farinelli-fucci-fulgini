@@ -8,7 +8,15 @@ import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
-/** A class extending the Properties class to load and retrieve properties used by the server. Uses the singleton pattern */
+/**
+ * Provides methods to load and retrieve runtime parameters used both by the client and the server.
+ * <p>
+ *     The parameters are represented by <i>properties</i>
+ * </p>
+ * <p>
+ *     This class uses the singleton pattern
+ * </p>
+ */
 public class AdrenalineProperties extends Properties {
 
     /** Default file name of the config file */

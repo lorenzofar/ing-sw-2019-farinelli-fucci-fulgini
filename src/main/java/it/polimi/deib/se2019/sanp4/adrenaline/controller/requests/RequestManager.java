@@ -152,8 +152,6 @@ public class RequestManager {
      * </p>
      * @param uuid the unique identifier of the request that originated the choice
      * @return the pending choice if it is found, {@code null} if no request is found with given UUID
-     * @apiNote This method is package-private because external classes are not encouraged to manipulate
-     * the choices directly, because it prevents them from being automatically taken out of the pending map
      */
     public synchronized CompletableChoice getPendingChoice(String uuid) {
         return pendingChoices.get(uuid);

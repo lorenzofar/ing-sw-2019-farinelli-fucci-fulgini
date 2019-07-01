@@ -1,5 +1,10 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.common;
 
+/**
+ * Provides methods to get color codes of an object with a color.
+ * The color can be retrieved either as an ANSI escape code or
+ * as an HEX (RGB, 8 bits per channel) value.
+ */
 public interface ColoredObject {
 
     /**

@@ -152,7 +152,6 @@ public class RoomTarget extends AbstractTarget {
      * <li>He's in a square excluded with {@code excludeSquares}</li>
      * <li>He's the shooter</li>
      * </ul>
-     * </p>
      *
      * @param target  The selected room to target, not null
      * @param shooter The player using the weapon, not null
