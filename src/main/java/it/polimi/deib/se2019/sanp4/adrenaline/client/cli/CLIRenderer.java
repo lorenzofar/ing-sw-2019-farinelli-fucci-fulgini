@@ -302,6 +302,7 @@ public class CLIRenderer implements UIRenderer {
 
     @Override
     public void showLeaderBoard() {
+        CLIHelper.cancelInput();
         Leaderboard leaderboard = clientView.getModelManager().getLeaderboard();
         if (leaderboard != null) {
             CLIHelper.clearScreen();
@@ -313,6 +314,7 @@ public class CLIRenderer implements UIRenderer {
 
     @Override
     public void updateLeaderBoard(Leaderboard leaderboard) {
+        CLIHelper.cancelInput();
         CLIHelper.clearScreen();
         CLIHelper.printFullScreenRenderedGameElement(CLIHelper.renderLeaderBoard(leaderboard), "Final scores");
     }
