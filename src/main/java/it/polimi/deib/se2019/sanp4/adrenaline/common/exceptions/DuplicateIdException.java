@@ -8,10 +8,18 @@ public class DuplicateIdException extends Exception {
 
     private static final long serialVersionUID = -2998515275825951602L;
 
+    /**
+     * Creates an exception with no message
+     */
     public DuplicateIdException() {
         super();
     }
 
+    /**
+     * Creates an exception with a specific message
+     *
+     * @param message The message
+     */
     public DuplicateIdException(String message) {
         super(message);
     }

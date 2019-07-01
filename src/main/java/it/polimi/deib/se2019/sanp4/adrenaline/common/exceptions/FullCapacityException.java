@@ -11,13 +11,19 @@ public class FullCapacityException extends Exception {
 
     /**
      * Constructor: assigns capacity and sets a proper message for the throwable.
-     * @param capacity maximum capacity which has been reached
+     *
+     * @param capacity The maximum capacity, which has been reached
      */
     public FullCapacityException(int capacity) {
         super(String.format("Cannot add this element because maximum capacity %s has been reached", capacity));
         this.capacity = capacity;
     }
 
+    /**
+     * Returns the capacity which has been reached
+     *
+     * @return The maximum capacity, which has been reached
+     */
     public int getCapacity() {
         return capacity;
     }

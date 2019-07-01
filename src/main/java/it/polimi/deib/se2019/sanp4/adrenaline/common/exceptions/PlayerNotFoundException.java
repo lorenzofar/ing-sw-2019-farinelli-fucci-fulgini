@@ -8,7 +8,15 @@ public class PlayerNotFoundException extends RuntimeException {
 
     private static final long serialVersionUID = 6751640880343681499L;
 
+    /**
+     * Creates an exception with no message
+     */
     public PlayerNotFoundException(){ super(); }
 
+    /**
+     * Creates an exception with a specific message
+     *
+     * @param message The message
+     */
     public PlayerNotFoundException(String message){ super(message); }
 }

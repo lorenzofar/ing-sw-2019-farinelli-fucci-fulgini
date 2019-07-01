@@ -8,10 +8,18 @@ public class UnknownIdException extends Exception {
 
     private static final long serialVersionUID = 9065206789660670809L;
 
+    /**
+     * Creates an exception with no message
+     */
     public UnknownIdException() {
         super();
     }
 
+    /**
+     * Creates an exception with a specific message
+     *
+     * @param message The message
+     */
     public UnknownIdException(String message) {
         super(message);
     }
