@@ -145,28 +145,30 @@ public class CLIRenderer implements UIRenderer {
         }
         CLIHelper.stopSpinner();
         CLIHelper.clearScreen();
-        printMatchScreen();
+        printMatchScreen(false);
     }
 
     @Override
     public void showDrawnWeapon(WeaponCard weapon) {
         // We refresh the match screen since the list of owned weapon cards is shown there
-        printMatchScreen();
+        printMatchScreen(false);
     }
 
     @Override
     public void showDrawnPowerup(PowerupCard powerup) {
         // We refresh the match screen since the list of owned powerup cards is shown there
-        printMatchScreen();
+        printMatchScreen(false);
     }
 
     /**
      * Generates and prints a textual representation of the game dashboard
+     *
+     * @param override {@code true} to print the screen even if there is a pending request
      */
-    private void printMatchScreen() {
+    private void printMatchScreen(boolean override) {
 
         // If there is a request pending, we do not print the match screen
-        if (clientView.getCurrentRequest() != null) {
+        if (!override && clientView.getCurrentRequest() != null) {
             return;
         }
 
@@ -186,6 +188,10 @@ public class CLIRenderer implements UIRenderer {
             - stacked players board
         */
         ModelManager modelManager = clientView.getModelManager();
+        // We stop if the match is not yet initialized
+        if (modelManager.getMatch() == null) {
+            return;
+        }
 
         // We first render the killshots track
         List<List<String>> renderedKillshotsTrack = CLIHelper.renderKillshotsTrack(
@@ -331,7 +337,7 @@ public class CLIRenderer implements UIRenderer {
      */
     @Override
     public void refreshKillshotsTrack() {
-        printMatchScreen();
+        printMatchScreen(false);
     }
 
     /**
@@ -341,7 +347,7 @@ public class CLIRenderer implements UIRenderer {
      */
     @Override
     public void refreshPlayerBoard(String boardOwner) {
-        printMatchScreen();
+        printMatchScreen(false);
     }
 
     /**
@@ -349,7 +355,7 @@ public class CLIRenderer implements UIRenderer {
      */
     @Override
     public void refreshGameBoard() {
-        printMatchScreen();
+        printMatchScreen(false);
     }
 
     /**
@@ -359,12 +365,12 @@ public class CLIRenderer implements UIRenderer {
      */
     @Override
     public void refreshGameBoard(CoordPair... squares) {
-        printMatchScreen();
+        printMatchScreen(false);
     }
 
     @Override
     public void refreshAmmoInfo() {
-        printMatchScreen();
+        printMatchScreen(false);
     }
 
     /**
@@ -372,32 +378,32 @@ public class CLIRenderer implements UIRenderer {
      */
     @Override
     public void refreshMatchInfo() {
-        printMatchScreen();
+        printMatchScreen(false);
     }
 
     @Override
     public void refreshSpawnWeapons() {
-        printMatchScreen();
+        printMatchScreen(false);
     }
 
     @Override
     public void refreshOwnedWeapons() {
-        printMatchScreen();
+        printMatchScreen(false);
     }
 
     @Override
     public void refreshOwnedPowerups() {
-        printMatchScreen();
+        printMatchScreen(false);
     }
 
     @Override
     public void handle(ActionRequest request) {
-        requestRoutine("Action selection", request, actionEnum -> String.format("%s : %s", actionEnum.name(), actionEnum.toString()));
+        requestRoutine("Action selection", request, null, actionEnum -> String.format("%s : %s", actionEnum.name(), actionEnum.toString()));
     }
 
     @Override
     public void handle(BoardRequest request) {
-        requestRoutine("Board configuration", request, BoardCreator::getBoardDescription);
+        requestRoutine("Board configuration", request, null, BoardCreator::getBoardDescription);
     }
 
     @Override
@@ -413,10 +419,10 @@ public class CLIRenderer implements UIRenderer {
     @Override
     public void handle(PowerupCardRequest request) {
         // First render all the powerup cards we can choose among
-        List<List<List<String>>> renderedPowerupCards = request.getChoices().stream().map(CLIHelper::renderPowerupCard).collect(Collectors.toList());
-        // Then show them to the user by concatenating them
-        CLIHelper.printRenderedGameElement(CLIHelper.concatRenderedElements(renderedPowerupCards, 1));
-        requestRoutine("Powerup selection", request, powerup -> String.format("%s (%s)", powerup.getName(), powerup.getCubeColor()));
+        List<List<String>> renderedPowerupCards = CLIHelper.concatRenderedElements(
+                request.getChoices().stream().map(CLIHelper::renderPowerupCard).collect(Collectors.toList()),
+                1);
+        requestRoutine("Powerup selection", request, renderedPowerupCards, powerup -> String.format("%s (%s)", powerup.getName(), powerup.getCubeColor()));
     }
 
     @Override
@@ -427,7 +433,7 @@ public class CLIRenderer implements UIRenderer {
     @Override
     public void handle(SquareRequest request) {
         // First make sure the board is shown to the user, hence refresh the match screen
-        requestRoutine("Square selection", request,
+        requestRoutine("Square selection", request, null,
                 coordPair -> {
                     // We show information about:
                     // * how many players are there
@@ -450,17 +456,19 @@ public class CLIRenderer implements UIRenderer {
     @Override
     public void handle(WeaponCardRequest request) {
         // First render all the weapon cards we can choose among
-        List<List<List<String>>> renderedWeaponCards = request.getChoices().stream().map(CLIHelper::renderWeaponCard).collect(Collectors.toList());
-        // Then show them to the user by concatenating them
-        CLIHelper.printRenderedGameElement(CLIHelper.concatRenderedElements(renderedWeaponCards, 1));
-        requestRoutine("Weapon card selection", request, WeaponCard::getName);
+        List<List<String>> renderedWeaponCards = CLIHelper.concatRenderedElements(
+                request.getChoices().stream().map(CLIHelper::renderWeaponCard).collect(Collectors.toList()),
+                1);
+        requestRoutine("Weapon card selection", request, renderedWeaponCards, WeaponCard::getName);
     }
 
     @Override
     public void handle(EffectRequest request) {
-        List<List<List<String>>> renderedEffects = request.getChoices().stream().map(effect -> CLIHelper.renderEffectDescription(effect, true)).collect(Collectors.toList());
-        CLIHelper.printRenderedGameElement(CLIHelper.concatRenderedElements(renderedEffects, 1));
-        requestRoutine("Effect selection", request, EffectDescription::getName);
+        // First render all the effects we can choose among
+        List<List<String>> renderedEffects = CLIHelper.concatRenderedElements(
+                request.getChoices().stream().map(effect -> CLIHelper.renderEffectDescription(effect, true)).collect(Collectors.toList()),
+                1);
+        requestRoutine("Effect selection", request, renderedEffects, EffectDescription::getName);
     }
 
     /**
@@ -468,15 +476,22 @@ public class CLIRenderer implements UIRenderer {
      *
      * @param title           The title of the screen shown to the user
      * @param request         The object representing the request
+     * @param choicePreview   The rendered preview of the objects involved in the choice
      * @param stringConverter The conversion function to print the available choices
      * @param <T>             The type of the choices
      */
-    private <T extends Serializable> void requestRoutine(String title, ChoiceRequest<T> request, Function<T, String> stringConverter) {
+    private <T extends Serializable> void requestRoutine(String title, ChoiceRequest<T> request, List<List<String>> choicePreview, Function<T, String> stringConverter) {
         CLIHelper.cancelInput();
         CLIHelper.stopSpinner();
-        // Show the match screen again if something has changed
-        printMatchScreen();
+        // We print the match screen to show the latest changes
+        printMatchScreen(true);
+        // We then print the title of the request
         CLIHelper.printTitle(title);
+        // If a choice preview is provided, we print it
+        if (choicePreview != null) {
+            CLIHelper.printRenderedGameElement(choicePreview);
+        }
+
         // Ask the user to select a choice
         T selectedObject = CLIHelper.askOptionFromList(
                 request.getMessage(),
@@ -504,6 +519,6 @@ public class CLIRenderer implements UIRenderer {
      * @param <T>     The type of the choices
      */
     private <T extends Serializable> void requestRoutine(String title, ChoiceRequest<T> request) {
-        requestRoutine(title, request, Object::toString);
+        requestRoutine(title, request, null, Object::toString);
     }
 }
