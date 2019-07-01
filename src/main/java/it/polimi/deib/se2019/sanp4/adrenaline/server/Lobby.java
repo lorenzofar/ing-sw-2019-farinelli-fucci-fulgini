@@ -226,13 +226,13 @@ public class Lobby implements Runnable {
      */
     @Override
     public void run() {
-        logger.log(Level.FINE, "Running lobby, min players to start match: {0}", minPlayers);
-
         /* Get updated values for properties */
         minPlayers = Integer.parseInt((String)AdrenalineProperties.getProperties()
                 .getOrDefault("adrenaline.players.min", "3"));
         waitingTime = Integer.parseInt((String)AdrenalineProperties.getProperties()
                 .getOrDefault("adrenaline.timeout.lobby", "30"));
+
+        logger.log(Level.FINE, "Running lobby, min players to start match: {0}", minPlayers);
 
         stayActive = true;
         while (stayActive) {
