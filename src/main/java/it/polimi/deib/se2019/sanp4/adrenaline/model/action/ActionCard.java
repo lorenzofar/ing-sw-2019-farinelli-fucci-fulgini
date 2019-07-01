@@ -162,6 +162,10 @@ public class ActionCard implements Serializable {
         return Objects.hash(type);
     }
 
+    /**
+     * Generates a reduced view of this object
+     * @return A reduced view of this object
+     */
     public ActionCardView generateView() {
         return new ActionCardView(type, actions, finalAction);
     }

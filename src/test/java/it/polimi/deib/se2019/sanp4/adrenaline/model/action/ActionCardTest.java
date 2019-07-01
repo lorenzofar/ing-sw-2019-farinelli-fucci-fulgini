@@ -64,11 +64,11 @@ public class ActionCardTest {
     public void createCard_properParametersProvided_shouldNotThrowException(){
         ActionCard actionCard = new ActionCard(validMaxActions, validType, validActions, validFinalAction);
         assertEquals(validType, actionCard.getType());
+        assertEquals(validType.toString(), actionCard.getType().toString());
         assertTrue(validActions.containsAll(actionCard.getActions()));
         assertTrue(actionCard.getActions().containsAll(validActions));
         assertEquals(validFinalAction, actionCard.getFinalAction());
-        assertTrue(validActions.containsAll(actionCard.getActions()));
-        assertTrue(actionCard.getActions().containsAll(validActions));
+        assertEquals(validFinalAction.toString(), actionCard.getFinalAction().toString());
     }
 
     @Test
