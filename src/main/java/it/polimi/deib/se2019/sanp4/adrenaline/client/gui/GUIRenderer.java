@@ -15,6 +15,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.image.Image;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
@@ -105,15 +106,6 @@ public class GUIRenderer extends Application implements UIRenderer {
         }
     }
 
-    @Override
-    public void start(Stage primaryStage) throws Exception {
-        this.stage = primaryStage;
-        this.clientView = new ClientView();
-        clientView.setRenderer(this);
-
-        showScene("/fxml/login.fxml", false);
-    }
-
     /**
      * Spawns a new windows with the provided title and showing the provided FXML file
      *
@@ -140,11 +132,37 @@ public class GUIRenderer extends Application implements UIRenderer {
         }
     }
 
+    /**
+     * Updates the stage info (title and icon) after showing a scene
+     *
+     * @param title The title of the stage
+     */
+    private void updateStageInfo(String title) {
+        if (this.stage != null) {
+            this.stage.setTitle(title);
+            this.stage.getIcons().clear();
+            this.stage.getIcons().add(new Image("/adrenaline_icon.png"));
+        }
+    }
+
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+        this.stage = primaryStage;
+        this.clientView = new ClientView();
+        clientView.setRenderer(this);
+
+        showScene("/fxml/login.fxml", false);
+        updateStageInfo("Adrenaline");
+    }
+
     /* ===== LOBBY ===== */
 
     @Override
     public void showLobby() {
-        Platform.runLater(() -> showScene("/fxml/lobby.fxml", false));
+        Platform.runLater(() -> {
+            showScene("/fxml/lobby.fxml", false);
+            updateStageInfo("Adrenaline lobby");
+        });
     }
 
     @Override
@@ -177,6 +195,7 @@ public class GUIRenderer extends Application implements UIRenderer {
             } catch (Exception e) {
                 logger.log(Level.INFO, "Game screen was not loaded, we show it for the first time");
                 showScene("/fxml/game.fxml", true);
+                updateStageInfo("Adrenaline");
                 ((GameController) currentController).buildMatchScreen();
             }
         });
@@ -268,6 +287,7 @@ public class GUIRenderer extends Application implements UIRenderer {
     public void showLeaderBoard() {
         Platform.runLater(() -> {
             showScene("/fxml/leaderboard.fxml", true);
+            updateStageInfo("Adrenaline");
             if (clientView.getModelManager().getLeaderboard() != null) {
                 ((LeaderboardController) currentController).updateLeaderBoard(clientView.getModelManager().getLeaderboard());
             }
