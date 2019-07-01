@@ -87,6 +87,8 @@ public interface UIRenderer extends ChoiceRequestVisitor {
 
     /**
      * Updates the content of the displayed leaderboard
+     *
+     * @param leaderboard The object representing the leaderboard
      */
     void updateLeaderBoard(Leaderboard leaderboard);
 

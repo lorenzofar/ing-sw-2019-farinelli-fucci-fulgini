@@ -28,19 +28,39 @@ import java.util.Map;
  */
 public class PlayerBoardControl extends VBox {
 
+    /**
+     * The ratios of damage track cells for boards in FRENZY mode
+     */
     private static final double[] FRENZY_CELLS = {8.27, 8.23, 25, 8.25, 8.21, 8.23, 8.23, 8.36, 8.20, 8.26, 9.18, 8.30};
+    /**
+     * The ratios of damage track cells for boards in REGULAR mode
+     */
     private static final double[] REGULAR_CELLS = {8.02, 8.75, 8.48, 8.08, 8.72, 8.51, 8.08, 8.14, 8.05, 8.69, 8.57, 7.90};
-
+    /**
+     * The ratios of the board rows
+     */
     private static final double[] ROWS = {34, 32, 34};
+    /**
+     * The ratios of the columns in the middle row, containing the damage track
+     */
     private static final double[] MIDDLE_ROW_COLUMNS = {9, 67, 24};
-
+    /**
+     * The ratio of the board
+     */
     public static final double BOARD_RATIO = 1121.0 / 274.0;
 
+    /**
+     * A map associating each board state to the ratios of cells in the damage track
+     */
     private final Map<String, double[]> stateCellsMap;
-
+    /**
+     * The state of the board, defaulting with the regular state
+     */
     private String boardState = "regular";
+    /**
+     * The color of the board, matching that of the player owning it
+     */
     private PlayerColor boardColor;
-
     /**
      * The grid-pane containing the damage tokens of the player board
      */
@@ -49,9 +69,17 @@ public class PlayerBoardControl extends VBox {
      * The actual player board, with the corresponding graphic
      */
     private GridPane playerBoardGrid;
-
+    /**
+     * The property storing the name of the player
+     */
     private StringProperty playerName;
+    /**
+     * The property storing the count of deaths of the player
+     */
     private IntegerProperty playerDeaths;
+    /**
+     * The property storing the count of marks the player received
+     */
     private IntegerProperty playerMarks;
 
     public PlayerBoardControl() {
@@ -89,14 +117,13 @@ public class PlayerBoardControl extends VBox {
 
         // Then create the board layout adding the three rows
         GUIRenderer.setRowConstraints(playerBoardGrid, ROWS);
-        int i = 0;
-        for (double rowHeight : ROWS) {
+
+        for (int i = 0; i < ROWS.length; i++) {
             GridPane row = new GridPane();
-            row.prefHeightProperty().bind(playerBoardGrid.heightProperty().multiply(rowHeight / 100));
+            row.prefHeightProperty().bind(playerBoardGrid.heightProperty().multiply(ROWS[i] / 100));
             row.prefWidthProperty().bind(playerBoardGrid.widthProperty());
             GridPane.setRowIndex(row, i);
             playerBoardGrid.getChildren().add(row);
-            i++;
         }
         GridPane middleRow = (GridPane) playerBoardGrid.getChildren().get(1);
 
@@ -158,8 +185,11 @@ public class PlayerBoardControl extends VBox {
      * @param boardState The string representing the state
      */
     public void setBoardState(String boardState) {
+        boolean stateChanged = this.boardState == null || !this.boardState.equalsIgnoreCase(boardState);
         this.boardState = boardState.toLowerCase();
-        updateBoardBackground();
+        if (stateChanged) {
+            updateBoardBackground();
+        }
     }
 
     /**
@@ -168,8 +198,11 @@ public class PlayerBoardControl extends VBox {
      * @param boardColor The object representing the color
      */
     public void setBoardColor(PlayerColor boardColor) {
+        boolean colorChanged = this.boardColor == null || !this.boardColor.equals(boardColor);
         this.boardColor = boardColor;
-        updateBoardBackground();
+        if (colorChanged) {
+            updateBoardBackground();
+        }
     }
 
     /**
@@ -180,17 +213,15 @@ public class PlayerBoardControl extends VBox {
     public void setDamageTokens(List<ColoredObject> damageTokens) {
         // First remove all the tokens
         damageTokensContainer.getChildren().clear();
-        int i = 0;
         double[] cellRatios = stateCellsMap.get(boardState);
         // Then for each token in the list create a new overlay and insert it into the container
-        for (ColoredObject token : damageTokens) {
+        for (int i = 0; i < damageTokens.size(); i++) {
             // First we create an overlay for the token
-            Pane tokenOverlay = createTokenOverlay(cellRatios[i] / 100, damageTokensContainer, token.getHexCode());
+            Pane tokenOverlay = createTokenOverlay(cellRatios[i] / 100, damageTokensContainer, damageTokens.get(i).getHexCode());
             tokenOverlay.getStyleClass().add("glossy");
             tokenOverlay.setOpacity(0.75);
             GridPane.setColumnIndex(tokenOverlay, i);
             damageTokensContainer.getChildren().add(tokenOverlay);
-            i++;
         }
     }
 

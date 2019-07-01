@@ -20,6 +20,9 @@ public class KillshotsTrack extends GridPane {
 
     private static final double[] COLUMNS = {12.5, 12.5, 12.5, 12.5, 12.5, 12.5, 12.5, 12.5};
 
+    /**
+     * The total amount of skulls that are inside the killshots track
+     */
     private int totalSkulls;
 
     public KillshotsTrack() {

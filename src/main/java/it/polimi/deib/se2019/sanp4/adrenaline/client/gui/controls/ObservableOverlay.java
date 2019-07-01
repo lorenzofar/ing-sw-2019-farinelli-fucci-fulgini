@@ -11,6 +11,9 @@ import java.util.function.Consumer;
  */
 public abstract class ObservableOverlay<T> extends Button {
 
+    /**
+     * The data associated to the overlay
+     */
     private T data;
 
     /**
@@ -66,10 +69,20 @@ public abstract class ObservableOverlay<T> extends Button {
      */
     public abstract void reset();
 
+    /**
+     * Retrieves the data associated to the overlay
+     *
+     * @return The object representing the data
+     */
     public T getData() {
         return data;
     }
 
+    /**
+     * Sets the data associated to the overlay
+     *
+     * @param data The object representing the data
+     */
     void setData(T data) {
         this.data = data;
     }

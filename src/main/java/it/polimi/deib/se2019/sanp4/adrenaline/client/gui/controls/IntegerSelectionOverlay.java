@@ -6,7 +6,7 @@ import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 
 /**
- * An overlay used to represent and select an integer
+ * An overlay used to select an integer value, showing it in a square container
  */
 public class IntegerSelectionOverlay extends SelectableOverlay<Integer> {
 
@@ -26,6 +26,13 @@ public class IntegerSelectionOverlay extends SelectableOverlay<Integer> {
         overlayRoot.getStyleClass().add("integer-selection-overlay");
     }
 
+    /**
+     * Sets the integer value associated to the overlay.
+     * if a null value is provided the overlay is associated to the value 0, to be used when the user can choose
+     * not to select anything
+     *
+     * @param integer The value of the integer
+     */
     public void setInteger(Integer integer) {
         setData(integer != null ? integer : 0);
         label.setText(integer != null ? integer.toString() : "0");

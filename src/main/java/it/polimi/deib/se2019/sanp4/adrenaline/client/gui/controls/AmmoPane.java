@@ -26,9 +26,10 @@ public class AmmoPane extends VBox {
         super();
         this.setSpacing(8);
         this.getStylesheets().add("/fxml/style.css");
-
+        // Create the header of the pane
         Label header = new Label("Ammo");
         header.getStyleClass().add(GUIRenderer.CSS_BOLD_TITLE);
+        // Initialize the map storing the labels
         cubeLabels = new EnumMap<>(AmmoCube.class);
         HBox cubesContainer = new HBox(8);
         this.getChildren().addAll(header, cubesContainer);

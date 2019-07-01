@@ -1,6 +1,5 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.client.gui.controls;
 
-import it.polimi.deib.se2019.sanp4.adrenaline.client.gui.OrientationEnum;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -12,9 +11,12 @@ import javafx.scene.paint.Color;
  */
 public class OrientableImage extends Pane {
 
+    /**
+     * The orientation of the enum
+     */
     private OrientationEnum orientation;
 
-    public OrientableImage() {
+    OrientableImage() {
         super();
         this.orientation = OrientationEnum.UP;
     }

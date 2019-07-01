@@ -24,6 +24,22 @@ import java.util.stream.Collectors;
 import static it.polimi.deib.se2019.sanp4.adrenaline.client.gui.GUIRenderer.setColumnConstraints;
 import static it.polimi.deib.se2019.sanp4.adrenaline.client.gui.GUIRenderer.setRowConstraints;
 
+/**
+ * The controller used to handle the game screen, responsible of updating the information rendered in all the
+ * custom controls according to data retrieved from the ModelManager. It shows:
+ * <ul>
+ * <li>The game board, with the killshots track and the map containing all the squares with their content</li>
+ * <li>The player board of the user</li>
+ * <li>The name of the player that is currently playing</li>
+ * <li>The score of the user</li>
+ * <li>The frenzy status of the match (i.e. on/off)</li>
+ * <li>The list of players participating in the match</li>
+ * <li>The weapons owned by the other players</li>
+ * <li>The player boards of the other players</li>
+ * <li>The powerup cards owned by the user</li>
+ * <li>The weapon cards owned by the user</li>
+ * </ul>
+ */
 public class GameController extends GUIController {
 
     private static final double[] GAME_CONTAINER_ROWS = {20.77, 68 + 11.23};
@@ -88,7 +104,7 @@ public class GameController extends GUIController {
     /**
      * A map describing the player board control associated to each player
      */
-    Map<String, PlayerBoardControl> playerBoards;
+    private Map<String, PlayerBoardControl> playerBoards;
 
     /**
      * The map associating each spawn color to the list of weapon images sockets
@@ -294,7 +310,6 @@ public class GameController extends GUIController {
      * Refresh all the containers and rendered content in the screen
      */
     void refreshMatchScreen() {
-        // Then populate everything
         updateBoard();
         updateKillshotsTrack();
         updateMatchInfo();

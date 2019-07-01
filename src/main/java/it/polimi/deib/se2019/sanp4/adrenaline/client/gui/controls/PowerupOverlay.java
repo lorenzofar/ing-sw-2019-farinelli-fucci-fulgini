@@ -6,6 +6,9 @@ import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
+/**
+ * An overlay used to select a powerup, showing the graphical representation of its card
+ */
 public class PowerupOverlay extends SelectableOverlay<PowerupCard> {
 
     @FXML
@@ -20,6 +23,12 @@ public class PowerupOverlay extends SelectableOverlay<PowerupCard> {
         super.setSelectableRoot(overlayRoot);
     }
 
+    /**
+     * Sets the powerup card associated to the overlay.
+     * If a null object is provided, an empty card is shown, to be used when the used can choose not to select any card
+     *
+     * @param powerupCard The object representing the powerup card
+     */
     public void setPowerupCard(PowerupCard powerupCard) {
         this.setData(powerupCard);
         String filePath = String.format("/images/powerups/%s", powerupCard == null ?

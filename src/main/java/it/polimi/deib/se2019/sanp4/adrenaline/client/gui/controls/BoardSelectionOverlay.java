@@ -6,7 +6,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 /**
- * A class describing an overlay used to select the board configuration
+ * A class describing an overlay used to select the board configuration, showing the thumbnail of the board
  */
 public class BoardSelectionOverlay extends SelectableOverlay<Integer> {
 
@@ -22,6 +22,11 @@ public class BoardSelectionOverlay extends SelectableOverlay<Integer> {
         super.setSelectableRoot(overlayRoot);
     }
 
+    /**
+     * Sets the board associated to the overlay
+     *
+     * @param boardId The identifier of the board
+     */
     public void setBoardId(int boardId) {
         this.setData(boardId);
         // Set the board image as the graphic of the button

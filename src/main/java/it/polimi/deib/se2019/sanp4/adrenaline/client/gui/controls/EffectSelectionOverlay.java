@@ -14,7 +14,12 @@ import javafx.scene.text.Text;
 import java.util.stream.Collectors;
 
 /**
- * A custom control describing the visual representation of the effect of a weapon
+ * A custom control used to select effects of a weapon, showing information about:
+ * <ul>
+ * <li>The name of the effect</li>
+ * <li>The description of the effect</li>
+ * <li>The cost of the effect in terms of ammo cubes</li>
+ * </ul>
  */
 public class EffectSelectionOverlay extends SelectableOverlay<EffectDescription> {
 
@@ -42,6 +47,13 @@ public class EffectSelectionOverlay extends SelectableOverlay<EffectDescription>
         super.setSelectableRoot(overlayRoot);
     }
 
+    /**
+     * Sets the effect associated to the overlay.
+     * If a null object is passed, the overlay is associated to no effectsto be used when the user can
+     * choose not to select any effect
+     *
+     * @param effect The object representing the effect
+     */
     public void setEffect(EffectDescription effect) {
         this.setData(effect);
         costContainer.getChildren().clear();

@@ -11,6 +11,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 
+/**
+ * An overlay used to select a player, showing the name of the player and the picture of its character
+ */
 public class PlayerSelectionOverlay extends SelectableOverlay<String> {
 
     @FXML
@@ -34,6 +37,14 @@ public class PlayerSelectionOverlay extends SelectableOverlay<String> {
         super.setSelectableRoot(overlayRoot);
     }
 
+    /**
+     * Sets the player associated to the overlay.
+     * If a null object is provided it shows a gray icon with the text "no one", to be used when the user can choose
+     * not to select any player
+     *
+     * @param playerName  The name of the player
+     * @param playerColor The color of the player
+     */
     public void setPlayer(String playerName, PlayerColor playerColor) {
         this.setData(playerName);
 

@@ -27,6 +27,12 @@ public class PlayerOperationOverlay extends SelectableOverlay<PlayerOperationEnu
         overlayRoot.getStyleClass().add("player-operation-overlay");
     }
 
+    /**
+     * Sets the player operation associated to the overlay.
+     * If a null object is provided, the overlay shows a "do nothing" message, to be used when an operation is optional
+     *
+     * @param operation The object representing the operation
+     */
     public void setOperation(PlayerOperationEnum operation) {
         setData(operation);
         // If a null operation is provided, it means the user can choose to do nothing

@@ -26,6 +26,12 @@ public class ActionOverlay extends SelectableOverlay<ActionEnum> {
         overlayRoot.getStyleClass().add("player-operation-overlay");
     }
 
+    /**
+     * Sets the action associated to the overlay
+     * If a null action is provided, the overlay shows a "no action" message, to be used when an action is optional
+     *
+     * @param action The object representing the action
+     */
     public void setAction(ActionEnum action) {
         setData(action);
         label.setText(action != null ? action.toString() : "No action");

@@ -48,10 +48,9 @@ public class WeaponsContainer extends HBox {
             weaponBox.prefHeightProperty().bind(this.heightProperty());
             weaponBox.prefWidthProperty().bind(this.heightProperty().multiply(WEAPON_RATIO));
             // We then create an image containing the weapon card
-            OrientableImage weaponImage = new OrientableImage();
-            weaponImage.setImage(
-                    String.format("/images/weapons/%s.png",
-                            weapon.getId()));
+            WeaponImage weaponImage = new WeaponImage();
+            weaponImage.setWeapon(weapon.getId());
+            // And bind its size to that of the container
             weaponImage.prefHeightProperty().bind(weaponBox.heightProperty().multiply(0.9));
             weaponImage.prefWidthProperty().bind(weaponBox.heightProperty().multiply(WEAPON_RATIO));
             // We create a colored rectangle to show the usability status of the weapon

@@ -1,4 +1,4 @@
-package it.polimi.deib.se2019.sanp4.adrenaline.client.gui;
+package it.polimi.deib.se2019.sanp4.adrenaline.client.gui.controls;
 
 /**
  * An enumerator describing the orientation of an object in the space
