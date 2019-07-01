@@ -6,7 +6,9 @@ import it.polimi.deib.se2019.sanp4.adrenaline.model.items.powerup.PowerupCard;
 
 import java.util.List;
 
-/** A specialized request to ask for a powerup card */
+/**
+ * A specialized request to ask for a powerup card
+ */
 public class PowerupCardRequest extends ChoiceRequest<PowerupCard> {
 
     private static final long serialVersionUID = -2902511575406764592L;
@@ -39,6 +41,11 @@ public class PowerupCardRequest extends ChoiceRequest<PowerupCard> {
         super(message, choices, optional, PowerupCard.class);
     }
 
+    /**
+     * Accepts to be visited by a visitor, which may properly handle this request
+     *
+     * @param visitor The visitor which is trying to visit this, not null
+     */
     @Override
     public void accept(ChoiceRequestVisitor visitor) {
         visitor.handle(this);

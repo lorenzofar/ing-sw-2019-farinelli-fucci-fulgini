@@ -6,7 +6,9 @@ import it.polimi.deib.se2019.sanp4.adrenaline.model.board.CoordPair;
 
 import java.util.List;
 
-/** A specialized request to ask for a coordinates pair (namely a square) */
+/**
+ * A specialized request to ask for a coordinates pair (namely a square)
+ */
 public class SquareRequest extends ChoiceRequest<CoordPair> {
 
     private static final long serialVersionUID = 6735045518417681095L;
@@ -38,6 +40,11 @@ public class SquareRequest extends ChoiceRequest<CoordPair> {
         super(message, choices, optional, CoordPair.class);
     }
 
+    /**
+     * Accepts to be visited by a visitor, which may properly handle this request
+     *
+     * @param visitor The visitor which is trying to visit this, not null
+     */
     @Override
     public void accept(ChoiceRequestVisitor visitor) {
         visitor.handle(this);

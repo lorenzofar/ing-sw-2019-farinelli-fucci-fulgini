@@ -15,8 +15,8 @@ public class BoardRequest extends ChoiceRequest<Integer> {
     /**
      * Creates a new request
      *
-     * @param choices  The list of objects representing the available choices
-     * @param uuid     unique identifier of the request, if not provided it will be auto-generated
+     * @param choices The list of objects representing the available choices
+     * @param uuid    unique identifier of the request, if not provided it will be auto-generated
      */
     @JsonCreator
     public BoardRequest(
@@ -28,12 +28,17 @@ public class BoardRequest extends ChoiceRequest<Integer> {
     /**
      * Creates a new request, with auto-generated uuid
      *
-     * @param choices  The list of objects representing the available choices
+     * @param choices The list of objects representing the available choices
      */
     public BoardRequest(List<Integer> choices) {
         super("Please select the board", choices, false, Integer.class);
     }
 
+    /**
+     * Accepts to be visited by a visitor, which may properly handle this request
+     *
+     * @param visitor The visitor which is trying to visit this, not null
+     */
     @Override
     public void accept(ChoiceRequestVisitor visitor) {
         visitor.handle(this);

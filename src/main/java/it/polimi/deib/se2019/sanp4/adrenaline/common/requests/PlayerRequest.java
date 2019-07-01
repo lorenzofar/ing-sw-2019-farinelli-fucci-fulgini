@@ -5,7 +5,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 
-/** A specialized request to ask for the name of a player */
+/**
+ * A specialized request to ask for the name of a player
+ */
 public class PlayerRequest extends ChoiceRequest<String> {
 
     private static final long serialVersionUID = 5158410776370103882L;
@@ -38,6 +40,11 @@ public class PlayerRequest extends ChoiceRequest<String> {
         super(message, choices, optional, String.class);
     }
 
+    /**
+     * Accepts to be visited by a visitor, which may properly handle this request
+     *
+     * @param visitor The visitor which is trying to visit this, not null
+     */
     @Override
     public void accept(ChoiceRequestVisitor visitor) {
         visitor.handle(this);

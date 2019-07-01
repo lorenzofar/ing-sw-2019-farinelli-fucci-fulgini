@@ -6,7 +6,9 @@ import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.WeaponCard;
 
 import java.util.List;
 
-/** A specialized request to ask for a weapon card */
+/**
+ * A specialized request to ask for a weapon card
+ */
 public class WeaponCardRequest extends ChoiceRequest<WeaponCard> {
 
     private static final long serialVersionUID = 7286352744493657016L;
@@ -39,6 +41,11 @@ public class WeaponCardRequest extends ChoiceRequest<WeaponCard> {
         super(message, choices, optional, WeaponCard.class);
     }
 
+    /**
+     * Accepts to be visited by a visitor, which may properly handle this request
+     *
+     * @param visitor The visitor which is trying to visit this, not null
+     */
     @Override
     public void accept(ChoiceRequestVisitor visitor) {
         visitor.handle(this);

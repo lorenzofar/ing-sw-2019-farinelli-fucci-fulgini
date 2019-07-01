@@ -41,6 +41,11 @@ public class EffectRequest extends ChoiceRequest<EffectDescription> {
         super(message, choices, optional, EffectDescription.class);
     }
 
+    /**
+     * Accepts to be visited by a visitor, which may properly handle this request
+     *
+     * @param visitor The visitor which is trying to visit this, not null
+     */
     @Override
     public void accept(ChoiceRequestVisitor visitor) {
         visitor.handle(this);

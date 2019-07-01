@@ -6,7 +6,9 @@ import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionEnum;
 
 import java.util.List;
 
-/** A specialized request to ask for the action the user wants to perform */
+/**
+ * A specialized request to ask for the action the user wants to perform
+ */
 public class ActionRequest extends ChoiceRequest<ActionEnum> {
 
     private static final long serialVersionUID = -8594391460674651023L;
@@ -39,6 +41,11 @@ public class ActionRequest extends ChoiceRequest<ActionEnum> {
         super(message, choices, optional, ActionEnum.class);
     }
 
+    /**
+     * Accepts to be visited by a visitor, which may properly handle this request
+     *
+     * @param visitor The visitor which is trying to visit this, not null
+     */
     @Override
     public void accept(ChoiceRequestVisitor visitor) {
         visitor.handle(this);

@@ -6,7 +6,9 @@ import it.polimi.deib.se2019.sanp4.adrenaline.model.match.PlayerOperationEnum;
 
 import java.util.List;
 
-/** A specialized request to ask for the operation to be performed during a turn */
+/**
+ * A specialized request to ask for the operation to be performed during a turn
+ */
 public class PlayerOperationRequest extends ChoiceRequest<PlayerOperationEnum> {
 
     private static final long serialVersionUID = -3091597394450215066L;
@@ -14,8 +16,8 @@ public class PlayerOperationRequest extends ChoiceRequest<PlayerOperationEnum> {
     /**
      * Creates a new weapon card request
      *
-     * @param choices  The list of objects representing the available choices
-     * @param uuid     unique identifier of the request, if not provided it will be auto-generated
+     * @param choices The list of objects representing the available choices
+     * @param uuid    unique identifier of the request, if not provided it will be auto-generated
      */
     @JsonCreator
     public PlayerOperationRequest(
@@ -27,12 +29,17 @@ public class PlayerOperationRequest extends ChoiceRequest<PlayerOperationEnum> {
     /**
      * Creates a new weapon card request, with auto-generated uuid
      *
-     * @param choices  The list of objects representing the available choices
+     * @param choices The list of objects representing the available choices
      */
     public PlayerOperationRequest(List<PlayerOperationEnum> choices) {
         super("Choose the operation you want to perform", choices, false, PlayerOperationEnum.class);
     }
 
+    /**
+     * Accepts to be visited by a visitor, which may properly handle this request
+     *
+     * @param visitor The visitor which is trying to visit this, not null
+     */
     @Override
     public void accept(ChoiceRequestVisitor visitor) {
         visitor.handle(this);
