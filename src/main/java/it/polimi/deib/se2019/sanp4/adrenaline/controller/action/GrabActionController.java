@@ -165,7 +165,7 @@ public class GrabActionController implements SquareVisitor {
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         } finally {
-            if (selectedCard != drawnPowerup) { /* Discard powerup in player's hands */
+            if (!selectedCard.equals(drawnPowerup)) { /* Discard powerup in player's hands */
                 player.removePowerup(selectedCard);
                 try {
                     player.addPowerup(drawnPowerup);
