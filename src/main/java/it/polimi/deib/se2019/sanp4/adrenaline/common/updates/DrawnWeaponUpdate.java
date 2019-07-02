@@ -27,18 +27,34 @@ public class DrawnWeaponUpdate extends ModelUpdate {
         this.weaponCard = weaponCard;
     }
 
+    /**
+     * Returns the player property
+     * @return The player property
+     */
     public String getPlayer() {
         return player;
     }
 
+    /**
+     * Sets the player property
+     * @param player The player property, not null
+     */
     public void setPlayer(String player) {
         this.player = player;
     }
 
+    /**
+     * Returns the drawn card
+     * @return the drawn card
+     */
     public WeaponCard getWeaponCard() {
         return weaponCard;
     }
 
+    /**
+     * Sets the drawn card
+     * @param weaponCard The drawn card, not null
+     */
     public void setWeaponCard(WeaponCard weaponCard) {
         this.weaponCard = weaponCard;
     }

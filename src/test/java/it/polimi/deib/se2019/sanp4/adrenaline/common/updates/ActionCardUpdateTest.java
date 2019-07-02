@@ -6,6 +6,9 @@ import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionCardEnum;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionEnum;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.JSONUtils;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -13,11 +16,15 @@ import java.util.Collection;
 import java.util.HashSet;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.verify;
 
+@RunWith(MockitoJUnitRunner.class)
 public class ActionCardUpdateTest {
 
     private Collection<ActionEnum> actions = new HashSet<>();
     private ObjectMapper objectMapper = JSONUtils.getObjectMapper();
+    @Mock
+    private static ModelUpdateVisitor visitor;
 
     @Test
     public void serialize_ShouldSucceed() throws IOException {
@@ -47,5 +54,17 @@ public class ActionCardUpdateTest {
         assertEquals(actionCardView.getFinalAction(), actionCardUpdate.getActionCard().getFinalAction());
         assertEquals(actionCardView.getType(), actionCardUpdate.getActionCard().getType());
 
+    }
+
+    @Test
+    public void accept_shouldAcceptVisitor() {
+        ActionCardView actionCardView = new ActionCardView(ActionCardEnum.ADRENALINE1,
+                actions, ActionEnum.RELOAD);
+
+        ActionCardUpdate update = new ActionCardUpdate(actionCardView, "player");
+
+        update.accept(visitor);
+
+        verify(visitor).handle(update);
     }
 }

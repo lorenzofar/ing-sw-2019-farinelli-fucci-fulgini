@@ -6,7 +6,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.ActionCardView;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionCard;
 
 /**
- * An update sent to a player when its {@link ActionCard} changes.
+ * An update sent to a player when an {@link ActionCard} changes.
  */
 public class ActionCardUpdate extends ModelUpdate {
 
@@ -17,8 +17,8 @@ public class ActionCardUpdate extends ModelUpdate {
     /**
      * Creates an action card update that will be sent in broadcast.
      *
-     * @param actionCard the action card to send as update.
-     * @param player the username of the player who owns the action card
+     * @param actionCard the action card to send as update, not null
+     * @param player     the username of the player who owns the action card, not null
      */
     @JsonCreator
     public ActionCardUpdate(
@@ -29,21 +29,24 @@ public class ActionCardUpdate extends ModelUpdate {
         this.player = player;
     }
 
+    /**
+     * Returns the changed version of the action card
+     *
+     * @return The action card
+     */
     public ActionCardView getActionCard() {
         return actionCard;
     }
 
-    public void setActionCard(ActionCardView actionCard) {
-        this.actionCard = actionCard;
-    }
-
+    /**
+     * Returns the username of the player who owns the action card
+     *
+     * @return The username of the player who owns the action card
+     */
     public String getPlayer() {
         return player;
     }
 
-    public void setPlayer(String player) {
-        this.player = player;
-    }
 
     @Override
     public void accept(ModelUpdateVisitor visitor) {

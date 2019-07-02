@@ -27,18 +27,34 @@ public class DrawnPowerupUpdate extends ModelUpdate {
         this.powerupCard = powerupCard;
     }
 
+    /**
+     * Returns the player property
+     * @return The player property
+     */
     public String getPlayer() {
         return player;
     }
 
+    /**
+     * Sets the player property
+     * @param player The player property, not null
+     */
     public void setPlayer(String player) {
         this.player = player;
     }
 
+    /**
+     * Returns the drawn card
+     * @return the drawn card
+     */
     public PowerupCard getPowerupCard() {
         return powerupCard;
     }
 
+    /**
+     * Sets the drawn card
+     * @param powerupCard The drawn card, not null
+     */
     public void setPowerupCard(PowerupCard powerupCard) {
         this.powerupCard = powerupCard;
     }

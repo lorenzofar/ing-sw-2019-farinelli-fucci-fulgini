@@ -20,10 +20,6 @@ public class InitialUpdate extends ModelUpdate {
     private BoardView board;
     private PlayerTurnView currentTurn;
 
-    public static long getSerialVersionUID() {
-        return serialVersionUID;
-    }
-
     public Map<String, PlayerView> getPlayers() {
         return players;
     }
