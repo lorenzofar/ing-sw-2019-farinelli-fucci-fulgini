@@ -15,31 +15,61 @@ import java.util.concurrent.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Handles incoming players waiting to start a new match.
+ * <p>
+ * Once the Lobby has been created, it must be run (preferably on a new thread).
+ * It will start listening for incoming players, which can be provided by calling
+ * {@link #insertPlayer(String, RemoteView)}
+ * </p>
+ * <p>
+ * When a minimum number of waiting players has been reached, a timer starts and if when the timer
+ * expires there are still that minimum amount of players connected, a match will be started with them, by
+ * calling the server.
+ * If the number of connected players is below the minimum, the match won't be started.
+ * If the number of waiting players coincides with the maximum amount of players in a match (number of player colors),
+ * then the match starts immediately and the timer is stopped.
+ * </p>
+ */
 public class Lobby implements Runnable {
 
     private static final Logger logger = Logger.getLogger(Lobby.class.getName());
 
     private boolean stayActive = true;
 
-    /** Minimum number of players to start a match */
+    /**
+     * Minimum number of players to start a match
+     */
     private int minPlayers;
 
-    /** Maxmimum number of players in a match */
+    /**
+     * Maxmimum number of players in a match
+     */
     private int maxPlayers;
 
-    /** Waiting time of the timer, in seconds (default 30 sec.) */
+    /**
+     * Waiting time of the timer, in seconds (default 30 sec.)
+     */
     private int waitingTime;
 
-    /** This will contain the players coming from the server */
+    /**
+     * This will contain the players coming from the server
+     */
     private BlockingQueue<Map.Entry<String, RemoteView>> incomingPlayers = new LinkedBlockingQueue<>();
 
-    /** A map with the views of the players who have been accepted and are waiting to start the match */
+    /**
+     * A map with the views of the players who have been accepted and are waiting to start the match
+     */
     private ConcurrentMap<String, RemoteView> waitingPlayers = new ConcurrentHashMap<>();
 
-    /** Executor service tu run the timer */
+    /**
+     * Executor service tu run the timer
+     */
     private ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
 
-    /** The return value of the timer */
+    /**
+     * The return value of the timer
+     */
     private Future<?> timer;
 
     /**
@@ -56,8 +86,9 @@ public class Lobby implements Runnable {
      * Inserts an incoming player that has just logged in in the incoming queue.
      * This method assumes that the server has checked that no player
      * with that username (either active or inactive) exists on the server
+     *
      * @param username username
-     * @param view player
+     * @param view     player
      */
     public void insertPlayer(String username, RemoteView view) {
         incomingPlayers.add(new AbstractMap.SimpleEntry<>(username, view));
@@ -67,10 +98,11 @@ public class Lobby implements Runnable {
      * Waits for an incoming player from the queue.
      * When it gets the incoming player:
      * <ol>
-     *     <li>Inserts it in the waiting list</li>
-     *     <li>If there are {@link #maxPlayers} in the waiting list, creates a new match and empties the waiting list</li>
-     *     <li>If there are at least {@link #minPlayers} starts a timer which will start the match later</li>
+     * <li>Inserts it in the waiting list</li>
+     * <li>If there are {@link #maxPlayers} in the waiting list, creates a new match and empties the waiting list</li>
+     * <li>If there are at least {@link #minPlayers} starts a timer which will start the match later</li>
      * </ol>
+     *
      * @param incomingPlayer (username, view) pair of a player view received from the server
      */
     synchronized void receiveIncomingPlayer(Map.Entry<String, RemoteView> incomingPlayer) {
@@ -143,6 +175,7 @@ public class Lobby implements Runnable {
 
     /**
      * Disconnects a player and sends a notification to the other waiting players
+     *
      * @param username the player who has to be disconnected
      */
     void disconnectPlayer(String username) {
@@ -156,6 +189,7 @@ public class Lobby implements Runnable {
 
     /**
      * Selects the LOBBY scene on given player
+     *
      * @param view the view of the player
      */
     void selectLobbyScene(RemoteView view) {
@@ -168,6 +202,7 @@ public class Lobby implements Runnable {
 
     /**
      * Sends the current list of waiting players to the waiting players
+     *
      * @param starting whether the match is going to start shortly or not
      */
     void notifyWaitingList(boolean starting) {
@@ -205,6 +240,7 @@ public class Lobby implements Runnable {
 
     /**
      * Returns the blocking queue with incoming players
+     *
      * @return the blocking queue with incoming players
      */
     BlockingQueue<Map.Entry<String, RemoteView>> getIncomingPlayers() {
@@ -213,6 +249,7 @@ public class Lobby implements Runnable {
 
     /**
      * Returns a map with the players waiting for a match to be created
+     *
      * @return a map with the players waiting for a match to be created
      */
     ConcurrentMap<String, RemoteView> getWaitingPlayers() {
@@ -227,9 +264,9 @@ public class Lobby implements Runnable {
     @Override
     public void run() {
         /* Get updated values for properties */
-        minPlayers = Integer.parseInt((String)AdrenalineProperties.getProperties()
+        minPlayers = Integer.parseInt((String) AdrenalineProperties.getProperties()
                 .getOrDefault("adrenaline.players.min", "3"));
-        waitingTime = Integer.parseInt((String)AdrenalineProperties.getProperties()
+        waitingTime = Integer.parseInt((String) AdrenalineProperties.getProperties()
                 .getOrDefault("adrenaline.timeout.lobby", "30"));
 
         logger.log(Level.FINE, "Running lobby, min players to start match: {0}", minPlayers);
@@ -266,6 +303,7 @@ public class Lobby implements Runnable {
 
     /**
      * Returns the minimum number of players required to start a match
+     *
      * @return The minimum number of players required to start a match
      */
     public int getMinPlayers() {
@@ -274,6 +312,7 @@ public class Lobby implements Runnable {
 
     /**
      * Returns the maximum number of players allowed in a match
+     *
      * @return The maximum number of players allowed in a match
      */
     public int getMaxPlayers() {
@@ -283,6 +322,7 @@ public class Lobby implements Runnable {
     /**
      * Returns the time (in seconds) that the lobby waits to start a match
      * when there are at least minimum players, but less than maximum
+     *
      * @return The waiting time to start the match
      */
     public int getWaitingTime() {
