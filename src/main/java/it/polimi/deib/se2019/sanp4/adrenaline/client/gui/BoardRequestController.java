@@ -16,7 +16,7 @@ public class BoardRequestController extends RequestController<Integer> {
      * @return The number of columns
      */
     @Override
-    public int getColumnsCount() {
+    int getColumnsCount() {
         return 2;
     }
 
@@ -26,7 +26,7 @@ public class BoardRequestController extends RequestController<Integer> {
      * @param request The object representing the request
      */
     @Override
-    public void createOverlays(ChoiceRequest<Integer> request) {
+    void createOverlays(ChoiceRequest<Integer> request) {
         request.getChoices().forEach(i -> {
             BoardSelectionOverlay overlay = new BoardSelectionOverlay();
             overlay.setBoardId(i);

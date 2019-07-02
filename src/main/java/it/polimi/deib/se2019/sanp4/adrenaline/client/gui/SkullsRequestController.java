@@ -18,7 +18,7 @@ public class SkullsRequestController extends RequestController<Integer> {
      * @return The number of columns
      */
     @Override
-    public int getColumnsCount() {
+    int getColumnsCount() {
         return 8;
     }
 
@@ -28,7 +28,7 @@ public class SkullsRequestController extends RequestController<Integer> {
      * @param request The object representing the request
      */
     @Override
-    public void createOverlays(ChoiceRequest<Integer> request) {
+    void createOverlays(ChoiceRequest<Integer> request) {
         int i = 0;
         // If the request is optional, we add a null choice
         List<Integer> choices = request.getChoices();

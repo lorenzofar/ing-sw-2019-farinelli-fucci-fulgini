@@ -288,8 +288,7 @@ public class CLIRenderer implements UIRenderer {
         CLIHelper.clearScreen();
         CLIHelper.printTitle(title);
         CLIHelper.printlnColored(message, CLIHelper.ANSI_RED);
-        CLIHelper.println("Press enter key to close the game...");
-        CLIHelper.parseString();
+        CLIHelper.parseString("Press enter key to close the game...");
         System.exit(0);
     }
 
@@ -308,7 +307,8 @@ public class CLIRenderer implements UIRenderer {
             CLIHelper.clearScreen();
             CLIHelper.printFullScreenRenderedGameElement(
                     CLIHelper.renderLeaderBoard(leaderboard),
-                    "Final scores");
+                    "Final scores",
+                    "The match is over, here is the final leaderboard");
         }
     }
 
@@ -316,7 +316,10 @@ public class CLIRenderer implements UIRenderer {
     public void updateLeaderBoard(Leaderboard leaderboard) {
         CLIHelper.cancelInput();
         CLIHelper.clearScreen();
-        CLIHelper.printFullScreenRenderedGameElement(CLIHelper.renderLeaderBoard(leaderboard), "Final scores");
+        CLIHelper.printFullScreenRenderedGameElement(
+                CLIHelper.renderLeaderBoard(leaderboard),
+                "Final scores",
+                "The match is over, here is the final leaderboard");
     }
 
     @Override

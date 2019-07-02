@@ -18,7 +18,7 @@ public class ActionRequestController extends RequestController<ActionEnum> {
      * @return The number of columns
      */
     @Override
-    public int getColumnsCount() {
+    int getColumnsCount() {
         return 1;
     }
 
@@ -28,7 +28,7 @@ public class ActionRequestController extends RequestController<ActionEnum> {
      * @param request The object representing the request
      */
     @Override
-    public void createOverlays(ChoiceRequest<ActionEnum> request) {
+    void createOverlays(ChoiceRequest<ActionEnum> request) {
         int i = 0;
         // If the request is optional, we add a null choice
         List<ActionEnum> choices = request.getChoices();

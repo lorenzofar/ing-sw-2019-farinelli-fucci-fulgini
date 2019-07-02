@@ -196,7 +196,7 @@ class CLIHelper {
      * @param title       The title of the screen
      * @param description The description of the screen
      */
-    private static void printFullScreenRenderedGameElement(List<List<String>> gameElement, String title, String description) {
+    static void printFullScreenRenderedGameElement(List<List<String>> gameElement, String title, String description) {
         if (gameElement == null || gameElement.isEmpty()) {
             return;
         }
@@ -258,27 +258,6 @@ class CLIHelper {
     }
 
     /**
-     * Prints the provided game element to the command line in a full-screen mode
-     * If a null object is provided, nothing is printed
-     *
-     * @param gameElement The textual representation of the element
-     * @param title       The title of the screen
-     */
-    static void printFullScreenRenderedGameElement(List<List<String>> gameElement, String title) {
-        printFullScreenRenderedGameElement(gameElement, title, "");
-    }
-
-    /**
-     * Prints the provided game element to the command line in a full-screen mode
-     * If a null object is provided, nothing is printed
-     *
-     * @param gameElement The textual representation of the element
-     */
-    public static void printFullScreenRenderedGameElement(List<List<String>> gameElement) {
-        printFullScreenRenderedGameElement(gameElement, "", "");
-    }
-
-    /**
      * Asks the user to choose among a list of options
      *
      * @param message         A message to show to the user
@@ -313,30 +292,6 @@ class CLIHelper {
         } while (n > maxN || n < 0);
 
         return n == options.size() ? null : options.get(n);
-    }
-
-    /**
-     * Asks the user to choose among a list of options
-     *
-     * @param message         A message to show to the user
-     * @param options         The list of objects representing the options
-     * @param stringConverter The function describing how to print each element
-     * @return The object representing the selected option
-     */
-    static <T> T askOptionFromList(String message, List<T> options, Function<T, String> stringConverter) {
-        return askOptionFromList(message, options, false, stringConverter);
-    }
-
-    /**
-     * Asks the user to choose among a list of options
-     *
-     * @param message   A message to show to the user
-     * @param options   The list of objects representing the options
-     * @param allowNull Allows a null option to be chosen
-     * @return The object representing the selected option
-     */
-    static <T> T askOptionFromList(String message, List<T> options, boolean allowNull) {
-        return askOptionFromList(message, options, allowNull, Object::toString);
     }
 
     /**
@@ -380,19 +335,8 @@ class CLIHelper {
         print(ANSI_CYAN);
         println(message);
         resetColor();
-        if (!message.equals("")) {
-            print(PROMPT_TEMPLATE);
-        }
+        print(PROMPT_TEMPLATE);
         return input.readLine();
-    }
-
-    /**
-     * Retrieves a string entered in the console
-     *
-     * @return The string entered by the user
-     */
-    static String parseString() {
-        return parseString("");
     }
 
     /**
@@ -455,9 +399,7 @@ class CLIHelper {
 
     /* ===== ERRORS ===== */
     static void printError(String errorMessage) {
-        print(ANSI_RED);
-        println(errorMessage);
-        resetColor();
+        printlnColored(errorMessage, ANSI_RED);
     }
     /* ================== */
 

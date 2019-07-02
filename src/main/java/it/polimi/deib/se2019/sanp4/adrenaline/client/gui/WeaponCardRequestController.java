@@ -19,7 +19,7 @@ public class WeaponCardRequestController extends RequestController<WeaponCard> {
      * @return The number of columns
      */
     @Override
-    public int getColumnsCount() {
+    int getColumnsCount() {
         return 4;
     }
 
@@ -29,7 +29,7 @@ public class WeaponCardRequestController extends RequestController<WeaponCard> {
      * @param request The object representing the request
      */
     @Override
-    public void createOverlays(ChoiceRequest<WeaponCard> request) {
+    void createOverlays(ChoiceRequest<WeaponCard> request) {
         int i = 0;
         // If the request is optional we add a null choice
         List<WeaponCard> choices = request.getChoices();

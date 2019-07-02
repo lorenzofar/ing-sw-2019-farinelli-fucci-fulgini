@@ -18,7 +18,7 @@ public class EffectRequestController extends RequestController<EffectDescription
      * @return The number of columns
      */
     @Override
-    public int getColumnsCount() {
+    int getColumnsCount() {
         return 1;
     }
 
@@ -28,7 +28,7 @@ public class EffectRequestController extends RequestController<EffectDescription
      * @param request The object representing the request
      */
     @Override
-    public void createOverlays(ChoiceRequest<EffectDescription> request) {
+    void createOverlays(ChoiceRequest<EffectDescription> request) {
         int i = 0;
         List<EffectDescription> choices = request.getChoices();
         if (request.isOptional()) {

@@ -18,7 +18,7 @@ public class PlayerOperationRequestController extends RequestController<PlayerOp
      * @return The number of columns
      */
     @Override
-    public int getColumnsCount() {
+    int getColumnsCount() {
         return 1;
     }
 
@@ -28,7 +28,7 @@ public class PlayerOperationRequestController extends RequestController<PlayerOp
      * @param request The object representing the request
      */
     @Override
-    public void createOverlays(ChoiceRequest<PlayerOperationEnum> request) {
+    void createOverlays(ChoiceRequest<PlayerOperationEnum> request) {
         int i = 0;
         // If the request is optional, we add a null choice
         List<PlayerOperationEnum> choices = request.getChoices();

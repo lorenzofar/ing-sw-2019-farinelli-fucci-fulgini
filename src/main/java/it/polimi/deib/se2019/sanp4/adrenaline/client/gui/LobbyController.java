@@ -16,8 +16,8 @@ import java.util.Collection;
 /**
  * A controller used to handle the lobby scene, providing information about
  * <ul>
- *     <li>The players connected to the game</li>
- *     <li>Whether the match is starting soon or not</li>
+ * <li>The players connected to the game</li>
+ * <li>Whether the match is starting soon or not</li>
  * </ul>
  */
 public class LobbyController extends GUIController {
@@ -48,6 +48,7 @@ public class LobbyController extends GUIController {
 
     /**
      * Sets the players connected to the lobby
+     *
      * @param connectedPlayers The list of players
      */
     void setConnectedPlayers(Collection<String> connectedPlayers) {
@@ -57,9 +58,10 @@ public class LobbyController extends GUIController {
 
     /**
      * Sets whether the match is about to start or not
+     *
      * @param matchStarting {@code true} if the match is starting, {@code false} otherwise
      */
-    void setMatchStarting(boolean matchStarting){
+    void setMatchStarting(boolean matchStarting) {
         this.matchStarting.set(matchStarting);
     }
 }

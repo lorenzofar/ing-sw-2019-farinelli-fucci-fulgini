@@ -17,7 +17,15 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 
 /**
- * The controller for the windows showing the final scores and the match leaderboard
+ * The controller for the window showing the final scores and the match leaderboard.
+ * For each player it provides information about:
+ * <ul>
+ * <li>The position in the leaderboard</li>
+ * <li>The final score</li>
+ * <li>The count of performed killshots</li>
+ * <li>The count of performed overkills</li>
+ * <li>The number of deaths</li>
+ * </ul>
  */
 public class LeaderboardController extends GUIController {
 

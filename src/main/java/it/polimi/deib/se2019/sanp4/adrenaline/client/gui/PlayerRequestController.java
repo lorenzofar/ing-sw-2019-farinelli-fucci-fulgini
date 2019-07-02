@@ -18,7 +18,7 @@ public class PlayerRequestController extends RequestController<String> {
      * @return The number of columns
      */
     @Override
-    public int getColumnsCount() {
+    int getColumnsCount() {
         return 5;
     }
 
@@ -28,7 +28,7 @@ public class PlayerRequestController extends RequestController<String> {
      * @param request The object representing the request
      */
     @Override
-    public void createOverlays(ChoiceRequest<String> request) {
+    void createOverlays(ChoiceRequest<String> request) {
         int i = 0;
         List<String> choices = request.getChoices();
         if (request.isOptional()) {

@@ -63,9 +63,9 @@ public class ClientView extends RemoteObservable<ViewEvent> implements RemoteVie
 
     public ClientView() {
         this.modelManager = new ModelManager();
-        // Create a new model
         this.renderingManager = new RenderingManager(this);
         this.currentRequest = null;
+        this.selectionHandler = null;
         pendingRequests = new LinkedBlockingQueue<>();
     }
 

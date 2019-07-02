@@ -22,7 +22,7 @@ import java.util.List;
  *
  * @param <T> The type of the data involved in the request
  */
-public abstract class RequestController<T extends Serializable> extends GUIController implements RequestControllerInterface<T> {
+public abstract class RequestController<T extends Serializable> extends GUIController {
 
     @FXML
     protected Label message;
@@ -52,7 +52,6 @@ public abstract class RequestController<T extends Serializable> extends GUIContr
      *
      * @param request The object representing the request
      */
-    @Override
     public void setup(ChoiceRequest<T> request) {
         // When the window is closed, we reply with a null response
         this.stage.setOnCloseRequest((WindowEvent t) -> {
@@ -92,12 +91,12 @@ public abstract class RequestController<T extends Serializable> extends GUIContr
      *
      * @return The number of columns
      */
-    public abstract int getColumnsCount();
+    abstract int getColumnsCount();
 
     /**
      * Create the overlays of the needed type according the list of choices provided by the request
      *
      * @param request The object representing the request
      */
-    public abstract void createOverlays(ChoiceRequest<T> request);
+    abstract void createOverlays(ChoiceRequest<T> request);
 }
