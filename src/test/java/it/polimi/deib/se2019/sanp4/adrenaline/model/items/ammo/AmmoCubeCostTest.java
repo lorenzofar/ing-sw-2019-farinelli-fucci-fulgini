@@ -8,6 +8,15 @@ import static org.junit.Assert.*;
 
 public class AmmoCubeCostTest {
 
+    @Test
+    public void colorCodes_shouldBeNotNull() {
+        AmmoCubeCost cube = AmmoCubeCost.RED;
+
+        assertNotNull(cube.getAnsiCode());
+        assertNotNull(cube.getHexCode());
+        assertNotNull(cube.toString());
+    }
+
     @Test(expected = NullPointerException.class)
     public void checkCanPay_nullAmmoCubeCostProvided_shouldThrowNullPointerException(){
         AmmoCubeCost.ANY.canPayFor((AmmoCubeCost)null);

@@ -12,7 +12,10 @@ import java.util.Objects;
 
 /**
  * An immutable class representing a powerup card
- * It has an id,a name, a description and a color
+ * It has an id,a name, a description (defined by the type) and a color.
+ * <p>
+ * Two powerup cards are considered equal if they have the same type and color.
+ * </p>
  */
 public class PowerupCard implements CubeInterface, Serializable {
 
@@ -23,7 +26,8 @@ public class PowerupCard implements CubeInterface, Serializable {
 
     /**
      * Creates a new powerup card
-     * @param type the type of the powerup effect
+     *
+     * @param type      the type of the powerup effect
      * @param cubeColor the color of the powerup (for spawn and ammo)
      */
     @JsonCreator
@@ -38,20 +42,40 @@ public class PowerupCard implements CubeInterface, Serializable {
         this.cubeColor = cubeColor;
     }
 
+    /**
+     * Returns the type of this powerup, i.e. the identifier of its effect
+     *
+     * @return The type of this powerup
+     */
     public PowerupEnum getType() {
         return type;
     }
 
+    /**
+     * Returns the name of the powerup effect
+     *
+     * @return The name of the powerup effect
+     */
     @JsonIgnore
     public String getName() {
         return type.getName();
     }
 
+    /**
+     * Returns a textual description of this powerup's effect
+     *
+     * @return The description of the effect
+     */
     @JsonIgnore
     public String getDescription() {
         return type.getDescription();
     }
 
+    /**
+     * Returns the color of this powerup
+     *
+     * @return The color of this powerup
+     */
     @Override
     public AmmoCube getCubeColor() {
         return cubeColor;

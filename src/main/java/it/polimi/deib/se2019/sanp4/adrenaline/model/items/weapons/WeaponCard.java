@@ -15,7 +15,16 @@ import java.util.Objects;
 
 /**
  * A class describing a light representation of a weapon
- * Used to represent the weapon card drawn by a player
+ * Holds information about:
+ * <ul>
+ * <li>A textual description of the effects of the weapon, its reload cost
+ * and the additional cost for each effect.</li>
+ * <li>
+ * The state of the weapon, which determines if the weapon can be used to shoot or not
+ * and also how much to pay to reload it. The state transitions can be performed by calling the
+ * methods {@link #reload(Player)}, {@link #unload()} and {@link #reset()}.
+ * </li>
+ * </ul>
  */
 public class WeaponCard extends Observable<ModelUpdate> implements Serializable {
 

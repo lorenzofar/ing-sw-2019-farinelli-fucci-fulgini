@@ -67,7 +67,7 @@ public class AmmoCardCreator {
         /* Check if a card with the same id exists (avoid conflicts) */
         if (ammoCards.stream().noneMatch(c -> c.getId() == card.getInt("id"))) {
             /* Build the card */
-            AmmoCard deserialized = null;
+            AmmoCard deserialized;
 
             try {
                 deserialized = objectMapper.readValue(card.toString(), AmmoCard.class);

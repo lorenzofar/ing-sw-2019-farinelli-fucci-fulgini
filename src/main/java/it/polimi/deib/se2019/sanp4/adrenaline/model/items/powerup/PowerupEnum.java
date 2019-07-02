@@ -32,7 +32,8 @@ public enum PowerupEnum {
 
     /**
      * Creates a new powerup type
-     * @param name printable name of the powerup
+     *
+     * @param name        printable name of the powerup
      * @param description description of the powerup effect
      */
     PowerupEnum(String name, String description) {
@@ -40,10 +41,20 @@ public enum PowerupEnum {
         this.description = description;
     }
 
+    /**
+     * Returns the name of this powerup effect
+     *
+     * @return The name of the powerup effect
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Returns the description of this powerup effect
+     *
+     * @return The description of the powerup effect
+     */
     public String getDescription() {
         return description;
     }

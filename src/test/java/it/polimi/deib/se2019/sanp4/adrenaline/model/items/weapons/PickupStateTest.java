@@ -1,6 +1,5 @@
 package it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons;
 
-import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.FullCapacityException;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionCard;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionCardEnum;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionEnum;
@@ -12,8 +11,11 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.*;
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 public class PickupStateTest {
 
@@ -31,6 +33,8 @@ public class PickupStateTest {
 
     @BeforeClass
     public static void setup(){
+        LogManager.getLogManager().reset();
+
         validCost = new ArrayList<>();
         validCost.addAll(Collections.nCopies(Player.INITIAL_AMMO, AmmoCubeCost.BLUE));
         validCost.addAll(Collections.nCopies(Player.INITIAL_AMMO, AmmoCubeCost.RED));
@@ -86,13 +90,8 @@ public class PickupStateTest {
     }
 
     @Test
-    public void reloadWeapon_playerHasWeaponAndEnoughAmmo_playerAmmoShouldBeDecreasedAndWeaponStateShouldBeLoaded(){
+    public void reloadWeapon_playerHasEnoughAmmo_playerAmmoShouldBeDecreasedAndWeaponStateShouldBeLoaded(){
         Player player = new Player(validPlayerName, validActionCard, validColor);
-        try {
-            player.addWeapon(weaponCard);
-        } catch (FullCapacityException e) {
-            fail();
-        }
         weaponCard.setState(new PickupState());
         weaponCard.getState().reload(player, weaponCard);
         Map<AmmoCube, Integer> testAmmo = new EnumMap<>(AmmoCube.class);
@@ -106,19 +105,30 @@ public class PickupStateTest {
     }
 
     @Test
-    public void reloadWeapon_playerHasWeaponAndEnoughAmmo_weaponCostsOnlyOneCube_playerAmmoShouldNotBeDecreasedAndWeaponStateShouldBeLoaded(){
+    public void reloadWeapon_playerHasEnoughAmmo_weaponCostsOnlyOneCube_playerAmmoShouldNotBeDecreasedAndWeaponStateShouldBeLoaded(){
         List<AmmoCubeCost> oneCubeCost = new ArrayList<>();
         oneCubeCost.add(AmmoCubeCost.YELLOW);
         WeaponCard oneCubecard = new WeaponCard(validId ,validName, oneCubeCost, new ArrayList<>());
         Player player = new Player(validPlayerName, validActionCard, validColor);
-        try {
-            player.addWeapon(oneCubecard);
-        } catch (FullCapacityException e) {
-            fail();
-        }
+
         oneCubecard.setState(new PickupState());
         oneCubecard.getState().reload(player, oneCubecard);
         assertEquals(initialPlayerAmmo, player.getAmmo());
         assertEquals(LoadedState.class, oneCubecard.getState().getClass());
+    }
+
+    @Test
+    public void reloadWeapon_playerHasNotEnoughAmmo_shouldNotBeLoaded() {
+        List<AmmoCubeCost> costList = Arrays.asList(AmmoCubeCost.YELLOW, AmmoCubeCost.YELLOW, AmmoCubeCost.YELLOW);
+
+        WeaponCard card = new WeaponCard(validId, validName, costList, Collections.emptyList());
+        Player player = new Player(validPlayerName, validActionCard, validColor); /* One ammo for each color */
+
+        card.reset(); /* Set to pickup state */
+        WeaponCardState oldState = card.getState();
+
+        oldState.reload(player, card);
+
+        assertEquals(oldState.toString(), card.getState().toString());
     }
 }

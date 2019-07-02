@@ -6,6 +6,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 /** A class describing a light representation of an effect provided by a weapon*/
 public class EffectDescription implements Serializable {
@@ -93,6 +94,6 @@ public class EffectDescription implements Serializable {
 
     @Override
     public int hashCode(){
-        return 17 + 31*id.hashCode();
+        return Objects.hash(id);
     }
 }

@@ -72,6 +72,15 @@ public class WeaponCardTest {
     }
 
     @Test
+    public void reset_shouldBringBackToOriginalState() {
+        WeaponCard w = new WeaponCard(validId, validName, Collections.emptyList(), validEffects);
+        w.setState(new LoadedState());
+        w.reset();
+
+        assertFalse(w.isUsable());
+    }
+
+    @Test
     public void createCard_properParametersProvided_shouldNotThrowException(){
         WeaponCard weaponCard = new WeaponCard(validId, validName, validCost, validEffects);
         assertEquals(validId, weaponCard.getId());
@@ -92,25 +101,25 @@ public class WeaponCardTest {
     @Test
     public void checkEquals_selfPassed_shouldReturnTrue(){
         WeaponCard weaponCard = new WeaponCard(validId, validName, validCost, validEffects);
-        assertTrue(weaponCard.equals(weaponCard));
+        assertEquals(weaponCard, weaponCard);
     }
 
     @Test
     public void checkEquals_anotherClassPassed_shouldreturnFalse(){
         WeaponCard weaponCard = new WeaponCard(validId, validName, validCost, validEffects);
-        assertFalse(weaponCard.equals(new Object()));
+        assertNotEquals(weaponCard, new Object());
     }
 
     @Test
     public void checkEquals_PowerUpCardWithSameIdProvided_shouldReturnTrue(){
         WeaponCard weaponCard = new WeaponCard(validId, validName, validCost, validEffects);
-        assertTrue(weaponCard.equals(new WeaponCard(validId, "Another name", validCost, validEffects)));
+        assertEquals(weaponCard, new WeaponCard(validId, "Another name", validCost, validEffects));
     }
 
     @Test
     public void checkEquals_PowerUpCardWithDifferentIdProvided_shouldReturnFalse(){
         WeaponCard weaponCard = new WeaponCard(validId, validName, validCost, validEffects);
-        assertFalse(weaponCard.equals(new WeaponCard("anotherweapon", "Another card", validCost, validEffects)));
+        assertNotEquals(weaponCard, new WeaponCard("anotherweapon", "Another card", validCost, validEffects));
     }
 
     @Test
