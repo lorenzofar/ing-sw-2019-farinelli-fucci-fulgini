@@ -22,6 +22,18 @@ import java.util.*;
 
 /**
  * Represents a player of the match.
+ * Holds the following information:
+ * <ul>
+ *     <li><b>Name</b> and <b>color</b> which uniquely identify the player, along with the color</li>
+ *     <li><b>Score</b> which indicates the number of points accumulated by this player, along with the number
+ *     of killshots and overkills he performed</li>
+ *     <li><b>Action card</b> which indicates which and how many actions the player can perform during his turn</li>
+ *     <li><b>Player Board</b> which contains information about the damage and marks</li>
+ *     <li><b>Weapons</b> and <b>Powerups</b> are two collections with the cards that the players has in his hands</li>
+ *     <li><b>Ammo cubes</b> owned by the player</li>
+ *     <li><b>square</b> the player is currently in</li>
+ *     <li><b>Operational state</b> which indicates whether the player is active and can play a turn or not</li>
+ * </ul>
  */
 public class Player extends Observable<ModelUpdate> implements Observer<ModelUpdate> {
 

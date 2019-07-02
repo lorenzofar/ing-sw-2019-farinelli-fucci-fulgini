@@ -88,14 +88,7 @@ public class PlayerTurn extends Observable{
         if(action == null){
             throw new NullPointerException("Action cannot be null");
         }
-        if(remainingActions == 0){
-            // Return false if the player has no actions left
-            return false;
-        }
-        // Retrieve the action card of the player
-        ActionCard playerActionCard = turnOwner.getActionCard();
-        // Check whether the action card contains the action or if it is the final one
-        return playerActionCard.hasAction(action) || (playerActionCard.hasFinalAction() && action.toString().equals(playerActionCard.getFinalAction().toString()));
+        return getAvailableActions().contains(action);
     }
 
     /**

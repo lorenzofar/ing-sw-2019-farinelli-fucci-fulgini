@@ -86,7 +86,7 @@ public class ModelImplTest {
     }
 
     @Test
-    public void suspendPlayer_matchSet_shouldCallDelegate() {
+    public void suspendPlayer_matchSet_usernameProvided_shouldCallDelegate() {
         ModelImpl model = new ModelImpl();
         model.setMatch(match);
 
@@ -96,13 +96,33 @@ public class ModelImplTest {
     }
 
     @Test
-    public void unsuspendPlayer_matchSet_shouldCallDelegate() {
+    public void unsuspendPlayer_matchSet_usernameProvided_shouldCallDelegate() {
         ModelImpl model = new ModelImpl();
         model.setMatch(match);
 
         model.unsuspendPlayer("player");
 
         verify(match).unsuspendPlayer("player");
+    }
+
+    @Test
+    public void suspendPlayer_matchSet_usernameNull_shouldDoNothing() {
+        ModelImpl model = new ModelImpl();
+        model.setMatch(match);
+
+        model.suspendPlayer(null);
+
+        verify(match, never()).suspendPlayer(anyString());
+    }
+
+    @Test
+    public void unsuspendPlayer_matchSet_usernameNull_shouldDoNothing() {
+        ModelImpl model = new ModelImpl();
+        model.setMatch(match);
+
+        model.unsuspendPlayer(null);
+
+        verify(match, never()).unsuspendPlayer(anyString());
     }
 
     @Test

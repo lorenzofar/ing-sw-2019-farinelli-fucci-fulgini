@@ -4,7 +4,10 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * Regular state of the player board. Scores do not depend on player's deaths.
+ * The state of the {@link PlayerBoard} in frenzy mode
+ * <p>
+ * Scores do not depend on player's deaths and there is no extra point for first blood
+ * </p>
  */
 public class FrenzyPlayerBoardState implements PlayerBoardState {
 

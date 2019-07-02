@@ -8,7 +8,7 @@ public enum PlayerState {
     ONLINE("Online"),
     /**
      * The player may be suspended because he didn't perform an action  before timeout,
-     * connection is still open.
+     * connection may be still open.
      */
     SUSPENDED("Suspended");
 

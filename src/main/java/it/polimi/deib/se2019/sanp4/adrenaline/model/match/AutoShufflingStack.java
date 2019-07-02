@@ -64,6 +64,7 @@ public class AutoShufflingStack<T> implements CardStack<T> {
      * If the stack is empty, it class the shuffle method.
      *
      * @return The drawn card
+     * @throws NoSuchElementException if the stack is empty
      */
     @Override
     public T draw() {

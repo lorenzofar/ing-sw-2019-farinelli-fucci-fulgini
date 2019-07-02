@@ -3,7 +3,11 @@ package it.polimi.deib.se2019.sanp4.adrenaline.model.player;
 import java.util.Iterator;
 
 /**
- * Regular state of the player board. Scores are given based on player's deaths (skulls) on the board.
+ * The state of the {@link PlayerBoard} in frenzy mode
+ * <p>
+ * Scores are given depending on the number of skulls on the board, which represent the deaths.
+ * There is one extra point for first blood.
+ * </p>
  */
 public class RegularPlayerBoardState implements PlayerBoardState {
     private static final int[] POINTS = {8, 6, 4, 2, 1, 1};
