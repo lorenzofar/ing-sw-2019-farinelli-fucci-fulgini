@@ -16,7 +16,7 @@
           "visibility" : "VISIBLE",
           "minDist" : 2,
           "damage" : 3,
-          "mark" : 1
+          "marks" : 1
         }
       ]
     }

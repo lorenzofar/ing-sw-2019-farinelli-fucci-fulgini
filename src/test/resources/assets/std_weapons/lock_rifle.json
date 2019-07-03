@@ -17,7 +17,7 @@
           "targetMode" : "PLAYER",
           "visibility" : "VISIBLE",
           "damage" : 2,
-          "mark" : 1
+          "marks" : 1
         }
       ]
     },
@@ -35,7 +35,7 @@
           "visibility" : "VISIBLE",
           "excludePlayers" : ["red"],
           "damage" : 0,
-          "mark" : 1
+          "marks" : 1
         }
       ]
     }

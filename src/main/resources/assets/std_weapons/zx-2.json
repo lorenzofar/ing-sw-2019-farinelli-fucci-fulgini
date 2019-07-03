@@ -30,21 +30,21 @@
           "id" : "red",
           "targetMode" : "PLAYER",
           "visibility" : "VISIBLE",
-          "mark" : 1
+          "marks" : 1
         },
         {
           "id" : "blue",
           "targetMode" : "PLAYER",
           "visibility" : "VISIBLE",
           "excludePlayers" : ["red"],
-          "mark" : 1
+          "marks" : 1
         },
         {
           "id" : "green",
           "targetMode" : "PLAYER",
           "visibility" : "VISIBLE",
           "excludePlayers" : ["red", "blue"],
-          "mark" : 1
+          "marks" : 1
         }
       ]
     }

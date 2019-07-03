@@ -33,7 +33,7 @@
           "minDist" : 1,
           "maxDist" : 1,
           "damage" : 1,
-          "mark" : 1
+          "marks" : 1
         }
       ]
     }

@@ -22,7 +22,7 @@
           "id" : "sqr",
           "targetMode" : "SQUARE",
           "visibility" : "VISIBLE",
-          "mark" : 1
+          "marks" : 1
         }
       ]
     },
@@ -44,7 +44,7 @@
           "id" : "sqr",
           "targetMode" : "SQUARE",
           "visibility" : "VISIBLE",
-          "mark" : 2
+          "marks" : 2
         }
       ]
     }
