@@ -96,7 +96,7 @@
         </Label>
 
         <!-- BOTTOM ROW -->
-        <HBox GridPane.rowIndex="2" spacing="12" GridPane.vgrow="ALWAYS" alignment="BOTTOM_LEFT">
+        <HBox GridPane.rowIndex="2" spacing="12" GridPane.vgrow="ALWAYS">
             <PlayerBoardControl fx:id="userBoard" styleClass="shadowed" GridPane.vgrow="ALWAYS"/>
             <PowerupsContainer fx:id="powerupsContainer" GridPane.vgrow="ALWAYS"/>
             <WeaponsContainer fx:id="weaponsContainer" GridPane.vgrow="ALWAYS"/>

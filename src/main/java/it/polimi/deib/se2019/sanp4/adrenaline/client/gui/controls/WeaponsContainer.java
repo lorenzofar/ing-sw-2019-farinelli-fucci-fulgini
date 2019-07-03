@@ -44,7 +44,7 @@ public class WeaponsContainer extends HBox {
         weapons.forEach(weapon -> {
             // We first create a container to put the information into
             VBox weaponBox = new VBox(8);
-            weaponBox.setAlignment(Pos.CENTER);
+            weaponBox.setAlignment(Pos.BASELINE_CENTER);
             weaponBox.prefHeightProperty().bind(this.heightProperty());
             weaponBox.prefWidthProperty().bind(this.heightProperty().multiply(WEAPON_RATIO));
             // We then create an image containing the weapon card
@@ -59,8 +59,8 @@ public class WeaponsContainer extends HBox {
             weaponUsabilityIndicator.setHeight(5);
             weaponUsabilityIndicator.setFill(Color.web(weapon.getState().isUsable() ? GUIRenderer.HEX_GREEN : GUIRenderer.HEX_RED));
             weaponUsabilityIndicator.getStyleClass().add("shadowed");
-            weaponBox.getChildren().add(weaponImage);
             weaponBox.getChildren().add(weaponUsabilityIndicator);
+            weaponBox.getChildren().add(weaponImage);
             // We then attach the weapon consumer
             if (weaponsConsumer != null) {
                 weaponImage.setOnMouseClicked(action -> weaponsConsumer.accept(weapon.getId()));
