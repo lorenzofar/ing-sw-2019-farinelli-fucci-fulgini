@@ -30,51 +30,36 @@ public class PlayerBoard extends Observable<ModelUpdate> {
      */
     public static final int KILLSHOT_DAMAGE = 11;
 
-    /**
-     * Number of damage tokens to perform an overkill
-     */
+    /** Number of damage tokens to perform an overkill */
     public static final int OVERKILL_DAMAGE = KILLSHOT_DAMAGE + 1;
 
-    /**
-     * Number of maximum damage tokens
-     */
+    /** Number of maximum damage tokens */
     public static final int MAX_DAMAGES = OVERKILL_DAMAGE;
 
     private static final String NULL_PLAYER_ERROR = "Player cannot be null";
 
-    /**
-     * Damages received by other players
-     */
+    /** Damages received by other players */
     private List<Player> damages;
 
-    /**
-     * Number of marks received by each player
-     */
+    /** Number of marks received by each player */
     private Map<Player, Integer> marks;
 
-    /**
-     * Number of times the player died, either by killshot or overkill
-     */
+    /** Number of times the player died, either by killshot or overkill */
     private int deaths;
 
-    /**
-     * Owner of the player board
-     */
+    /** Owner of the player board */
     @JsonBackReference
     private final Player player;
 
-    /**
-     * State of the board for scoring purposes
-     */
+    /** State of the board for scoring purposes */
     private PlayerBoardState state;
 
     /**
      * Constructs a player board with no damages, marks or deaths and in regular state,
      * suitable for the start of the match.
-     *
      * @param player owner of the player board, not null
      */
-    protected PlayerBoard(Player player) {
+    protected PlayerBoard(Player player){
         if (player == null) {
             throw new NullPointerException(NULL_PLAYER_ERROR);
         }
@@ -87,7 +72,6 @@ public class PlayerBoard extends Observable<ModelUpdate> {
 
     /**
      * Returns the number of times this player died, either by killshot or overkill.
-     *
      * @return number of deaths
      */
     public int getDeaths() {
@@ -104,7 +88,6 @@ public class PlayerBoard extends Observable<ModelUpdate> {
 
     /**
      * Returns the owner of this board.
-     *
      * @return owner of this board
      */
     public Player getPlayer() {
@@ -113,7 +96,6 @@ public class PlayerBoard extends Observable<ModelUpdate> {
 
     /**
      * Returns a duplicate of the internal list of damages.
-     *
      * @return a list of players representing the suffered damages, in chronological order
      */
     public List<Player> getDamages() {
@@ -122,30 +104,28 @@ public class PlayerBoard extends Observable<ModelUpdate> {
 
     /**
      * Returns the number of damage tokens on this board.
-     *
      * @return number of damage tokens on this board
      */
-    public int getDamageCount() {
+    public int getDamageCount(){
         return damages.size();
     }
 
     /**
      * Adds damage by given player. If damage exceeds capacity, it is simply discarded.
-     *
      * @param shooter player who did the damage, not the owner of the player board, not null
-     * @param count   number of damage tokens, must be positive
+     * @param count number of damage tokens, must be positive
      */
-    public void addDamage(Player shooter, int count) {
-        if (shooter == null) {
+    public void addDamage(Player shooter, int count){
+        if(shooter == null){
             throw new NullPointerException(NULL_PLAYER_ERROR);
         }
-        if (shooter.equals(player)) {
+        if(shooter.equals(player)){
             throw new IllegalArgumentException("Shooter cannot be the board owner");
         }
-        if (count < 0) {
+        if(count < 0){
             throw new IllegalArgumentException("Number of damage tokens cannot be negative");
         }
-        while (damages.size() < MAX_DAMAGES && count > 0) {
+        while(damages.size() < MAX_DAMAGES && count > 0) {
             damages.add(shooter);
             count--;
         }
@@ -154,18 +134,17 @@ public class PlayerBoard extends Observable<ModelUpdate> {
 
     /**
      * Adds marks by given player. If tokens exceed maximum number per player, they are simply discarded.
-     *
      * @param shooter player who sent the marks, not the owner of the player board, not null
-     * @param count   number of marks to add, must be positive
+     * @param count number of marks to add, must be positive
      */
-    public void addMark(Player shooter, int count) {
-        if (shooter == null) {
+    public void addMark(Player shooter, int count){
+        if(shooter == null){
             throw new NullPointerException(NULL_PLAYER_ERROR);
         }
-        if (shooter.equals(player)) {
+        if(shooter.equals(player)){
             throw new IllegalArgumentException("Shooter cannot be the board owner");
         }
-        if (count < 0) {
+        if(count < 0){
             throw new IllegalArgumentException("Number of marks cannot be negative");
         }
         int playerMarks = getMarksByPlayer(shooter) + count;
@@ -178,12 +157,11 @@ public class PlayerBoard extends Observable<ModelUpdate> {
     /**
      * Returns the number of marks on the board delivered by a certain player.
      * If there are no marks by that player, it will simply return 0.
-     *
      * @param player player who sent the marks, not null
      * @return number of marks, in range {@code 0..MAX_MARKS_PER_PLAYER}
      */
-    public int getMarksByPlayer(Player player) {
-        if (player == null) {
+    public int getMarksByPlayer(Player player){
+        if(player == null){
             throw new NullPointerException(NULL_PLAYER_ERROR);
         }
         Integer markCount = marks.get(player);
@@ -191,26 +169,11 @@ public class PlayerBoard extends Observable<ModelUpdate> {
     }
 
     /**
-     * Removes all the marks given by the provided player
-     *
-     * @param player The object representing the player
-     */
-    public void removeMarksByPlayer(Player player) {
-        if (player == null) {
-            throw new NullPointerException(NULL_PLAYER_ERROR);
-        }
-        /* Remove the player from the marks map */
-        marks.remove(player);
-        this.notifyObservers(new PlayerBoardUpdate(this.generateView(), this.player.getName()));
-    }
-
-    /**
      * Returns the player who performed the killshot, if any.
-     *
      * @return player who performed the killshot, null otherwise
      */
-    public Player getKillshot() {
-        if (damages.size() < KILLSHOT_DAMAGE) {
+    public Player getKillshot(){
+        if(damages.size() < KILLSHOT_DAMAGE){
             return null;
         }
         return damages.get(KILLSHOT_DAMAGE - 1);
@@ -219,11 +182,10 @@ public class PlayerBoard extends Observable<ModelUpdate> {
     /**
      * Returns the player who performed the overkill, if any.
      * Note: overkill implies killshot.
-     *
      * @return player who performed the overkill, null otherwise
      */
-    public Player getOverkill() {
-        if (damages.size() < OVERKILL_DAMAGE) {
+    public Player getOverkill(){
+        if(damages.size() < OVERKILL_DAMAGE){
             return null;
         }
         return damages.get(OVERKILL_DAMAGE - 1);
@@ -234,7 +196,6 @@ public class PlayerBoard extends Observable<ModelUpdate> {
      * damage to the owner of the player board, automatically resolving draws.
      * Does not reset the board after calculation.
      * Players who delivered no damage won't be in the map.
-     *
      * @return {@code map<player, score>} with each player who got points
      */
     @JsonIgnore /* Tell Jackson that this is not a property */
@@ -244,7 +205,7 @@ public class PlayerBoard extends Observable<ModelUpdate> {
         // We create a map holding the score of each player
         Map<Player, Integer> playerScores = new HashMap<>();
 
-        if (damages.isEmpty()) {
+        if(damages.isEmpty()){
             return playerScores;
         }
 
@@ -295,12 +256,11 @@ public class PlayerBoard extends Observable<ModelUpdate> {
     /**
      * Checks whether the player is dead or not, then increments the number of deaths accordingly and
      * resets all damage on the board.
-     *
      * @throws PlayerException if the player is not dead
      */
     public void updateDeathsAndReset() throws PlayerException {
 
-        if (damages.size() < KILLSHOT_DAMAGE) {
+        if(damages.size() < KILLSHOT_DAMAGE){
             throw new PlayerException("The player is not dead");
         }
 
@@ -313,11 +273,10 @@ public class PlayerBoard extends Observable<ModelUpdate> {
     /**
      * Turn the playerboard to the frenzy state and deaths are removed as they don't count for scoring.
      * This can only be done if there are no damages. Marks are left untouched.
-     *
      * @throws PlayerException if there are damages on the board
      */
-    public void turnFrenzy() throws PlayerException {
-        if (!damages.isEmpty()) {
+    public void turnFrenzy() throws  PlayerException {
+        if(!damages.isEmpty()) {
             throw new PlayerException("The player is damaged");
         }
         state = new FrenzyPlayerBoardState(); // Change player board
@@ -326,16 +285,14 @@ public class PlayerBoard extends Observable<ModelUpdate> {
 
     /**
      * Returns whether the player is dead or not.
-     *
      * @return {@code true} if the player is dead, {@code false} otherwise
      */
-    public boolean isDead() {
+    public boolean isDead(){
         return damages.size() >= KILLSHOT_DAMAGE;
     }
 
     /**
      * Returns the state of the player board (regular, frenzy)
-     *
      * @return the state of the player board
      */
     public PlayerBoardState getState() {
@@ -344,16 +301,15 @@ public class PlayerBoard extends Observable<ModelUpdate> {
 
     /**
      * Generates the {@link PlayerBoardView} of the player board
-     *
      * @return the player board view
      */
     public PlayerBoardView generateView() {
         PlayerBoardView view = new PlayerBoardView();
         view.setDamages(this.getDamages().stream()
-                .map(Player::getName)
-                .collect(Collectors.toList()));
+                        .map(Player::getName)
+                        .collect(Collectors.toList()));
         view.setDeaths(deaths);
-        view.setMarks(marks.values().stream().reduce(Integer::sum).orElse(0));
+        view.setMarks(marks.size());
         view.setState(state.toString());
         return view;
     }
