@@ -120,6 +120,24 @@ public class PlayerBoardTest {
         assertEquals(PlayerBoard.MAX_DAMAGES, currentDamages.size());
     }
 
+    @Test
+    public void addDamage_playerHasMarksByShooter_shouldBeConvertedToDamage() {
+        Player player = new Player(validName, validActionCard, validColor);
+        Player shooter = new Player("Another player", validActionCard, validColor);
+        PlayerBoard playerBoard = new PlayerBoard(player);
+
+        /* Add marks */
+        int marks = 2;
+        playerBoard.addMark(shooter, marks);
+
+        /* Then add damage */
+        int damage = 5;
+        playerBoard.addDamage(shooter, damage);
+
+        /* Check that the final damage is the sum of the two */
+        assertEquals(marks + damage, playerBoard.getDamageCount());
+    }
+
     /* ===== MARKS ===== */
     @Test(expected = NullPointerException.class)
     public void addMark_nullPlayerProvided_shouldThrowException(){

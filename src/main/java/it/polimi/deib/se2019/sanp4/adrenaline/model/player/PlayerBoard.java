@@ -112,6 +112,7 @@ public class PlayerBoard extends Observable<ModelUpdate> {
 
     /**
      * Adds damage by given player. If damage exceeds capacity, it is simply discarded.
+     * If there are marks by the shooter, these are removed and turn to damage.
      * @param shooter player who did the damage, not the owner of the player board, not null
      * @param count number of damage tokens, must be positive
      */
@@ -125,6 +126,11 @@ public class PlayerBoard extends Observable<ModelUpdate> {
         if(count < 0){
             throw new IllegalArgumentException("Number of damage tokens cannot be negative");
         }
+        /* Turn marks to damage */
+        count += getMarksByPlayer(shooter);
+        /* Remove those marks */
+        marks.remove(shooter);
+
         while(damages.size() < MAX_DAMAGES && count > 0) {
             damages.add(shooter);
             count--;
@@ -309,7 +315,7 @@ public class PlayerBoard extends Observable<ModelUpdate> {
                         .map(Player::getName)
                         .collect(Collectors.toList()));
         view.setDeaths(deaths);
-        view.setMarks(marks.size());
+        view.setMarks(marks.values().stream().reduce(Integer::sum).orElse(0));
         view.setState(state.toString());
         return view;
     }
