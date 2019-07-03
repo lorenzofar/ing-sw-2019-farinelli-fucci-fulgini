@@ -9,7 +9,7 @@ import java.io.IOException;
 
 /**
  * A class describing an overlay that can be selected (e.g. by clicking on it)
- * It extends the ObservableOverlay to notify listeners that it has been selected
+ * It extends the {@link ObservableOverlay} to notify listeners that it has been selected
  */
 public abstract class SelectableOverlay<T> extends ObservableOverlay<T> {
 

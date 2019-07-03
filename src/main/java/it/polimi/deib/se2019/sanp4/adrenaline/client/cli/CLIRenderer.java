@@ -21,7 +21,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
- * A specialized class implementing the UIRenderer interface that provides methods to render content in a CLI environment
+ * A specialized class implementing the {@link UIRenderer} interface that provides methods to render content in a CLI environment
  */
 public class CLIRenderer implements UIRenderer {
 

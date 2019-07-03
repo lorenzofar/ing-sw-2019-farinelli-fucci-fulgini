@@ -26,7 +26,7 @@ import static it.polimi.deib.se2019.sanp4.adrenaline.client.gui.GUIRenderer.setR
 
 /**
  * The controller used to handle the game screen, responsible of updating the information rendered in all the
- * custom controls according to data retrieved from the ModelManager. It shows:
+ * custom controls according to data retrieved from the {@link ModelManager}. It shows:
  * <ul>
  * <li>The game board, with the killshots track and the map containing all the squares with their content</li>
  * <li>The player board of the user</li>

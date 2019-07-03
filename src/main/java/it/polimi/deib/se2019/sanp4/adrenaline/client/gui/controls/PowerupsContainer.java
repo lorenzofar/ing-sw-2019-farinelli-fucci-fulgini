@@ -7,7 +7,7 @@ import javafx.scene.layout.HBox;
 import java.util.List;
 
 /**
- * A custom control extending an HBox container that contains images of powerup cards
+ * A custom control extending an {@link HBox} container that contains images of powerup cards
  */
 public class PowerupsContainer extends HBox {
 

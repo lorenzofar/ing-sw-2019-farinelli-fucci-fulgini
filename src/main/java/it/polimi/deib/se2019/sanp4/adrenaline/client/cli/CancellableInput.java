@@ -5,7 +5,7 @@ import java.io.Reader;
 import java.util.concurrent.*;
 
 /**
- * A class extending a buffered reader that does not block the app
+ * A class extending a {@link BufferedReader} that does not block the app
  * and allows for the input request to be cancelled
  */
 public class CancellableInput extends BufferedReader {

@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * An abstract class representing a GUIController that is responsible of managing windows used to select something when performing a request
+ * An abstract class representing a {@link GUIController} that is responsible of managing windows used to select something when performing a request
  *
  * @param <T> The type of the data involved in the request
  */

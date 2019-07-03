@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 /**
- * A custom control extending an HBox container that contains images of weapon cards
+ * A custom control extending an {@link HBox} container that contains images of weapon cards
  */
 public class WeaponsContainer extends HBox {
 

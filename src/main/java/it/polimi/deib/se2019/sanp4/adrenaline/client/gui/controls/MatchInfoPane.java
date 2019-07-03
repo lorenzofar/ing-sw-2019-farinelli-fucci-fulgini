@@ -17,7 +17,7 @@ import javafx.scene.shape.Circle;
 import java.util.Map;
 
 /**
- * A custom control based on a VBox showing information about the match, namely:
+ * A custom control based on a {@link VBox} showing information about the match, namely:
  * <ul>
  * <li>Name of the player that is playing in the current turn</li>
  * <li>Score of the user</li>
