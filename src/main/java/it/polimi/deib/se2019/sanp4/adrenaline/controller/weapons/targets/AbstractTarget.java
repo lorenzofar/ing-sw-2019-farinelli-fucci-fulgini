@@ -274,6 +274,11 @@ public abstract class AbstractTarget {
      */
     protected void applyDamageAndMarks(Player target, Player shooter) {
         /* Apply damage and marks */
+
+        /* First get the marks the target already has from the shooter and add them to the damage count */
+        damage += target.getPlayerBoard().getMarksByPlayer(shooter);
+        /* Then remove them from the target's player board */
+        target.getPlayerBoard().removeMarksByPlayer(shooter);
         target.getPlayerBoard().addDamage(shooter, damage);
         target.getPlayerBoard().addMark(shooter, marks);
 

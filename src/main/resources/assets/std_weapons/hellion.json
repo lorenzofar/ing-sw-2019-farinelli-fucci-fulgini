@@ -16,7 +16,8 @@
           "visibility" : "VISIBLE",
           "minDist" : 1,
           "squareRef" : "sqr",
-          "damage" : 1
+          "damage" : 1,
+          "mark": 1
         },
         {
           "id" : "sqr",
