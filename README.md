@@ -23,7 +23,7 @@ The game has been developed in Java as a Software Engineering project at [Polite
 - [ ] Turret mode
 
 ## System requirements
-This software requires Oracle's Java Runtime Envirionment (including JavFX)
+This software requires Oracle's Java Runtime Environment (including JavaFX)
 to be installed and properly configured on the system.
 
 ## Server
@@ -31,7 +31,7 @@ The server can handle multiple matches at a time and both RMI and Socket
 clients.\
 It is recommended to start the server with the command
 ```
-java -Dadrenaline.server.hostname=[hostname] -jar adrenaline-client.jar
+java -Dadrenaline.server.hostname=[hostname] -jar adrenaline-server.jar
 ```
 where *hostname* is an address resolvable from the clients who want to connect.
 This has the advantages of seeing logs on the console.
