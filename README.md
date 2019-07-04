@@ -26,6 +26,14 @@ The game has been developed in Java as a Software Engineering project at [Polite
 This software requires Oracle's Java Runtime Environment (including JavaFX)
 to be installed and properly configured on the system.
 
+The CLI interface of the client uses ANSI escape codes and Unicode characters,
+so make sure that your terminal supports both.
+On Windows, this can be achieved by using the Windows Subsystem For Linux (WSL)
+terminal with the font
+[DejaVu Sans Mono for Powerline](https://github.com/powerline/fonts/tree/master/DejaVuSansMono).
+See [this guide by Michele Bertoni](https://github.com/michele-bertoni/W10JavaCLI)
+on how to configure it.
+
 ## Server
 The server can handle multiple matches at a time and both RMI and Socket
 clients.\
