@@ -249,12 +249,12 @@ public class GameController extends GUIController {
         });
 
         // Then bind their widths to that of the container
-        playerBoardsContainer.widthProperty().addListener((obs, oldVal, newVal) -> {
-            playerBoards.values().stream().filter(board -> !board.equals(userBoard)).forEach(playerBoard -> {
-                playerBoard.setMinWidth(newVal.doubleValue() * 0.8);
-                playerBoard.setMaxWidth(newVal.doubleValue() * 0.8);
-            });
-        });
+        playerBoardsContainer.widthProperty().addListener((obs, oldVal, newVal) ->
+                playerBoards.values().stream().filter(board -> !board.equals(userBoard)).forEach(playerBoard -> {
+                    playerBoard.setMinWidth(newVal.doubleValue() * 0.8);
+                    playerBoard.setMaxWidth(newVal.doubleValue() * 0.8);
+                })
+        );
 
         // Set the image viewer handler for the weapons table and weapons container
         // and make it open a new window with the image of the selected weapon card

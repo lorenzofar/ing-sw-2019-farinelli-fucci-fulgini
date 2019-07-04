@@ -70,6 +70,7 @@ public class ClientView extends RemoteObservable<ViewEvent> implements RemoteVie
         this.renderingManager = new RenderingManager(this);
         this.currentRequest = null;
         this.selectionHandler = null;
+        this.scene = ViewScene.LOGIN;
         pendingRequests = new LinkedBlockingQueue<>();
     }
 
@@ -197,9 +198,7 @@ public class ClientView extends RemoteObservable<ViewEvent> implements RemoteVie
             if (getCurrentRequest() == null) {
                 // Cancel the current selection if a new request arrives and has to be handled immediately
                 renderer.cancelSelection();
-                synchronized (requestsLock) {
-                    this.currentRequest = request;
-                }
+                this.currentRequest = request;
                 request.accept(renderer);
             } else {
                 pendingRequests.add(request);
@@ -242,6 +241,9 @@ public class ClientView extends RemoteObservable<ViewEvent> implements RemoteVie
     public synchronized void selectScene(ViewScene scene) {
         // We first cancel a pending selection
         renderer.cancelSelection();
+        synchronized (requestsLock) {
+            this.currentRequest = null;
+        }
         switch (scene) {
             case LOGIN:
                 break;

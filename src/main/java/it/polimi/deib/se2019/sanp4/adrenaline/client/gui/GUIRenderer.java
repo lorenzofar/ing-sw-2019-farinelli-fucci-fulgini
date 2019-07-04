@@ -35,6 +35,7 @@ import java.util.logging.Logger;
 public class GUIRenderer extends Application implements UIRenderer {
 
     public static final String CSS_BOLD_TITLE = "title-text";
+    private static final String ADRENALINE_STAGE_TITLE = "Adrenaline";
 
     /* ===== HEX CODES ===== */
     public static final String HEX_RED = "#f6453a";
@@ -80,7 +81,7 @@ public class GUIRenderer extends Application implements UIRenderer {
                 this.stage.hide();
             } else {
                 this.stage = new Stage();
-                this.stage.setTitle("Adrenaline");
+                this.stage.setTitle(ADRENALINE_STAGE_TITLE);
                 this.stage.setResizable(true);
             }
 
@@ -152,7 +153,7 @@ public class GUIRenderer extends Application implements UIRenderer {
         clientView.setRenderer(this);
 
         showScene("/fxml/login.fxml", false);
-        updateStageInfo("Adrenaline");
+        updateStageInfo(ADRENALINE_STAGE_TITLE);
     }
 
     /* ===== LOBBY ===== */
@@ -195,7 +196,7 @@ public class GUIRenderer extends Application implements UIRenderer {
             } catch (Exception e) {
                 logger.log(Level.INFO, "Game screen was not loaded, we show it for the first time");
                 showScene("/fxml/game.fxml", true);
-                updateStageInfo("Adrenaline");
+                updateStageInfo(ADRENALINE_STAGE_TITLE);
                 ((GameController) currentController).buildMatchScreen();
             }
         });
@@ -244,13 +245,15 @@ public class GUIRenderer extends Application implements UIRenderer {
         // We set a null selection handler and, incidentally, we cancel the existing one (if present)
         clientView.setSelectionHandler(null);
         // We reset all the messages shown to the user
-        Platform.runLater(() -> {
-            try {
-                ((GameController) currentController).resetRequestMessages();
-            } catch (Exception e) {
-                logger.log(Level.INFO, "Failed to reset game request messages");
-            }
-        });
+        if (clientView.getScene().isGameScene()) {
+            Platform.runLater(() -> {
+                try {
+                    ((GameController) currentController).resetRequestMessages();
+                } catch (Exception e) {
+                    logger.log(Level.INFO, "Failed to reset game request messages");
+                }
+            });
+        }
     }
 
     /**
@@ -287,7 +290,7 @@ public class GUIRenderer extends Application implements UIRenderer {
     public void showLeaderBoard() {
         Platform.runLater(() -> {
             showScene("/fxml/leaderboard.fxml", true);
-            updateStageInfo("Adrenaline");
+            updateStageInfo(ADRENALINE_STAGE_TITLE);
             if (clientView.getModelManager().getLeaderboard() != null) {
                 ((LeaderboardController) currentController).updateLeaderBoard(clientView.getModelManager().getLeaderboard());
             }

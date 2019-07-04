@@ -488,6 +488,7 @@ public class CLIRenderer implements UIRenderer {
     private <T extends Serializable> void requestRoutine(String title, ChoiceRequest<T> request, List<List<String>> choicePreview, Function<T, String> stringConverter) {
         CLIHelper.cancelInput();
         CLIHelper.stopSpinner();
+        CLIHelper.clearScreen();
         // We print the match screen to show the latest changes
         printMatchScreen(true);
         // We then print the title of the request
