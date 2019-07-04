@@ -85,8 +85,9 @@ mode and your username.
 Then you will be waiting in a lobby until there are enough players to start
 a match.
 
+![Login screen in GUI and CLI](./wiki/login.png)
+
 #### Match screen
-<!-- TODO: Add screenshots -->
 Once you have completed the login procedure and the match has stared,
 the _match screen_ will be shown.\
 It includes: the game board, the weapons in the spawn points, your player board,
@@ -94,16 +95,22 @@ your items and other player's boards and weapons.
 The match screen will be automatically updated when something changes,
 both during your or another player's turn.
 
+![Match screen in GUI](./wiki/match_gui.png)
+
+![Match screen in CLI](./wiki/match_cli.png)
+
 #### Selections
 
 During the game you will be asked to make selections.
 + In GUI this is very simple: just click the item you want to select.
 + In CLI each choice has a number: to reply type the number and press
 Enter on your keyboard.
+
 Most selections require a choice, but some even accept you to choose nothing.
 In this case a special option is presented. For example you can choose to
 reload no weapon by selecting the _grey_ card.
-<!-- TODO: Add image -->
+
+![Weapon selection in GUI](./wiki/weapon_no_selection.png)
 
 ## Configuration parameters
 
