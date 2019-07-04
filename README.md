@@ -4,11 +4,11 @@ The game has been developed in Java as a Software Engineering project at [Polite
 
 ## Team
 <!-- TODO: Remove sensible data before publishing public repo -->
-| Name                | Matricola      |
-| :------------------ | :------------- |
-| Lorenzo Farinelli   | 866236         |
-| Tiziano Fucci       | 873622         |
-| Alessandro Fulgini  | 866390         |
+| Name                | Matricola      | Developed features         |
+| :------------------ | :------------- | :------------------------- |
+| Lorenzo Farinelli   | 866236         | Client, Model              |
+| Tiziano Fucci       | 873622         | Model, Updates             |
+| Alessandro Fulgini  | 866390         | Controller, Network, Model |
 
 ## Features
 - [x] Complete rules
@@ -29,22 +29,22 @@ to be installed and properly configured on the system.
 ## Server
 The server can handle multiple matches at a time and both RMI and Socket
 clients.\
-It is recommended to start the server with the command
+It is recommended to start it with the command
 ```
 java -Dadrenaline.server.hostname=[hostname] -jar adrenaline-server.jar
 ```
-where *hostname* is an address resolvable from the clients who want to connect.
-This has the advantages of seeing logs on the console.
-
-The server can also be started by double-clicking the JAR, but in this case
-you'll have to set the parameter with a properties file (see more on the
-dedicated section).
+where `[hostname]` is an address resolvable from the clients who want to connect.
+This has the advantages of seeing logs on the console.\
+In alternative, the parameter can be set via the `adrenaline.properties` file
+(more on this in the [dedicated section](##configuration-parameters));
+in this last case, the server can also be started by double-clicking the JAR.
 
 When the server has started, it will wait for login requests by the players.
 Once a login request has been accepted, the player will be waiting in the
 lobby until there are enough waiting players to start the match.
 
-When the match starts, each player has a maximum amount of time to end his turn.
+When the match starts, each player has a maximum amount of time to end his turn
+(3 minutes by default).
 If the time runs out, he will be suspended and disconnected, but he can
 reopen his client, login with the same name and will rejoin the match at the
 end of the current turn.
@@ -58,14 +58,16 @@ In both cases the scoring is performed and the scores are shown to the
 active players.
 
 ## Client
-To run the client run the following command in a console window:
+To start the client run the following command in a console window:
 ```
 java -jar adrenaline-client.jar
 ```
-and make sure to add any needed parameters such as `adrenaline.client.hostname`
+and make sure to set the parameter `adrenaline.client.hostname`
 if you want to connect with RMI (the hostname must be resolvable by the server).
+More on this in the section
+[configuration parameters](#configuration-parameters).
 
-You can select the interface with a parameter afer the JAR name:
+You can select the user interface with a parameter after the JAR name:
 `cli` or `gui`. If no parameter is selected, then GUI is chosen by default.
 The client can also be started in GUI mode by double-clicking the JAR.
 
@@ -78,9 +80,9 @@ a match.
 #### Match screen
 <!-- TODO: Add screenshots -->
 Once you have completed the login procedure and the match has stared,
-the _match screen_ will be shown to you. This includes: the game board,
-the weapons in the spawn points, your player board, your items and other
-player's boards and weapons.
+the _match screen_ will be shown.\
+It includes: the game board, the weapons in the spawn points, your player board,
+your items and other player's boards and weapons.
 The match screen will be automatically updated when something changes,
 both during your or another player's turn.
 
@@ -90,23 +92,27 @@ During the game you will be asked to make selections.
 + In GUI this is very simple: just click the item you want to select.
 + In CLI each choice has a number: to reply type the number and press
 Enter on your keyboard.
+Most selections require a choice, but some even accept you to choose nothing.
+In this case a special option is presented. For example you can choose to
+reload no weapon by selecting the _grey_ card.
+<!-- TODO: Add image -->
 
 ## Configuration parameters
 
 The game has various parameters which can be modified by the user.
 The parameters can be loaded from a custom file by specifying the following
-JVM option `-Dadrenaline.config=path/to/file.properties` where the file
-is the property file described later.
+JVM option `-Dadrenaline.config=path/to/file.properties` where the value
+is the path to the properties file (described later).
 If such option is not provided, the game will try to load properties
 from a default file `adrenaline.properties` in the directory where the
 game has been launched.
 If this file does not exist, then the default values are used.
 The parameters can also be overridden by specifying the corresponding
-JVM arguments (`-Dparameter.name`) when running the game from command line.
+JVM arguments (`-Dparameter.name=value`) when running the game from command line.
 
-It's important to note that there is no dirty checking for the configured
-parameters, to it's important to check the their correctness before
-starting the game.
+It's important to note that there is no dirty checking for the configuration
+parameters, so it's important to check the their correctness before
+starting the program.
 
 #### Definitions
 These are the parameters:
@@ -123,7 +129,7 @@ port of the server socket (default 3000)
 + `adrenaline.players.min`:
 the minumum number of players for a match (default 3).
 This must also be less than the maximum number of players, determined by
-the colors, which is currently 5.
+the colors, which is currently 5, and greater than 0.
 If there are less waiting players, a match won't start. If at the end of a turn
 the number of active players is less than this, the match ends.
 + `adrenaline.rmi.ping.interval`:
