@@ -144,7 +144,6 @@ public class CLIRenderer implements UIRenderer {
             return;
         }
         CLIHelper.stopSpinner();
-        CLIHelper.clearScreen();
         printMatchScreen(false);
     }
 
@@ -192,7 +191,7 @@ public class CLIRenderer implements UIRenderer {
         if (modelManager.getMatch() == null) {
             return;
         }
-
+        CLIHelper.clearScreen();
         // We first render the killshots track
         List<List<String>> renderedKillshotsTrack = CLIHelper.renderKillshotsTrack(
                 modelManager.getMatch() != null ?
@@ -488,7 +487,6 @@ public class CLIRenderer implements UIRenderer {
     private <T extends Serializable> void requestRoutine(String title, ChoiceRequest<T> request, List<List<String>> choicePreview, Function<T, String> stringConverter) {
         CLIHelper.cancelInput();
         CLIHelper.stopSpinner();
-        CLIHelper.clearScreen();
         // We print the match screen to show the latest changes
         printMatchScreen(true);
         // We then print the title of the request

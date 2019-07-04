@@ -1154,7 +1154,7 @@ class CLIHelper {
         final int leaderBoardWidth = Math.max(firstRowLength, secondRowLength);
 
         // Then for each entry of the leaderboard add a new line with the formatted templates
-        int i = 0;
+        int i = 1;
         for (Leaderboard.Entry entry : leaderboard.getEntries()) {
             expandStringRendering(renderedLeaderBoard, generateLine(BLANK, leaderBoardWidth));
             fillLineWithText(renderedLeaderBoard.get(renderedLeaderBoard.size() - 1),
