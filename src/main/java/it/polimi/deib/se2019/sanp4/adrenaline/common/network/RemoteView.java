@@ -31,6 +31,7 @@ import java.rmi.Remote;
  * The response is not required anymore if the player owning the view gets suspended, or if the
  * match terminates for any reason.
  * </p>
+ * @author Alessandro Fulgini
  */
 public interface RemoteView extends RemoteObserver<ModelUpdate>, Remote {
 

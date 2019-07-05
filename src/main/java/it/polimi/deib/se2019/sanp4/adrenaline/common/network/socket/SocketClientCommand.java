@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
  * Represents a command that a server wants to issue on a client communicating with Socket.
  * The target of this command is {@link SocketClientCommandTarget}, usually a {@code SocketServerConnection}
  * residing on the client
+ * @author Alessandro Fulgini
  */
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.CLASS,

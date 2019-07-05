@@ -7,6 +7,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.common.events.ViewEvent;
 /**
  * Sent when the view has to notify its remote observers (the controller)
  * with a {@link ViewEvent}
+ * @author Alessandro Fulgini
  */
 public class NotifyEventCommand implements SocketServerCommand {
 

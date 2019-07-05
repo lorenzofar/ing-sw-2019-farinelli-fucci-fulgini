@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Response to {@link LoginCommand}
+ * @author Alessandro Fulgini
  */
 public class LoginResponse implements SocketClientCommand {
 

@@ -3,7 +3,10 @@ package it.polimi.deib.se2019.sanp4.adrenaline.common.network.socket;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.LoginException;
 import it.polimi.deib.se2019.sanp4.adrenaline.common.network.RemoteView;
 
-/** Describes the interface of the server for a view stub communicating with Socket */
+/**
+ * Describes the interface of the server for a view stub communicating with Socket
+ * @author Alessandro Fulgini
+ */
 public interface SocketServer {
     /**
      * Request to log in a user.

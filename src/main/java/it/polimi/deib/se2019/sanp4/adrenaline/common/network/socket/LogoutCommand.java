@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 
 /**
  * Sent by client to log out from the server
+ * @author Alessandro Fulgini
  */
 public class LogoutCommand implements SocketServerCommand {
 

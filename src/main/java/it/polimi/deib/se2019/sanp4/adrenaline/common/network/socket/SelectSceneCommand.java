@@ -7,6 +7,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.view.ViewScene;
 
 /**
  * Sent when the server selects a scene to be shown by the client view
+ * @author Alessandro Fulgini
  */
 public class SelectSceneCommand implements SocketClientCommand {
 

@@ -9,6 +9,7 @@ import java.io.IOException;
 
 /**
  * Sent when a user with Socket connection wants to log in
+ * @author Alessandro Fulgini
  */
 public class LoginCommand implements SocketServerCommand {
 

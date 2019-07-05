@@ -7,6 +7,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.common.requests.ChoiceRequest;
 
 /**
  * Sent when the controller wants to perform a request on the client
+ * @author Alessandro Fulgini
  */
 public class PerformRequestCommand implements SocketClientCommand {
 

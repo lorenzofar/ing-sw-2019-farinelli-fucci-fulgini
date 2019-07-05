@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 /**
  * This is a no-op command which can be used by the client and the server to check that
  * the connection is still up.
+ * @author Alessandro Fulgini
  */
 public class PingCommand implements SocketServerCommand, SocketClientCommand {
 

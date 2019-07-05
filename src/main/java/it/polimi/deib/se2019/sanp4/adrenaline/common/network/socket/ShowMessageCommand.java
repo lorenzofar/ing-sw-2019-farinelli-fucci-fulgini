@@ -7,6 +7,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.view.MessageType;
 
 /**
  * Sent to show a message on the client view
+ * @author Alessandro Fulgini
  */
 public class ShowMessageCommand implements SocketClientCommand {
 

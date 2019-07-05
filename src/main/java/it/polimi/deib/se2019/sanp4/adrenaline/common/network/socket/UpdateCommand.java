@@ -7,6 +7,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.common.updates.ModelUpdate;
 
 /**
  * Sent to deliver an update by an observed object to the client's view
+ * @author Alessandro Fulgini
  */
 public class UpdateCommand implements SocketClientCommand {
 

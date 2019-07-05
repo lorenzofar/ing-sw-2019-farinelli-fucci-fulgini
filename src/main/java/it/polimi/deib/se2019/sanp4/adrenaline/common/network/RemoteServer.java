@@ -5,7 +5,10 @@ import it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions.LoginException;
 import java.io.IOException;
 import java.rmi.Remote;
 
-/** Describes a server based on RMI for communication */
+/**
+ * Describes a server based on RMI for communication
+ * @author Alessandro Fulgini
+ */
 public interface RemoteServer extends Remote {
 
     /**

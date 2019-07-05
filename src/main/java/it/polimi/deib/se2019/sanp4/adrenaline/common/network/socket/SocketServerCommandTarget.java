@@ -8,6 +8,7 @@ import java.io.IOException;
 /**
  * Represents the target on which a {@link SocketServerCommand} is applied.
  * The target is normally a {@code SocketRemoteView} which resides on the server
+ * @author Alessandro Fulgini
  */
 public interface SocketServerCommandTarget {
 

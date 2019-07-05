@@ -7,6 +7,7 @@ import java.io.IOException;
 /**
  * Represents the target on which a {@link SocketClientCommand} is applied.
  * The target is normally a {@code ServerConnection} which resides on the client
+ * @author Alessandro Fulgini
  */
 public interface SocketClientCommandTarget {
 
