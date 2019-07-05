@@ -8,6 +8,7 @@ import java.util.Map;
 /**
  * An abstract class representing an object that is responsible of assigning points to users
  * according to the current state of the game
+ * @author Lorenzo Farinelli
  */
 public interface ScoreManager {
 

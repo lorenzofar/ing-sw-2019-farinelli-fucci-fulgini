@@ -25,6 +25,7 @@ import java.util.stream.Collectors;
  * It also provides methods to save {@link Player}s and {@link Square}s.
  * These can be saved/accessed by the users of the weapon as a temporary state.
  * </p>
+ * @author Alessandro Fulgini
  */
 public abstract class AbstractWeapon {
 

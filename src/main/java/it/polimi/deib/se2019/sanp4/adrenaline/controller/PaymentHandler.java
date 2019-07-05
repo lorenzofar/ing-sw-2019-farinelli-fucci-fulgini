@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
  * If the user has enough ammo cubes to pay, the payment is automatic.
  * If the user has powerups, the handler will only ask the user to select a powerup
  * if he has more powerups than the ones needed to cover the cost, otherwise the selection is made automatically.
+ * @author Alessandro Fulgini
  */
 public class PaymentHandler {
 

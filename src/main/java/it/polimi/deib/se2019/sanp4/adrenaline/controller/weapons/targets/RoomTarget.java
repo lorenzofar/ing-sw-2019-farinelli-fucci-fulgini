@@ -26,6 +26,7 @@ import java.util.stream.Collectors;
  * <li>Players listed in {@code excludePlayers} won't receive damage and marks,
  * even if they are in the room</li>
  * </ul>
+ * @author Alessandro Fulgini
  */
 public class RoomTarget extends AbstractTarget {
 

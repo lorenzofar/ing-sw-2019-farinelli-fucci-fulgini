@@ -2,6 +2,7 @@ package it.polimi.deib.se2019.sanp4.adrenaline.controller.requests;
 
 /**
  * Thrown when an invalid choice is provided in response to a request
+ * @author Alessandro Fulgini
  */
 public class InvalidChoiceException extends Exception {
 

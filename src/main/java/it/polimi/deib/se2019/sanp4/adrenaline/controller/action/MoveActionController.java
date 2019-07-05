@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 /**
  * Responsible for handling the basic action "Move".
  * The instance does not depend on the specific player who is performing the action
+ * @author Alessandro Fulgini
  */
 public class MoveActionController {
 

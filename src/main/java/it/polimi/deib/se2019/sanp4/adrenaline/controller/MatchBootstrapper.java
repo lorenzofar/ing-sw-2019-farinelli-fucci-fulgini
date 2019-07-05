@@ -15,6 +15,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * This is responsible for asking a player the initial configuration of the match.
  * If the request expires, a random configuration is chosen
+ * @author Alessandro Fulgini
  */
 public class MatchBootstrapper {
 

@@ -30,6 +30,7 @@ import java.util.*;
 
 /**
  * Default implementation of controller factory
+ * @author Alessandro Fulgini
  */
 public class StandardControllerFactory implements ControllerFactory {
 

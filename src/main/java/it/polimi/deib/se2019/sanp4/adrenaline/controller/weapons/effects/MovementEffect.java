@@ -18,6 +18,7 @@ import static it.polimi.deib.se2019.sanp4.adrenaline.model.board.VisibilityEnum.
 /**
  * Represents an effect where the player using the weapon is able to move for a
  * maximum number of steps.
+ * @author Alessandro Fulgini
  */
 public class MovementEffect extends AbstractEffect {
 

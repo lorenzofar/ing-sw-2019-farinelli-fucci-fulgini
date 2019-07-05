@@ -68,6 +68,7 @@ import java.util.concurrent.TimeUnit;
  *     However, if an update has to be sent synchronously, the method {@link #updateSync(ModelUpdate)} is provided
  * </p>
  * </div>
+ * @author Alessandro Fulgini
  */
 public interface PersistentView extends RemoteView, ViewEventVisitor {
 

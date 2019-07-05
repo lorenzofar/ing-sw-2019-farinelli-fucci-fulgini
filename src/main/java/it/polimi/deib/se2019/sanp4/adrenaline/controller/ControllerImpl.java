@@ -24,6 +24,7 @@ import java.util.logging.Logger;
 /**
  * Implementation of the Controller, which uses {@link PersistentView}s to decorate the
  * player's views.
+ * @author Alessandro Fulgini
  */
 public class ControllerImpl implements Controller {
 

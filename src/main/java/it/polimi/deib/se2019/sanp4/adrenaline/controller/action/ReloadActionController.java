@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
  * Responsible for handling the basic action "Reload".
  * The instance does not depend on the specific player who is performing the action.
  * The actions gives the ability to the user to reload as many weapons as he wants
+ * @author Alessandro Fulgini
  */
 public class ReloadActionController {
 

@@ -41,6 +41,7 @@ import static it.polimi.deib.se2019.sanp4.adrenaline.view.ViewScene.*;
  * <li>Action selection</li>
  * <li>Powerup selection and removal of the cards</li>
  * </ul>
+ * @author Alessandro Fulgini
  */
 public class TurnController {
 

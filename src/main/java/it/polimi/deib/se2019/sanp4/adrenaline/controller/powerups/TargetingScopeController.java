@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
  * A player may ues this during its turn when there are <i>damaged players</i>.
  * He will pay an ammo of any color and deal an additional damage to one of those players, which he's asked to select.
  * </p>
+ * @author Alessandro Fulgini
  */
 public class TargetingScopeController implements PowerupController {
 

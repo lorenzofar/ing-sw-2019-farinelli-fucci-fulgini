@@ -29,6 +29,7 @@ import java.util.concurrent.CancellationException;
  * </p>
  *
  * @see AbstractTarget
+ * @author Alessandro Fulgini
  */
 public class TargetingEffect extends AbstractEffect {
 

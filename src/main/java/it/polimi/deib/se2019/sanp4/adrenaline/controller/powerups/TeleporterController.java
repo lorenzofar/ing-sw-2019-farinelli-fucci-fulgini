@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
  * A player may ues this during its turn.
  * He will select a square anywhere where he wants to move.
  * </p>
+ * @author Alessandro Fulgini
  */
 public class TeleporterController implements PowerupController {
 

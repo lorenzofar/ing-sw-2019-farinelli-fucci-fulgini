@@ -28,6 +28,7 @@ import java.util.concurrent.CancellationException;
  * <p>
  * An {@link AbstractEffect} can only be executed once.
  * </p>
+ * @author Alessandro Fulgini
  */
 public abstract class AbstractEffect {
 

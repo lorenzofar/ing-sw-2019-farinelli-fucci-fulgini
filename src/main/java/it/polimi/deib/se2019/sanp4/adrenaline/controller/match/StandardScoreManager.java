@@ -12,6 +12,7 @@ import static java.util.Map.Entry.comparingByValue;
 /**
  * A specialized class describing an object that is responsible of assigning points to users
  * It represents the standard scoring mechanism of the game, as described in the game manual
+ * @author Lorenzo Farinelli, Alessandro Fulgini
  */
 public class StandardScoreManager implements ScoreManager {
 

@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 
 /**
  * It is responsible for controlling the flow of the game, from the beginning to the end
+ * @author Alessandro Fulgini
  */
 public class MatchController {
 

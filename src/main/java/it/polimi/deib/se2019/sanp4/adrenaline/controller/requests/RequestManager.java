@@ -18,6 +18,7 @@ import java.util.concurrent.CancellationException;
  *     When a request is completed(cancelled) its CompletableChoice is completed(cancelled)
  *     and it is then removed from the internal map.
  * </p>
+ * @author Alessandro Fulgini
  */
 public class RequestManager {
 

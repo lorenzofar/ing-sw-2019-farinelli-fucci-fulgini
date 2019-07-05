@@ -30,6 +30,7 @@ import java.util.concurrent.CancellationException;
 /**
  * Responsible for handling the basic action "Grab".
  * The instance can be used for a single grab action, due to the fact that we use a visitor pattern.
+ * @author Alessandro Fulgini
  */
 public class GrabActionController implements SquareVisitor {
 

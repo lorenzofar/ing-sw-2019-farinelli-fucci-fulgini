@@ -15,6 +15,7 @@ import it.polimi.deib.se2019.sanp4.adrenaline.model.Model;
  *     <li>Listen for incoming events from the views</li>
  *     <li>Shutting down the match</li>
  * </ul>
+ * @author Alessandro Fulgini
  */
 public interface Controller extends RemoteObserver<ViewEvent>, Runnable {
     /**

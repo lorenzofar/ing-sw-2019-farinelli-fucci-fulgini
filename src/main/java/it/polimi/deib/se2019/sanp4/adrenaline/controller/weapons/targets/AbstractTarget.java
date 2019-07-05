@@ -30,6 +30,7 @@ import static it.polimi.deib.se2019.sanp4.adrenaline.model.board.VisibilityEnum.
  * <li><b>damage</b>: The amount of damage that will be received by all targeted players</li>
  * <li><b>marks</b>: The amount of marks that will be received by all targeted players</li>
  * </ul>
+ * @author Alessandro Fulgini
  */
 public abstract class AbstractTarget {
 

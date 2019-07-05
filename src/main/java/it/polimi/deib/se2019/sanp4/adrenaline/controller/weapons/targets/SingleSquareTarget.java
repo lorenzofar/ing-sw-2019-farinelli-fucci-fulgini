@@ -35,6 +35,7 @@ import static it.polimi.deib.se2019.sanp4.adrenaline.controller.weapons.Shooting
  *     <li><b>moveShooterHere</b>: will move the shooter in the target square after shooting</li>
  *     <li><b>squareRef</b>: saves the targeted square in the weapon, with the given id</li>
  * </ul>
+ * @author Alessandro Fulgini
  */
 public abstract class SingleSquareTarget extends AbstractTarget {
 

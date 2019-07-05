@@ -28,6 +28,7 @@ import static it.polimi.deib.se2019.sanp4.adrenaline.controller.weapons.Shooting
  * <p>
  *     After execution, the targeted square is saved in the weapon with the target's id.
  * </p>
+ * @author Alessandro Fulgini
  */
 public class SquareTarget extends SingleSquareTarget {
 

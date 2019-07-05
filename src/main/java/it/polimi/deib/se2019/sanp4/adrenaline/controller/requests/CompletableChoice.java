@@ -23,6 +23,7 @@ import java.util.concurrent.CancellationException;
  *     receive an exception.
  * </p>
  * @param <T> the type of the choice
+ * @author Alessandro Fulgini
  */
 public class CompletableChoice<T extends Serializable> {
 

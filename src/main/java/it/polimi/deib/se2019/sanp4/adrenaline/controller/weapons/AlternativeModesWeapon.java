@@ -16,6 +16,7 @@ import java.util.concurrent.CancellationException;
  * Controller for a weapon where the player can use only one between alternative effects (a.k.a. modes)
  * All the effects are treated as mandatory, the player can't choose to execute no effect.
  * Also, the dependencies of effects are ignored, since only one can be executed.
+ * @author Alessandro Fulgini
  */
 public class AlternativeModesWeapon extends AbstractWeapon {
 

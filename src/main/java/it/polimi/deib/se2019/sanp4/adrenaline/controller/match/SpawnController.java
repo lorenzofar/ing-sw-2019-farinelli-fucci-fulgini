@@ -21,6 +21,7 @@ import java.util.stream.Stream;
 
 /**
  * Provides static methods to handle initial spawn and respawn after death.
+ * @author Alessandro Fulgini
  */
 public class SpawnController {
 

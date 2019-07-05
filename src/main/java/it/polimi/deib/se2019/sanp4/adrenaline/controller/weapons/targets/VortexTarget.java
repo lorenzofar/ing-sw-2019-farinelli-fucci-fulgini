@@ -26,6 +26,7 @@ import static it.polimi.deib.se2019.sanp4.adrenaline.model.board.VisibilityEnum.
  * Then the shooter is asked to select a player to be taken into the vortex.
  * The selected player is then saved to the weapon with the id of this target.
  * </p>
+ * @author Alessandro Fulgini
  */
 public class VortexTarget extends AbstractTarget {
 

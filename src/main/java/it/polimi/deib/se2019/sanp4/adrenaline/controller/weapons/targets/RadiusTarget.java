@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
  * <li>Weapon direction is not taken into account</li>
  * </ul>
  * Please note that this type of target requires no interaction from the user.
+ * @author Alessandro Fulgini
  */
 public class RadiusTarget extends AbstractTarget {
     /**

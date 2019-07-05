@@ -17,6 +17,7 @@ import java.util.Set;
  * A player may ues this during another player's turn, when he gets damaged by that player.
  * The player of the turn will get a mark from the player using the powerup.
  * </p>
+ * @author Alessandro Fulgini
  */
 public class TagbackController implements PowerupController {
 

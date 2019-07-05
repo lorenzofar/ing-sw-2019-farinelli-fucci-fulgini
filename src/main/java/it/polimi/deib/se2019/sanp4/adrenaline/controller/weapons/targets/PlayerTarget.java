@@ -38,6 +38,7 @@ import static it.polimi.deib.se2019.sanp4.adrenaline.model.board.VisibilityEnum.
  * shooting direction.
  * In case of {@code movePlayerAfter}, the movement is constrained to the shooting direction.
  * </p>
+ * @author Alessandro Fulgini
  */
 public class PlayerTarget extends SingleSquareTarget {
 

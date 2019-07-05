@@ -23,6 +23,7 @@ import org.json.JSONObject;
  * Abstract factory used by controllers to create the other controllers they need.
  * The factory is bound to a specific {@link Match} and map of {@link PersistentView}s,
  * which are injected as dependencies as needed
+ * @author Alessandro Fulgini
  */
 public interface ControllerFactory {
 

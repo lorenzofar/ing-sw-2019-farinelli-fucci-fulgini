@@ -26,6 +26,7 @@ import static it.polimi.deib.se2019.sanp4.adrenaline.model.board.VisibilityEnum.
  * A player may ues this during its turn.
  * He will select another player and move it for 1 or 2 steps in one direction.
  * </p>
+ * @author Alessandro Fulgini
  */
 public class NewtonController implements PowerupController {
 

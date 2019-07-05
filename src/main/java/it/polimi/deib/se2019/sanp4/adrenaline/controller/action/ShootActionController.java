@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
  * <p>
  * The instance can be reused for multiple actions.
  * </p>
+ * @author Alessandro Fulgini
  */
 public class ShootActionController {
 

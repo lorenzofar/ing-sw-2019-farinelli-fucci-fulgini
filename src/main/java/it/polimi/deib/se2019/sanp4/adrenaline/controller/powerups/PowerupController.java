@@ -10,6 +10,7 @@ import java.util.concurrent.CancellationException;
  * It only controls the effect, not the logic for selecting the powerup card and/or discarding it
  * after usage.
  * </p>
+ * @author Alessandro Fulgini
  */
 public interface PowerupController {
 

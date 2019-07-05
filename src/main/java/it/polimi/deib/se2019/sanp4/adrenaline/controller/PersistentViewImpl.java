@@ -27,6 +27,7 @@ import java.util.logging.Logger;
  * Uses a {@link RequestManager} to handle requests to the user
  * and a {@link ScheduledExecutorService} for the timer.
  * By convention, if the remote view has connection faults, it gets set to null
+ * @author Alessandro Fulgini
  */
 public class PersistentViewImpl extends RemoteObservable<ViewEvent> implements PersistentView {
 

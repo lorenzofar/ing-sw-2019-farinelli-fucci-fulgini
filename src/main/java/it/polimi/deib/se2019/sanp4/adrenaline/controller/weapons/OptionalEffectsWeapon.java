@@ -29,6 +29,7 @@ import java.util.stream.Collectors;
  * <li>If it depends on other effects,it can only be executed if those effects have completed successfully</li>
  * <li>The mandatory effect must not depend on other effects</li>
  * </ul>
+ * @author Alessandro Fulgini
  */
 public class OptionalEffectsWeapon extends AbstractWeapon {
 
