@@ -2,6 +2,8 @@ package it.polimi.deib.se2019.sanp4.adrenaline.view;
 
 /**
  * Describes the state a view is into, to determine what it's currently doing
+ *
+ * @author Lorenzo Farinelli, Alessandro Fulgini
  */
 public enum ViewScene {
     /**

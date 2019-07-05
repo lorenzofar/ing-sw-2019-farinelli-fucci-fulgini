@@ -4,6 +4,8 @@ import it.polimi.deib.se2019.sanp4.adrenaline.common.ColoredObject;
 
 /**
  * Describes the importance level of a message
+ *
+ * @author Lorenzo Farinelli
  */
 public enum MessageType implements ColoredObject {
     /**
