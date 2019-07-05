@@ -16,6 +16,8 @@ import java.util.Objects;
  * <p>
  * Two powerup cards are considered equal if they have the same type and color.
  * </p>
+ *
+ * @author Alessandro Fulgini, Lorenzo Farinelli, Tiziano Fucci
  */
 public class PowerupCard implements CubeInterface, Serializable {
 

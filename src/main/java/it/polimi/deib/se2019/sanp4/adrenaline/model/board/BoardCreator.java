@@ -17,6 +17,8 @@ import java.util.MissingResourceException;
 /**
  * Shared class responsible for building game boards from file.
  * The board JSON files must be loaded before being able to request them.
+ *
+ * @author Alessandro Fulgini
  */
 public class BoardCreator {
 

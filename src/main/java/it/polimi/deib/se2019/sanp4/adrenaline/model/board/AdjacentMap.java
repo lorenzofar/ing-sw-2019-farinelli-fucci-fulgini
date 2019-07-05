@@ -12,6 +12,8 @@ import java.util.stream.Collectors;
  * It holds an internal mapping of the adjacent squares of a square for all the cardinal directions
  * and provides methods to retrieve adjacent squares.
  * If there is no adjacent square in a given direction, the value is set to null in this map.
+ *
+ * @author Alessandro Fulgini, Lorenzo Farinelli
  */
 public class AdjacentMap extends EnumMap<CardinalDirection, SquareConnection> implements Serializable {
 
@@ -20,18 +22,19 @@ public class AdjacentMap extends EnumMap<CardinalDirection, SquareConnection> im
     /**
      * Creates a map where the square is isolated: all connections are set to null.
      */
-    AdjacentMap(){
+    AdjacentMap() {
         super(CardinalDirection.class);
     }
 
     /**
      * Sets the connection in a specified direction.
-     * @param direction The cardinal direction, not null
-     * @param square The coordinates of the adjacent square in that direction
+     *
+     * @param direction      The cardinal direction, not null
+     * @param square         The coordinates of the adjacent square in that direction
      * @param connectionType The connection type with the adjacent square
      */
-    public void setConnection(CardinalDirection direction, CoordPair square, SquareConnectionType connectionType){
-        if(direction == null){
+    public void setConnection(CardinalDirection direction, CoordPair square, SquareConnectionType connectionType) {
+        if (direction == null) {
             throw new NullPointerException("Direction cannot be null");
         }
         this.put(direction, new SquareConnection(square, connectionType));
@@ -39,11 +42,12 @@ public class AdjacentMap extends EnumMap<CardinalDirection, SquareConnection> im
 
     /**
      * Returns the connection in the specified direction, null if there is no adjacent square.
+     *
      * @param direction The cardinal direction, not null
      * @return If there is an adjacent square, returns the connection; if there is no adjacent square returns null
      */
-    public SquareConnection getConnection(CardinalDirection direction){
-        if(direction == null){
+    public SquareConnection getConnection(CardinalDirection direction) {
+        if (direction == null) {
             throw new NullPointerException("Direction cannot be null");
         }
         return this.get(direction);
@@ -51,17 +55,19 @@ public class AdjacentMap extends EnumMap<CardinalDirection, SquareConnection> im
 
     /**
      * Retrieves all the adjacent squares.
+     *
      * @return A collection of objects representing the squares
      */
-    public Collection<CoordPair> getSquares(){
+    public Collection<CoordPair> getSquares() {
         return this.values().stream().map(SquareConnection::getSquare).filter(Objects::nonNull).collect(Collectors.toList());
     }
 
     /**
      * Retrieves all the adjacent squares a player can move into
+     *
      * @return A collection of objects representing the squares
      */
-    public Collection<CoordPair> getReachableSquares(){
+    public Collection<CoordPair> getReachableSquares() {
         return this.values()
                 .stream()
                 .filter(connection -> connection.getConnectionType() != SquareConnectionType.WALL)

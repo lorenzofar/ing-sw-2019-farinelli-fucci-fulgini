@@ -20,9 +20,13 @@ import java.util.logging.Logger;
  * The returned cards are not unique, but they are shared in a flyweight fashion;
  * initial loading on a single thread anc immutability of the AmmoCard class makes
  * this operation absolutely thread-safe.
+ *
+ * @author Alessandro Fulgini
  */
 public class AmmoCardCreator {
-    /** A static copy of the deck */
+    /**
+     * A static copy of the deck
+     */
     private static Collection<AmmoCard> ammoCards = new ArrayList<>();
 
     /* Commodity */
@@ -30,18 +34,22 @@ public class AmmoCardCreator {
 
     private static Logger logger = Logger.getLogger(AmmoCardCreator.class.getName());
 
-    /** This class is static and it should be impossible to instantiate it */
-    private AmmoCardCreator(){}
+    /**
+     * This class is static and it should be impossible to instantiate it
+     */
+    private AmmoCardCreator() {
+    }
 
     /**
      * Loads and validates all the cards in the specified ammo card pack.
      * If two cards with the same id are found in the deck, only the first one will be loaded.
+     *
      * @param filePath resource path of the ammo card pack JSON file
      * @throws MissingResourceException if the required file is not found
-     * @throws JSONException if anything goes wrong while parsing JSON
-     * @throws ValidationException if the JSON is invalid
+     * @throws JSONException            if anything goes wrong while parsing JSON
+     * @throws ValidationException      if the JSON is invalid
      */
-    public static void loadAmmoCardPack(String filePath){
+    public static void loadAmmoCardPack(String filePath) {
         /* Parse the file */
         JSONObject pack = JSONUtils.loadJSONResource(filePath);
 
@@ -61,9 +69,10 @@ public class AmmoCardCreator {
     /**
      * Loads an ammo card from given JSON object. The card is not loaded if a card
      * with the same id is already present.
+     *
      * @param card JSON object representing the ammo card, as extracted by the "deck" array
      */
-    static void loadAmmoCard(JSONObject card){
+    static void loadAmmoCard(JSONObject card) {
         /* Check if a card with the same id exists (avoid conflicts) */
         if (ammoCards.stream().noneMatch(c -> c.getId() == card.getInt("id"))) {
             /* Build the card */
@@ -83,6 +92,7 @@ public class AmmoCardCreator {
 
     /**
      * Returns the ammo card associated with this index.
+     *
      * @param id identifier of the ammo card
      * @return AmmoCard instance
      * @throws CardNotFoundException if the index is not associated with a card
@@ -97,16 +107,17 @@ public class AmmoCardCreator {
      * Returns an unmodifiable collection with all ammo cards in the deck,
      * the cards are immutable and shared in a flyweight fashion.
      * This is suitable to initialize a card stack.
+     *
      * @return unmodifiable collection containing the ammo cards in the deck
      */
-    public static Collection<AmmoCard> getAmmoCardDeck(){
+    public static Collection<AmmoCard> getAmmoCardDeck() {
         return Collections.unmodifiableCollection(ammoCards);
     }
 
     /**
      * Forgets all the cards loaded until now, i.e. brings the class back to its original state.
      */
-    static void reset(){
+    static void reset() {
         ammoCards.clear();
     }
 

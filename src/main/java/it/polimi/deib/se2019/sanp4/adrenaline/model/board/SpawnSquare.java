@@ -14,6 +14,8 @@ import java.util.stream.Collectors;
 
 /**
  * A specialized class representing a square available as spawn points and that contain weapon cards
+ *
+ * @author Alessandro Fulgini, Lorenzo Farinelli, Tiziano Fucci
  */
 public class SpawnSquare extends Square {
 

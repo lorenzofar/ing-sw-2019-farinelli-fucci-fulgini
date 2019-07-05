@@ -11,10 +11,12 @@ import java.util.Objects;
  * Holds a representation of the actions the player can perform.
  * The actions can be distinguished in:
  * <ul>
- *     <li>Normal actions, of which a number indicated by {@link #maxActions} can be performed during turn</li>
- *     <li>A final action (which is optional) that can be performed when the normal actions are over, before
- *     passing the turn to the next player </li>
+ * <li>Normal actions, of which a number indicated by {@link #maxActions} can be performed during turn</li>
+ * <li>A final action (which is optional) that can be performed when the normal actions are over, before
+ * passing the turn to the next player </li>
  * </ul>
+ *
+ * @author Alessandro Fulgini, Lorenzo Farinelli, Tiziano Fucci
  * @see ActionCardCreator
  */
 public class ActionCard implements Serializable {
@@ -29,24 +31,28 @@ public class ActionCard implements Serializable {
 
     private ActionEnum finalAction;
 
-    /** Default constructor only to be used by Jackson */
-    private ActionCard(){}
+    /**
+     * Default constructor only to be used by Jackson
+     */
+    private ActionCard() {
+    }
 
     /**
      * Construct the action card, it will be totally immutable.
-     * @param maxActions Maximum number of actions performable during a turn, also referred to as <i>multiplier</i>, must be positive
-     * @param type Identifier of the type of action card, not null
-     * @param actions Collection of "normal" actions, not null and not empty
+     *
+     * @param maxActions  Maximum number of actions performable during a turn, also referred to as <i>multiplier</i>, must be positive
+     * @param type        Identifier of the type of action card, not null
+     * @param actions     Collection of "normal" actions, not null and not empty
      * @param finalAction Optional "final" action, can be null
      */
     public ActionCard(int maxActions, ActionCardEnum type, Collection<ActionEnum> actions, ActionEnum finalAction) {
-        if(type == null || actions == null){
+        if (type == null || actions == null) {
             throw new NullPointerException("Found null parameters");
         }
-        if(maxActions < 0){
+        if (maxActions < 0) {
             throw new IllegalArgumentException("Maximum number of actions cannot be negative");
         }
-        if(actions.isEmpty()){
+        if (actions.isEmpty()) {
             throw new IllegalArgumentException("The list of actions cannot be empty");
         }
         this.maxActions = maxActions;
@@ -57,6 +63,7 @@ public class ActionCard implements Serializable {
 
     /**
      * Returns maximum number of actions performable by player during turn.
+     *
      * @return maximum actions per turn (multiplier)
      */
     public int getMaxActions() {
@@ -65,6 +72,7 @@ public class ActionCard implements Serializable {
 
     /**
      * Returns the type of action card which identifies when it is used.
+     *
      * @return action card type
      */
     public ActionCardEnum getType() {
@@ -73,19 +81,21 @@ public class ActionCard implements Serializable {
 
     /**
      * Returns the "normal" actions in this card.
+     *
      * @return <b>unmodifiable</b> collection of actions
-      */
+     */
     public Collection<ActionEnum> getActions() {
         return Collections.unmodifiableCollection(actions);
     }
 
     /**
      * Returns wether an action is a "normal" action in this card or not.
+     *
      * @param action the action you want to check, not null
      * @return {@code true} if it is a "normal" action, {@code false} otherwise
      */
     public boolean hasAction(ActionEnum action) {
-        if(action == null){
+        if (action == null) {
             throw new NullPointerException("Action cannot be null");
         }
         return actions.contains(action);
@@ -93,6 +103,7 @@ public class ActionCard implements Serializable {
 
     /**
      * Returns final action.
+     *
      * @return final action, if any, {@code null} otherwise
      */
     public ActionEnum getFinalAction() {
@@ -101,6 +112,7 @@ public class ActionCard implements Serializable {
 
     /**
      * Returns whether this card has a final action or not.
+     *
      * @return {@code true} if it has a final action, {@code false} otherwise
      */
     public boolean hasFinalAction() {
@@ -110,6 +122,7 @@ public class ActionCard implements Serializable {
     /**
      * Returns the action card used at the beginning of the match.
      * Uses {@link ActionCardCreator}, so make sure it has been properly set up before calling this
+     *
      * @return the action card used at the beginning of the match
      */
     public static ActionCard initial() {
@@ -135,9 +148,16 @@ public class ActionCard implements Serializable {
             case ADRENALINE1:
             case ADRENALINE2:
                 /* Here we handle the regular action cards */
-                if (currentDamage < 3) { nextType = ActionCardEnum.REGULAR; break; }
-                if (currentDamage < 6) { nextType = ActionCardEnum.ADRENALINE1; break; }
-                nextType = ActionCardEnum.ADRENALINE2; break;
+                if (currentDamage < 3) {
+                    nextType = ActionCardEnum.REGULAR;
+                    break;
+                }
+                if (currentDamage < 6) {
+                    nextType = ActionCardEnum.ADRENALINE1;
+                    break;
+                }
+                nextType = ActionCardEnum.ADRENALINE2;
+                break;
             case FRENZY2:
             case FRENZY1:
                 /* In frenzy mode there are no adrenaline actions */
@@ -151,10 +171,10 @@ public class ActionCard implements Serializable {
     }
 
     @Override
-    public boolean equals(Object obj){
-        if(obj == this) return true;
-        if(!(obj instanceof ActionCard)) return false;
-        return ((ActionCard)obj).getType().equals(this.type);
+    public boolean equals(Object obj) {
+        if (obj == this) return true;
+        if (!(obj instanceof ActionCard)) return false;
+        return ((ActionCard) obj).getType().equals(this.type);
     }
 
     @Override
@@ -164,6 +184,7 @@ public class ActionCard implements Serializable {
 
     /**
      * Generates a reduced view of this object
+     *
      * @return A reduced view of this object
      */
     public ActionCardView generateView() {

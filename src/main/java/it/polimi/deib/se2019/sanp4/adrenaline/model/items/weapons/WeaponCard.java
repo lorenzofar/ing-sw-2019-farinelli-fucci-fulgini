@@ -25,6 +25,8 @@ import java.util.Objects;
  * methods {@link #reload(Player)}, {@link #unload()} and {@link #reset()}.
  * </li>
  * </ul>
+ *
+ * @author Alessandro Fulgini, Lorenzo Farinelli, Tiziano Fucci
  */
 public class WeaponCard extends Observable<ModelUpdate> implements Serializable {
 

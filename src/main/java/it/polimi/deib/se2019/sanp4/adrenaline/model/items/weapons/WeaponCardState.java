@@ -13,6 +13,8 @@ import java.io.Serializable;
  * It provides methods to check whether the weapon can be used to shoot and also to transition to
  * a new state from this one.
  * </p>
+ *
+ * @author Alessandro Fulgini, Lorenzo Farinelli, Tiziano Fucci
  */
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,

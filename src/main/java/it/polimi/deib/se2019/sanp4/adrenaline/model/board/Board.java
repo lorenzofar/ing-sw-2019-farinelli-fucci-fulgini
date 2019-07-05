@@ -29,31 +29,43 @@ import static it.polimi.deib.se2019.sanp4.adrenaline.model.board.CardinalDirecti
  * The class also provides various methods to navigate the board from a starting point with various constraints
  * (distance, movement direction, etc.)
  * </p>
+ *
+ * @author Alessandro Fulgini, Lorenzo Farinelli, Tiziano Fucci
  */
 public class Board extends Observable<ModelUpdate> implements Observer<ModelUpdate> {
 
-    /** The unique identifier of this board configuration */
+    /**
+     * The unique identifier of this board configuration
+     */
     private int id;
 
-    /** A matrix of objects representing the squares the board is composed of. The addressing is [x][y] */
+    /**
+     * A matrix of objects representing the squares the board is composed of. The addressing is [x][y]
+     */
     private Square[][] squares;
 
     private Map<RoomColor, Room> rooms;
 
-    /** Maps each color in the powerups to its spawn point */
+    /**
+     * Maps each color in the powerups to its spawn point
+     */
     private Map<AmmoCube, SpawnSquare> spawnPoints;
 
-    /** Default constructor only to be used by Jackson */
-    protected Board(){}
+    /**
+     * Default constructor only to be used by Jackson
+     */
+    protected Board() {
+    }
 
     /**
      * Creates an empty game board of given size.
-     * @param id unique identifier of this board configuration
+     *
+     * @param id    unique identifier of this board configuration
      * @param xSize horizontal size (number of columns)
      * @param ySize vertical size (number of rows)
      */
-    public Board(int id, int xSize, int ySize){
-        if (xSize <= 0 || ySize <=0) throw new IllegalArgumentException("Board size must be greater than 0");
+    public Board(int id, int xSize, int ySize) {
+        if (xSize <= 0 || ySize <= 0) throw new IllegalArgumentException("Board size must be greater than 0");
 
         this.id = id;
 
@@ -73,20 +85,21 @@ public class Board extends Observable<ModelUpdate> implements Observer<ModelUpda
     /**
      * Adds given square to the board.
      * If there is already a square on the same point, the square is replaced and adjacencies are recomputed
+     *
      * @param square the square to be added, not null
      */
-    void addSquare(Square square){
+    void addSquare(Square square) {
         if (square == null) throw new NullPointerException("Cannot add null square to the board");
         int x = square.getLocation().getX();
         int y = square.getLocation().getY();
         /* Check that the square is inside the board */
-        if (x >= squares.length || y >= squares[0].length){
+        if (x >= squares.length || y >= squares[0].length) {
             throw new IndexOutOfBoundsException(
                     String.format("Cannot add a square at coords (%d, %d) because it's outside the board", x, y));
         }
 
         // We check whether the place was occupied by another square, and in case we remove us from the observers
-        if(squares[x][y] != null){
+        if (squares[x][y] != null) {
             squares[x][y].removeObserver(this);
         }
 
@@ -97,8 +110,9 @@ public class Board extends Observable<ModelUpdate> implements Observer<ModelUpda
 
     /**
      * Moves a player from its current square to the provided one.
+     *
      * @param player The player to be moved
-     * @param end The square where the player is moved
+     * @param end    The square where the player is moved
      */
     public void movePlayer(Player player, Square end) {
         Square start = player.getCurrentSquare();
@@ -111,10 +125,11 @@ public class Board extends Observable<ModelUpdate> implements Observer<ModelUpda
 
     /**
      * Retrieve all the squares that are visible from the provided squares, according to the game rules
+     *
      * @param start The object representing the square
      * @return The set of objects representing the visible squares
      */
-    public Set<Square> getVisibleSquares(Square start){
+    public Set<Square> getVisibleSquares(Square start) {
         // Here we have to determine which squares are visible from the provided square
         // First we add all the squares that are in its same room
         Set<Square> visibleSquares = new HashSet<>(start.getRoom().getSquares());
@@ -140,13 +155,14 @@ public class Board extends Observable<ModelUpdate> implements Observer<ModelUpda
      * and the maximum number of steps.
      * The visit stops when the maximum number of steps is reached or when the visitable neighbors
      * are already in {@code alreadyVisited}
-     * @param start The square from which to start the navigation, not null
-     * @param alreadyVisited The set of already visited squares, not null, will be modified
-     * @param directionFilter A predicate which constraints the visit to a certain direction, not null
+     *
+     * @param start            The square from which to start the navigation, not null
+     * @param alreadyVisited   The set of already visited squares, not null, will be modified
+     * @param directionFilter  A predicate which constraints the visit to a certain direction, not null
      * @param connectionFilter A predicate which filters {@link SquareConnectionType}, this will be applied
      *                         to determine which adjacent squares can be visited
-     * @param maxSteps the maximum number of steps after which the visit ends
-     *                 (if 0 will only add start, if negative it will not add nothing), optional
+     * @param maxSteps         the maximum number of steps after which the visit ends
+     *                         (if 0 will only add start, if negative it will not add nothing), optional
      * @return A set with the visited squares, including the ones already visited
      * @throws NullPointerException If start, alreadyVisited or connectionFilter are null
      */
@@ -186,7 +202,7 @@ public class Board extends Observable<ModelUpdate> implements Observer<ModelUpda
             for (Square square : toVisit) {
                 /* Visit each one of the neighbours and decrement maxSteps */
                 alreadyVisited.addAll(visitNeighbors(
-                        square,alreadyVisited,
+                        square, alreadyVisited,
                         directionFilter, connectionFilter,
                         maxSteps == null ? null : maxSteps - 1));
                 /* The newly visited squares are added to alreadyVisited */
@@ -199,14 +215,15 @@ public class Board extends Observable<ModelUpdate> implements Observer<ModelUpda
     /**
      * Given a starting square, this method navigates the board and returns the set of visited squares
      * matching the specified filters
-     * @param start the square from which start, not null
+     *
+     * @param start      the square from which start, not null
      * @param visibility determines on which condition you can move from a square to its adjacent
-     * @param direction the visit will proceed only in this direction, optional
-     * @param minDist the minimum amount of moves from the starting square, optional
-     * @param maxDist the maximum amount of moves from the starting square, optional
+     * @param direction  the visit will proceed only in this direction, optional
+     * @param minDist    the minimum amount of moves from the starting square, optional
+     * @param maxDist    the maximum amount of moves from the starting square, optional
      * @return the set of visited squares matching the specified filters
      * @throws IllegalArgumentException if distances are negative or minDist &gt; maxDist
-     * @throws NullPointerException if start or visibility are null
+     * @throws NullPointerException     if start or visibility are null
      */
     public Set<Square> querySquares(Square start, VisibilityEnum visibility, CardinalDirection direction,
                                     Integer minDist, Integer maxDist) {
@@ -256,11 +273,12 @@ public class Board extends Observable<ModelUpdate> implements Observer<ModelUpda
 
     /**
      * Retrieves the square located at the provided location
+     *
      * @param location The cartesian coordinates of the location
      * @return The object representing the square
      */
-    public Square getSquare(CoordPair location){
-        if(location == null){
+    public Square getSquare(CoordPair location) {
+        if (location == null) {
             throw new NullPointerException("Location cannot be null");
         }
         return getSquare(location.getX(), location.getY());
@@ -268,6 +286,7 @@ public class Board extends Observable<ModelUpdate> implements Observer<ModelUpda
 
     /**
      * Retrieves the square at the specified coordinates, if it exists
+     *
      * @param x x coordinate (horizontal, left-zero-based)
      * @param y y coordinate (vertical, top-zero-based)
      * @return the square at specified cordinates, null if it doesn't exist
@@ -282,6 +301,7 @@ public class Board extends Observable<ModelUpdate> implements Observer<ModelUpda
 
     /**
      * Retrieves the squares composing the board
+     *
      * @return A collection of objects representing the squares
      */
     public Collection<Square> getSquares() {
@@ -290,6 +310,7 @@ public class Board extends Observable<ModelUpdate> implements Observer<ModelUpda
 
     /**
      * Returns the rooms composing the board
+     *
      * @return An unmodifiable map of the rooms in this board
      */
     public Map<RoomColor, Room> getRooms() {
@@ -298,6 +319,7 @@ public class Board extends Observable<ModelUpdate> implements Observer<ModelUpda
 
     /**
      * Returns a map with the spawn points
+     *
      * @return unmodifiable map of spawn points
      */
     public Map<AmmoCube, Square> getSpawnPoints() {
@@ -306,6 +328,7 @@ public class Board extends Observable<ModelUpdate> implements Observer<ModelUpda
 
     /**
      * Returns the identifier of this board configuration
+     *
      * @return the identifier of this board configuration
      */
     public int getId() {
@@ -314,7 +337,8 @@ public class Board extends Observable<ModelUpdate> implements Observer<ModelUpda
 
     /**
      * Set a square as the spawn point for a specific color
-     * @param color color of the spawn point
+     *
+     * @param color  color of the spawn point
      * @param square square where to spawn
      */
     void setSpawnPoint(AmmoCube color, SpawnSquare square) {
@@ -323,13 +347,14 @@ public class Board extends Observable<ModelUpdate> implements Observer<ModelUpda
 
     /**
      * Generates the {@link BoardView} of the board
+     *
      * @return the board view
      */
-    public BoardView generateView(){
+    public BoardView generateView() {
         SquareView[][] squareViewMatrix = new SquareView[squares.length][squares[0].length];
         BoardView view = new BoardView(this.id, squares.length, squares[0].length);
-        for(int x = 0; x < squares.length; x++) {
-            for(int y = 0; y < squares[0].length; y++) {
+        for (int x = 0; x < squares.length; x++) {
+            for (int y = 0; y < squares[0].length; y++) {
                 if (squares[x][y] != null) {
                     squareViewMatrix[x][y] = squares[x][y].generateView();
                 }
@@ -339,8 +364,8 @@ public class Board extends Observable<ModelUpdate> implements Observer<ModelUpda
         /* From spawnPoints, creates a new Map in which the key is the same and the value contains
         only the location of the spawn squares */
         view.setSpawnPoints(spawnPoints.entrySet()
-                    .stream()
-                    .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().getLocation())));
+                .stream()
+                .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().getLocation())));
         return view;
     }
 
@@ -348,6 +373,7 @@ public class Board extends Observable<ModelUpdate> implements Observer<ModelUpda
      * Given two locations, determines if they are aligned and returns the cardinal
      * direction of {@code b} from {@code a}.
      * If the locations coincide or if they are not aligned returns {@code null}.
+     *
      * @param a The starting location, not null
      * @param b The end location, not null
      * @return The cardinal direction from {@code a} to {@code b}, null if it can't be determined

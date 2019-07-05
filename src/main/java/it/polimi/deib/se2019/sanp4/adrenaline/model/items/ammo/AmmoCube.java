@@ -8,6 +8,8 @@ import java.util.stream.Collectors;
 
 /**
  * Identifies the color of an ammo cube
+ *
+ * @author Alessandro Fulgini, Lorenzo Farinelli
  */
 public enum AmmoCube implements ColoredObject {
 
@@ -38,6 +40,7 @@ public enum AmmoCube implements ColoredObject {
      * Given a collection of {@link AmmoCube} computes a map where each key is
      * the {@link AmmoCube} and the value is the number of occurrences of that in the
      * given collection
+     *
      * @param ammoCubes A collection of {@link AmmoCube}, not null
      * @return A map with counted occurrences
      */

@@ -12,6 +12,8 @@ import java.util.Collection;
  * It provides access to the match and holds the players before match creation.
  * The model observes the match for {@link ModelUpdate}s and so it receives
  * all the updates, which then get sent (routed) to the correct views
+ *
+ * @author Alessandro Fulgini
  */
 public interface Model extends Observer<ModelUpdate> {
 
@@ -19,12 +21,14 @@ public interface Model extends Observer<ModelUpdate> {
 
     /**
      * Sets the internal instance to the match
+     *
      * @param match the match to be set
      */
     void setMatch(Match match);
 
     /**
      * Returns match instance associated to this model.
+     *
      * @return match instance
      */
     Match getMatch();
@@ -32,6 +36,7 @@ public interface Model extends Observer<ModelUpdate> {
     /**
      * Suspends a player if the player exists and the match has been created,
      * otherwise it does nothing
+     *
      * @param username the username of the player to be suspended
      */
     void suspendPlayer(String username);
@@ -39,18 +44,21 @@ public interface Model extends Observer<ModelUpdate> {
     /**
      * Unsuspends a player if it has been suspended
      * If the player does not exist or if it wasn't suspended, nothing happens
+     *
      * @param username the username of the player to be suspended
      */
     void unsuspendPlayer(String username);
 
     /**
      * Returns the operational state of the match
+     *
      * @return the operational state of the match
      */
     MatchOperationalState getOperationalState();
 
     /**
      * Sets the operational state of the match
+     *
      * @param state the operational state
      */
     void setOperationalState(MatchOperationalState state);
@@ -58,6 +66,7 @@ public interface Model extends Observer<ModelUpdate> {
     /**
      * Sends the model update with all the match status (aka initial update)
      * to the specified player
+     *
      * @param username username of the player
      */
     void sendInitialUpdate(String username);
@@ -66,6 +75,7 @@ public interface Model extends Observer<ModelUpdate> {
 
     /**
      * Subscribe given observer to all events addressed to the specified username.
+     *
      * @param username username for routing
      * @param observer observer to be subscribed
      */
@@ -74,6 +84,7 @@ public interface Model extends Observer<ModelUpdate> {
     /**
      * Unsubscribe given observer from events addressed to given username.
      * If the given pair does not exist, nothing happens.
+     *
      * @param username username for routing
      * @param observer observer to be unsubscribed
      */
@@ -83,28 +94,32 @@ public interface Model extends Observer<ModelUpdate> {
      * Unsubscribe all observers for a specific username.
      * If an observer is subscribed to different usernames, it will be kept on the other usernames.
      * If the username does not exist, nothing happens.
+     *
      * @param username username whose observers must be removed
      */
     void removeAllObservers(String username);
 
     /**
      * Sends the event to the observers of the username (i.e. calls {@link Observer#update(Object)} on them).
+     *
      * @param username username for routing
-     * @param event event to be sent
+     * @param event    event to be sent
      */
     void notifyObservers(String username, ModelUpdate event);
 
     /**
      * Sends the event to the observers of the recipients (i.e. calls {@link Observer#update(Object)} on them).
      * If an observers is subscribed to more than one username, it will only be notified once.
+     *
      * @param recipients collection of usernames whose observers will received the event
-     * @param event event to be sent
+     * @param event      event to be sent
      */
     void notifyObservers(Collection<String> recipients, ModelUpdate event);
 
     /**
      * Sends the event to all the observers, regardless of the usernames they subscribed to.
      * If an observers is subscribed to more than one username, it will only be notified once.
+     *
      * @param event event to be sent
      */
     void notifyObservers(ModelUpdate event);

@@ -2,6 +2,8 @@ package it.polimi.deib.se2019.sanp4.adrenaline.model.board;
 
 /**
  * Identifies how a square is connected to another square
+ *
+ * @author Lorenzo Farinelli, Alessandro Fulgini
  */
 public enum SquareConnectionType {
     /**
@@ -34,6 +36,7 @@ public enum SquareConnectionType {
 
     /**
      * Returns a string with a single character to print this connection type, in horizontal direction
+     *
      * @return A single-char string
      */
     public String getHorizontalCharacterRepresentation() {
@@ -42,6 +45,7 @@ public enum SquareConnectionType {
 
     /**
      * Returns a string with a single character to print this connection type, in vertical direction
+     *
      * @return A single-char string
      */
     public String getVerticalCharacterRepresentation() {

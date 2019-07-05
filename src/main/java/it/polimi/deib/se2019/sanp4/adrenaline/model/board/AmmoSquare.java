@@ -13,6 +13,8 @@ import java.util.stream.Collectors;
 
 /**
  * A specialized class representing a square containing ammo cards
+ *
+ * @author Alessandro Fulgini, Lorenzo Farinelli, Tiziano Fucci
  */
 public class AmmoSquare extends Square {
 

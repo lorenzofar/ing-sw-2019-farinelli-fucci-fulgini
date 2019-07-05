@@ -17,6 +17,8 @@ import java.util.MissingResourceException;
  * and returning them when asked.
  * The returned action cards are not cloned, but they are immutable
  * so it's safe (and suggested) to share them among players and matches.
+ *
+ * @author Alessandro Fulgini
  */
 public class ActionCardCreator {
     private static final Map<ActionCardEnum, ActionCard> cards
@@ -26,17 +28,19 @@ public class ActionCardCreator {
     private static ObjectMapper objectMapper = JSONUtils.getObjectMapper();
 
     /* This class is static and should not be instantiated */
-    private ActionCardCreator() {}
+    private ActionCardCreator() {
+    }
 
     /**
      * Loads and validates all the action cards in the specified action card pack.
      * If two cards with the same id are found, the latter is kept.
+     *
      * @param filePath resource path of the action card pack JSON file
      * @throws MissingResourceException if the required file is not found
-     * @throws JSONException if anything goes wrong while parsing JSON
-     * @throws ValidationException if the JSON is invalid
+     * @throws JSONException            if anything goes wrong while parsing JSON
+     * @throws ValidationException      if the JSON is invalid
      */
-    public static void loadActionCardPack(String filePath){
+    public static void loadActionCardPack(String filePath) {
         /* Parse the file */
         JSONObject pack = JSONUtils.loadJSONResource(filePath);
         /* Validate it */
@@ -52,6 +56,7 @@ public class ActionCardCreator {
 
     /**
      * Loads an action card from given JSON object.
+     *
      * @param card JSON object representing the action card, as extracted by the "actionCards" array
      */
     static void loadActionCard(JSONObject card) {
@@ -65,17 +70,18 @@ public class ActionCardCreator {
 
     /**
      * Returns the action card associated to given type.
+     *
      * @param type type of the action card, not null
      * @return action card associated to type
      * @throws IllegalStateException if the card is not found
      */
     public static ActionCard createActionCard(ActionCardEnum type) {
-        if(type == null){
+        if (type == null) {
             throw new NullPointerException("Action card type cannot be null");
         }
         ActionCard card = cards.get(type);
 
-        if (card == null){
+        if (card == null) {
             throw new IllegalStateException(String.format("Action card type %s does not exist", type.name()));
         }
 
@@ -85,7 +91,7 @@ public class ActionCardCreator {
     /**
      * Forgets all the cards loaded until now, i.e. brings the class back to its original state.
      */
-    static void reset(){
+    static void reset() {
         cards.clear();
     }
 }

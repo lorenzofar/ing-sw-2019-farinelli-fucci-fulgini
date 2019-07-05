@@ -11,6 +11,8 @@ import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
  * by paying its entire cost or it can be discarded which will bring it back to
  * its original state.
  * </p>
+ *
+ * @author Alessandro Fulgini, Lorenzo Farinelli
  */
 public class UnloadedState extends WeaponCardState {
 

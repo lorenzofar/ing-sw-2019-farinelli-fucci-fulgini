@@ -4,6 +4,8 @@ import it.polimi.deib.se2019.sanp4.adrenaline.common.ColoredObject;
 
 /**
  * Represents the possible colors a player can have
+ *
+ * @author Lorenzo Farinelli
  */
 public enum PlayerColor implements ColoredObject {
     /**

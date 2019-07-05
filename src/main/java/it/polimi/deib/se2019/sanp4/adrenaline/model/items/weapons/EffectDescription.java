@@ -8,43 +8,58 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-/** A class describing a light representation of an effect provided by a weapon*/
+/**
+ * A class describing a light representation of an effect provided by a weapon
+ *
+ * @author Lorenzo Farinelli
+ */
 public class EffectDescription implements Serializable {
 
     private static final long serialVersionUID = -4617447984038595221L;
 
-    /** A unique identifier of the effect */
+    /**
+     * A unique identifier of the effect
+     */
     private String id;
 
-    /** A human-readable identifier of the effect */
+    /**
+     * A human-readable identifier of the effect
+     */
     private String name;
 
-    /** A human-readable description of what the effect does */
+    /**
+     * A human-readable description of what the effect does
+     */
     private String description;
 
-    /** The list of ammo cubes the user has to pay to use the effect */
+    /**
+     * The list of ammo cubes the user has to pay to use the effect
+     */
     private List<AmmoCubeCost> cost;
 
-    /** Default constructor only to be used by Jackson */
-    private EffectDescription(){
+    /**
+     * Default constructor only to be used by Jackson
+     */
+    private EffectDescription() {
         cost = new ArrayList<>(0); /* Default cost is zero */
     }
 
     /**
      * Creates a new object describing an effect
-     * @param id The id of the effect
-     * @param name The name of the effect, not null and not an empty string
+     *
+     * @param id          The id of the effect
+     * @param name        The name of the effect, not null and not an empty string
      * @param description The description of the effect, not null and not an empty string
-     * @param cost The list of objects representing the cost of the effect, not null
+     * @param cost        The list of objects representing the cost of the effect, not null
      */
-    public EffectDescription(String id, String name, String description, List<AmmoCubeCost> cost){
-        if(name == null || description == null || cost == null){
+    public EffectDescription(String id, String name, String description, List<AmmoCubeCost> cost) {
+        if (name == null || description == null || cost == null) {
             throw new NullPointerException("Found null parameters");
         }
-        if(id.isEmpty() || name.isEmpty() || description.isEmpty()){
+        if (id.isEmpty() || name.isEmpty() || description.isEmpty()) {
             throw new IllegalArgumentException("Effect descriptions cannot be empty");
         }
-        if(cost.contains(null)){
+        if (cost.contains(null)) {
             throw new NullPointerException("Cost list cannot contain null objects");
         }
         this.id = id;
@@ -55,6 +70,7 @@ public class EffectDescription implements Serializable {
 
     /**
      * Retrieves the identifier of the effect
+     *
      * @return The id of the effect
      */
     public String getId() {
@@ -63,6 +79,7 @@ public class EffectDescription implements Serializable {
 
     /**
      * Retrieves the name of the weapon
+     *
      * @return The name of the weapon
      */
     public String getName() {
@@ -71,6 +88,7 @@ public class EffectDescription implements Serializable {
 
     /**
      * Retrieves the description of the effect
+     *
      * @return The description of the effect
      */
     public String getDescription() {
@@ -79,21 +97,22 @@ public class EffectDescription implements Serializable {
 
     /**
      * Retrieves the cost of the effect
+     *
      * @return An unmodifiable list of objects representing the cost of the effect
      */
-    public List<AmmoCubeCost> getCost(){
+    public List<AmmoCubeCost> getCost() {
         return Collections.unmodifiableList(cost);
     }
 
     @Override
-    public boolean equals(Object obj){
-        if(obj == this) return true;
-        if(!(obj instanceof EffectDescription)) return false;
+    public boolean equals(Object obj) {
+        if (obj == this) return true;
+        if (!(obj instanceof EffectDescription)) return false;
         return ((EffectDescription) obj).getId().equals(this.id);
     }
 
     @Override
-    public int hashCode(){
+    public int hashCode() {
         return Objects.hash(id);
     }
 }

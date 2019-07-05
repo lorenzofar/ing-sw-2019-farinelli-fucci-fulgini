@@ -7,6 +7,7 @@ import java.util.*;
  * It automatically performs shuffling of discarded cards when there are no available cards.
  *
  * @param <T> The type of cards contained in the stack
+ * @author Lorenzo Farinelli
  */
 public class AutoShufflingStack<T> implements CardStack<T> {
 

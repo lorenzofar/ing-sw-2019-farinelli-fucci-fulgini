@@ -14,32 +14,43 @@ import static it.polimi.deib.se2019.sanp4.adrenaline.model.match.PlayerTurnState
  * A representation of the turn of a player
  * It contains information about:
  * <ul>
- *     <li>The current action performed by the player</li>
- *     <li>The number of actions available for the player to perform</li>
- *     <li>The player the turn belongs to</li>
- *     <li>The list of all the players damaged during the turn</li>
+ * <li>The current action performed by the player</li>
+ * <li>The number of actions available for the player to perform</li>
+ * <li>The player the turn belongs to</li>
+ * <li>The list of all the players damaged during the turn</li>
  * </ul>
+ *
+ * @author Alessandro Fulgini, Lorenzo Farinelli, Tiziano Fucci
  */
-public class PlayerTurn extends Observable{
+public class PlayerTurn extends Observable {
 
-    /** The number of actions the player can still perform */
+    /**
+     * The number of actions the player can still perform
+     */
     private int remainingActions;
 
-    /** The player the turn belongs to */
+    /**
+     * The player the turn belongs to
+     */
     private Player turnOwner;
 
-    /** The state of the turn */
+    /**
+     * The state of the turn
+     */
     private PlayerTurnState state;
 
-    /** The list of players that received a damage in the turn */
+    /**
+     * The list of players that received a damage in the turn
+     */
     private Set<Player> damagedPlayers;
 
     /**
      * Creates a new turn for the specified player.
+     *
      * @param player The object representing the player, not null
      */
-    public PlayerTurn(Player player){
-        if(player == null){
+    public PlayerTurn(Player player) {
+        if (player == null) {
             throw new NullPointerException("Player cannot be null");
         }
         damagedPlayers = new LinkedHashSet<>();
@@ -58,17 +69,18 @@ public class PlayerTurn extends Observable{
     /**
      * Retrieves the list of actions the player can perform, according to the current state of the turn
      * <ul>
-     *     <li>If the turn is over, the collection is empty</li>
-     *     <li>If the user still has remaining actions, all the actions in the action card are returned</li>
-     *     <li>If the user has finished his remaining actions, then the final action is returned</li>
+     * <li>If the turn is over, the collection is empty</li>
+     * <li>If the user still has remaining actions, all the actions in the action card are returned</li>
+     * <li>If the user has finished his remaining actions, then the final action is returned</li>
      * </ul>
+     *
      * @return A read-only collection with the actions that the user can choose to perform
      */
-    public Collection<ActionEnum> getAvailableActions(){
+    public Collection<ActionEnum> getAvailableActions() {
         ActionCard actionCard = turnOwner.getActionCard();
         if (state == OVER) {
             return Collections.emptyList(); /* No actions to perform */
-        } else if(remainingActions > 0) {
+        } else if (remainingActions > 0) {
             List<ActionEnum> actions = new ArrayList<>(actionCard.getActions());
             if (actionCard.hasFinalAction()) actions.add(actionCard.getFinalAction());
             return actions; /* Main + Final actions */
@@ -81,11 +93,12 @@ public class PlayerTurn extends Observable{
 
     /**
      * Checks whether the provided action can be performed by the player
+     *
      * @param action The action to test, not null
      * @return {@code true} if the action can be performed, {@code false} otherwise
      */
-    public boolean canPerformAction(ActionEnum action){
-        if(action == null){
+    public boolean canPerformAction(ActionEnum action) {
+        if (action == null) {
             throw new NullPointerException("Action cannot be null");
         }
         return getAvailableActions().contains(action);
@@ -93,19 +106,23 @@ public class PlayerTurn extends Observable{
 
     /**
      * Retrieves the state the turn is into
+     *
      * @return The object representing the state
      */
-    public PlayerTurnState getTurnState(){ return this.state; }
+    public PlayerTurnState getTurnState() {
+        return this.state;
+    }
 
     /**
      * Sets the state the turn is into
+     *
      * @param state The object representing the state, not null
      */
-    public void setTurnState(PlayerTurnState state){
-        if(state == null){
+    public void setTurnState(PlayerTurnState state) {
+        if (state == null) {
             throw new NullPointerException("State cannot be null");
         }
-        if (this.state != state){
+        if (this.state != state) {
             this.state = state;
             this.notifyObservers(new PlayerTurnUpdate(this.generateView()));
         }
@@ -113,6 +130,7 @@ public class PlayerTurn extends Observable{
 
     /**
      * Adds given player to the set of players damaged during this turn
+     *
      * @param player The player to be added
      */
     public void addDamagedPlayer(Player player) {
@@ -121,14 +139,16 @@ public class PlayerTurn extends Observable{
 
     /**
      * Retrieves the list of players that received a damage during this turn
+     *
      * @return A set of objects representing the players
      */
-    public Set<Player> getDamagedPlayers(){
+    public Set<Player> getDamagedPlayers() {
         return Collections.unmodifiableSet(damagedPlayers);
     }
 
     /**
      * Retrieves the player the turn belongs to
+     *
      * @return The object representing the player
      */
     public Player getTurnOwner() {
@@ -137,6 +157,7 @@ public class PlayerTurn extends Observable{
 
     /**
      * Retrieves the number of actions the user can still perform
+     *
      * @return The count of remaining actions
      */
     public int getRemainingActions() {
@@ -145,6 +166,7 @@ public class PlayerTurn extends Observable{
 
     /**
      * Sets the number of actions the user can still perform
+     *
      * @param remainingActions The number of actions the player can perform
      */
     public void setRemainingActions(int remainingActions) {
@@ -156,9 +178,10 @@ public class PlayerTurn extends Observable{
 
     /**
      * Generates the {@link PlayerTurnView} of the player turn
+     *
      * @return the player turn view
      */
-    public PlayerTurnView generateView(){
+    public PlayerTurnView generateView() {
         PlayerTurnView view = new PlayerTurnView(this.getTurnOwner().getName());
         view.setRemainingActions(this.getRemainingActions());
         view.setState(this.getTurnState());

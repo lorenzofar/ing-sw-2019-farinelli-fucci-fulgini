@@ -9,10 +9,12 @@ import java.io.Serializable;
  * Represent the configuration needed to create a new match.
  * This includes:
  * <ul>
- *     <li>the board to be used</li>
- *     <li>the number of skulls on the killshot track</li>
+ * <li>the board to be used</li>
+ * <li>the number of skulls on the killshot track</li>
  * </ul>
  * Mind that the characters are randomly assigned to the players
+ *
+ * @author Alessandro Fulgini
  */
 public class MatchConfiguration implements Serializable {
 
@@ -31,10 +33,11 @@ public class MatchConfiguration implements Serializable {
 
     /**
      * Creates a match configuration with given parameters
+     *
      * @param boardId id of the board to play on
-     * @param skulls number of skulls to be put on the killshot track
+     * @param skulls  number of skulls to be put on the killshot track
      * @throws IllegalArgumentException if playerColors contains duplicate values or skulls
-     * @throws NullPointerException if null arguments are provided
+     * @throws NullPointerException     if null arguments are provided
      */
     @JsonCreator
     public MatchConfiguration(
@@ -47,6 +50,7 @@ public class MatchConfiguration implements Serializable {
 
     /**
      * Returns the board id
+     *
      * @return board id
      */
     public int getBoardId() {
@@ -55,6 +59,7 @@ public class MatchConfiguration implements Serializable {
 
     /**
      * Sets the board id
+     *
      * @param boardId board id
      */
     public void setBoardId(int boardId) {
@@ -64,6 +69,7 @@ public class MatchConfiguration implements Serializable {
 
     /**
      * Returns the number of skulls
+     *
      * @return the number of skulls
      */
     public int getSkulls() {
@@ -72,6 +78,7 @@ public class MatchConfiguration implements Serializable {
 
     /**
      * Sets the number of skulls
+     *
      * @param skulls the number of skulls to be set
      */
     public void setSkulls(int skulls) {

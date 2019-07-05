@@ -3,6 +3,8 @@ package it.polimi.deib.se2019.sanp4.adrenaline.model.items.powerup;
 /**
  * Represents the types of powerup effects.
  * Each type has a textual name and description.
+ *
+ * @author Alessandro Fulgini
  */
 public enum PowerupEnum {
     TARGETING_SCOPE("Targeting scope",

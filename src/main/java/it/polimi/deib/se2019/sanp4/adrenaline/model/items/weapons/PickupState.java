@@ -19,6 +19,8 @@ import java.util.logging.Logger;
  * A player grabbing a weapon card must first pay its reload cost, and if he then discards a weapon
  * in any state, it must be brought back to this state by calling {@link #reset(WeaponCard)}
  * </p>
+ *
+ * @author Alessandro Fulgini, Lorenzo Farinelli
  */
 public class PickupState extends WeaponCardState {
 

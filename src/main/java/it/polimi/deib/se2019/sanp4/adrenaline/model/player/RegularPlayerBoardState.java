@@ -8,6 +8,8 @@ import java.util.Iterator;
  * Scores are given depending on the number of skulls on the board, which represent the deaths.
  * There is one extra point for first blood.
  * </p>
+ *
+ * @author Alessandro Fulgini
  */
 public class RegularPlayerBoardState implements PlayerBoardState {
     private static final int[] POINTS = {8, 6, 4, 2, 1, 1};
@@ -43,6 +45,7 @@ public class RegularPlayerBoardState implements PlayerBoardState {
 
     /**
      * Returns a string representation suitable for identifying the state
+     *
      * @return a string representation
      */
     @Override

@@ -31,6 +31,8 @@ import java.util.stream.Collectors;
  * <li>The number of remaining skulls in the killshots track</li>
  * <li>Whether the match is in frenzy mode or not</li>
  * </ul>
+ *
+ * @author Alessandro Fulgini, Lorenzo Farinelli, Tiziano Fucci
  */
 public class Match extends Observable<ModelUpdate> implements Observer<ModelUpdate> {
 

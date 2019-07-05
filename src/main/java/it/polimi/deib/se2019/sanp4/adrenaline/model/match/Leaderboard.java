@@ -15,6 +15,8 @@ import java.util.stream.Collectors;
  * <p>
  * The information, for each player, include: scores, performed killshots, performed overkills and number of deaths
  * </p>
+ *
+ * @author Alessandro Fulgini
  */
 public class Leaderboard implements Serializable {
 
@@ -65,6 +67,7 @@ public class Leaderboard implements Serializable {
 
         /**
          * Generates a leaderboard entry for given player
+         *
          * @param player The player from which to get the data, not null
          * @return The leaderboard entry
          */

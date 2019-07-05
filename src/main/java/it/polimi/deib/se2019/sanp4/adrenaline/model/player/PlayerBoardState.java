@@ -4,6 +4,8 @@ import java.util.Iterator;
 
 /**
  * Changes {@link PlayerBoard} behavior based on its state.
+ *
+ * @author Alessandro Fulgini
  */
 public interface PlayerBoardState {
 

@@ -4,6 +4,8 @@ import it.polimi.deib.se2019.sanp4.adrenaline.common.ColoredObject;
 
 /**
  * Represents the possible colors a room can have
+ *
+ * @author Alessandro Fulgini, Lorenzo Farinelli, Tiziano Fucci
  */
 public enum RoomColor implements ColoredObject {
     /**

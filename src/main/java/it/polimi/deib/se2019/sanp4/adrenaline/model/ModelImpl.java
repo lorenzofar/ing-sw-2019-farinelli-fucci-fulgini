@@ -12,6 +12,8 @@ import java.util.Set;
 
 /**
  * Concrete implementation of {@link Model}.
+ *
+ * @author Alessandro Fulgini
  */
 public class ModelImpl extends RemoteRoutingObservable<ModelUpdate> implements Model, Observer<ModelUpdate> {
 
@@ -102,7 +104,7 @@ public class ModelImpl extends RemoteRoutingObservable<ModelUpdate> implements M
     public void setOperationalState(MatchOperationalState state) {
         MatchOperationalState oldState = this.operationalState;
         this.operationalState = state;
-        if(oldState != state) {
+        if (oldState != state) {
             this.notifyObservers(new MatchOperationalStateUpdate(this.operationalState));
         }
     }

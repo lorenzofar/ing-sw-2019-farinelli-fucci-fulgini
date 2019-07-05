@@ -9,37 +9,50 @@ import java.util.stream.Collectors;
 
 import static java.lang.Integer.max;
 
-/** Describes the possible costs in terms of ammo cube colors*/
+/**
+ * Describes the possible costs in terms of ammo cube colors
+ *
+ * @author Alessandro Fulgini, Lorenzo Farinelli
+ */
 public enum AmmoCubeCost implements ColoredObject {
 
-    /** Red cube */
+    /**
+     * Red cube
+     */
     RED("Red"),
-    /** Yellow cube */
+    /**
+     * Yellow cube
+     */
     YELLOW("Yellow"),
-    /** Blue cube */
+    /**
+     * Blue cube
+     */
     BLUE("Blue"),
-    /** Can be any of the cubes*/
+    /**
+     * Can be any of the cubes
+     */
     ANY("Any");
 
     private String message;
 
-    AmmoCubeCost(String message){
+    AmmoCubeCost(String message) {
         this.message = message;
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return this.message;
     }
 
 
     /**
      * Determines whether the provided cube can suffice as a payment method
+     *
      * @param cube The object representing the cube, not null
      * @return {@code true} if the cube is sufficient, {@code false} otherwise
      */
-    public boolean canPayFor(AmmoCubeCost cube){
-        if(cube == null){
+    public boolean canPayFor(AmmoCubeCost cube) {
+        if (cube == null) {
             throw new NullPointerException("Cube cost cannot be null");
         }
         return this == AmmoCubeCost.ANY || this == cube;
@@ -47,11 +60,12 @@ public enum AmmoCubeCost implements ColoredObject {
 
     /**
      * Determines whether the provided cube can suffice as a payment method
+     *
      * @param cube The object representing the cube
      * @return {@code true} if the cube is sufficient, {@code false} otherwise
      */
-    public boolean canPayFor(AmmoCube cube){
-        if(cube == null){
+    public boolean canPayFor(AmmoCube cube) {
+        if (cube == null) {
             throw new NullPointerException("Cube cannot be null");
         }
         return this == AmmoCubeCost.ANY || this.toString().equals(cube.toString());
@@ -61,10 +75,11 @@ public enum AmmoCubeCost implements ColoredObject {
      * Returns the corresponding ammo cube if this cost is
      * {@link AmmoCubeCost#RED}, {@link AmmoCubeCost#YELLOW} or {@link AmmoCubeCost#BLUE};
      * if this cost is {@link AmmoCubeCost#ANY} returns {@code null}
+     *
      * @return The corresponding ammo cube if it can be uniquely determined, {@code null} otherwise
      */
-    public AmmoCube getCorrespondingCube(){
-        switch(this){
+    public AmmoCube getCorrespondingCube() {
+        switch (this) {
             case RED:
                 return AmmoCube.RED;
             case BLUE:
@@ -80,8 +95,9 @@ public enum AmmoCubeCost implements ColoredObject {
      * Given a cost which has to be covered and a the ammo cubes that are available to pay that cost,
      * tries to cover the cost with the given ammo cubes and determines the part of the cost that can't
      * be covered with those ammo cubes.
-     * @param initialCost A map representing the cost which has to be paid. A missing key will be interpreted
-     *                    as a 0 for that particular cube cost. All values must be &gt; 0.
+     *
+     * @param initialCost   A map representing the cost which has to be paid. A missing key will be interpreted
+     *                      as a 0 for that particular cube cost. All values must be &gt; 0.
      * @param availableAmmo A map with the ammo available for a specific color.A missing key will be interpreted
      *                      as a 0 for that particular cube color. All values must be &gt; 0.
      * @return A map containing the remaining costs. A missing key must be interpreted as a 0, the values are all &gt; 0
@@ -128,7 +144,8 @@ public enum AmmoCubeCost implements ColoredObject {
 
     /**
      * Determines if the given ammo cost can be payed using the available ammo
-     * @param cost A map containing the number of cubes to pay for each color, not null and with no negative values
+     *
+     * @param cost          A map containing the number of cubes to pay for each color, not null and with no negative values
      * @param availableAmmo A map containing the number of cubes available to pay for each color, not null
      *                      and with no negative values
      * @return If the cost can be paid or not
@@ -145,6 +162,7 @@ public enum AmmoCubeCost implements ColoredObject {
      * Given a collection of {@link AmmoCubeCost} computes a map where each key is
      * the {@link AmmoCubeCost} and the value is the number of occurrences of that in the
      * given collection
+     *
      * @param cost A collection of {@link AmmoCubeCost}, not null
      * @return A map with counted occurrences
      */

@@ -23,49 +23,55 @@ import java.util.stream.Collectors;
  * Helper static class used by {@code ModelImpl} to create a new {@link Match}
  * This class uses
  * <ul>
- *     <li>{@link BoardCreator}</li>
- *     <li>{@link ActionCardCreator}</li>
- *     <li>{@link AmmoCardCreator}</li>
- *     <li>{@link PowerupCreator}</li>
- *     <li>{@link WeaponCreator}</li>
+ * <li>{@link BoardCreator}</li>
+ * <li>{@link ActionCardCreator}</li>
+ * <li>{@link AmmoCardCreator}</li>
+ * <li>{@link PowerupCreator}</li>
+ * <li>{@link WeaponCreator}</li>
  * </ul>
  * Using the methods in this class without loading JSON resources in these creators first
  * might lead to unexpected behavior (e.g. empty card stacks)
+ *
+ * @author Alessandro Fulgini
  */
 public class MatchCreator {
 
-    /** The class is static, cannot be instantiated */
-    private  MatchCreator() {}
+    /**
+     * The class is static, cannot be instantiated
+     */
+    private MatchCreator() {
+    }
 
     /**
      * Creates a new match in its initial state, according to provided configuration
      * This method uses the following creators to get needed resources
      * <ul>
-     *     <li>{@link BoardCreator}</li>
-     *     <li>{@link ActionCardCreator}</li>
-     *     <li>{@link AmmoCardCreator}</li>
-     *     <li>{@link PowerupCreator}</li>
-     *     <li>{@link WeaponCreator}</li>
+     * <li>{@link BoardCreator}</li>
+     * <li>{@link ActionCardCreator}</li>
+     * <li>{@link AmmoCardCreator}</li>
+     * <li>{@link PowerupCreator}</li>
+     * <li>{@link WeaponCreator}</li>
      * </ul>
      * Make sure they have loaded their data from file before calling this method,
      * because it may lead to unexpected behavior, such as empty card stacks.
      * <p>
-     *     This method does not select the first player and does not fill
-     *     the board with ammo and weapons, this has to be done later
+     * This method does not select the first player and does not fill
+     * the board with ammo and weapons, this has to be done later
      * </p>
-     *
+     * <p>
      * If the match could not be created for some reason, returns null
-     * @param usernames set with the names of the players who will play in the match
+     *
+     * @param usernames     set with the names of the players who will play in the match
      * @param configuration configuration of the match, usually obtained by first player,
      *                      which is supposed to be valid
      * @return the created match if creation was successful, null if unable to create it
-     * @throws NullPointerException if null parameters are provided
+     * @throws NullPointerException     if null parameters are provided
      * @throws IllegalArgumentException if there are too many players (more than the colors),
      *                                  if the provided skulls are negative
      *                                  if the board id provided is invalid
-     * @throws IllegalStateException if the regular action card cannot be obtained by {@link ActionCardCreator}
-     * @throws UncheckedIOException if a weapon card that was correctly loaded on startup
-     * cannot be loaded from file anymore
+     * @throws IllegalStateException    if the regular action card cannot be obtained by {@link ActionCardCreator}
+     * @throws UncheckedIOException     if a weapon card that was correctly loaded on startup
+     *                                  cannot be loaded from file anymore
      */
     public static Match createMatch(Set<String> usernames, MatchConfiguration configuration) {
         /* Check parameters */
@@ -103,6 +109,13 @@ public class MatchCreator {
 
     /* ===== PRIVATE METHODS ===== */
 
+    /**
+     * Create a board corresponding to the provided board id
+     *
+     * @param boardId The id of the board to create
+     * @return The object representing the board
+     * @throws IllegalArgumentException If the board doess not exist
+     */
     private static Board createBoard(int boardId) {
         try {
             return BoardCreator.createBoard(boardId);
@@ -111,6 +124,12 @@ public class MatchCreator {
         }
     }
 
+    /**
+     * Create players from the provided set of usernames
+     *
+     * @param usernames The set of usernames of the players
+     * @return A list containing the objects representing the players
+     */
     private static List<Player> createPlayers(Set<String> usernames) {
         /* Since the same action card is shared among all players, get it in advance */
         ActionCard actionCard = ActionCard.initial();
@@ -125,6 +144,11 @@ public class MatchCreator {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Creates a deck of weapon cards
+     *
+     * @return The collection of objects representing the weapon cards in the deck
+     */
     private static Collection<WeaponCard> createWeaponCardsDeck() {
         try {
             return WeaponCreator.createWeaponCardDeck();

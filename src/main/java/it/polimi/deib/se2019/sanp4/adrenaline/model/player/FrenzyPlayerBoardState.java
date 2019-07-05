@@ -8,6 +8,8 @@ import java.util.NoSuchElementException;
  * <p>
  * Scores do not depend on player's deaths and there is no extra point for first blood
  * </p>
+ *
+ * @author Alessandro Fulgini
  */
 public class FrenzyPlayerBoardState implements PlayerBoardState {
 

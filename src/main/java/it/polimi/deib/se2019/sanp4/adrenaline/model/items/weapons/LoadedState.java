@@ -7,6 +7,8 @@ import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
  * <p>
  * A weapon in this state cannot be reloaded, and if it shoots it must be unloaded
  * </p>
+ *
+ * @author Alessandro Fulgini, Lorenzo Farinelli
  */
 public class LoadedState extends WeaponCardState {
 
