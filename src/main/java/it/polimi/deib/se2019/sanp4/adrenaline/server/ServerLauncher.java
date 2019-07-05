@@ -5,6 +5,8 @@ import it.polimi.deib.se2019.sanp4.adrenaline.common.ResourcesLoader;
 
 /**
  * Main class for the server
+ *
+ * @author Alessandro Fulgini, Lorenzo Farinelli
  */
 public class ServerLauncher {
 

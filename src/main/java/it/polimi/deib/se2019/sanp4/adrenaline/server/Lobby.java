@@ -30,6 +30,7 @@ import java.util.logging.Logger;
  * If the number of waiting players coincides with the maximum amount of players in a match (number of player colors),
  * then the match starts immediately and the timer is stopped.
  * </p>
+ * @author Alessandro Fulgini
  */
 public class Lobby implements Runnable {
 

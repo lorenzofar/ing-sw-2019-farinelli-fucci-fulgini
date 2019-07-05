@@ -25,6 +25,7 @@ import java.util.logging.Logger;
 
 /**
  * A class representing a remote view connected via a socket connection
+ * @author Alessandro Fulgini
  */
 public class SocketRemoteView extends RemoteObservable<ViewEvent>
         implements RemoteView, Runnable, SocketServerCommandTarget {

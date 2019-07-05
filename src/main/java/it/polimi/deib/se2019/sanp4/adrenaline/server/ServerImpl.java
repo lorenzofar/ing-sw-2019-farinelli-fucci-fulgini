@@ -31,6 +31,7 @@ import java.util.logging.Logger;
  * A class representing the implementation of a server
  * it implements both the server and remote server interfaces
  * This class uses the singleton pattern
+ * @author Alessandro Fulgini
  */
 public class ServerImpl implements SocketServer, RemoteServer, Runnable {
     /** Single instance */
