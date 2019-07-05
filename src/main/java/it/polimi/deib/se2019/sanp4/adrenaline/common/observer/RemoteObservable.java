@@ -9,7 +9,9 @@ import java.util.Set;
  * In case calling {@code update()} on a remote observer throws an {@code IOException} the exception is ignored.
  * This means that subclasses must be aware that their dispatched events may not get to their observers when
  * communication is interrupted.
+ *
  * @param <T> The type of events dispatched by this class
+ * @author Alessandro Fulgini, Tiziano Fucci
  * @see Observable
  * @see RemoteObserver
  */
@@ -20,6 +22,7 @@ public abstract class RemoteObservable<T> {
     /**
      * Subscribes given observer for events.
      * In case the observer was already subscribed nothing happens (i.e. it won't get double events).
+     *
      * @param observer observer to subscribe
      */
     public void addObserver(RemoteObserver<T> observer) {
@@ -29,6 +32,7 @@ public abstract class RemoteObservable<T> {
     /**
      * Unsubscribe observer for events.
      * In case the observer was not subscribed nothing happens.
+     *
      * @param observer observer to be unsubscribed
      */
     public void removeObserver(RemoteObserver<T> observer) {
@@ -38,6 +42,7 @@ public abstract class RemoteObservable<T> {
     /**
      * Sends the given event to all subscribed observers (i.e. calls {@link Observer#update(Object)} on them).
      * If calling {@code update()} throws an {@code IOException}, the exception is simply ignored.
+     *
      * @param event event to be sent to observers
      */
     protected void notifyObservers(T event) {

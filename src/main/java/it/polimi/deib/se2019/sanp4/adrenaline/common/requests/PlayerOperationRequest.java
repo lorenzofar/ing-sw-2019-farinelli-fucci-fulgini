@@ -8,6 +8,8 @@ import java.util.List;
 
 /**
  * A specialized request to ask for the operation to be performed during a turn
+ *
+ * @author Alessandro Fulgini
  */
 public class PlayerOperationRequest extends ChoiceRequest<PlayerOperationEnum> {
 

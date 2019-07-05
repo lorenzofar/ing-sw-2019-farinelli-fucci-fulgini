@@ -6,6 +6,8 @@ import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.WeaponCard;
 
 /**
  * An update sent when a player draws a {@link WeaponCard}.
+ *
+ * @author Tiziano Fucci
  */
 public class DrawnWeaponUpdate extends ModelUpdate {
 
@@ -15,7 +17,8 @@ public class DrawnWeaponUpdate extends ModelUpdate {
 
     /**
      * Creates a drawn weapon update that will be sent in broadcast.
-     * @param player the player who draws the card.
+     *
+     * @param player     the player who draws the card.
      * @param weaponCard the weapon card drawn.
      */
     @JsonCreator
@@ -29,6 +32,7 @@ public class DrawnWeaponUpdate extends ModelUpdate {
 
     /**
      * Returns the player property
+     *
      * @return The player property
      */
     public String getPlayer() {
@@ -37,6 +41,7 @@ public class DrawnWeaponUpdate extends ModelUpdate {
 
     /**
      * Sets the player property
+     *
      * @param player The player property, not null
      */
     public void setPlayer(String player) {
@@ -45,6 +50,7 @@ public class DrawnWeaponUpdate extends ModelUpdate {
 
     /**
      * Returns the drawn card
+     *
      * @return the drawn card
      */
     public WeaponCard getWeaponCard() {
@@ -53,6 +59,7 @@ public class DrawnWeaponUpdate extends ModelUpdate {
 
     /**
      * Sets the drawn card
+     *
      * @param weaponCard The drawn card, not null
      */
     public void setWeaponCard(WeaponCard weaponCard) {

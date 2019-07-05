@@ -11,6 +11,8 @@ import java.util.Map;
 
 /**
  * A lightweight representation of an ammo square in the view.
+ *
+ * @author Tiziano Fucci, Lorenzo Farinelli
  */
 public class AmmoSquareView extends SquareView {
 

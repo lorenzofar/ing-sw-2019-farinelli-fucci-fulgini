@@ -11,6 +11,8 @@ import java.util.Map;
 
 /**
  * A lightweight representation of the game board in the view
+ *
+ * @author Tiziano Fucci, Lorenzo Farinelli
  */
 public class BoardView implements Serializable {
 

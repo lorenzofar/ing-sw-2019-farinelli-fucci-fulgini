@@ -8,6 +8,8 @@ import java.util.Map;
 
 /**
  * A general update sent when a player connects to the server
+ *
+ * @author Tiziano Fucci
  */
 public class InitialUpdate extends ModelUpdate {
 
@@ -70,12 +72,13 @@ public class InitialUpdate extends ModelUpdate {
 
     /**
      * Creates a new initial update
-     * @param players the players names and their respective views
+     *
+     * @param players      the players names and their respective views
      * @param playerBoards the players names and their respective player board views
-     * @param actionCards the players names and their respective action cards
-     * @param match the match view
-     * @param board the board view
-     * @param currentTurn the current turn view, null if there is not a turn yet
+     * @param actionCards  the players names and their respective action cards
+     * @param match        the match view
+     * @param board        the board view
+     * @param currentTurn  the current turn view, null if there is not a turn yet
      */
     @JsonCreator
     public InitialUpdate(

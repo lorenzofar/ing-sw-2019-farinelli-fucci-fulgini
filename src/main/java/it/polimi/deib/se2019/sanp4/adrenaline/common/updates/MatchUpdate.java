@@ -7,6 +7,8 @@ import it.polimi.deib.se2019.sanp4.adrenaline.model.match.Match;
 
 /**
  * An update sent when the {@link Match} changes its status.
+ *
+ * @author Tiziano Fucci
  */
 public class MatchUpdate extends ModelUpdate {
 
@@ -15,6 +17,7 @@ public class MatchUpdate extends ModelUpdate {
 
     /**
      * Creates a match update that will be sent in broadcast.
+     *
      * @param match the match to send as update.
      */
     @JsonCreator

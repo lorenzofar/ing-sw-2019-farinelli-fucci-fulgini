@@ -7,6 +7,8 @@ import it.polimi.deib.se2019.sanp4.adrenaline.model.player.Player;
 
 /**
  * An update sent when a {@link Player} changes its status.
+ *
+ * @author Tiziano Fucci
  */
 public class PlayerUpdate extends ModelUpdate {
 
@@ -15,19 +17,30 @@ public class PlayerUpdate extends ModelUpdate {
 
     /**
      * Creates a player update that will be sent in broadcast.
+     *
      * @param player the player to send as update.
      */
     @JsonCreator
-    public PlayerUpdate (
+    public PlayerUpdate(
             @JsonProperty("player") PlayerView player) {
         super();
         this.player = player;
     }
 
+    /**
+     * Retrieves the view of the player
+     *
+     * @return The object representing the view
+     */
     public PlayerView getPlayer() {
         return player;
     }
 
+    /**
+     * Sets the view of the player
+     *
+     * @param player The object representing the view
+     */
     public void setPlayer(PlayerView player) {
         this.player = player;
     }

@@ -2,6 +2,8 @@ package it.polimi.deib.se2019.sanp4.adrenaline.common.exceptions;
 
 /**
  * Thrown when a player has not enough ammo cubes to pay a cost.
+ *
+ * @author Alessandro Fulgini
  */
 public class NotEnoughAmmoException extends Exception {
 

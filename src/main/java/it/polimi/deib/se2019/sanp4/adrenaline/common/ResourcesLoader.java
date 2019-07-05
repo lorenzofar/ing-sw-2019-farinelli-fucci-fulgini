@@ -8,20 +8,24 @@ import it.polimi.deib.se2019.sanp4.adrenaline.model.items.weapons.WeaponCreator;
 
 /**
  * Responsible for loading resources needed by various factories/creators.
+ *
+ * @author Alessandro Fulgini
  */
 public class ResourcesLoader {
 
     /* Hide implicit constructor */
-    private ResourcesLoader() {}
+    private ResourcesLoader() {
+    }
 
-    /** Loads JSON schemas on {@link JSONUtils} and creator resources
+    /**
+     * Loads JSON schemas on {@link JSONUtils} and creator resources
      * These include:
      * <ul>
-     *     <li>{@link ActionCardCreator}</li>
-     *     <li>{@link AmmoCardCreator}</li>
-     *     <li>{@link BoardCreator}</li>
-     *     <li>{@link PowerupCreator}</li>
-     *     <li>{@link WeaponCreator}</li>
+     * <li>{@link ActionCardCreator}</li>
+     * <li>{@link AmmoCardCreator}</li>
+     * <li>{@link BoardCreator}</li>
+     * <li>{@link PowerupCreator}</li>
+     * <li>{@link WeaponCreator}</li>
      * </ul>
      */
     public static void loadCreatorResources() {

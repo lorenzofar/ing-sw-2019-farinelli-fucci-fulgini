@@ -8,7 +8,9 @@ import java.util.Set;
  * {@link Observable} objects can subscribe to this to receive events/updates.
  * Classes extending this interface should use the {@link #notifyObservers(Object)} method to send updates to their
  * observers.
+ *
  * @param <T> The type of events dispatched by this class
+ * @author Alessandro Fulgini, Tiziano Fucci
  * @see RemoteObservable for a version of this that accepts remote observers
  * @see RoutingObservable for a version of this that routes events based on username of the subscriber
  * @see Observer
@@ -20,26 +22,29 @@ public abstract class Observable<T> {
     /**
      * Subscribes given observer for events.
      * In case the observer was already subscribed nothing happens (i.e. it won't get double events).
+     *
      * @param observer observer to subscribe
      */
-    public void addObserver(Observer<T> observer){
+    public void addObserver(Observer<T> observer) {
         observers.add(observer);
     }
 
     /**
      * Unsubscribe observer for events.
      * In case the observer was not subscribed nothing happens.
+     *
      * @param observer observer to be unsubscribed
      */
-    public void removeObserver(Observer<T> observer){
+    public void removeObserver(Observer<T> observer) {
         observers.remove(observer);
     }
 
     /**
      * Sends the given event to all subscribed observers (i.e. calls {@link Observer#update(Object)} on them).
+     *
      * @param event event to be sent to observers
      */
-    protected void notifyObservers(T event){
+    protected void notifyObservers(T event) {
         observers.forEach(observer -> observer.update(event));
     }
 }

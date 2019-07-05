@@ -9,6 +9,8 @@ import java.util.Collection;
  * This update is sent in broadcast by the Lobby to notify the players who are waiting
  * for a match to start.
  * It contains the names of the waiting players
+ *
+ * @author Alessandro Fulgini
  */
 public class LobbyUpdate extends ModelUpdate {
 
@@ -20,8 +22,9 @@ public class LobbyUpdate extends ModelUpdate {
 
     /**
      * Creates the lobby update with the names of the players waiting for the match to start
+     *
      * @param waitingPlayers a collection with the names of the waiting players, not null
-     * @param starting whether the match is starting or not
+     * @param starting       whether the match is starting or not
      * @throws NullPointerException if the collection is null
      */
     @JsonCreator

@@ -2,6 +2,8 @@ package it.polimi.deib.se2019.sanp4.adrenaline.common.updates;
 
 /**
  * An interface describing an object using the visitor pattern to handle model updates
+ *
+ * @author Tiziano Fucci
  */
 public interface ModelUpdateVisitor {
     void handle(LobbyUpdate update);

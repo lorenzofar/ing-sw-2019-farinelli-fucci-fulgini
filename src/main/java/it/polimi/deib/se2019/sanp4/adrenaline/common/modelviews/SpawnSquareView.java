@@ -10,6 +10,8 @@ import java.util.List;
 
 /**
  * A lightweight representation of a spawn square in the view.
+ *
+ * @author Tiziano Fucci, Lorenzo Farinelli
  */
 public class SpawnSquareView extends SquareView {
 

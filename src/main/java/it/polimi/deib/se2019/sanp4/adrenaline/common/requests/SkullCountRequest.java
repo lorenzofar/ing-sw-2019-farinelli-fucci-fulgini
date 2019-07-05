@@ -7,6 +7,8 @@ import java.util.List;
 
 /**
  * Represents the request of the initial number of skulls to start the match
+ *
+ * @author Alessandro Fulgini
  */
 public class SkullCountRequest extends ChoiceRequest<Integer> {
 

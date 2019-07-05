@@ -13,6 +13,8 @@ import java.util.*;
 
 /**
  * A lightweight representation of a square in the view
+ *
+ * @author Tiziano Fucci, Lorenzo Farinelli
  */
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,

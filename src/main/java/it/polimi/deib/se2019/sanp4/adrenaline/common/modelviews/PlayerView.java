@@ -15,6 +15,8 @@ import java.util.Map;
 
 /**
  * A lightweight representation of a player in the view
+ *
+ * @author Tiziano Fucci, Lorenzo Farinelli
  */
 public class PlayerView implements Serializable {
 
@@ -50,7 +52,8 @@ public class PlayerView implements Serializable {
 
     /**
      * Creates a new player view
-     * @param name the name of the player
+     *
+     * @param name  the name of the player
      * @param color the color of the player
      */
     public PlayerView(
@@ -169,6 +172,7 @@ public class PlayerView implements Serializable {
 
     /**
      * Returns the operational state of this player
+     *
      * @return The operational state of this player
      */
     public PlayerState getState() {
@@ -177,6 +181,7 @@ public class PlayerView implements Serializable {
 
     /**
      * Sets the operational state of this player
+     *
      * @param state The state to be set
      */
     public void setState(PlayerState state) {

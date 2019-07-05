@@ -7,6 +7,8 @@ import java.util.List;
 
 /**
  * Represents the request of the board id at the beginning of the game
+ *
+ * @author Alessandro Fulgini
  */
 public class BoardRequest extends ChoiceRequest<Integer> {
 

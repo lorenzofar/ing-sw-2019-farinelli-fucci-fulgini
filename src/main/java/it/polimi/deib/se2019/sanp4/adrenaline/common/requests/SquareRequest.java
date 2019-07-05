@@ -8,6 +8,8 @@ import java.util.List;
 
 /**
  * A specialized request to ask for a coordinates pair (namely a square)
+ *
+ * @author Alessandro Fulgini
  */
 public class SquareRequest extends ChoiceRequest<CoordPair> {
 

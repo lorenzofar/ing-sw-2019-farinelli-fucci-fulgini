@@ -8,6 +8,8 @@ import java.util.List;
 
 /**
  * A specialized request to ask for a weapon card
+ *
+ * @author Alessandro Fulgini
  */
 public class WeaponCardRequest extends ChoiceRequest<WeaponCard> {
 

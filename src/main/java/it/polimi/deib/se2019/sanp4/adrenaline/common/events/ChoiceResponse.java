@@ -9,6 +9,8 @@ import java.io.Serializable;
 /**
  * A specialized class describing an event generated when a player makes a choice
  * @param <T> The type of the object the user chose
+ *
+ * @author Alessandro Fulgini
  */
 public class ChoiceResponse<T extends Serializable> extends ViewEvent {
 

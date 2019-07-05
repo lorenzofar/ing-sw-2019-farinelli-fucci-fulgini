@@ -8,6 +8,8 @@ import java.util.List;
 
 /**
  * Represents the request to choose which effect to use on a weapon
+ *
+ * @author Alessandro Fulgini
  */
 public class EffectRequest extends ChoiceRequest<EffectDescription> {
 

@@ -9,6 +9,8 @@ import java.io.Serializable;
 /**
  * An abstract class representing a generic event the controller can handle.
  * It holds information about the player who has generated it.
+ *
+ * @author Alessandro Fulgini
  */
 @JsonTypeInfo(use=JsonTypeInfo.Id.CLASS, property="@class")
 public abstract class ViewEvent implements Serializable {

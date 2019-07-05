@@ -11,18 +11,24 @@ import java.util.logging.Logger;
 /**
  * Provides methods to load and retrieve runtime parameters used both by the client and the server.
  * <p>
- *     The parameters are represented by <i>properties</i>
+ * The parameters are represented by <i>properties</i>
  * </p>
  * <p>
- *     This class uses the singleton pattern
+ * This class uses the singleton pattern
  * </p>
+ *
+ * @author Alessandro Fulgini, Lorenzo Farinelli
  */
 public class AdrenalineProperties extends Properties {
 
-    /** Default file name of the config file */
+    /**
+     * Default file name of the config file
+     */
     private static final String CONFIG_FILENAME = "adrenaline.properties";
 
-    /** Arguments that can be provided by the user */
+    /**
+     * Arguments that can be provided by the user
+     */
     private static final String[] ARGUMENTS = {
             "adrenaline.rmi.port", "adrenaline.socket.port",
             "adrenaline.server.hostname", "adrenaline.client.hostname",
@@ -39,6 +45,7 @@ public class AdrenalineProperties extends Properties {
 
     /**
      * Returns the instance of the class
+     *
      * @return The object representing the instance
      */
     public static AdrenalineProperties getProperties() {
@@ -52,19 +59,18 @@ public class AdrenalineProperties extends Properties {
      * After that it checks whether the user passed any of the default arguments defined in {@link #ARGUMENTS},
      * overwriting properties accordingly.
      */
-    public void loadProperties(){
+    public void loadProperties() {
         // We first check whether the user has provided a config file
         String configFileName = System.getProperty("adrenaline.config");
-        if(configFileName != null){
+        if (configFileName != null) {
             // Load properties from file
             try {
                 InputStream configFileInputStream = new FileInputStream(configFileName);
                 this.load(configFileInputStream);
             } catch (IOException e) {
-                logger.log(Level.SEVERE,"Error accessing provided file", e);
+                logger.log(Level.SEVERE, "Error accessing provided file", e);
             }
-        }
-        else {
+        } else {
             // Here we search for a fallback file from the current folder
             try {
                 FileInputStream defaultConfigStream = new FileInputStream(CONFIG_FILENAME);
@@ -78,7 +84,7 @@ public class AdrenalineProperties extends Properties {
         // We iterate over the default arguments and check whether the user set them
         for (String argument : ARGUMENTS) {
             String argumentValue = System.getProperty(argument);
-            if(argumentValue == null) continue;
+            if (argumentValue == null) continue;
             this.setProperty(argument, argumentValue);
         }
     }
@@ -86,9 +92,10 @@ public class AdrenalineProperties extends Properties {
     /**
      * Loads the logging configuration:
      * <ol>
-     *     <li>From the file specified in property adrenaline.loggerconfig</li>
-     *     <li>If the property is not specified, it uses the resource provided as {@code fallbackConfig}</li>
+     * <li>From the file specified in property adrenaline.loggerconfig</li>
+     * <li>If the property is not specified, it uses the resource provided as {@code fallbackConfig}</li>
      * </ol>
+     *
      * @param fallbackConfig the path of the resource on which to fallback
      */
     public static void loadLoggerConfig(String fallbackConfig) {

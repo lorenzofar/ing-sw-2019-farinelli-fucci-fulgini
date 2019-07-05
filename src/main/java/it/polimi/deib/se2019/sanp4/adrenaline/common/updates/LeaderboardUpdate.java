@@ -4,6 +4,11 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.match.Leaderboard;
 
+/**
+ * An update containing the leaderboard and the final scores of players sent once the match is over
+ *
+ * @author Alessandro Fulgini
+ */
 public class LeaderboardUpdate extends ModelUpdate {
 
     private static final long serialVersionUID = 9033152745287621905L;

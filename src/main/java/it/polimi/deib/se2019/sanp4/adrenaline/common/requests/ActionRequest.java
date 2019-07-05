@@ -8,6 +8,8 @@ import java.util.List;
 
 /**
  * A specialized request to ask for the action the user wants to perform
+ *
+ * @author Alessandro Fulgini
  */
 public class ActionRequest extends ChoiceRequest<ActionEnum> {
 

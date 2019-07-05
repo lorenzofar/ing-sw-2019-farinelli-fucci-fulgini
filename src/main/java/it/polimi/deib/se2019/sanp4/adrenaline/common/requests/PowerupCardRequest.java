@@ -8,6 +8,8 @@ import java.util.List;
 
 /**
  * A specialized request to ask for a powerup card
+ *
+ * @author Alessandro Fulgini
  */
 public class PowerupCardRequest extends ChoiceRequest<PowerupCard> {
 

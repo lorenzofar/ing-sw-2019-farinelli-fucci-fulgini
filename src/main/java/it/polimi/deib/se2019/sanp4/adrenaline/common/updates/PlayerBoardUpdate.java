@@ -6,6 +6,8 @@ import it.polimi.deib.se2019.sanp4.adrenaline.common.modelviews.PlayerBoardView;
 
 /**
  * An update sent when a player gets hit, marked or killed.
+ *
+ * @author Tiziano Fucci
  */
 public class PlayerBoardUpdate extends ModelUpdate {
 

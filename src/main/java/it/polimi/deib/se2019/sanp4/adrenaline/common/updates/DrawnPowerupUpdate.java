@@ -6,6 +6,8 @@ import it.polimi.deib.se2019.sanp4.adrenaline.model.items.powerup.PowerupCard;
 
 /**
  * An update sent when a player draws a {@link PowerupCard}.
+ *
+ * @author Tiziano Fucci
  */
 public class DrawnPowerupUpdate extends ModelUpdate {
 

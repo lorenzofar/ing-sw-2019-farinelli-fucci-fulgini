@@ -7,6 +7,8 @@ import java.util.List;
 
 /**
  * A specialized request to ask for the name of a player
+ *
+ * @author Alessandro Fulgini
  */
 public class PlayerRequest extends ChoiceRequest<String> {
 

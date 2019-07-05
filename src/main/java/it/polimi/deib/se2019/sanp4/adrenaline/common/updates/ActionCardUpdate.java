@@ -7,6 +7,8 @@ import it.polimi.deib.se2019.sanp4.adrenaline.model.action.ActionCard;
 
 /**
  * An update sent to a player when an {@link ActionCard} changes.
+ *
+ * @author Tiziano Fucci
  */
 public class ActionCardUpdate extends ModelUpdate {
 

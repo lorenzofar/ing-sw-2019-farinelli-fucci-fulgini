@@ -10,6 +10,8 @@ import java.util.Collection;
 
 /**
  * A lightweight representation of an action card in the view
+ *
+ * @author Tiziano Fucci, Lorenzo Farinelli
  */
 public class ActionCardView implements Serializable {
 
@@ -20,8 +22,9 @@ public class ActionCardView implements Serializable {
 
     /**
      * Creates a new action card view
-     * @param type the type of the action card
-     * @param actions the available actions
+     *
+     * @param type        the type of the action card
+     * @param actions     the available actions
      * @param finalAction the final action
      */
     @JsonCreator

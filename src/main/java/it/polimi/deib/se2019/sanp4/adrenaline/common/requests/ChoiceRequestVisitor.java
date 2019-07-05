@@ -7,6 +7,8 @@ package it.polimi.deib.se2019.sanp4.adrenaline.common.requests;
  * If a request cannot be handled for a specific reason, the class which performed the request
  * (and is waiting for a response) should be notified in some way.
  * </p>
+ *
+ * @author Alessandro Fulgini
  */
 public interface ChoiceRequestVisitor {
 

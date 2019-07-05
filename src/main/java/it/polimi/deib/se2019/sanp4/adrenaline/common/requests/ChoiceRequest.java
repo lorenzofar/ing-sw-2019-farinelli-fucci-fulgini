@@ -16,6 +16,7 @@ import java.util.UUID;
  * The request also has an unique identifier, which will be used by its response to identify it.
  *
  * @param <T> The type of objects representing the choices the player can make
+ * @author Alessandro Fulgini
  */
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.CLASS,

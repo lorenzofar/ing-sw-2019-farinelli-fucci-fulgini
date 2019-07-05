@@ -6,6 +6,8 @@ import java.util.List;
 
 /**
  * A lightweight representation of a player board in the view
+ *
+ * @author Tiziano Fucci, Lorenzo Farinelli
  */
 public class PlayerBoardView implements Serializable {
     private static final long serialVersionUID = 4751123925171736434L;
@@ -118,6 +120,7 @@ public class PlayerBoardView implements Serializable {
 
     /**
      * Retrieves the state of the board
+     *
      * @return The string representing the state
      */
     public String getState() {
@@ -126,6 +129,7 @@ public class PlayerBoardView implements Serializable {
 
     /**
      * Sets the state of the board
+     *
      * @param state The string representing the state
      */
     public void setState(String state) {

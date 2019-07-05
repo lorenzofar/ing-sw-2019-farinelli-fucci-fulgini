@@ -5,7 +5,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.deib.se2019.sanp4.adrenaline.model.MatchOperationalState;
 
 /**
- * An update sent when the {@link MatchOperationalState}
+ * An update sent when the {@link MatchOperationalState} changes
+ *
+ * @author Tiziano Fucci
  */
 public class MatchOperationalStateUpdate extends ModelUpdate {
 
@@ -14,6 +16,7 @@ public class MatchOperationalStateUpdate extends ModelUpdate {
 
     /**
      * Creates a match operational state update that will be sent in broadcast.
+     *
      * @param state the match state to send as update.
      */
     @JsonCreator

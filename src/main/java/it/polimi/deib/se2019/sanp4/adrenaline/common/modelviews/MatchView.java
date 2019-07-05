@@ -8,6 +8,8 @@ import java.util.List;
 
 /**
  * A lightweight representation of the match in the view
+ *
+ * @author Tiziano Fucci, Lorenzo Farinelli
  */
 public class MatchView implements Serializable {
 

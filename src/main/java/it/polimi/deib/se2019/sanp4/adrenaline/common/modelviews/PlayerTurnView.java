@@ -7,6 +7,8 @@ import java.io.Serializable;
 
 /**
  * A lightweight representation of a turn in the view
+ *
+ * @author Tiziano Fucci, Lorenzo Farinelli
  */
 public class PlayerTurnView implements Serializable {
 
@@ -28,6 +30,7 @@ public class PlayerTurnView implements Serializable {
 
     /**
      * Creates a new player turn view
+     *
      * @param player the name of the player
      */
     public PlayerTurnView(

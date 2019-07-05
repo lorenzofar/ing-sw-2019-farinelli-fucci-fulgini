@@ -7,6 +7,8 @@ import java.io.Serializable;
  * <p>
  * Classes implementing this interface can handle each type of event with a specific method.
  * </p>
+ *
+ * @author Alessandro Fulgini
  */
 public interface ViewEventVisitor {
 

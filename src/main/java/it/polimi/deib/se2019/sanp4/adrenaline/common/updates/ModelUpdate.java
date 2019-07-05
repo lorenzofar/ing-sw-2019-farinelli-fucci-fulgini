@@ -8,6 +8,8 @@ import java.util.Set;
 /**
  * An abstract class representing an update coming from the model.
  * If recipients is null, the update is sent in broadcast.
+ *
+ * @author Tiziano Fucci
  */
 
 @JsonTypeInfo(
@@ -23,12 +25,13 @@ public abstract class ModelUpdate implements Serializable {
     /**
      * Creates an update that will be sent in broadcast.
      */
-    public ModelUpdate(){
+    public ModelUpdate() {
         recipients = null;
     }
 
     /**
      * Creates an update that will be sent to a set of observers.
+     *
      * @param recipients Who will receive the update
      */
     public ModelUpdate(Set<String> recipients) {
@@ -45,6 +48,7 @@ public abstract class ModelUpdate implements Serializable {
 
     /**
      * Makes the provided visitor handle the update
+     *
      * @param visitor The object representing the visitor
      */
     public abstract void accept(ModelUpdateVisitor visitor);
