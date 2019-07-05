@@ -4,18 +4,21 @@ The game has been developed in Java as a Software Engineering project at [Polite
 
 ## Team
 <!-- TODO: Remove sensible data before publishing public repo -->
-| Name                | Matricola      | Developed features         |
-| :------------------ | :------------- | :------------------------- |
-| Lorenzo Farinelli   | 866236         | Client, Model              |
-| Tiziano Fucci       | 873622         | Model, Updates             |
-| Alessandro Fulgini  | 866390         | Controller, Network, Model |
+| Name                | Matricola      | Author of                               |
+| :------------------ | :------------- | :-------------------------------------- |
+| Lorenzo Farinelli   | 866236         | :computer: Client, Model                |
+| Tiziano Fucci       | 873622         | :satellite_antenna: Updates, Model      |
+| Alessandro Fulgini  | 866390         | :video_game: Controller, Network, Model |
 
 ## Features
+Base:
 - [x] Complete rules
 - [x] GUI
 - [x] CLI
 - [x] TCP connection
 - [x] RMI connection
+
+Advanced:
 - [x] Multiple simultaneous matches (on the server)
 - [ ] Game persistence
 - [ ] Terminator
@@ -44,7 +47,7 @@ java -Dadrenaline.server.hostname=[hostname] -jar adrenaline-server.jar
 where `[hostname]` is an address resolvable from the clients who want to connect.
 This has the advantages of seeing logs on the console.\
 In alternative, the parameter can be set via the `adrenaline.properties` file
-(more on this in the [dedicated section](##configuration-parameters));
+(more on this in the [dedicated section](#configuration-parameters));
 in this last case, the server can also be started by double-clicking the JAR.
 
 When the server has started, it will wait for login requests by the players.
@@ -70,7 +73,8 @@ To start the client run the following command in a console window:
 ```
 java -jar adrenaline-client.jar
 ```
-and make sure to set the parameter `adrenaline.client.hostname`
+and make sure to set the parameter `adrenaline.client.hostname` via
+command-line or in the `adrenaline.properties` file,
 if you want to connect with RMI (the hostname must be resolvable by the server).
 More on this in the section
 [configuration parameters](#configuration-parameters).
