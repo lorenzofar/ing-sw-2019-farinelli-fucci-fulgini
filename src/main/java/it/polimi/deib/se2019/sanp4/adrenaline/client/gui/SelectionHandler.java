@@ -17,6 +17,7 @@ import java.util.function.Consumer;
  * A class describing an object handling the selection of a certain object to reply to choice requests
  *
  * @param <T> The type of choice to retrieve
+ * @author Lorenzo Farinelli
  */
 public class SelectionHandler<T extends Serializable> implements Consumer<ObservableOverlay<T>> {
 

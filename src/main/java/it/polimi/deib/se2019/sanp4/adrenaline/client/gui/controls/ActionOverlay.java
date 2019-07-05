@@ -8,6 +8,8 @@ import javafx.scene.control.Label;
 
 /**
  * An overlay used to represent and select an action the player can perform
+ *
+ * @author Lorenzo Farinelli
  */
 public class ActionOverlay extends SelectableOverlay<ActionEnum> {
 

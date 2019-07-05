@@ -24,6 +24,8 @@ import java.util.stream.Collectors;
 /**
  * An utility class to interact with the command-line.
  * It provides to read and write from the console
+ *
+ * @author Lorenzo Farinelli
  */
 class CLIHelper {
 

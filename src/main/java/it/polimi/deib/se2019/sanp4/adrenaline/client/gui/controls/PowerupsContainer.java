@@ -8,6 +8,8 @@ import java.util.List;
 
 /**
  * A custom control extending an {@link HBox} container that contains images of powerup cards
+ *
+ * @author Lorenzo Farinelli
  */
 public class PowerupsContainer extends HBox {
 

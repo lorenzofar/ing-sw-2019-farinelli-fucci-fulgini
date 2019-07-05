@@ -10,6 +10,8 @@ import java.util.List;
 /**
  * A specialized request controller used to handle player operation requests.
  * The window will show a vertical list of buttons representing the available operations the user can select.
+ *
+ * @author Lorenzo Farinelli
  */
 public class PlayerOperationRequestController extends RequestController<PlayerOperationEnum> {
     /**

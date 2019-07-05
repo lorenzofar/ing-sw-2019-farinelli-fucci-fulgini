@@ -10,6 +10,8 @@ import java.util.List;
 /**
  * A specialized request controller used to handle powerup requests.
  * The window will show an horizontal track of the powerup cards the user can select
+ *
+ * @author Lorenzo Farinelli
  */
 public class PowerupRequestController extends RequestController<PowerupCard> {
 

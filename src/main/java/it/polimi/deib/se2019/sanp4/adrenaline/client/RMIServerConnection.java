@@ -26,6 +26,7 @@ import java.util.logging.Logger;
  * When connecting, this connection retrieves the server at the specified RMI registry,
  * then at login time it provides an exported version of the client view (RemoteView), which the server
  * uses to call methods on the view (and receive events)
+ * @author Alessandro Fulgini
  */
 public class RMIServerConnection extends RemoteObservable<ModelUpdate> implements ServerConnection {
     private final int pingInterval;

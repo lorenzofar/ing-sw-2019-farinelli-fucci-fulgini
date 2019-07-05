@@ -7,6 +7,8 @@ import javafx.scene.image.ImageView;
 
 /**
  * A class describing an overlay used to select the board configuration, showing the thumbnail of the board
+ *
+ * @author Lorenzo Farinelli
  */
 public class BoardSelectionOverlay extends SelectableOverlay<Integer> {
 

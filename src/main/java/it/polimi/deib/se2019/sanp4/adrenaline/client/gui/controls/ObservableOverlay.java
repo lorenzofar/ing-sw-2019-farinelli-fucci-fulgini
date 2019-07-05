@@ -8,6 +8,8 @@ import java.util.function.Consumer;
 
 /**
  * A class describing an overlay that can be observed to catch fired events
+ *
+ * @author Lorenzo Farinelli
  */
 public abstract class ObservableOverlay<T> extends Button {
 

@@ -14,6 +14,8 @@ import java.util.stream.Collectors;
 
 /**
  * A class responsible of managing the local model and of handling model updates
+ *
+ * @author Lorenzo Farinelli
  */
 public class ModelManager implements ModelUpdateVisitor {
 

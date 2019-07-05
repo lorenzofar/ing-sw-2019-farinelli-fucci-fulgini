@@ -20,6 +20,8 @@ import java.util.stream.Collectors;
  * <li>The description of the effect</li>
  * <li>The cost of the effect in terms of ammo cubes</li>
  * </ul>
+ *
+ * @author Lorenzo Farinelli
  */
 public class EffectSelectionOverlay extends SelectableOverlay<EffectDescription> {
 

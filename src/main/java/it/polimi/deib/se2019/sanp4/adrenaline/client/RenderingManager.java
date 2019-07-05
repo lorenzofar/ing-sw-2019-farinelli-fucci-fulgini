@@ -6,6 +6,8 @@ import it.polimi.deib.se2019.sanp4.adrenaline.view.ViewScene;
 
 /**
  * A class implementing the {@link ModelUpdateVisitor} interface that is responsible of updating the rendered game screen according to the received update
+ *
+ * @author Lorenzo Farinelli
  */
 public class RenderingManager implements ModelUpdateVisitor {
 

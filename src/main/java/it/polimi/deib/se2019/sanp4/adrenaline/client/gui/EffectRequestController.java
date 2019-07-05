@@ -10,6 +10,8 @@ import java.util.List;
 /**
  * A specialized request controller used to handle weapon effect requests.
  * The window will show a vertical track of the weapon effects the user can select
+ *
+ * @author Lorenzo Farinelli
  */
 public class EffectRequestController extends RequestController<EffectDescription> {
     /**

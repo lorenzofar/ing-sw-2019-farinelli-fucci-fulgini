@@ -9,6 +9,8 @@ import java.io.IOException;
 /**
  * A specialized {@link OrientableImage} that shows the card image of a weapon, along with a tooltip
  * telling its name. If a {@code null} object is provided, it will show an empty card and an empty tooltip
+ *
+ * @author Lorenzo Farinelli
  */
 public class WeaponImage extends OrientableImage {
 

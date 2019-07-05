@@ -18,6 +18,8 @@ import java.util.function.Consumer;
 /**
  * A custom control extending a {@link VBox} representing a table showing information about the weapons owned by the players
  * It also allows to set a consumer of the image ids to handle the events generated when the user clicks on the "info" button of a weapon
+ *
+ * @author Lorenzo Farinelli
  */
 public class WeaponsInfoPane extends VBox {
 

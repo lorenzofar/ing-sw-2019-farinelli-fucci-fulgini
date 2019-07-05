@@ -14,6 +14,8 @@ import java.util.Map;
 
 /**
  * A custom control to show information about the ammo owned by the user
+ *
+ * @author Lorenzo Farinelli
  */
 public class AmmoPane extends VBox {
 

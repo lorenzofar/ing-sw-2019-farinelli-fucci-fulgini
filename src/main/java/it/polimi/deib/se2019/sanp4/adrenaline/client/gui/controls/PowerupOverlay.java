@@ -8,6 +8,8 @@ import javafx.scene.image.ImageView;
 
 /**
  * An overlay used to select a powerup, showing the graphical representation of its card
+ *
+ * @author Lorenzo Farinelli
  */
 public class PowerupOverlay extends SelectableOverlay<PowerupCard> {
 

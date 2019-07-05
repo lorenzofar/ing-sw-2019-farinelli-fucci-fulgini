@@ -39,6 +39,8 @@ import static it.polimi.deib.se2019.sanp4.adrenaline.client.gui.GUIRenderer.setR
  * <li>The powerup cards owned by the user</li>
  * <li>The weapon cards owned by the user</li>
  * </ul>
+ *
+ * @author Lorenzo Farinelli
  */
 public class GameController extends GUIController {
 

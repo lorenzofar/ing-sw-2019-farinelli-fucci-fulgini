@@ -10,6 +10,8 @@ import java.util.List;
 /**
  * A specialized request controller used to handle player requests.
  * The window will show an horizontal track with the selectable players, showing their name and image
+ *
+ * @author Lorenzo Farinelli
  */
 public class PlayerRequestController extends RequestController<String> {
     /**

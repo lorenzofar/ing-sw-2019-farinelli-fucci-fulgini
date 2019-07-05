@@ -8,6 +8,8 @@ import javafx.scene.paint.Color;
 
 /**
  * A control extending {@link Pane} that allows the provided image to be rotated according to the provided orientation
+ *
+ * @author Lorenzo Farinelli
  */
 public class OrientableImage extends Pane {
 

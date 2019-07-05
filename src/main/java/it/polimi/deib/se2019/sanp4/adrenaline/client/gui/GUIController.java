@@ -6,6 +6,8 @@ import javafx.stage.Stage;
 /**
  * An abstract class representing a controller used to handle GUI screens.
  * It holds a reference to the current ClientView and the current stage, along with methods to set them
+ *
+ * @author Lorenzo Farinelli
  */
 abstract class GUIController {
     /**

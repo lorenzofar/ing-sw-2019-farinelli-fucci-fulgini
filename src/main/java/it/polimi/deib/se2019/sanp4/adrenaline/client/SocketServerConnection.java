@@ -34,6 +34,8 @@ import java.util.logging.Logger;
  * <li>A thread that listens for incoming commands for the client</li>
  * <li>A thread that executes the command</li>
  * </ul>
+ *
+ * @author Alessandro Fulgini
  */
 public class SocketServerConnection extends RemoteObservable<ModelUpdate>
         implements ServerConnection, SocketClientCommandTarget {

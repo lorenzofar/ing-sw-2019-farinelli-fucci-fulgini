@@ -31,6 +31,8 @@ import java.util.logging.Logger;
 
 /**
  * A specialized class implementing the {@link UIRenderer} interface that provides methods to render content in a GUI environment
+ *
+ * @author Lorenzo Farinelli
  */
 public class GUIRenderer extends Application implements UIRenderer {
 

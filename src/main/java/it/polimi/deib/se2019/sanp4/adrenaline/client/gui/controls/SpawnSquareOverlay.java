@@ -14,6 +14,8 @@ import java.util.Map;
 
 /**
  * A class describing an overlay representing a spawn square
+ *
+ * @author Lorenzo Farinelli
  */
 public class SpawnSquareOverlay extends SquareOverlay {
 

@@ -22,6 +22,8 @@ import java.util.stream.Collectors;
 
 /**
  * A specialized class implementing the {@link UIRenderer} interface that provides methods to render content in a CLI environment
+ *
+ * @author Lorenzo Farinelli
  */
 public class CLIRenderer implements UIRenderer {
 

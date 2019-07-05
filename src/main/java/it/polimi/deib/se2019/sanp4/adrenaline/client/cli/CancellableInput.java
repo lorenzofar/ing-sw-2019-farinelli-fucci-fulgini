@@ -7,6 +7,8 @@ import java.util.concurrent.*;
 /**
  * A class extending a {@link BufferedReader} that does not block the app
  * and allows for the input request to be cancelled
+ *
+ * @author Lorenzo Farinelli
  */
 public class CancellableInput extends BufferedReader {
     private final ExecutorService executor;

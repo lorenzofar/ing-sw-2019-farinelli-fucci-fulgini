@@ -7,6 +7,8 @@ import javafx.scene.control.Label;
 
 /**
  * An overlay used to select an integer value, showing it in a square container
+
+ * @author Lorenzo Farinelli
  */
 public class IntegerSelectionOverlay extends SelectableOverlay<Integer> {
 

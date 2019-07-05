@@ -10,6 +10,8 @@ import java.util.Map;
 
 /**
  * An abstract class describing an overlay representing a square of the game board
+ *
+ * @author Lorenzo Farinelli
  */
 public abstract class SquareOverlay extends SelectableOverlay<CoordPair> {
 

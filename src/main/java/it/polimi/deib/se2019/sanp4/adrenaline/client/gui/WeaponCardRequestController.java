@@ -10,6 +10,8 @@ import java.util.List;
 /**
  * A specialized request controller used to handle weapon requests.
  * The window will show an horizontal track of the weapon cards the user can select
+ *
+ * @author Lorenzo Farinelli
  */
 public class WeaponCardRequestController extends RequestController<WeaponCard> {
 

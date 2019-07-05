@@ -7,6 +7,8 @@ import javafx.scene.image.ImageView;
 
 /**
  * A controller used to manage windows where an image is shown
+ *
+ * @author Lorenzo Farinelli
  */
 public class ImageViewerController extends GUIController {
 

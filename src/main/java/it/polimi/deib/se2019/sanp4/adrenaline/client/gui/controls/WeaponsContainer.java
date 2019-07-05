@@ -13,6 +13,8 @@ import java.util.function.Consumer;
 
 /**
  * A custom control extending an {@link HBox} container that contains images of weapon cards
+ *
+ * @author Lorenzo Farinelli
  */
 public class WeaponsContainer extends HBox {
 

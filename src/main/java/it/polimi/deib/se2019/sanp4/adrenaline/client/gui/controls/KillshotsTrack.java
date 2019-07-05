@@ -15,6 +15,8 @@ import java.util.List;
  * A control representing the killshots track, providing methods to show current amount of remaining skulls
  * Available skulls are those that are visible, unavailable ones are removed from the left,
  * in order to make the flaming skull the last one
+ *
+ * @author Lorenzo Farinelli
  */
 public class KillshotsTrack extends GridPane {
 

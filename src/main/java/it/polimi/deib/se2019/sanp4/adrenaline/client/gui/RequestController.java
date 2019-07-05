@@ -21,6 +21,7 @@ import java.util.List;
  * An abstract class representing a {@link GUIController} that is responsible of managing windows used to select something when performing a request
  *
  * @param <T> The type of the data involved in the request
+ * @author Lorenzo Farinelli
  */
 public abstract class RequestController<T extends Serializable> extends GUIController {
 

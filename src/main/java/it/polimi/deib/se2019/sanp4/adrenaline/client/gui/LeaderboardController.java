@@ -26,6 +26,8 @@ import javafx.scene.shape.Circle;
  * <li>The count of performed overkills</li>
  * <li>The number of deaths</li>
  * </ul>
+ *
+ * @author Lorenzo Farinelli
  */
 public class LeaderboardController extends GUIController {
 

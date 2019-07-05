@@ -23,6 +23,8 @@ import java.util.Map;
  * <li>Score of the user</li>
  * <li>List of participating players along with their character color</li>
  * </ul>
+ *
+ * @author Lorenzo Farinelli
  */
 public class MatchInfoPane extends VBox {
     /**

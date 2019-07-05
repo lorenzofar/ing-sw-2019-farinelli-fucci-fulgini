@@ -8,6 +8,8 @@ import javafx.scene.image.ImageView;
 
 /**
  * An overlay used to select a weapon, showing the graphical representation of its card
+ *
+ * @author Lorenzo Farinelli
  */
 public class WeaponCardOverlay extends SelectableOverlay<WeaponCard> {
 

@@ -17,6 +17,8 @@ import java.util.Map;
 
 /**
  * A class describing an overlay representing an ammo square
+ *
+ * @author Lorenzo Farinelli
  */
 public class AmmoSquareOverlay extends SquareOverlay {
 

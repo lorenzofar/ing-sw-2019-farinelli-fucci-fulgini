@@ -17,6 +17,8 @@ import java.io.IOException;
  * <li>Connect to the server using the chosen connection</li>
  * <li>Log in to the server</li>
  * </ul>
+ *
+ * @author Lorenzo Farinelli
  */
 public class LoginController extends GUIController {
 

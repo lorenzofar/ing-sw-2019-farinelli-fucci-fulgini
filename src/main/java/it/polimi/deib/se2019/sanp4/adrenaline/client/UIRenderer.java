@@ -12,6 +12,8 @@ import java.util.Collection;
 /**
  * An interface extending ChoiceRequestVisitor describing a class that renders or refreshes the screens shown to the user.
  * It provides methods both to show screens and to refresh UI elements in a granular way
+ *
+ * @author Lorenzo Farinelli
  */
 public interface UIRenderer extends ChoiceRequestVisitor {
 

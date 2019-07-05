@@ -7,6 +7,8 @@ import it.polimi.deib.se2019.sanp4.adrenaline.common.ResourcesLoader;
 
 /**
  * A class providing an entry point to the client
+ *
+ * @author Lorenzo Farinelli
  */
 public class ClientLauncher {
 

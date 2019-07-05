@@ -25,6 +25,8 @@ import java.util.Map;
  * <li>Count of marks</li>
  * <li>Received damages</li>
  * </ul>
+ *
+ * @author Lorenzo Farinelli
  */
 public class PlayerBoardControl extends VBox {
 

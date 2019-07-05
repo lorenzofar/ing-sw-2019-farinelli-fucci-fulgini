@@ -19,6 +19,8 @@ import java.util.Collection;
  * <li>The players connected to the game</li>
  * <li>Whether the match is starting soon or not</li>
  * </ul>
+ *
+ * @author Lorenzo Farinelli
  */
 public class LobbyController extends GUIController {
 

@@ -13,6 +13,8 @@ import javafx.scene.shape.Circle;
 
 /**
  * An overlay used to select a player, showing the name of the player and the picture of its character
+ *
+ * @author Lorenzo Farinelli
  */
 public class PlayerSelectionOverlay extends SelectableOverlay<String> {
 
